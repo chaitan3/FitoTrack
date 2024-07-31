@@ -547,4 +547,6 @@
     </plurals>
     <string name="workoutTypePullUps">Подтягивания</string>
     <string name="workoutDurationPrecisionToSeconds">Продолжительность с точностью до секунд</string>
+    <string name="askForComment">Запрос комментария</string>
+    <string name="askForCommentSummary">Запрос ввода комментария после остановки записи</string>
 </resources>
