@@ -97,7 +97,7 @@ public class OsmTraceUploader {
 
                     if (e instanceof OsmAuthorizationException) {
                         textRes = R.string.uploadFailedOsmNotAuthorized;
-                        new OAuthAuthentication(handler, activity, null).clearAccessToken();
+                        new OAuthAuthentication().clearAccessToken();
                     }
 
                     Toast.makeText(activity, textRes, Toast.LENGTH_LONG).show();

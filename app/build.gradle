@@ -147,6 +147,10 @@ dependencies {
     // New Splash screen API
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
+    // OAuth2.0
+    implementation 'com.github.scribejava:scribejava-apis:8.3.3'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+
     configurations {
         all*.exclude group: 'xmlpull', module: 'xmlpull'
     }

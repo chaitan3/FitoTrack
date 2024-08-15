@@ -314,7 +314,10 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
     private OAuthConsumer oAuthConsumer = null;
 
     private void prepareUpload() {
-        OAuthAuthentication authentication = new OAuthAuthentication(mHandler, this, new OAuthAuthentication.OAuthAuthenticationListener() {
+        OAuthAuthentication authentication = new OAuthAuthentication();
+
+        /*
+        new OAuthAuthentication.Listener() {
             @Override
             public void authenticationFailed() {
                 new AlertDialog.Builder(ShowGpsWorkoutActivity.this)
@@ -325,13 +328,13 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
             }
 
             @Override
-            public void authenticationComplete(OAuthConsumer consumer) {
-                oAuthConsumer = consumer;
+            public void authenticationComplete() {
                 showUploadOptions();
             }
         });
+        */
 
-        authentication.authenticateIfNecessary();
+        startActivity(new Intent(this, OAuthAuthentication.class));
     }
 
     private AlertDialog dialog = null;
