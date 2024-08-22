@@ -12,6 +12,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.github.scribejava.core.builder.ScopeBuilder
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.builder.api.DefaultApi20
+import kotlin.concurrent.thread
 
 object OsmApi : DefaultApi20() {
     override fun getAccessTokenEndpoint(): String {
@@ -56,49 +57,61 @@ class OAuthAuthentication() : ComponentActivity() {
                 handleAuthorizationCode(code, object: Listener {
                     override fun authenticationComplete() {
                         setResult(Activity.RESULT_OK)
-                        finish()
+                        finishAndReset()
                     }
 
                     override fun authenticationFailed() {
                         setResult(Activity.RESULT_CANCELED)
-                        finish()
+                        finishAndReset()
                     }
                 })
             } else {
-                throw Exception("Unexpected response from OSM authorizer!")
+                // User denied access
+                setResult(Activity.RESULT_CANCELED)
+                finishAndReset()
             }
         } else {
             val token = preferences.getString("accessToken", null)
 
             if (token == null) {
-                Log.d("oauth", token.toString())
-
-                val url = getAuthorizationUrl()
-
-                val builder = CustomTabsIntent.Builder()
-                val customTabsIntent = builder.build()
-                customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                customTabsIntent.launchUrl(this, Uri.parse(url))
+                val b = !preferences.getBoolean("showingCustomTab", false)
+                if (b) {
+                    val url = getAuthorizationUrl()
+                    val builder = CustomTabsIntent.Builder()
+                    val customTabsIntent = builder.build()
+                    customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                    customTabsIntent.launchUrl(this, Uri.parse(url))
+                    preferences.edit().putBoolean("showingCustomTab", true).apply()
+                } else {
+                    setResult(Activity.RESULT_CANCELED)
+                    finishAndReset()
+                }
             } else {
                 setResult(Activity.RESULT_OK)
-                finish()
+                finishAndReset()
             }
         }
     }
 
+    fun finishAndReset() {
+        preferences.edit().putBoolean("showingCustomTab", false).apply()
+        finish()
+    }
+
     fun handleAuthorizationCode(code: String, listener: Listener) {
-        Thread() {
-            val token = oauthService.getAccessToken(code)
-            preferences.edit()
-                .putString("accessToken", token.accessToken)
-                .putBoolean("authenticated", true)
-                .apply()
+        thread {
+            try {
+                val token = oauthService.getAccessToken(code)
+                preferences.edit()
+                    .putString("accessToken", token.accessToken)
+                    .putBoolean("authenticated", true)
+                    .apply()
 
-            Log.d("oauth", token.rawResponse)
-
-            //if (token.)
-            listener.authenticationComplete()
-        }.start()
+                listener.authenticationComplete()
+            } catch (e: Exception) {
+                listener.authenticationFailed()
+            }
+        }
     }
 
     private fun getAuthorizationUrl() : String {

@@ -24,6 +24,7 @@ import android.os.Handler
 import androidx.preference.Preference
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
+import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.ShareFileActivity
 import de.tadris.fitness.util.DataManager
 import org.apache.commons.io.FileUtils
@@ -51,6 +52,11 @@ class DebugSettingsFragment : FitoTrackSettingFragment() {
 
         findPreference<Preference>("debugPressure")?.setOnPreferenceClickListener {
             startActivity(Intent(requireContext(), DebugPressureActivity::class.java))
+            true
+        }
+
+        findPreference<Preference>("resetOAuthToken")?.setOnPreferenceClickListener {
+            context?.let { ctx -> OAuthAuthentication.clearAccessToken(ctx) }
             true
         }
 

@@ -543,6 +543,7 @@
     <string name="debugSensorsTitle">Debug sensors</string>
     <string name="debugSensorsSummary">Collect sensor data which is written into the log file</string>
     <string name="debugPressureSensor">Debug pressure sensor</string>
+    <string name="resetOAuthToken">Reset OAuth Token</string>
     <string name="calibrating">Calibrating</string>
     <string name="noSensorAvailable">No sensor available</string>
     <string name="show_sum">Show sum</string>

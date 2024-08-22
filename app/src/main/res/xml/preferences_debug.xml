@@ -34,4 +34,8 @@
         android:key="debugPressure"
         android:title="@string/debugPressureSensor" />
 
+    <Preference
+        android:key="resetOAuthToken"
+        android:title="@string/resetOAuthToken" />
+
 </PreferenceScreen>
