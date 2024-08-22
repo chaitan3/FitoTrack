@@ -19,6 +19,7 @@
 
 package de.tadris.fitness.ui.workout;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +33,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -67,11 +73,25 @@ import de.tadris.fitness.util.sections.SectionListModel;
 import de.tadris.fitness.util.sections.SectionListPresenter;
 import de.tadris.fitness.util.sections.SectionListView;
 import de.westnordost.osmapi.traces.GpsTraceDetails;
-import oauth.signpost.OAuthConsumer;
 
 public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements DialogUtils.WorkoutDeleter {
 
     TextView commentView;
+
+    private final ActivityResultLauncher<Intent> oauthActivityLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            showUploadOptions();
+                        } else {
+                            new AlertDialog.Builder(ShowGpsWorkoutActivity.this)
+                                    .setTitle(R.string.error)
+                                    .setMessage(R.string.authenticationFailed)
+                                    .setPositiveButton(R.string.okay, null)
+                                    .create().show();
+                        }
+                    }
+            );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,30 +331,8 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
         }).start();
     }
 
-    private OAuthConsumer oAuthConsumer = null;
-
     private void prepareUpload() {
-        OAuthAuthentication authentication = new OAuthAuthentication();
-
-        /*
-        new OAuthAuthentication.Listener() {
-            @Override
-            public void authenticationFailed() {
-                new AlertDialog.Builder(ShowGpsWorkoutActivity.this)
-                        .setTitle(R.string.error)
-                        .setMessage(R.string.authenticationFailed)
-                        .setPositiveButton(R.string.okay, null)
-                        .create().show();
-            }
-
-            @Override
-            public void authenticationComplete() {
-                showUploadOptions();
-            }
-        });
-        */
-
-        startActivity(new Intent(this, OAuthAuthentication.class));
+        oauthActivityLauncher.launch(new Intent(this, OAuthAuthentication.class));
     }
 
     private AlertDialog dialog = null;
@@ -375,8 +373,9 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
     }
 
     private void uploadToOsm(boolean cut, GpsTraceDetails.Visibility visibility, String description) {
+        String token = OAuthAuthentication.Companion.getAccessToken(this);
         List<GpsSample> samples = new ArrayList<>(this.samples);
-        new OsmTraceUploader(this, mHandler, workout, samples, visibility, oAuthConsumer, cut, description).upload();
+        new OsmTraceUploader(this, mHandler, workout, samples, visibility, token, cut, description).upload();
     }
 
     @Override

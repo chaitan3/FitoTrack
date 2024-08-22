@@ -1,16 +1,13 @@
 package de.tadris.fitness.osm
 
-import android.accounts.AccountManager
-import android.accounts.AccountManagerCallback
-import android.accounts.AccountManagerFuture
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import com.github.scribejava.core.builder.ScopeBuilder
 import com.github.scribejava.core.builder.ServiceBuilder
@@ -26,7 +23,7 @@ object OsmApi : DefaultApi20() {
     }
 }
 
-class OAuthAuthentication() : Activity() {
+class OAuthAuthentication() : ComponentActivity() {
     lateinit var preferences : SharedPreferences
 
     val oauthService = ServiceBuilder("rUrENrM0e12uvqK5gXYYWbNtGw-H6Ok518gjZ6JTjLA")
@@ -39,8 +36,14 @@ class OAuthAuthentication() : Activity() {
         .callback("auth://callback")
         .build(OsmApi)
 
+    interface Listener {
+        fun authenticationFailed()
+        fun authenticationComplete()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferences = this.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
     }
 
     override fun onResume() {
@@ -50,62 +53,70 @@ class OAuthAuthentication() : Activity() {
         if (data != null) {
             val code = data.getQueryParameter("code")
             if (code != null) {
-                handleAuthorizationCode(code)
+                handleAuthorizationCode(code, object: Listener {
+                    override fun authenticationComplete() {
+                        setResult(Activity.RESULT_OK)
+                        finish()
+                    }
+
+                    override fun authenticationFailed() {
+                        setResult(Activity.RESULT_CANCELED)
+                        finish()
+                    }
+                })
             } else {
-                TODO("Throw Error?")
+                throw Exception("Unexpected response from OSM authorizer!")
             }
         } else {
-            preferences = this.getSharedPreferences("osm_oauth", android.content.Context.MODE_PRIVATE)
+            val token = preferences.getString("accessToken", null)
 
-            val token = preferences.getString("accessToken", "")
-            Log.d("oauth", token.toString())
+            if (token == null) {
+                Log.d("oauth", token.toString())
 
-            val url = oauthService.authorizationUrl
+                val url = getAuthorizationUrl()
 
-            val builder = CustomTabsIntent.Builder()
-            val customTabsIntent = builder.build()
-            customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            customTabsIntent.launchUrl(this, Uri.parse(url))
+                val builder = CustomTabsIntent.Builder()
+                val customTabsIntent = builder.build()
+                customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                customTabsIntent.launchUrl(this, Uri.parse(url))
+            } else {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        Log.d("oauth", "onNewIntent: ")
-        super.onNewIntent(intent)
-        val code = intent?.data?.getQueryParameter("code")
-        if (code != null) {
-            handleAuthorizationCode(code)
-        } else {
-            // handle error
+    fun handleAuthorizationCode(code: String, listener: Listener) {
+        Thread() {
+            val token = oauthService.getAccessToken(code)
+            preferences.edit()
+                .putString("accessToken", token.accessToken)
+                .putBoolean("authenticated", true)
+                .apply()
+
+            Log.d("oauth", token.rawResponse)
+
+            //if (token.)
+            listener.authenticationComplete()
+        }.start()
+    }
+
+    private fun getAuthorizationUrl() : String {
+        return oauthService.authorizationUrl
+    }
+
+    companion object {
+        fun clearAccessToken(ctx: Context) {
+            val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+            preferences.edit()
+                .remove("accessToken")
+                .putBoolean("authenticated", false)
+                .apply()
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d("oauth", "onPause: ")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("oauth", "onStop: ")
-    }
-
-    fun handleAuthorizationCode(code: String) {
-        val token = oauthService.getAccessToken(code)
-        preferences.edit()
-            .putString("accessToken", token.toString())
-            .apply()
-        Log.d("oauth", token.toString())
-            //.putString("tokenSecret", oAuthConsumer.getTokenSecret())
-            //.putBoolean("authenticated", true).apply()
-    }
-
-    fun clearAccessToken() {
-        TODO("Needs to be implemented")
-    }
-
-    interface Listener {
-        fun authenticationFailed()
-        fun authenticationComplete()
+        fun getAccessToken(ctx: Context): String? {
+            val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+            return preferences.getString("accessToken", null)
+        }
     }
 }
