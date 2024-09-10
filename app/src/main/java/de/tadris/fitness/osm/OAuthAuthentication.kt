@@ -6,12 +6,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import com.github.scribejava.core.builder.ScopeBuilder
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.builder.api.DefaultApi20
+import de.tadris.fitness.ui.FitoTrackActivity
 import kotlin.concurrent.thread
 
 object OsmApi : DefaultApi20() {
@@ -24,7 +23,7 @@ object OsmApi : DefaultApi20() {
     }
 }
 
-class OAuthAuthentication() : ComponentActivity() {
+class OAuthAuthentication() : FitoTrackActivity() {
     lateinit var preferences : SharedPreferences
 
     val oauthService = ServiceBuilder("rUrENrM0e12uvqK5gXYYWbNtGw-H6Ok518gjZ6JTjLA")
@@ -57,18 +56,22 @@ class OAuthAuthentication() : ComponentActivity() {
                 handleAuthorizationCode(code, object: Listener {
                     override fun authenticationComplete() {
                         setResult(Activity.RESULT_OK)
-                        finishAndReset()
+                        finish()
                     }
 
                     override fun authenticationFailed() {
                         setResult(Activity.RESULT_CANCELED)
-                        finishAndReset()
+                        finish()
                     }
                 })
             } else {
                 // User denied access
-                setResult(Activity.RESULT_CANCELED)
-                finishAndReset()
+                thread {
+                    // This sleep is important to guarantee that denying access will navigate back to the ShowGpsWorkoutActivity.
+                    Thread.sleep(1000)
+                    setResult(Activity.RESULT_CANCELED)
+                    finish()
+                }
             }
         } else {
             val token = preferences.getString("accessToken", null)
@@ -77,8 +80,7 @@ class OAuthAuthentication() : ComponentActivity() {
                 val b = !preferences.getBoolean("showingCustomTab", false)
                 if (b) {
                     val url = getAuthorizationUrl()
-                    val builder = CustomTabsIntent.Builder()
-                    val customTabsIntent = builder.build()
+                    val customTabsIntent = CustomTabsIntent.Builder().build()
                     customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                     customTabsIntent.launchUrl(this, Uri.parse(url))
                     preferences.edit().putBoolean("showingCustomTab", true).apply()
