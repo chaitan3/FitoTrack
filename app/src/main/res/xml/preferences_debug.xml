@@ -36,6 +36,6 @@
 
     <Preference
         android:key="resetOAuthToken"
-        android:title="@string/resetOAuthToken" />
+        android:title="@string/removeOAuthToken" />
 
 </PreferenceScreen>

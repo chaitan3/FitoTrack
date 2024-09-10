@@ -46,6 +46,7 @@ import de.tadris.fitness.data.BaseWorkout
 import de.tadris.fitness.data.GpsWorkout
 import de.tadris.fitness.data.IndoorWorkout
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.adapter.WorkoutAdapter
 import de.tadris.fitness.ui.adapter.WorkoutAdapter.WorkoutAdapterListener
 import de.tadris.fitness.ui.dialog.SelectWorkoutTypeDialog
@@ -272,6 +273,11 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
 
     public override fun onResume() {
         super.onResume()
+        
+        // In case the user closes the app while the OAuth CustomTab is open, it is needed to reset the state of the CustomTab.
+        // Otherwise, an error will be shown without starting the CustomTab.
+        OAuthAuthentication.resetCustomTabState(this)
+
         refresh()
     }
 

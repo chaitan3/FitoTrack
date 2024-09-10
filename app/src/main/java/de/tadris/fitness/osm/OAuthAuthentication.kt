@@ -6,10 +6,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import com.github.scribejava.core.builder.ScopeBuilder
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.builder.api.DefaultApi20
+import de.tadris.fitness.R
 import de.tadris.fitness.ui.FitoTrackActivity
 import kotlin.concurrent.thread
 
@@ -96,7 +98,7 @@ class OAuthAuthentication() : FitoTrackActivity() {
     }
 
     fun finishAndReset() {
-        preferences.edit().putBoolean("showingCustomTab", false).apply()
+        resetCustomTabState(this)
         finish()
     }
 
@@ -127,11 +129,18 @@ class OAuthAuthentication() : FitoTrackActivity() {
                 .remove("accessToken")
                 .putBoolean("authenticated", false)
                 .apply()
+
+            Toast.makeText(ctx, R.string.removedOAuthToken, Toast.LENGTH_SHORT).show()
         }
 
         fun getAccessToken(ctx: Context): String? {
             val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
             return preferences.getString("accessToken", null)
+        }
+
+        fun resetCustomTabState(ctx: Context) {
+            val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+            preferences.edit().putBoolean("showingCustomTab", false).apply()
         }
     }
 }
