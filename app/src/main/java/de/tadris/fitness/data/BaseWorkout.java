@@ -113,9 +113,9 @@ public abstract class BaseWorkout {
     // returns a file name string without suffix that can be used for exports
     public String getExportFileName() {
         if (!getSafeComment().isEmpty()) {
-            return String.format("workout-%s-%s-%s", getSafeDateString(), getSafeWorkoutTypeID(), getSafeComment());
+            return String.format("workout-%s-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle(), getSafeComment());
         } else {
-            return String.format("workout-%s-%s", getSafeDateString(), getSafeWorkoutTypeID());
+            return String.format("workout-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle());
         }
     }
 
@@ -137,8 +137,8 @@ public abstract class BaseWorkout {
     }
 
     @JsonIgnore
-    public String getSafeWorkoutTypeID() {
-        return this.workoutTypeId.replaceAll("\\P{LD}", "_");
+    public String getSafeWorkoutTypeTitle() {
+        return this.workoutType.title.replaceAll("\\P{LD}", "_");
     }
 
     @JsonIgnore
