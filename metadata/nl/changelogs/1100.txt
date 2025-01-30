@@ -1,0 +1,10 @@
+- Automatisch starten op meerdere manieren
+- Ondersteuning voor offline kaarten
+
+- Stabiliteits verbeteringen
+- "Alle" filter optie voor training statistieken
+- Voeg de "gewijzigd" vlag alleen toe aan trainingen waar de afstand, datum of tijdsduur is gewijzigd
+
+- verschillende bugs verholpen
+
+Bekijk
