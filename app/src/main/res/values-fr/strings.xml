@@ -337,7 +337,7 @@
     <string name="recordingPermissionNotGrantedMessage">FitoTrack a besoin d\'une autorisation de localisation pour suivre vos mouvements pendant votre entraînement. FitoTrack collecte également des données de localisation lorsque l\'application est en arrière-plan ou que l\'écran est éteint pour enregistrer vos entraînements. Les données de localisation restent toujours sur votre téléphone sans votre consentement clair pour les partager.</string>
     <string name="workoutAutoStartAborted">Démarrage automatique annulé</string>
     <string name="invalidNumberFormat">Format de numéro non valide.</string>
-    <string name="pref_announcements_pace_control_title">Avertissements sur le contrôle du rythme</string>
+    <string name="pref_announcements_pace_control_title">Avertissements de cadence</string>
     <string name="pref_announcements_pace_control_summary">Avertir en cas de dépassement d\'une vitesse donnée</string>
     <string name="noColoring">Pas de coloration</string>
     <string name="auto">Auto</string>
