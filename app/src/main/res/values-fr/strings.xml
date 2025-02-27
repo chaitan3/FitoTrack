@@ -398,7 +398,7 @@
     <string name="editWorkoutStartEnd">Modifier début/fin</string>
     <string name="unitHeartBeatsPerMinute">bpm</string>
     <string name="preferenceUseAverageForCurrentSpeed">Utilisez la vitesse moyenne sur une certaine période au lieu du dernier enregistrement de vitesse unique pour le calcul de la vitesse actuelle.</string>
-    <string name="preferenceCurrentSpeedAverageTimeTitle">Vitesse actuelle par moyenne</string>
+    <string name="preferenceCurrentSpeedAverageTimeTitle">Vitesse moyenne</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Remplacer la vitesse actuelle par une moyenne</string>
     <string name="preferenceCurrentSpeedTime">Durée pour le calcul de la moyenne</string>
     <string name="preferencesCategoryMap">Carte</string>
