@@ -412,7 +412,7 @@
     <string name="workoutRecordingTypeGps">Entraînements GPS</string>
     <string name="workoutMaxIntensity">Intensité max</string>
     <string name="workoutMaxFrequency">Fréquence max</string>
-    <string name="pref_render_theme_style_info">Pas de menu de thème de rendu disponible pour le thème de rendu sélectionné.</string>
+    <string name="pref_render_theme_style_info">Pas de menu disponible pour le thème sélectionné.</string>
     <string name="workoutTypeTrampolineJumping">Trampoline</string>
     <string name="workoutSets">Ensembles</string>
     <string name="fileNotFound">Fichier introuvable</string>
@@ -535,7 +535,7 @@
     <string name="pink_mist">Brume Rose</string>
     <string name="rainbow_warrior">Guerrier Arc-en-ciel</string>
     <string name="mondriaan">Mondrian</string>
-    <string name="hintConfigureExportTargets">Ajouter les destinations pour les fichiers exportés.</string>
+    <string name="hintConfigureExportTargets">Indiquer où les fichiers doivent être exportés.</string>
     <string name="show_sum">Voir la somme</string>
     <string name="workoutDistanceSum">Somme des distances</string>
     <string name="debugSensorsTitle">Debug des capteurs</string>
