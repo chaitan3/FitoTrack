@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -82,7 +82,7 @@ public class OsmTraceUploader {
             count++;
             lastSample= currentSample;
         }
-        Log.d("Uploader", "Cutted " + (last ? "last" : "first") + " " + count + " Samples (" + distance + " meters)");
+        Log.d("Uploader", "Cut " + (last ? "last" : "first") + " " + count + " Samples (" + distance + " meters)");
     }
 
     public void upload(){

@@ -1,18 +1,41 @@
+/*
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+ *
+ * This file is part of FitoTrack
+ *
+ * FitoTrack is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     FitoTrack is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package de.tadris.fitness.osm
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.edit
+import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.github.scribejava.core.builder.ScopeBuilder
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.builder.api.DefaultApi20
 import de.tadris.fitness.R
 import de.tadris.fitness.ui.FitoTrackActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 object OsmApi : DefaultApi20() {
@@ -25,11 +48,12 @@ object OsmApi : DefaultApi20() {
     }
 }
 
-class OAuthAuthentication() : FitoTrackActivity() {
+class OAuthAuthentication : FitoTrackActivity() {
+
     lateinit var preferences : SharedPreferences
 
-    val oauthService = ServiceBuilder("rUrENrM0e12uvqK5gXYYWbNtGw-H6Ok518gjZ6JTjLA")
-        .apiSecret("x-xpLlYCqm2k8VQi1NdRIj-m7mR1PA2_uHsddx7k0K8")
+    val oauthService = ServiceBuilder("kZKYrve0YEyWUZBykoG4cJGGPCWE0hn0nd0hsjjrVig")
+        .apiSecret("7ru8t1mBY77zzmZ7SiGGzek-JOdM7sHtXg9UmDkvxaE")
         .defaultScope(
             ScopeBuilder()
                 .withScope("read_gpx")
@@ -46,53 +70,74 @@ class OAuthAuthentication() : FitoTrackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferences = this.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
-    }
 
-    override fun onResume() {
-        super.onResume()
-
-        val data = intent?.data
-        if (data != null) {
-            val code = data.getQueryParameter("code")
-            if (code != null) {
-                handleAuthorizationCode(code, object: Listener {
-                    override fun authenticationComplete() {
-                        setResult(Activity.RESULT_OK)
-                        finish()
-                    }
-
-                    override fun authenticationFailed() {
-                        setResult(Activity.RESULT_CANCELED)
-                        finish()
-                    }
-                })
+        val token = preferences.getString("accessToken", null)
+        if (token == null) {
+            if (intent?.data != null) {
+                handleIntent(intent)
             } else {
-                // User denied access
-                thread {
-                    // This sleep is important to guarantee that denying access will navigate back to the ShowGpsWorkoutActivity.
-                    Thread.sleep(1000)
-                    setResult(Activity.RESULT_CANCELED)
-                    finish()
-                }
-            }
-        } else {
-            val token = preferences.getString("accessToken", null)
-
-            if (token == null) {
                 val b = !preferences.getBoolean("showingCustomTab", false)
                 if (b) {
                     val url = getAuthorizationUrl()
                     val customTabsIntent = CustomTabsIntent.Builder().build()
                     customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                    customTabsIntent.launchUrl(this, Uri.parse(url))
-                    preferences.edit().putBoolean("showingCustomTab", true).apply()
+                    customTabsIntent.launchUrl(this, url.toUri())
+                    preferences.edit {
+                        putBoolean("showingCustomTab", true)
+                    }
                 } else {
                     setResult(Activity.RESULT_CANCELED)
-                    finishAndReset()
+                    finish()
                 }
-            } else {
-                setResult(Activity.RESULT_OK)
-                finishAndReset()
+            }
+        } else {
+            setResult(Activity.RESULT_OK)
+            finishAndReset()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val token = preferences.getString("accessToken", null)
+        if (token != null) {
+            setResult(Activity.RESULT_OK)
+            finishAndReset()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.data == null) {
+            setResult(Activity.RESULT_CANCELED)
+            finishAndReset()
+        } else {
+            handleIntent(intent)
+        }
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val data = intent.data ?: return
+
+        val code = data.getQueryParameter("code")
+        if (code != null) {
+            handleAuthorizationCode(code, object : Listener {
+                override fun authenticationComplete() {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+
+                override fun authenticationFailed() {
+                    setResult(Activity.RESULT_CANCELED)
+                    finish()
+                }
+            })
+        } else {
+            // User denied access
+            lifecycleScope.launch {
+                // This sleep is important to guarantee that denying access will navigate back to the ShowGpsWorkoutActivity.
+                delay(1000)
+                setResult(Activity.RESULT_CANCELED)
+                finish()
             }
         }
     }
@@ -106,10 +151,10 @@ class OAuthAuthentication() : FitoTrackActivity() {
         thread {
             try {
                 val token = oauthService.getAccessToken(code)
-                preferences.edit()
-                    .putString("accessToken", token.accessToken)
-                    .putBoolean("authenticated", true)
-                    .apply()
+                preferences.edit {
+                    putString("accessToken", token.accessToken)
+                    putBoolean("authenticated", true)
+                }
 
                 listener.authenticationComplete()
             } catch (e: Exception) {
@@ -123,12 +168,14 @@ class OAuthAuthentication() : FitoTrackActivity() {
     }
 
     companion object {
+        private const val TAG = "OAuthAuthentication"
+
         fun clearAccessToken(ctx: Context) {
             val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
-            preferences.edit()
-                .remove("accessToken")
-                .putBoolean("authenticated", false)
-                .apply()
+            preferences.edit {
+                remove("accessToken")
+                putBoolean("authenticated", false)
+            }
 
             Toast.makeText(ctx, R.string.removedOAuthToken, Toast.LENGTH_SHORT).show()
         }
@@ -140,7 +187,9 @@ class OAuthAuthentication() : FitoTrackActivity() {
 
         fun resetCustomTabState(ctx: Context) {
             val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
-            preferences.edit().putBoolean("showingCustomTab", false).apply()
+            preferences.edit {
+                putBoolean("showingCustomTab", false)
+            }
         }
     }
 }
