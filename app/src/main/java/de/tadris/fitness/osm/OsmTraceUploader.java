@@ -26,9 +26,9 @@ import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.tadris.fitness.R;
@@ -38,9 +38,8 @@ import de.tadris.fitness.ui.dialog.ProgressDialogController;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.common.errors.OsmAuthorizationException;
 import de.westnordost.osmapi.traces.GpsTraceDetails;
-import de.westnordost.osmapi.traces.GpsTracesDao;
+import de.westnordost.osmapi.traces.GpsTracesApi;
 import de.westnordost.osmapi.traces.GpsTrackpoint;
-import oauth.signpost.OAuthConsumer;
 
 public class OsmTraceUploader {
 
@@ -51,18 +50,18 @@ public class OsmTraceUploader {
     private final GpsWorkout workout;
     private final List<GpsSample> samples;
     private final GpsTraceDetails.Visibility visibility;
-    private final OAuthConsumer consumer;
+    private final String oauthToken;
     private final boolean cut;
     private final ProgressDialogController dialogController;
     private final String description;
 
-    public OsmTraceUploader(Activity activity, Handler handler, GpsWorkout workout, List<GpsSample> samples, GpsTraceDetails.Visibility visibility, OAuthConsumer consumer, boolean cut, String description) {
+    public OsmTraceUploader(Activity activity, Handler handler, GpsWorkout workout, List<GpsSample> samples, GpsTraceDetails.Visibility visibility, String oauthToken, boolean cut, String description) {
         this.activity = activity;
         this.handler = handler;
         this.workout = workout;
         this.samples = samples;
         this.visibility = visibility;
-        this.consumer = consumer;
+        this.oauthToken = oauthToken;
         this.cut = cut;
         this.description = description;
         this.dialogController = new ProgressDialogController(activity, activity.getString(R.string.uploading));
@@ -97,7 +96,7 @@ public class OsmTraceUploader {
 
                     if (e instanceof OsmAuthorizationException) {
                         textRes = R.string.uploadFailedOsmNotAuthorized;
-                        new OAuthAuthentication(handler, activity, null).clearAccessToken();
+                        OAuthAuthentication.Companion.clearAccessToken(activity);
                     }
 
                     Toast.makeText(activity, textRes, Toast.LENGTH_LONG).show();
@@ -113,18 +112,23 @@ public class OsmTraceUploader {
         if(cut){ cut(); }
         setProgress(20);
         OsmConnection osm = new OsmConnection(
-                "https://api.openstreetmap.org/api/0.6/", "FitoTrack", consumer);
+                "https://api.openstreetmap.org/api/0.6/", "FitoTrack", oauthToken);
 
-        List<GpsTrackpoint> trackpoints= new ArrayList<>();
+        List<GpsTrackpoint> trackpoints= new LinkedList<>();
 
         for (GpsSample sample : samples) {
-            GpsTrackpoint trackpoint = new GpsTrackpoint(new GpsTraceLatLong(sample));
-            trackpoint.time = new Date(sample.absoluteTime);
-            trackpoint.elevation = (float) sample.elevation;
+            GpsTrackpoint trackpoint = new GpsTrackpoint(
+                    new GpsTraceLatLong(sample),
+                    Instant.ofEpochMilli(sample.absoluteTime),
+                    sample == samples.get(0),
+                    (float)0,
+                    (float) sample.elevation
+                    );
             trackpoints.add(trackpoint);
         }
         setProgress(25);
-        new GpsTracesDao(osm).create(workout.getDateString(), visibility, description, Collections.singletonList("FitoTrack"), trackpoints);
+
+        new GpsTracesApi(osm).create(workout.getDateString(), visibility, description, Collections.singletonList("FitoTrack"), trackpoints);
         setProgress(100);
         handler.post(() -> {
             Toast.makeText(activity, R.string.uploadSuccessful, Toast.LENGTH_LONG).show();
