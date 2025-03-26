@@ -46,7 +46,7 @@
     <string name="timeHourShort">godz.</string>
     <string name="timeHourPlural">Godziny</string>
     <string name="timeHourSingular">Godzina</string>
-    <string name="timeMinuteShort">min.</string>
+    <string name="timeMinuteShort">min</string>
     <string name="timeMinutePlural">Minuty</string>
     <string name="timeMinuteSingular">Minuta</string>
     <string name="setPreferencesMessage">Możesz ustawić swój preferowany system jednostek i wagę w ustawieniach.</string>
