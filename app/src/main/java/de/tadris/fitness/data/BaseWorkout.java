@@ -113,9 +113,9 @@ public abstract class BaseWorkout {
     // returns a file name string without suffix that can be used for exports
     public String getExportFileName() {
         if (!getSafeComment().isEmpty()) {
-            return String.format("workout-%s-%s", getSafeDateString(), getSafeComment());
+            return String.format("workout-%s-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle(), getSafeComment());
         } else {
-            return String.format("workout-%s", getSafeDateString());
+            return String.format("workout-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle());
         }
     }
 
@@ -132,8 +132,13 @@ public abstract class BaseWorkout {
     @JsonIgnore
     public String getSafeComment() {
         if (comment == null) return "";
-        String safeComment = this.comment.replaceAll("[^0-9a-zA-Z-_]+", "_"); // replace all unwanted chars by `_`
+        String safeComment = this.comment.replaceAll("\\P{LD}", "_"); // leave Unicode letters & digits, replace other chars by "_"
         return safeComment.substring(0, Math.min(safeComment.length(), 50)); // cut the comment after 50 Chars
+    }
+
+    @JsonIgnore
+    public String getSafeWorkoutTypeTitle() {
+        return this.workoutType.title.replaceAll("\\P{LD}", "_");
     }
 
     @JsonIgnore
