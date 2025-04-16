@@ -442,7 +442,7 @@
     <string name="trackable_visibility">可追踪</string>
     <string name="kcal_unit">千卡</string>
     <string name="only_on_headphones_mode">仅在耳机上</string>
-    <string name="humanitarian_clean_map_but_sometimes_not_available">人道主义\n干净地图，但并不总是可用</string>
+    <string name="humanitarian_clean_map_but_sometimes_not_available">人道主义 \n干净地图，但并不总是可用</string>
     <string name="pink_mist">粉色雾</string>
     <string name="system_theme">系统</string>
     <string name="imperial_unit_system">英制</string>
@@ -524,4 +524,6 @@
         <item quantity="other">一个卫星</item>
     </plurals>
     <string name="askForComment">请求备注</string>
+    <string name="removeOAuthToken">移除 OAuth 令牌</string>
+    <string name="removedOAuthToken">已移除 OAuth 令牌</string>
 </resources>

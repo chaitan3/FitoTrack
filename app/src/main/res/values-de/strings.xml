@@ -544,4 +544,6 @@
     <string name="workoutTypePullUps">Klimmzüge</string>
     <string name="askForCommentSummary">Nach einem Kommentar fragen, wenn ein Workout beendet wird</string>
     <string name="askForComment">Nach Kommentar fragen</string>
+    <string name="removedOAuthToken">OAuth-Token entfernt</string>
+    <string name="removeOAuthToken">OAuth-Token entfernen</string>
 </resources>

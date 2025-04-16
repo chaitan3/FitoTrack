@@ -534,4 +534,6 @@
     <string name="workoutDurationPrecisionToSeconds">Időtartam pontossága másodpercekre</string>
     <string name="askForCommentSummary">Megjegyzés megadásának kérése a rögzítés leállításakor</string>
     <string name="askForComment">Megjegyzés kérése</string>
+    <string name="removeOAuthToken">OAuth Token eltávolítása</string>
+    <string name="removedOAuthToken">OAuth Token eltávolítva</string>
 </resources>

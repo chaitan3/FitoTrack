@@ -531,4 +531,6 @@
     <string name="workoutDurationPrecisionToSeconds">Тривалість з точністю до секунд</string>
     <string name="askForComment">Запитувати коментар</string>
     <string name="askForCommentSummary">Запитувати введення коментаря при завершенні запису</string>
+    <string name="removeOAuthToken">Вилучити OAuth токен</string>
+    <string name="removedOAuthToken">OAuth токен вилучено</string>
 </resources>

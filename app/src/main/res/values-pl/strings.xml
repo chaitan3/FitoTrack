@@ -46,7 +46,7 @@
     <string name="timeHourShort">godz.</string>
     <string name="timeHourPlural">Godziny</string>
     <string name="timeHourSingular">Godzina</string>
-    <string name="timeMinuteShort">min.</string>
+    <string name="timeMinuteShort">min</string>
     <string name="timeMinutePlural">Minuty</string>
     <string name="timeMinuteSingular">Minuta</string>
     <string name="setPreferencesMessage">Możesz ustawić swój preferowany system jednostek i wagę w ustawieniach.</string>
@@ -550,4 +550,6 @@
     <string name="workoutDurationPrecisionToSeconds">Dokładność czasu trwania do sekund</string>
     <string name="askForComment">Pytaj o komentarz</string>
     <string name="askForCommentSummary">Poproś o wpisanie komentarza podczas zatrzymywania nagrywania</string>
+    <string name="removeOAuthToken">Usuń OAuth Token</string>
+    <string name="removedOAuthToken">Usunięto OAuth Token</string>
 </resources>

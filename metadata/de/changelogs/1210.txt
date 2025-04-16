@@ -1,0 +1,1 @@
+Diese Version repariert die Verbindung zu nicht gekoppelten Bluetooth-Geräten.

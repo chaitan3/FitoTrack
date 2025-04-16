@@ -309,9 +309,9 @@
     <string name="pref_auto_start_mode_title">Režim automatického spuštění</string>
     <string name="intervalAutoStartModeTraining">Režim automatického spuštění tréninku</string>
     <string name="manageAutoStartModeSummary">Změnit režim automatického spuštění tréninku</string>
-    <string name="ttsMinuteSecondCountdownAnnouncement"> \u0020<xliff:g example="1 minute" id="mins">%1$s</xliff:g> a <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> do startu \u0020</string>
-    <string name="ttsMinuteCountdownAnnouncement"> \u0020<xliff:g example="12 minutes" id="mins">%1$s</xliff:g> do startu \u0020</string>
-    <string name="ttsLongSecondCountdownAnnouncement"> \u0020<xliff:g example="5 seconds" id="secs">%1$s</xliff:g> do startu \u0020</string>
+    <string name="ttsMinuteSecondCountdownAnnouncement"><xliff:g example="1 minute" id="mins">%1$s</xliff:g> a <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> do startu</string>
+    <string name="ttsMinuteCountdownAnnouncement"><xliff:g example="12 minutes" id="mins">%1$s</xliff:g> do startu</string>
+    <string name="ttsLongSecondCountdownAnnouncement"><xliff:g example="5 seconds" id="secs">%1$s</xliff:g> do startu</string>
     <plurals name="minutes">
         <item quantity="one"><xliff:g example="1" id="mins">%1$d</xliff:g> minuta</item>
         <item quantity="few"><xliff:g example="5" id="mins">%1$d</xliff:g> minuty</item>
@@ -541,4 +541,6 @@
     <string name="workoutDurationPrecisionToSeconds">Přesnost doby trvání na sekundy</string>
     <string name="askForCommentSummary">Zeptat se na zadání komentáře po zastavení nahrávání</string>
     <string name="askForComment">Ptát se na komentář</string>
+    <string name="removeOAuthToken">Odstranit token OAuth</string>
+    <string name="removedOAuthToken">Token OAuth odstraněn</string>
 </resources>
