@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -113,6 +113,7 @@ public class BackupSettingsFragment extends FitoTrackSettingFragment {
         exportTask(progressDialog -> {
             File file = DataManager.createSharableFile(getContext(), "workouts.zip");
             new MassExporter(
+                    requireContext(),
                     Instance.getInstance(getContext()).db.gpsWorkoutDao(),
                     new GpxExporter(),
                     file,

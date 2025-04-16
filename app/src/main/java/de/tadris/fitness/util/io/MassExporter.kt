@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -19,6 +19,7 @@
 
 package de.tadris.fitness.util.io
 
+import android.content.Context
 import de.tadris.fitness.data.GpsWorkout
 import de.tadris.fitness.data.GpsWorkoutDao
 import de.tadris.fitness.data.GpsWorkoutData
@@ -28,6 +29,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 class MassExporter(
+    private val context: Context,
     private val gpsWorkoutDao: GpsWorkoutDao,
     private val export: IWorkoutExporter,
     file: File,
@@ -50,7 +52,8 @@ class MassExporter(
 
     private fun exportWorkout(index: Int, workout: GpsWorkout){
         val data = GpsWorkoutData.fromWorkout(gpsWorkoutDao, workout)
-        val zipEntryName = String.format("%05d", index) + "_" + workout.exportFileName + ".gpx";
+        val zipEntryName =
+            String.format("%05d", index) + "_" + workout.getWorkoutType(context) + ".gpx";
         val entry = ZipEntry(zipEntryName)
 
         zipOut.putNextEntry(entry)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -23,15 +23,14 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.data.GpsWorkoutData
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.io.general.IOHelper
-import java.io.File
-import java.io.IOException
 
 class WorkoutGpxExportSource(private val workoutId: Long) : ExportSource {
 
     override fun provideFile(context: Context): ExportSource.ExportedFile {
         val workout = Instance.getInstance(context).db.gpsWorkoutDao().getWorkoutById(workoutId)
         val data = GpsWorkoutData.fromWorkout(context, workout)
-        val file = DataManager.createSharableFile(context, workout.exportFileName + ".gpx")
+        val file =
+            DataManager.createSharableFile(context, workout.getExportFileName(context) + ".gpx")
         IOHelper.GpxExporter.exportWorkout(data, file)
 
         return ExportSource.ExportedFile(

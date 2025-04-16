@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -111,11 +111,11 @@ public abstract class BaseWorkout {
     public long intervalSetUsedId = 0;
 
     // returns a file name string without suffix that can be used for exports
-    public String getExportFileName() {
+    public String getExportFileName(Context context) {
         if (!getSafeComment().isEmpty()) {
-            return String.format("workout-%s-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle(), getSafeComment());
+            return String.format("workout-%s-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle(context), getSafeComment());
         } else {
-            return String.format("workout-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle());
+            return String.format("workout-%s-%s", getSafeDateString(), getSafeWorkoutTypeTitle(context));
         }
     }
 
@@ -137,8 +137,8 @@ public abstract class BaseWorkout {
     }
 
     @JsonIgnore
-    public String getSafeWorkoutTypeTitle() {
-        return this.workoutType.title.replaceAll("\\P{LD}", "_");
+    public String getSafeWorkoutTypeTitle(Context context) {
+        return this.getWorkoutType(context).title.replaceAll("\\P{LD}", "_");
     }
 
     @JsonIgnore
