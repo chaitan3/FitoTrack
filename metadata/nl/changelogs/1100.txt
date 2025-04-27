@@ -7,4 +7,4 @@
 
 - verschillende bugs verholpen
 
-Bekijk
+Bekijk de project repository op Codeberg voor een meer gedetailleerde lijst van wijzigingen
