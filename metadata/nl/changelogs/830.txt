@@ -1,0 +1,5 @@
+- Privacybeleid toegevoegd
+- Correctie van GPX-Export bestanden opslaan op Android <10
+- Aanpassing in aanvragen van locatietoestemming om te voldoen aan de nieuwe Google Play-regels
+
+- Bijgewerkte vertalingen

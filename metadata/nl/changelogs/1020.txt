@@ -1,0 +1,3 @@
+Deze update introduceert een oplossing voor een bug die op sommige apparaten optrad, waardoor FitoTrack niet gebruikt kon worden omdat GPS niet werd gevonden, zelfs niet als het apparaat een goed GPS-signaal krijgt.
+
+Als je denkt dat dit nog steeds niet is opgelost, open dan een probleem in de projectrepository of stuur me een e-mail. Bedankt.

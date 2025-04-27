@@ -1,0 +1,10 @@
+Nieuw:
+- Spraakaankondigingen: geeft u optioneel updates over uw huidige training
+
+Verbeteringen:
+- Maak duidelijk dat workout comments bewerkt kunnen worden
+- Handle ongeldige OSM authenticatie
+- Uitgeschakeld automatisch pauzeren wanneer er geen GPS is (voorkom slechte resultaten)
+
+Lokalisatie:
+- Spaanse vertaling

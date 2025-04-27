@@ -1,0 +1,4 @@
+- Scherm om hoogte/hoogte diagram en de kaart te vergelijken
+- Toon overlay als GPS-signaal nog niet is gevonden
+- Stel de voorkeurskaartlaag in (#15)
+- Versnel de gegevensimport

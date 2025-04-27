@@ -1,0 +1,11 @@
+- App-pictogram met thema en snelkoppelingen in het opstartprogramma
+- Pull-ups toegevoegd
+- Statistieken in de trainingslijst zijn verborgen bij het naar beneden scrollen
+- Twee decimalen voor snelheid in het trainingsoverzicht
+- Herbereken de duur en pauzetijden voor een consistente duur
+- Probleem opgelost waarbij de GPX-massa-export mislukte bij dubbele bestandsnamen
+- Hartslagen correct aflezen van GPX-bestanden
+- Gebruik voorkeur "eerste dag van de week" bij statistieken
+- Oekraïens toegevoegd
+
+zie de projectrepository op Codeberg voor een volledige lijst met wijzigingen

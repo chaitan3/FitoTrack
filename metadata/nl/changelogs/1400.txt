@@ -1,0 +1,8 @@
+- Automatische GPX-export en app-back-ups
+- Kaart inzoomen en pannen
+- Aangepaste statistieken op het scherm Delen
+- Bluetooth-sensorbatterij indien beschikbaar
+- Back-ups comprimeren
+- Bugfixes
+
+Zie de projectrepository op Codeberg voor een meer gedetailleerde lijst met wijzigingen

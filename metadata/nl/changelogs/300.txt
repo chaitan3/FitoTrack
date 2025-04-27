@@ -1,0 +1,8 @@
+Nieuw:
+- Upload trainingen als GPS-tracks naar OpenStreetMap (#24)
+- Automatische trainingsstop (#23)
+
+Verbeteringen:
+- Repareer het imperiale gewicht (#26)
+- Beter kaartgedrag bij analyseschermen
+- Betere calorieberekening

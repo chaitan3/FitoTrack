@@ -1,0 +1,6 @@
+- Nieuw statistiekscherm, revisie van grafieken en snelheidshistogram
+- Massa-export GPX-bestanden
+- Zwemmen toegevoegd als standaardtype
+- Nog veel meer verbeteringen:)
+
+Zie de projectrepository op Codeberg voor een volledige lijst met wijzigingen

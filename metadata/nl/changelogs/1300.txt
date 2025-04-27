@@ -1,0 +1,10 @@
+- Indoor trainingen bijhouden
+  - momenteel ondersteund: Loopband, Pus- ups, Rope Skipping en Trampolinespringen
+- Ondersteuning voor het weergeven van zip-thema's voor offline kaart / aanpassing
+
+- Accepteer bestandsintenties:GPX-bestanden delen en openen vanuit andere apps
+- Trainingstypen sorteren op laatste gebruik
+- Beginnen met training tijdens "wachten op GPS"
+- Meer verbeteringen en bugfixes...
+
+Zie de projectrepository op Codeberg voor een meer gedetailleerde lijst van wijzigingen

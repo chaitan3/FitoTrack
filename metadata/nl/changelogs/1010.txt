@@ -1,0 +1,10 @@
+- Stoppunten (pauzes) weergeven op de kaart op volledig scherm
+
+- Pictogrammen voor paardrijden en skiën
+- Betere prestaties bij weergave van lange workouts
+- Importeren van meerdere workouts via het hoofdscherm
+- Importeren van alle routes uit GPX-bestand
+
+- Importeren van trainingstypen uit back-ups
+
+Zie de projectrepository op Codeberg voor meer gedetailleerde lijst van wijzigingen

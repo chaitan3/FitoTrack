@@ -1,0 +1,4 @@
+- Hopelijk een correctie van een crash bij het importeren van GPX-bestanden bij oudere Java-versies
+- Correctie van probleem met lengte en calorie
+
+- Franse taal bijgewerkt

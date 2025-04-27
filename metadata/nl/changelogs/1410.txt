@@ -1,0 +1,7 @@
+Deze update bevat veel bugfixes en kleine verbeteringen zoals
+- Probeer een bug te repareren waarbij FitoTrack niets zou opnemen
+- Debug-logboekregistratie
+- Kaartzoomen via volumeknoppen is nu optioneel
+- Repareer GPX-formaat
+
+Zie de projectrepository op Codeberg voor een volledige lijst met wijzigingen

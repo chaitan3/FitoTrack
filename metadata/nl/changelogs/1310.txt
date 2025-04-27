@@ -1,0 +1,3 @@
+- Correctie van crash op Android-versies onder Oreo (< 8)
+- Correctie van crash bij het opslaan van trainingen die werden onderbroken
+- Correctie van audiofocus

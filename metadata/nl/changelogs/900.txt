@@ -1,0 +1,11 @@
+- Hartslagmeting toegevoegd
+- Hartslagen importeren/exporteren van/naar GPX-bestanden
+- Gestopte trainingen hervatten
+- Autopauze uitschakelen en handmatige pauzeoptie gebruiken
+- Nieuwe aankondiging: veranderingen in de trainingsstatus zoals starten, pauzeren, hervatten
+
+- Verbeterd grafiekscherm
+- Kaart schalen op basis van de schermgrootte
+- Optie "tonen op vergrendelscherm" (standaard uitgeschakeld)
+
+Zie de projectrepository op Codeberg voor meer wijzigingen

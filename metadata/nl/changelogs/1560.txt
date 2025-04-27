@@ -1,0 +1,2 @@
+- Correctie van crash bij het starten van trainingen
+- Vertalingen bijgewerkt

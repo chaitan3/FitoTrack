@@ -1,0 +1,6 @@
+- Trainingsstatistieken
+- GPX-bestanden importeren
+- Splits de training op in secties/ronden
+- Back-ups samenvoegen tot de huidige staat
+
+Zie de projectrepository op Codeberg voor meer wijzigingen

@@ -1,0 +1,12 @@
+Verbeteringen:
+- Optie om back-up op te slaan in interne opslag (#29)
+- Maak duidelijk dat opmerkingen over trainingen kunnen worden bewerkt (#34)
+- Tempo in het formaat MM'SS" (#36)
+- Houd rekening met de stijgwaarde bij het berekenen van calorieën (#39)
+
+Bugfixes:
+- Bug Imperial-eenheden verkeerd (#42)
+- Trainingslijst wordt niet goed vernieuwd (#37)
+
+Taal:
+- Spaanse vertaling bijgewerkt (#43)

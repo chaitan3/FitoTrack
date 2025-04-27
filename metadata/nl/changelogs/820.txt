@@ -1,0 +1,7 @@
+- Meerdere workouts importeren
+
+- Correctie toestemmingsdialoogvenster op Android <10
+- Vernieuw de aangeklikte training wanneer u terugkeert naar de trainingslijst
+- Correctie van Formaat het dialoogvenster voor de aankondiging
+
+- Vertalingen bijgewerkt

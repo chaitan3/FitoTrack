@@ -1,0 +1,5 @@
+- Activiteit Skateboarden toegevoegd
+- Verloren trainingen herstellen
+- Verschillende stabiliteitsproblemen bij het opnemen opgelost
+
+Zie de projectrepository op Codeberg voor meer wijzigingen

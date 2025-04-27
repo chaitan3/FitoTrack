@@ -1,0 +1,16 @@
+Nieuwe functies:
+- Handmatig workouts toevoegen (#53)
+- Donkere modus (#48)
+
+Verbeteringen:
+- Hoogte-correctie
+- Detecteer bluetooth headsets (#51)
+- Toon opname op vergrendelscherm (#45)
+- OpenStreetMap attributie in het opnamescherm (#52)
+
+Opgeloste problemen:
+- Verkeerde snelheidswaarden nadat het GPS-signaal enige tijd wegviel (#47)
+
+Lokalisatie:
+- Update Nederlands met dank aan albertheres en didierm (#57, #58)
+- Update Hongaars met dank aan urbalazs (#59)

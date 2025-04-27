@@ -1,0 +1,6 @@
+- Voorkeur om het commentaardialoogvenster uit te schakelen bij het beëindigen van trainingen
+- Spreek optioneel seconden in de duuraankondiging
+- Tempo/duur werd niet correct weergegeven in het scherm Delen
+- Gebruik nieuwe API voor het schuine scherm
+- Optimaliseren voor Android 14
+- Bijgewerkte vertalingen

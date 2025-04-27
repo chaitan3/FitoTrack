@@ -1,0 +1,8 @@
+- Roeien toegevoegd
+- Ondersteuning voor Android 10
+
+- Correctie van GPX import / export op oudere Android-apparaten
+- Correctie van tempo spraakaankondiging
+- Kleine verbeteringen in de lay-out
+
+- Russisch (deels) toegevoegd

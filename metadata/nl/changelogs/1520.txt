@@ -1,0 +1,4 @@
+- Ondersteuning voor Android 13
+- Einde van training bevestigen
+- Correcties van bugs en crashes dankzij @keesj
+- Bijgewerkte vertalingen

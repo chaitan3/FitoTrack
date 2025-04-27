@@ -1,0 +1,4 @@
+- Trainingsstatistieken: toon opgetelde waarden als balken
+- Trainingsstatistieken: open een trainingssamenvatting wanneer u op één enkele training klikt
+- Gem. Snelheid in laatste minuut als steminformatie
+- Correctie van de automatische pauze, die ook veel ruis opleverde in het snelheids- en hoogtediagram

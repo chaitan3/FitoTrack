@@ -1,0 +1,11 @@
+Nieuwe functies:
+- Startknop voor trainingen
+- Interval aankondigingen
+- Aangepaste InfoViews in het opnamescherm
+- Ondersteuning Inline Skaten als activiteit
+
+- Voeg een nieuwe optie toe aan de instellingen om de datum- en tijdnotatie te selecteren
+- Pictogram dat activiteit aangeeft
+- Instelling voor energie-eenheden (kcal/J) en Verkeerde spelling van afstands- en tijdseenheden
+
+Zie de projectrepository op Codeberg voor meer wijzigingen

@@ -1,0 +1,2 @@
+- Correctie van crash op Android-versies onder Oreo (< 8)
+- Vertalingen bijgewerkt

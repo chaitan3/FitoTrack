@@ -1,0 +1,1 @@
+- Repareer trainingen die niet worden weergegeven na opname (#25)

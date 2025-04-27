@@ -1,0 +1,6 @@
+- Time-outinstelling voor training
+- Huidige tijd als TTS-informatie
+- Geëxporteerde bestanden bevatten startdatum en opmerking
+- Veel betere volgstabiliteit
+
+Zie de projectrepository op Codeberg voor meer wijzigingen

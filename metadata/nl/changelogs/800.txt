@@ -1,0 +1,10 @@
+- Trainingen bewerken: type, afstand, duur
+- "Over"-scherm
+- VS eenheid met voeten toegevoegd
+- Tempo als weergegeven informatie en gesproken aankondiging
+
+- ThunderForest-kaartenverwijderd vanwege licenties
+- Bugfixes / stabiliteit en UI/UX-verbeteringen
+- Deens toegevoegd, Nederlands bijgewerkt
+
+Zie de projectrepository op Codeberg voor meer wijzigingen

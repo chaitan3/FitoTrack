@@ -1,0 +1,8 @@
+- Scannen naar niet-gekoppelde Bluetooth-apparaten
+- Trainingen knippen
+- Routekleuren
+- Optie om snelheid in de tijd te berekenen
+- Pacekeeper die je informeert dat je te langzaam/te snel loopt
+- Intervallen bewerken
+
+Zie de projectrepository op Codeberg voor een meer gedetailleerde lijst van wijzigingen

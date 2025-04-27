@@ -1,0 +1,9 @@
+Eerste release
+
+- Trainingen opnemen
+- Lijsten van trainingen
+- Trainingsgegevens (kaart, snelheidsdiagram, energie) + Verwijderen
+- Gegevens importeren/exporteren
+- Trainingen exporteren als GPX
+- Eenheden wisselen
+- Gewicht aanpassen
