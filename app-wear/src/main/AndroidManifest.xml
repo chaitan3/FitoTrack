@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-feature android:name="android.hardware.type.watch" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.App.Starting" >
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+        <activity
+            android:name=".ui.Main"
+            android:taskAffinity=".Main"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.workouts.WorkoutsActivity"
+            android:taskAffinity=".Main"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.workouts.WorkoutActivity"
+            android:taskAffinity=".Main"
+            android:noHistory="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.record.RecordActivity"
+            android:taskAffinity=".Main"
+            android:launchMode="singleTop"
+            android:theme="@style/WearNoBack" />
+        <activity
+            android:name=".ui.record.TypeSelectActivity"
+            android:taskAffinity=".RecordActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.record.TargetActivity"
+            android:taskAffinity=".RecordActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.record.SettingsActivity"
+            android:taskAffinity=".Main"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.settings.MenuSettings"
+            android:taskAffinity=".Main"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.settings.MenuMaps"
+            android:taskAffinity=".MenuSettings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.settings.MenuMapsDownload"
+            android:taskAffinity=".MenuSettings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.settings.MapDownload"
+            android:taskAffinity=".MenuSettings"
+            android:theme="@style/AppTheme" />
+        <service
+            android:name=".util.CommsBT"
+            android:exported="false" />
+        <service
+            android:name=".ui.record.RecordService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
+    </application>
+</manifest>

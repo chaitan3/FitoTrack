@@ -47,6 +47,15 @@ public class WorkoutTypeManager {
     public static final String WORKOUT_TYPE_ID_TRAMPOLINE_JUMPING = "trampoline_jumping";
     public static final String WORKOUT_TYPE_ID_PUSH_UPS = "push-ups";
     public static final String WORKOUT_TYPE_ID_PULL_UPS = "pull-ups";
+    public static final String WORKOUT_TYPE_ID_CLIMBING = "climbing";
+    public static final String WORKOUT_TYPE_ID_SKIING = "skiing";
+    public static final String WORKOUT_TYPE_ID_SNOWBOARDING = "snowboarding";
+    public static final String WORKOUT_TYPE_ID_SNOWSHOEING = "snowshoeing";
+    public static final String WORKOUT_TYPE_ID_WINDSURFING = "windsurfing";
+
+    public static final List<String> HIDDEN_FROM_SELECTION = Arrays.asList(
+            WORKOUT_TYPE_ID_CLIMBING
+    );
 
     private final List<WorkoutType> allWorkoutTypes = new ArrayList<>();
 
@@ -88,8 +97,10 @@ public class WorkoutTypeManager {
         return retType;
     }
 
-    public List<WorkoutType> getAllTypesSorted(Context context) {
+    public List<WorkoutType> getAllSelectableTypesSorted(Context context) {
         List<WorkoutType> list = getAllTypes(context);
+        list.removeIf(workoutType -> HIDDEN_FROM_SELECTION.contains(workoutType.id));
+
         AppDatabase db = Instance.getInstance(context).db;
         Collections.sort(list, (o1, o2) -> -Long.compare(db.getLastWorkoutTimeByType(o1.id), db.getLastWorkoutTimeByType(o2.id)));
 
@@ -209,7 +220,38 @@ public class WorkoutTypeManager {
                         context.getResources().getColor(R.color.colorPrimary),
                         Icon.PULL_UPS.name,
                         6, RecordingType.INDOOR.id,
-                        R.plurals.workoutPullUp)));
+                        R.plurals.workoutPullUp),
+                new WorkoutType(WORKOUT_TYPE_ID_CLIMBING,
+                        context.getString(R.string.workoutTypeClimbing),
+                        1,
+                        context.getResources().getColor(R.color.colorPrimary),
+                        Icon.CLIMB.name,
+                        8, RecordingType.INDOOR.id,
+                        R.plurals.workoutClimb),
+                new WorkoutType(WORKOUT_TYPE_ID_SKIING,
+                        context.getString(R.string.workoutTypeSkiing),
+                        1,
+                        context.getResources().getColor(R.color.colorPrimary),
+                        Icon.DOWNHILL_SKI.name,
+                        5, RecordingType.GPS.id),
+                new WorkoutType(WORKOUT_TYPE_ID_SNOWBOARDING,
+                        context.getString(R.string.workoutTypeSnowboarding),
+                        1,
+                        context.getResources().getColor(R.color.colorPrimary),
+                        Icon.SNOWBOARD.name,
+                        5, RecordingType.GPS.id),
+                new WorkoutType(WORKOUT_TYPE_ID_SNOWSHOEING,
+                        context.getString(R.string.workoutTypeSnowshoeing),
+                        1,
+                        context.getResources().getColor(R.color.colorPrimary),
+                        Icon.SNOWSHOE.name,
+                        5, RecordingType.GPS.id),
+                new WorkoutType(WORKOUT_TYPE_ID_WINDSURFING,
+                        context.getString(R.string.workoutTypeWindsurfing),
+                        1,
+                        context.getResources().getColor(R.color.colorPrimaryWaterSports),
+                        Icon.WINDSURF.name,
+                        3, RecordingType.GPS.id)));
     }
 
 }

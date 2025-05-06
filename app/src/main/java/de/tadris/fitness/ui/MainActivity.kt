@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         if (showWorkoutTypeDialog) {
-            val types = remember { WorkoutTypeManager.getInstance().getAllTypesSorted(this) }
+            val types = remember { WorkoutTypeManager.getInstance().getAllSelectableTypesSorted(this) }
             WorkoutTypePickerDialog(
                 types = types,
                 onDismiss = { showWorkoutTypeDialog = false },

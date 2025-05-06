@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF"
+    android:alpha="0.8">
+  <path
+      android:pathData="m17.721,4.848c0.981,0.182 1.933,-0.473 2.115,-1.454 0.182,-0.981 -0.473,-1.933 -1.454,-2.115 -0.981,-0.182 -1.933,0.473 -2.115,1.454 -0.182,0.981 0.473,1.933 1.454,2.115zM13.859,7.27 L11.906,12.07 6.809,14.856 7.652,16.627 14.007,13.214 15.376,15.025 14.385,20.379 16.315,20.389 17.408,14.017 15.865,11.886 16.896,9.309c0.912,1.553 2.532,2.776 4.494,3.139l0.33,-1.784c-1.695,-0.314 -2.958,-1.47 -3.44,-2.851l-0.628,-1.593c-0.258,-0.601 -0.727,-1.057 -1.352,-1.173 -0.875,0.032 -6.834,1.253 -9.59,1.722l0.347,1.727c2.27,-0.396 4.539,-0.794 6.802,-1.224"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="m17.443,20.897c0.574,0.314 1.193,0.546 1.873,0.665 0.827,0.146 1.656,0.109 2.431,-0.079l0.907,1.307c-1.13,0.359 -2.357,0.468 -3.598,0.249 -0.847,-0.149 -1.63,-0.43 -2.342,-0.829L3.766,14.728 4.503,13.426c4.329,2.462 8.607,5.014 12.939,7.47z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="M5.118,13.8C4.559,13.46 4.049,13.039 3.606,12.511 3.066,11.867 2.683,11.131 2.459,10.366L0.873,10.235c0.254,1.158 0.773,2.275 1.583,3.24 0.553,0.659 1.187,1.197 1.889,1.613 0,0 5.066,1.235 0.773,-1.288z"
+      android:fillColor="#FFFFFFFF"/>
+</vector>

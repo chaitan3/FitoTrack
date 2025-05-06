@@ -55,6 +55,10 @@ public enum Icon {
     TRAMPOLINE_JUMPING("trampoline_jumping", R.drawable.ic_trampoline_jumping),
     WHEELCHAIR("wheelchair", R.drawable.ic_wheelchair),
     WHEELCHAIR_FAST("wheelchair_fast", R.drawable.ic_wheelchair_fast),
+    CLIMB("climbing", R.drawable.ic_climbing),
+    SNOWBOARD("snowboarding", R.drawable.ic_snowboarding),
+    SNOWSHOE("snowshoeing", R.drawable.ic_snowshoeing),
+    WINDSURF("windsurfing", R.drawable.ic_windsurfing),
     OTHER("other", R.drawable.ic_other);
 
     public final String name;

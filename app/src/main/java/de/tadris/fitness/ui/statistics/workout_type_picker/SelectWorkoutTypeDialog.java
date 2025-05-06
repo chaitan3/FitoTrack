@@ -41,7 +41,7 @@ public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAd
     public SelectWorkoutTypeDialog(Activity context, WorkoutTypeSelectListener listener) {
         this.context = context;
         this.listener = listener;
-        this.options = WorkoutTypeManager.getInstance().getAllTypesSorted(context);
+        this.options = WorkoutTypeManager.getInstance().getAllSelectableTypesSorted(context);
     }
 
     public void show() {

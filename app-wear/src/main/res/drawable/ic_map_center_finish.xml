@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:strokeWidth="1"
+      android:pathData="M2,2H8V4H4V8H2Z"
+      android:fillColor="@color/textDarkerWhite"
+      android:strokeColor="@color/ic_border"/>
+  <path
+      android:strokeWidth="1"
+      android:pathData="M22,2V8H20V4H16V2Z"
+      android:fillColor="@color/textDarkerWhite"
+      android:strokeColor="@color/ic_border"/>
+  <path
+      android:strokeWidth="1"
+      android:pathData="m2,22v-6h2v4h4v2z"
+      android:fillColor="@color/textDarkerWhite"
+      android:strokeColor="@color/ic_border"/>
+  <path
+      android:strokeWidth="1"
+      android:pathData="m22,22h-6v-2h4v-4h2z"
+      android:fillColor="@color/textDarkerWhite"
+      android:strokeColor="@color/ic_border"/>
+  <path
+      android:fillColor="@color/textDarkerWhite"
+      android:pathData="m9.5,12c0,0.828 -0.671,1.5 -1.5,1.5 -0.414,0 -0.789,-0.168 -1.06,-0.44H2v-2.12l4.94,-0c0.271,-0.271 0.646,-0.439 1.06,-0.439 0.828,0 1.5,0.671 1.5,1.5z"
+      android:strokeWidth="1"
+      android:strokeColor="@color/ic_border"/>
+  <path
+      android:fillColor="@color/textDarkerWhite"
+      android:pathData="m14.5,12c0,0.828 0.671,1.5 1.5,1.5 0.414,0 0.789,-0.168 1.06,-0.44h4.94v-2.12l-4.94,-0c-0.271,-0.271 -0.646,-0.439 -1.06,-0.439 -0.828,0 -1.5,0.671 -1.5,1.5z"
+      android:strokeWidth="1"
+      android:strokeColor="@color/ic_border"/>
+</vector>

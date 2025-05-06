@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/summary"
+            android:textColor="#fff"
+            android:textSize="22sp" />
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/minTouchSize"
+            android:gravity="center"
+            android:contentDescription="@string/workout_type_icon" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/duration"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/duration_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="@string/screen_summary_duration_desc"
+            android:textColor="@color/textWhite"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/textWhite"
+            android:textSize="20sp" />
+        <LinearLayout
+            android:id="@+id/gps"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/distance"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/textWhite"
+                android:textSize="20sp" />
+            <Button
+                android:id="@+id/map_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_dark"
+                android:text="@string/show_map"
+                android:textColor="@color/textDarkerWhite"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/speed"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/textWhite"
+                android:textSize="20sp" />
+            <Button
+                android:id="@+id/speed_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_dark"
+                android:text="@string/show_chart"
+                android:textColor="@color/textDarkerWhite"
+                android:textSize="20sp" />
+            <LinearLayout
+                android:id="@+id/elevation_wrapper"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/elevation"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/elevation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/textWhite"
+                    android:textSize="20sp" />
+                <Button
+                    android:id="@+id/elevation_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/background_dark"
+                    android:text="@string/show_chart"
+                    android:textColor="@color/textDarkerWhite"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/heartRate_wrapper"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/heart_rate"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/heartRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/textWhite"
+                android:textSize="20sp" />
+            <Button
+                android:id="@+id/heartRate_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_dark"
+                android:text="@string/show_chart"
+                android:textColor="@color/textDarkerWhite"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/calories_wrapper"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/calories"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/calories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/textWhite"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/minTouchSize"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="@string/record_delete_desc" />
+    </LinearLayout>
+</ScrollView>

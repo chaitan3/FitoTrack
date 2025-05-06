@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@android:color/black</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+    <style name="AppTheme" parent="Theme.Material3.Dark">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorSecondary">@color/progressDone</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="android:background">@android:color/background_dark</item>
+        <item name="android:colorBackground">@android:color/background_dark</item>
+        <item name="android:textColorPrimary">@color/textDarkerWhite</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+    </style>
+    <style name="WearNoBack" parent="AppTheme">
+        <item name="android:windowSwipeToDismiss" tools:ignore="WearBackNavigation">false</item>
+    </style>
+    <style name="AlertDialog" parent="AppTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">5dp</item>
+    </style>
+
+    <style name="ScreenField" parent="AppTheme">
+        <item name="android:background">#0000</item>
+    </style>
+    <style name="spinnerItemStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/textDarkerWhite</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="spinnerDropDownItemStyle">
+        <item name="android:paddingLeft">40dp</item>
+        <item name="android:textColor">@color/textDarkerWhite</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="progressStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#0000</item>
+        <item name="indicatorColor">@color/colorPrimary</item>
+        <item name="trackColor">#0000</item>
+        <item name="trackThickness">1dp</item>
+        <item name="indicatorInset">0dp</item>
+        <item name="indicatorTrackGapSize">1dp</item>
+    </style>
+</resources>

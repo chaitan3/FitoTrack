@@ -1,0 +1,45 @@
+<!--
+  ~ Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF"
+    android:alpha="0.8">
+  <path
+      android:pathData="M9.126,4.595C9.994,4.104 10.302,2.991 9.811,2.122 9.319,1.254 8.206,0.945 7.338,1.437c-0.869,0.492 -1.177,1.605 -0.685,2.473 0.492,0.869 1.605,1.177 2.473,0.685zM7.724,8.934 L9.314,13.866 7.199,19.277 8.983,20.091 11.658,13.392 13.871,13.9 16.553,18.637 18.038,17.405 14.78,11.821 12.228,11.181 11.361,8.544c1.697,0.603 3.723,0.499 5.46,-0.484l-0.894,-1.579c-1.5,0.849 -3.211,0.775 -4.468,0.027L9.954,5.69C9.37,5.395 8.717,5.348 8.165,5.661 7.516,6.248 3.735,11.014 1.925,13.144l1.376,1.1C4.784,12.482 6.267,10.719 7.724,8.934"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="m17.68,17.517c0.61,-0.238 1.185,-0.564 1.714,-1.007 0.643,-0.54 0.46,-0.276 0.814,-0.99l1.584,0.146c-0.451,1.096 -0.469,1.183 -1.434,1.993 -0.659,0.553 -1.377,0.973 -2.14,1.261l-3.397,1.244 -0.523,-1.402c4.669,-1.733 -1.283,0.494 3.383,-1.245z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="m8.617,18.699c0.61,-0.238 1.185,-0.564 1.714,-1.007 0.643,-0.54 0.46,-0.276 0.814,-0.99l1.584,0.146c-0.451,1.096 -0.469,1.183 -1.434,1.993 -0.659,0.553 -1.377,0.973 -2.14,1.261l-3.397,1.244 -0.523,-1.402c4.669,-1.733 -1.283,0.494 3.383,-1.245z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="M3.564,14.357l0.983,0.183l-1.191,6.408l-0.983,-0.183z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="M15.745,8.734l0.946,0.324l-0.998,2.913l-0.946,-0.324z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="M13.56,15.156l0.946,0.324l-0.998,2.913l-0.946,-0.324z"
+      android:fillColor="#FFFFFFFF"/>
+</vector>

@@ -1,0 +1,179 @@
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">FitoTrack</string>
+
+    <!-- Main UI -->
+    <string name="main_workouts_text">Workouts</string>
+    <string name="main_record_text">Record</string>
+    <string name="main_settings_text">Settings</string>
+
+    <!-- Workouts UI -->
+    <string name="workout_type_icon">Workout type icon</string>
+    <string name="workouts_label">Workouts</string>
+    <string name="fail_no_workoutData">failed to load workout data</string>
+
+    <!-- Record UI -->
+    <string name="record_start">Start</string>
+    <string name="record_type_desc">workout type</string>
+    <string name="record_location_desc">location status</string>
+    <string name="record_heartRate_desc">heart rate status</string>
+    <string name="record_target">Target</string>
+    <string name="record_target_auto_pause">auto pause on target</string>
+    <string name="record_target_done">done</string>
+    <string name="record_location_off">location is switched off</string>
+    <string name="record_field_placeholder">--</string>
+    <string name="record_map_waiting">waiting for location</string>
+    <string name="osm_copyright">&#169; OpenStreetMap</string>
+    <string name="record_pauseResume_desc">pause or resume button</string>
+    <string name="record_zoom_out_desc">zoom out</string>
+    <string name="record_zoom_in_desc">zoom in</string>
+    <string name="record_center_type_desc">center map button</string>
+    <string name="record_screenUp_desc">switch screen button</string>
+    <string name="record_end_desc">end button</string>
+    <string name="record_delete_desc">delete the workout</string>
+    <string name="screen_summary_duration_desc">active + pause = total</string>
+    <string name="show_map">show map</string>
+    <string name="show_chart">show chart</string>
+    <string name="loading">loading</string>
+    <string name="avg">avg</string>
+    <string name="max">max</string>
+    <string name="gain">gain</string>
+    <string name="loss">loss</string>
+
+    <string-array name="target_distances">
+        <item>0 km</item><item>1 km</item><item>2 km</item><item>3 km</item><item>4 km</item>
+        <item>5 km</item><item>6 km</item><item>7 km</item><item>8 km</item><item>9 km</item>
+        <item>10 km</item><item>11 km</item><item>12 km</item><item>13 km</item><item>14 km</item>
+        <item>15 km</item><item>16 km</item><item>17 km</item><item>18 km</item><item>19 km</item>
+        <item>20 km</item><item>21 km</item><item>22 km</item><item>23 km</item><item>24 km</item>
+        <item>25 km</item><item>26 km</item><item>27 km</item><item>28 km</item><item>29 km</item>
+        <item>30 km</item><item>31 km</item><item>32 km</item><item>33 km</item><item>34 km</item>
+        <item>35 km</item><item>36 km</item><item>37 km</item><item>38 km</item><item>39 km</item>
+        <item>40 km</item><item>41 km</item><item>42 km</item><item>43 km</item><item>44 km</item>
+        <item>45 km</item><item>46 km</item><item>47 km</item><item>48 km</item><item>49 km</item>
+        <item>50 km</item>
+    </string-array>
+    <string-array name="target_durations">
+        <item>0 min</item><item>5 min</item><item>10 min</item><item>15 min</item>
+        <item>20 min</item><item>25 min</item><item>30 min</item><item>35 min</item>
+        <item>40 min</item><item>45 min</item><item>50 min</item><item>55 min</item>
+        <item>1 hour</item><item>1:05</item><item>1:10</item><item>1:15</item><item>1:20</item>
+        <item>1:25</item><item>1:30</item><item>1:35</item><item>1:40</item><item>1:45</item>
+        <item>1:50</item><item>1:55</item><item>2 hours</item><item>2:05</item><item>2:10</item>
+        <item>2:15</item><item>2:20</item><item>2:25</item><item>2:30</item><item>2:35</item>
+        <item>2:40</item><item>2:45</item><item>2:50</item><item>2:55</item><item>3 hours</item>
+    </string-array>
+
+    <string name="alert_cooldown_start">Track cooldown?</string>
+    <string name="alert_cooldown_yes">yes</string>
+    <string name="alert_cooldown_no">nah</string>
+    <string name="alert_delete_message">Delete workout?</string>
+    <string name="alert_delete_positive">Delete</string>
+    <string name="alert_delete_negative">Cancel</string>
+
+    <!-- Settings UI -->
+    <string name="settings_label">Settings</string>
+    <string name="settings_BT">Bluetooth</string>
+    <string name="settings_BT_enabled">enabled</string>
+    <string name="settings_BT_disabled">disabled</string>
+    <string name="settings_BT_permission">permission denied</string>
+    <string name="settings_screen">Screen</string>
+    <string name="settings_screen_on">keep on</string>
+    <string name="settings_screen_off">auto off</string>
+    <string name="settings_auto_pause">Auto pause</string>
+    <string name="settings_screen_map">Map screen</string>
+    <string name="settings_screen_current">Current screen</string>
+    <string name="settings_screen_total">Totals screen</string>
+    <string name="settings_screen_speed">Speed screen</string>
+    <string name="settings_screen_ele">Elevation screen</string>
+    <string name="settings_screen_heart_rate">Heart rate screen</string>
+
+    <!-- Settings.Maps UI -->
+    <string name="maps">Maps</string>
+    <string name="map_source">Map source</string>
+    <string name="download">Download</string>
+    <string name="updates">Check for updates</string>
+    <string name="downloading">Downloading</string>
+    <string name="failed">failed</string>
+    <string name="no_updates">all maps are up to date</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="delete_map">Delete %s?</string>
+    <string name="corrupt_map">%s is broken</string>
+
+    <string name="on">on</string>
+    <string name="off">off</string>
+    <string name="unavailable">unavailable</string>
+    <string name="online">online</string>
+    <string name="local">local</string>
+
+    <string name="fail_unavailable">missing permission, or location is switched off</string>
+    <string name="fail_open_settings">Failed to open settings</string>
+    <string name="fail_fast">No fast connection available</string>
+    <string name="fail_no_maps">Download a map first</string>
+
+    <!-- Notifications -->
+    <string name="notification_active">active</string>
+
+    <!-- Units -->
+    <string name="avg_symbol">&#216;</string>
+    <string name="km">km</string>
+    <string name="m">m</string>
+    <string name="kcal">kcal</string>
+    <string name="kmh">kmh</string>
+    <string name="ms">m/s</string>
+    <string name="bpm">bpm</string>
+
+    <!-- Values -->
+    <string name="none">none</string>
+    <string name="distance">distance</string>
+    <string name="summary">Summary</string>
+    <string name="duration">duration</string>
+    <string name="speed">Speed</string>
+    <string name="elevation">Elevation</string>
+    <string name="heart_rate">Heart rate</string>
+    <string name="calories">Calories</string>
+
+    <!-- Workout types -->
+    <string name="WorkoutType_BIKE">Biking</string>
+    <string name="WorkoutType_CLIMB">Climbing</string>
+    <string name="WorkoutType_HIKE">Hiking</string>
+    <string name="WorkoutType_RUN">Running</string>
+    <string name="WorkoutType_SNOWBOARDING">Snowboarding</string>
+    <string name="WorkoutType_SNOWSHOEING">Snowshoeing</string>
+    <string name="WorkoutType_SWIM_OUTDOOR">Swim (outdoor)</string>
+    <string name="WorkoutType_WALK">Walking</string>
+    <string name="WorkoutType_WINDSURFING">Windsurfing</string>
+    <string name="WorkoutType_OTHER_INDOOR">Other (indoor)</string>
+    <string name="WorkoutType_OTHER_OUTDOOR">Other (outdoor)</string>
+
+    <!-- Errors -->
+    <string name="error_workout_write">Failed to store workout</string>
+    <string name="error_workout_delete">Failed to delete workout</string>
+    <string name="error_map_load">Failed to load map</string>
+    <string name="error_no_permissions">No permissions, nothing to track</string>
+    <string name="error_start_exercise">Failed to start exercise</string>
+    <string name="error_bt_request">Problem with request from phone</string>
+    <string name="error_bt_response">Problem with response from phone</string>
+    <string name="error_maps_download">Failed to download map</string>
+    <string name="error_maps_file_exists">Map already available</string>
+
+</resources>

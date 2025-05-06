@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <color name="colorPrimary">#FB8C00</color>
+    <color name="colorPrimaryDark">#EF6C00</color>
+
+    <color name="textWhite">#FFF</color>
+    <color name="textDarkerWhite">#E6FFFFFF</color>
+    <color name="textInactive">#777777</color>
+
+    <color name="stateFailed">#F44336</color>
+
+    <color name="lineHighlight">#229a9a9a</color>
+
+    <color name="ic_border">#8000</color>
+    <color name="locationCircleFill">#2a7fff</color>
+    <color name="progressDone">#4CAF50</color>
+    <color name="progressDoneDark">#244D26</color>
+
+</resources>

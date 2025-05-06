@@ -138,6 +138,15 @@
         <item quantity="one">Pull up</item>
         <item quantity="other">Pull ups</item>
     </plurals>
+    <string name="workoutTypeClimbing">Climbing</string>
+    <plurals name="workoutClimb">
+        <item quantity="one">Climb</item>
+        <item quantity="other">Climbs</item>
+    </plurals>
+    <string name="workoutTypeSkiing">Skiing</string>
+    <string name="workoutTypeSnowboarding">Snowboarding</string>
+    <string name="workoutTypeSnowshoeing">Snowshoeing</string>
+    <string name="workoutTypeWindsurfing">Windsurfing</string>
     <plurals name="workoutRepetition">
         <item quantity="one">Rep</item>
         <item quantity="other">Reps</item>
@@ -588,4 +597,24 @@
     <string name="recording_gps_accurate">GPS · accurate</string>
     <string name="recording_gps_weak">%d sat · weak</string>
     <string name="recording_gps_searching">%d sat · searching</string>
+    <string name="wear_sync">Watch Sync</string>
+    <string name="wear_sync_new">New watch</string>
+    <string name="wear_sync_del">Delete watch?</string>
+    <string name="wear_icon_desc">Watch sync icon</string>
+    <string name="wear_connecting_to">Connecting to %s</string>
+    <string name="wear_connected_to">Connected to %s, syncing workouts. Stay on this screen, long workouts can take a couple of minutes to transfer.</string>
+    <string name="wear_disconnected">Connection is lost, close and try again.</string>
+    <string name="wear_device_select_title">To connect:\n- open the app on the watch\n- enabled bluetooth in the settings\n- select your watch from the list below</string>
+    <string name="wear_colon">:</string>
+    <string name="wear_status_pending">pending</string>
+    <string name="wear_status_downloading">downloading (%s)</string>
+    <string name="wear_status_processing">processing</string>
+    <string name="wear_status_done">done</string>
+    <string name="wear_status_fail">failed</string>
+    <string name="wear_error_denied">No Bluetooth permission. Allow nearby devices, try again.</string>
+    <string name="wear_error_off">Bluetooth turned off</string>
+    <string name="wear_error_no_devices">No bluetooth devices, pair your watch first</string>
+    <string name="wear_error_connect">Connection failed, try again. Make sure you have the app on the watch open, and that there is a Bluetooth connection.</string>
+    <string name="wear_error_tech">There was a technical problem in the communication with the watch. Close all and try again.</string>
+    <string name="wear_error_update">The version of this app and the watch app are incompatible, update both to the latest</string>
 </resources>

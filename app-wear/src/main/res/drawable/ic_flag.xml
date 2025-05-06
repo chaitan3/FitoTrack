@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF"
+    android:alpha="0.8">
+  <path
+      android:pathData="M4.535,18.898h4.913v1.89h-4.913z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="M6.425,3.78h1.134v15.118h-1.134z"
+      android:fillColor="#FFFFFFFF"/>
+  <path
+      android:pathData="m8.351,4.571c0,0 1.755,-1.136 2.912,-1.135 1.157,0 1.94,0.505 2.91,1.135 0.97,0.63 1.755,1.132 2.911,1.132 1.157,0 2.911,-1.132 2.911,-1.132v5.221c0,0 -1.754,1.891 -2.911,1.891 -1.157,0 -1.941,-0.506 -2.911,-1.136 -0.97,-0.63 -1.755,-1.132 -2.911,-1.132 -1.157,0 -2.911,1.132 -2.911,1.132z"
+      android:strokeWidth="1.583"
+      android:fillColor="#FFFFFFFF"
+      android:strokeColor="#FFFFFFFF"/>
+</vector>

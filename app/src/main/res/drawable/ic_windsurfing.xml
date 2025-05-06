@@ -1,0 +1,39 @@
+<!--
+  ~ Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF"
+    android:alpha="0.8">
+  <path
+      android:pathData="M7.134,7.151C8.037,6.725 8.427,5.638 8.001,4.735 7.576,3.832 6.489,3.442 5.586,3.868 4.683,4.294 4.293,5.381 4.719,6.284 5.145,7.186 6.232,7.576 7.134,7.151ZM5.414,11.373 L6.589,15.703 7.26,16.345 8.122,16.553 10.115,17.754 11.049,21.851 12.619,21.859 11.706,16.765 9.297,14.964 8.274,10.989c1.913,0.065 4.251,0.421 6.277,0.188L13.777,9.535c-1.471,-0.016 -2.641,0.004 -4.458,-0.305l-1.44,-0.926C7.319,7.966 6.648,7.777 6.097,8.142 5.463,8.461 5.35,10.818 5.414,11.373"
+      android:fillColor="#FF000000"/>
+  <path
+      android:pathData="m1.906,21.494 l0,1.519z"
+      android:fillColor="#FF000000"/>
+  <path
+      android:pathData="M5.874,21.715L21.651,21.715a0.441,0.441 45,0 1,0.441 0.441,1.468 1.468,144.883 0,1 -1.699,1.194l-14.52,0z"
+      android:fillColor="#FF000000"/>
+  <path
+      android:pathData="M12.906,0.406 L19.842,15.794 14.531,21.844Z"
+      android:fillColor="#FF000000"/>
+</vector>

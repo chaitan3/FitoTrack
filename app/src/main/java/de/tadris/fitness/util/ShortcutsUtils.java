@@ -89,7 +89,7 @@ public class ShortcutsUtils {
           return;
       }
       updateShortcuts(
-              WorkoutTypeManager.getInstance().getAllTypesSorted(context)
+              WorkoutTypeManager.getInstance().getAllSelectableTypesSorted(context)
       );
     }
 }

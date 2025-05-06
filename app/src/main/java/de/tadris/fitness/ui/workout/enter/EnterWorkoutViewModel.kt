@@ -81,7 +81,7 @@ class EnterWorkoutViewModel(
             _uiState.value = withContext(Dispatchers.IO) {
                 val instance = Instance.getInstance(getApplication())
                 val unitSystem = instance.distanceUnitUtils.getDistanceUnitSystem()
-                val allTypes = WorkoutTypeManager.getInstance().getAllTypesSorted(getApplication())
+                val allTypes = WorkoutTypeManager.getInstance().getAllSelectableTypesSorted(getApplication())
 
                 if (workoutId != 0L) {
                     val workout = instance.db.workoutDao().getWorkoutById(workoutId)
