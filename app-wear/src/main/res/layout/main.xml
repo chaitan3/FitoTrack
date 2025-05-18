@@ -35,7 +35,7 @@
         android:textAllCaps="false"
         android:textStyle="normal"
         android:lines="1"
-        android:textColor="@color/textDarkerWhite"
+        android:textColor="@color/textWhite"
         android:background="#0000"
         android:drawableStart="@drawable/ic_list"/>
     <Button
@@ -49,7 +49,7 @@
         android:textAllCaps="false"
         android:textStyle="normal"
         android:lines="1"
-        android:textColor="@color/textDarkerWhite"
+        android:textColor="@color/textWhite"
         android:background="#0000"
         android:drawableStart="@drawable/ic_add_white" />
     <Button
@@ -63,7 +63,7 @@
         android:textAllCaps="false"
         android:textStyle="normal"
         android:lines="1"
-        android:textColor="@color/textDarkerWhite"
+        android:textColor="@color/textWhite"
         android:background="#0000"
         android:drawableStart="@drawable/ic_edit" />
 </LinearLayout>

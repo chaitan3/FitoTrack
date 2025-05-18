@@ -22,16 +22,17 @@
     <color name="colorPrimaryDark">#EF6C00</color>
 
     <color name="textWhite">#FFF</color>
-    <color name="textDarkerWhite">#E6FFFFFF</color>
-    <color name="textInactive">#777777</color>
-
+    <color name="textInactive">#777</color>
     <color name="stateFailed">#F44336</color>
 
-    <color name="lineHighlight">#229a9a9a</color>
+    <color name="bg_list_item">#151515</color>
 
     <color name="ic_border">#8000</color>
     <color name="locationCircleFill">#2a7fff</color>
     <color name="progressDone">#4CAF50</color>
     <color name="progressDoneDark">#244D26</color>
+    <color name="bg_progressBar">#444</color>
+    <color name="progressBarAhead">#080</color>
+    <color name="progressBarBehind">#C00</color>
 
 </resources>

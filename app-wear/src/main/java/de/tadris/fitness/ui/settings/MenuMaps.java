@@ -77,12 +77,13 @@ public class MenuMaps extends MenuScreen{
         }
     }
     private void showMaps(List<MapStore.File> files){
-        if(!files.isEmpty()){
-            MenuItem updates = new MenuItem(this, R.string.updates);
-            updates.value.setVisibility(View.GONE);
-            updates.setOnClickListener(v->onUpdateClick());
-            list.addView(updates);
-        }
+        loading.setVisibility(View.GONE);
+        if(files.isEmpty()) return;
+
+        MenuItem updates = new MenuItem(this, R.string.updates);
+        updates.value.setVisibility(View.GONE);
+        updates.setOnClickListener(v->onUpdateClick());
+        list.addView(updates);
         for(MapStore.File file : files){
             MenuItem item = new MenuItem(this, file.path);
             item.value.setText(Util.prettySize(file.size));
@@ -95,15 +96,16 @@ public class MenuMaps extends MenuScreen{
             });
             list.addView(item);
         }
-        loading.setVisibility(View.GONE);
     }
     private void deleteMap(MenuItem item, MapStore.File file){
         Main.runInBackground(()->{
             if(mapStore.deleteLocalMap(this, file)){
-                runOnUiThread(()->item.setVisibility(View.GONE));
                 if(MapStore.getLocalMaps(this).isEmpty()){
                     SettingsStore.storeMapSource(this, false);
                     setMapSourceValue(mapSource);
+                    runOnUiThread(()->{for(int i=list.getChildCount()-1; i>2; i--) list.removeViewAt(i);});
+                }else{
+                    runOnUiThread(()->item.setVisibility(View.GONE));
                 }
             }else{
                 runOnUiThread(()->Toast.makeText(this, R.string.failed, Toast.LENGTH_SHORT).show());

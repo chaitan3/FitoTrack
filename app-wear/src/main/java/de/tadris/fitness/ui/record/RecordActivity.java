@@ -35,6 +35,7 @@ import android.os.VibratorManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -60,7 +61,6 @@ import androidx.health.services.client.data.ExerciseEvent;
 import androidx.health.services.client.data.ExerciseLapSummary;
 import androidx.health.services.client.data.ExerciseState;
 import androidx.health.services.client.data.ExerciseUpdate;
-import androidx.health.services.client.data.LocationAccuracy;
 import androidx.health.services.client.data.LocationAvailability;
 import androidx.health.services.client.data.LocationData;
 import androidx.health.services.client.data.SampleDataPoint;
@@ -100,12 +100,13 @@ public class RecordActivity extends FragmentActivity{
     static boolean locationEnabled = false;
     private final ArrayList<SpeedCachePoint> speedCache = new ArrayList<>();
     private long lastLocationTime = 0;
-    private double lastLocationAccuracy = 0;
     private double lastSpeed = 0;
     private double lastElevation = 0;
+    private boolean clearSpeedCache = true;
     private long checkpointTime = 0;
     private long checkpointDuration = 0;
-    private boolean targetAchieved = false;
+    public enum TargetAchieved{NOT, _50, _100}
+    private TargetAchieved targetAchieved = TargetAchieved.NOT;
     static WorkoutData workoutData;
     static WorkoutSettings workoutSettings;
     static boolean isPreparing = true;
@@ -141,8 +142,8 @@ public class RecordActivity extends FragmentActivity{
         }
         if(Screen.colorPrimary == -1){
             Screen.colorPrimary = getColor(R.color.colorPrimary);
-            Screen.progressDone = getColor(R.color.progressDone);
-            Screen.progressDoneDark = getColor(R.color.progressDoneDark);
+            Screen.colorProgressDone = getColor(R.color.progressDone);
+            Screen.colorProgressDoneDark = getColor(R.color.progressDoneDark);
             Screen.colorActive = getColor(R.color.textWhite);
             Screen.colorInactive = getColor(R.color.textInactive);
             Screen.colorCircleFill = getColor(R.color.locationCircleFill);
@@ -181,13 +182,24 @@ public class RecordActivity extends FragmentActivity{
         updateTime.run();
         update.run();
 
-        if(workoutData.targetType == WorkoutData.TargetType.DURATION){
-            activeScreen.updateTargetProgress((int) ((workoutData.durationTotal/600) / workoutData.targetValue));
-        }else if(workoutData.targetType == WorkoutData.TargetType.DISTANCE){
-            activeScreen.updateTargetProgress((int) ((workoutData.distanceTotal / 10) / workoutData.targetValue));
-        }else{
-            activeScreen.updateTargetProgress(0);
+        int progress = 0;
+        if(workoutData.primaryTargetType == WorkoutData.TargetType.DURATION){
+            progress = (int) ((workoutData.durationTotal / 600) / workoutData.primaryTargetValue);
+        }else if(workoutData.primaryTargetType == WorkoutData.TargetType.DISTANCE){
+            progress = (int) ((workoutData.distanceTotal/10) / workoutData.primaryTargetValue);
         }
+        switch(targetAchieved){
+            case NOT:
+                break;
+            case _100:
+                screens.forEach(Screen::setTargetUnAchieved);
+                screenStop.setTargetUnAchieved();
+                if(progress < 100) targetAchieved = TargetAchieved._50;
+            case _50:
+                if(progress < 50) targetAchieved = TargetAchieved.NOT;
+                break;
+        }
+        activeScreen.updateTargetProgress(progress);
 
         if(workoutSettings.autoPause == ENABLE){
             workoutSettings.autoPause = ENABLED;
@@ -238,6 +250,13 @@ public class RecordActivity extends FragmentActivity{
             workoutSettings.screenHeartRate = DISABLED;
             removeScreen(findScreen(ScreenHeartRate.class));
         }
+        if(workoutSettings.screenTarget == ENABLE){
+            workoutSettings.screenTarget = ENABLED;
+            if(findScreen(ScreenTarget.class) == null) addScreen(new ScreenTarget());
+        }else if(workoutSettings.screenTarget == DISABLE){
+            workoutSettings.screenTarget = DISABLED;
+            removeScreen(findScreen(ScreenTarget.class));
+        }
     }
     private Screen findScreen(Class<? extends Screen> cls){
         for(int i=0; i<screens.size(); i++) if(screens.get(i).getClass() == cls) return screens.get(i);
@@ -255,6 +274,10 @@ public class RecordActivity extends FragmentActivity{
         if(screen == null) return;
         fragmentManager.beginTransaction().remove(screen).commit();
         screens.remove(screen);
+    }
+    void reloadTargetScreen(Screen screen){
+        removeScreen(screen);
+        addScreen(new ScreenTarget());
     }
     @Override public void onPause(){
         handler.removeCallbacksAndMessages(null);
@@ -283,7 +306,7 @@ public class RecordActivity extends FragmentActivity{
 
     void startExercise(){
         workoutData.id = System.currentTimeMillis();
-        targetAchieved = false;
+        targetAchieved = TargetAchieved.NOT;
 
         ExerciseConfig.Builder configBuilder = new ExerciseConfig.Builder(workoutData.exerciseType);
         boolean autoPause = workoutData.isWorkoutTypeAutoPause()
@@ -312,6 +335,8 @@ public class RecordActivity extends FragmentActivity{
             if(workoutSettings.screenSpeed == ENABLED) addScreen(new ScreenSpeed());
             if(workoutSettings.screenElevation == ENABLE) workoutSettings.screenElevation = ENABLED;
             if(workoutSettings.screenElevation == ENABLED) addScreen(new ScreenElevation());
+            if(workoutSettings.screenTarget == ENABLE) workoutSettings.screenTarget = ENABLED;
+            if(workoutSettings.screenTarget == ENABLED) addScreen(new ScreenTarget());
 
             if(workoutData.isWorkoutTypeEle()){
                 dataTypes.add(DataType.ELEVATION_GAIN_TOTAL);
@@ -410,7 +435,7 @@ public class RecordActivity extends FragmentActivity{
         finishAndRemoveTask();
     }
     private boolean isAutoEnding(){
-        return exerciseState == ExerciseState.AUTO_ENDING || exerciseState == ExerciseState.AUTO_ENDING_PERMISSION_LOST;
+        return exerciseState.isEnding() && exerciseState != ExerciseState.ENDING;
     }
     private final Runnable updateTime = new Runnable(){@Override public void run(){
         Date date = new Date();
@@ -436,8 +461,8 @@ public class RecordActivity extends FragmentActivity{
         activeScreen.updateDuration(duration);
         workoutData.durationTotal = duration;
 
-        if(workoutData.targetType == WorkoutData.TargetType.DURATION){
-            updateTargetProgress((int) ((duration/600) / workoutData.targetValue));
+        if(workoutData.primaryTargetType == WorkoutData.TargetType.DURATION){
+            updateTargetProgress((int) ((duration/600) / workoutData.primaryTargetValue));
         }
 
         handler.postDelayed(update, 1000-(duration%1000));
@@ -463,16 +488,8 @@ public class RecordActivity extends FragmentActivity{
             if(exerciseState != exerciseUpdate.getExerciseStateInfo().getState()){
                 Log.d(Main.LOG_TAG, "RecordActivity State change: " + exerciseState + " > " + exerciseUpdate.getExerciseStateInfo().getState());
                 exerciseState = exerciseUpdate.getExerciseStateInfo().getState();
-                if(exerciseState == ExerciseState.AUTO_ENDING){
-                    //The exercise is being automatically ended due to a lack of exercise updates
-                    Log.e(Main.LOG_TAG, "RecordActivity AUTO_ENDING");
-                    endExercise();
-                    return;
-                }
-                if(exerciseState == ExerciseState.AUTO_ENDING_PERMISSION_LOST){
-                    //The exercise is being automatically ended due to lack of client's permissions
-                    //to receive data for the exercise.
-                    Log.e(Main.LOG_TAG, "RecordActivity AUTO_ENDING_PERMISSION_LOST");
+                if(isAutoEnding()){
+                    Log.e(Main.LOG_TAG, "RecordActivity.onExerciseUpdateReceived: isAutoEnding");
                     endExercise();
                     return;
                 }
@@ -507,13 +524,11 @@ public class RecordActivity extends FragmentActivity{
                     if(!exerciseState.isPaused()) workoutData.heartRateSamples.add(sample);
                 }else if(dataType.equals(DataType.LOCATION)){
                     SampleDataPoint<LocationData> dataPointLocation = (SampleDataPoint<LocationData>) dataPoint;
-                    LocationAccuracy locationAccuracy = (LocationAccuracy) dataPointLocation.getAccuracy();
                     LocationSample sample = new LocationSample();
                     sample.time = dataPointLocation.getTimeDurationFromBoot().plusMillis(bootTime).toMillis();
                     sample.lat = dataPointLocation.getValue().getLatitude();
                     sample.lon = dataPointLocation.getValue().getLongitude();
                     sample.ele = lastElevation;
-                    if(locationAccuracy != null) lastLocationAccuracy = locationAccuracy.getHorizontalPositionErrorMeters();
                     workoutData.locationSamples.add(sample);
                     lastLocationTime = sample.time;
                     sample.speed = lastSpeed;
@@ -550,8 +565,8 @@ public class RecordActivity extends FragmentActivity{
                     workoutData.distanceTotal = cdDataPoint.getTotal();
                     activeScreen.updateDistance(workoutData.distanceTotal);
                     updateLastSpeed(workoutData.distanceTotal.intValue());
-                    if(workoutData.targetType == WorkoutData.TargetType.DISTANCE){
-                        updateTargetProgress((int) ((workoutData.distanceTotal / 10) / workoutData.targetValue));
+                    if(workoutData.primaryTargetType == WorkoutData.TargetType.DISTANCE){
+                        updateTargetProgress((int) ((workoutData.distanceTotal / 10) / workoutData.primaryTargetValue));
                     }
                 }else if(dataType.equals(DataType.ELEVATION_GAIN_TOTAL)){
                     CumulativeDataPoint<Double> cdDataPoint = (CumulativeDataPoint<Double>) dataPoint;
@@ -589,35 +604,36 @@ public class RecordActivity extends FragmentActivity{
     private void updateLastSpeed(int distance){
         if(lastLocationTime == 0 || distance == 0) return;
         speedCache.add(new SpeedCachePoint(lastLocationTime, distance));
-        if(speedCache.size() < 4) return;
-        if(distance - speedCache.get(speedCache.size()-4).distance < 4){
+        if(speedCache.size() < 5) return;//wait for the speed cache to contain 5 measurements
+        if(clearSpeedCache){//ignore the first 5 measurements, because GPS is unreliable in the beginning
+            speedCache.clear();
+            clearSpeedCache = false;
+            return;
+        }
+        double distanceDiff = distance - speedCache.get(0).distance;//meters
+        double timeDiff = lastLocationTime - speedCache.get(0).timestamp;//milliseconds
+        if(distanceDiff < 4 || timeDiff < 1){
             lastSpeed = 0;
             activeScreen.updateSpeed(lastLocationTime, lastSpeed);
             return;
         }
-
-        double distanceDiff = 0;//meters
-        double timeDiff = 0;//milliseconds
-        for(int i = speedCache.size()-3; i>=0; i--){
-            distanceDiff = distance - speedCache.get(i).distance;
-            timeDiff = lastLocationTime - speedCache.get(i).timestamp;
-            if(distanceDiff > lastLocationAccuracy*10) break;
+        double newSpeed = (distanceDiff * 1000) / timeDiff;
+        if(workoutData.speedMax > 0 && newSpeed > workoutData.speedMax*5){//gps error (going through tunnel for example)
+            speedCache.clear();
+            return;
         }
+        lastSpeed = newSpeed;//meters/second
+        activeScreen.updateSpeed(lastLocationTime, lastSpeed);
 
-        if(distanceDiff <= 0 || timeDiff <= 0) return;
-        lastSpeed = (distanceDiff * 1000) / timeDiff;//meters/second
-
-        //delay showing the speed, because GPS is unreliable in the beginning
-        if(speedCache.size() > 20) activeScreen.updateSpeed(lastLocationTime, lastSpeed);
-
-        if(speedCache.size() > 30 && lastSpeed > workoutData.speedMax){
-            workoutData.speedMax = lastSpeed;
-        }
-        while(speedCache.size()>30) speedCache.remove(0);
+        if(lastSpeed > workoutData.speedMax) workoutData.speedMax = lastSpeed;
+        while(speedCache.size()>5) speedCache.remove(0);
     }
     private void updateTargetProgress(int value){
-        if(!targetAchieved && value >= 100){
-            targetAchieved = true;
+        if(targetAchieved == TargetAchieved.NOT && value >= 50){
+            targetAchieved = TargetAchieved._50;
+            vibrator.vibrate(ve_pattern);
+        }else if(targetAchieved == TargetAchieved._50 && value >= 100){
+            targetAchieved = TargetAchieved._100;
             screens.forEach(Screen::setTargetAchieved);
             screenStop.setTargetAchieved();
             vibrator.vibrate(ve_pattern);
@@ -625,7 +641,9 @@ public class RecordActivity extends FragmentActivity{
         }
         activeScreen.updateTargetProgress(value >= 100 ? value - 100 : value);
     }
-    @Override public boolean onTouchEvent(MotionEvent event){return gestureDetector.onTouchEvent(event);}
+    void addOnTouch(View v){v.setOnTouchListener(this::onTouch);}
+    private boolean onTouch(View ignoredV, MotionEvent e){return gestureDetector.onTouchEvent(e);}
+    @Override public boolean onTouchEvent(MotionEvent e){return gestureDetector.onTouchEvent(e);}
     private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener(){
         @Override public boolean onFling(MotionEvent e1, @NonNull MotionEvent e2, float vX, float vY){
             if(Math.abs(vX) < Math.abs(vY)){

@@ -5,6 +5,8 @@
 /build
 /app/build
 /app/release
+/app-wear/build
+/app-wear/release
 
 # misc
 .*/

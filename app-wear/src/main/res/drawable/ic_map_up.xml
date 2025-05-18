@@ -24,7 +24,7 @@
     android:viewportHeight="24">
   <path
       android:pathData="M12,0V0L24,10H0Z"
-      android:fillColor="@color/textDarkerWhite"
+      android:fillColor="@color/textWhite"
       android:strokeWidth="1"
       android:strokeColor="@color/ic_border"/>
 </vector>

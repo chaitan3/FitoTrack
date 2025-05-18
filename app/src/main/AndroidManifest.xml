@@ -143,6 +143,9 @@
             android:name=".ui.statistics.DetailStatsActivity"
             android:exported="true"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.wear.WearSyncActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

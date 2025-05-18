@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.tadris.fitness.R;
+import de.tadris.fitness.ui.Main;
 
 public class MenuItem extends LinearLayout{
     public final TextView value;
@@ -31,6 +32,15 @@ public class MenuItem extends LinearLayout{
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.menu_item, this, true);
+        findViewById(R.id.menu_item).getLayoutParams().height = Main.menuItemHeight;
+        ((TextView)findViewById(R.id.label)).setText(labelText);
+        value = findViewById(R.id.value);
+    }
+    public MenuItem(Context context, int labelText, int height){
+        super(context);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.menu_item, this, true);
+        findViewById(R.id.menu_item).getLayoutParams().height = height;
         ((TextView)findViewById(R.id.label)).setText(labelText);
         value = findViewById(R.id.value);
     }
@@ -38,6 +48,7 @@ public class MenuItem extends LinearLayout{
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.menu_item, this, true);
+        findViewById(R.id.menu_item).getLayoutParams().height = Main.menuItemHeight;
         ((TextView)findViewById(R.id.label)).setText(labelText);
         value = findViewById(R.id.value);
     }

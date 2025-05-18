@@ -31,13 +31,6 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="48dp" />
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        style="@style/progressStyle"
-        android:id="@+id/targetProgress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
     <androidx.wear.widget.CurvedTextView
         tools:ignore="SmallSp"
         android:id="@+id/osm_copyright"
@@ -110,7 +103,7 @@
         android:autoSizeTextType="uniform"
         android:autoSizeMaxTextSize="22sp"
         android:lines="1"
-        android:textColor="@color/textDarkerWhite"
+        android:textColor="@color/textWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -119,11 +112,18 @@
         android:id="@+id/screenUp"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="#0000"
         android:contentDescription="@string/record_screenUp_desc"
         android:gravity="center"
         android:src="@drawable/ic_map_up"
-        android:background="#0000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        style="@style/progressStyle"
+        android:id="@+id/targetProgress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

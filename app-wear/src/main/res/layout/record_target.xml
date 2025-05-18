@@ -17,106 +17,18 @@
   ~ 	You should have received a copy of the GNU General Public License
   ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/target_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <TextView
         android:id="@+id/target_label"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/record_target"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMaxTextSize="22sp"
         android:lines="1"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <Button
-        android:id="@+id/target_type_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:background="@android:color/background_dark"
-        android:text="@string/distance"
-        android:textColor="@color/textDarkerWhite"
-        android:autoSizeTextType="uniform"
-        android:lines="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/target_type_duration"
-        app:layout_constraintTop_toBottomOf="@id/target_label"/>
-    <Button
-        android:id="@+id/target_type_duration"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:background="@android:color/background_dark"
-        android:text="@string/duration"
-        android:textColor="@color/textDarkerWhite"
-        android:autoSizeTextType="uniform"
-        android:lines="1"
-        app:layout_constraintStart_toEndOf="@id/target_type_distance"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/target_label"/>
-    <Spinner
-        android:id="@+id/target_distance"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:paddingHorizontal="30dp"
-        android:gravity="center"
-        android:visibility="gone"
-        android:entries="@array/target_distances"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/target_type_distance"
-        app:layout_constraintBottom_toTopOf="@id/target_auto_pause"/>
-    <Spinner
-        android:id="@+id/target_duration"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:paddingHorizontal="30dp"
-        android:gravity="center"
-        android:visibility="gone"
-        android:entries="@array/target_durations"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/target_type_duration"
-        app:layout_constraintBottom_toTopOf="@id/target_auto_pause"/>
-    <Button
-        android:id="@+id/target_auto_pause"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:background="@android:color/background_dark"
-        android:text="@string/record_target_auto_pause"
-        android:textColor="@color/textDarkerWhite"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="8sp"
-        android:lines="1"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/target_done"/>
-    <Button
-        android:id="@+id/target_done"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:background="@android:color/background_dark"
-        android:text="@string/record_target_done"
-        android:textColor="@color/textDarkerWhite"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textColor="@color/colorPrimary" />
+</LinearLayout>

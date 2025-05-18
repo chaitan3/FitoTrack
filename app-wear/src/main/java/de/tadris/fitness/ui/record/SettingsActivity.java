@@ -55,14 +55,6 @@ public class SettingsActivity extends MenuScreen{
             setTargetValue();
             list.addView(target);
         }
-        if(RecordActivity.workoutData.isWorkoutTypeAutoPause()){
-            list.addView(new SettingsItem(
-                    this
-                    ,"autoPause"
-                    ,R.string.settings_auto_pause
-                    ,RecordActivity.workoutSettings.autoPause
-            ));
-        }
         list.addView(new SettingsItem(
                 this
                 ,"screenOn"
@@ -115,6 +107,12 @@ public class SettingsActivity extends MenuScreen{
                 ,R.string.settings_screen_heart_rate
                 ,RecordActivity.hasHRPermission ? RecordActivity.workoutSettings.screenHeartRate : UNAVAILABLE
         ));
+        list.addView(new SettingsItem(
+                this
+                ,"screenTarget"
+                ,R.string.settings_screen_target
+                ,RecordActivity.workoutSettings.screenTarget
+        ));
     }
     @Override public void onResume(){
         super.onResume();
@@ -122,7 +120,7 @@ public class SettingsActivity extends MenuScreen{
     }
     private void setTargetValue(){
         if(target == null) return;
-        switch(RecordActivity.workoutData.targetType){
+        switch(RecordActivity.workoutData.primaryTargetType){
             case NONE:
                 target.value.setText(R.string.none);
                 break;
@@ -131,6 +129,12 @@ public class SettingsActivity extends MenuScreen{
                 break;
             case DURATION:
                 target.value.setText(R.string.duration);
+                break;
+            case SPEED:
+                target.value.setText(R.string.speed);
+                break;
+            case HEART_RATE:
+                target.value.setText(R.string.heart_rate);
                 break;
         }
     }

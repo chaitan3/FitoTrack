@@ -51,7 +51,6 @@ public class ScreenElevation extends Screen{
     private boolean timeAxisReset = false;
     private boolean elevationAxisReset = false;
     private long lastChartItemTime = 0;
-    private double lastChartItemEle = 0;
 
     @Override public @Nullable View onCreateView(
             @NonNull LayoutInflater inflater,
@@ -80,14 +79,15 @@ public class ScreenElevation extends Screen{
         duration = rootView.findViewById(R.id.duration);
         duration.setType(ScreenField.Type.DURATION);
         duration.setCenter();
+
+        targetProgress = rootView.findViewById(R.id.targetProgress);
+
         if(Main.isScreenRound){
             duration.setPadding(Main.vw10, 0, Main.vw10, 0);
             ((ConstraintLayout.LayoutParams) chartElevation.getLayoutParams())
                     .setMargins(Main.vw10, 0, Main.vw10, 0);
+            duration.setPadding(Main.vw10, 0, Main.vw10, 0);
         }
-
-        targetProgress = rootView.findViewById(R.id.targetProgress);
-
         return rootView;
     }
 
@@ -122,7 +122,9 @@ public class ScreenElevation extends Screen{
     @Override void show(){
         super.show();
         if(!RecordActivity.workoutData.locationSamples.isEmpty())
-            RecordActivity.workoutData.locationSamples.forEach(sample->addElevation(sample.time, sample.ele));
+            RecordActivity.workoutData.locationSamples.forEach(
+                    sample->addElevation(sample.time, sample.ele)
+            );
         backFill = false;
     }
 
@@ -131,10 +133,10 @@ public class ScreenElevation extends Screen{
         if(!backFill) addElevation(sample.time, sample.ele);
     }
     private void addElevation(long time, double ele){
-        if(time < lastChartItemTime + 4500) return;
+        if(time < lastChartItemTime + 4500 ||
+                (lastDuration < 60000 && ele == 0.0)//don't trust an elevation of exactly 0.0 in the first minute
+        ) return;
         lastChartItemTime = time;
-        if(ele-lastChartItemEle > 2*(lastEleGain+lastEleLoss)) lineDataSet.clear();
-        lastChartItemEle = ele;
 
         long duration = recordActivity.timeToDuration(time);
         if(!timeAxisReset && duration >= 60000){

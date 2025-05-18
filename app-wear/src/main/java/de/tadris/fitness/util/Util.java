@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
  *
  * This file is part of FitoTrack
  *
@@ -68,7 +68,7 @@ public class Util{
     }
 
     public static String distanceDoubleToString(double value){
-        return doubleToString(value, value >= 1000 ? 1 : 2);
+        return doubleToString(value, value >= 10 ? 1 : 2);
     }
 
     public static String speedDoubleToString(double value){
@@ -76,12 +76,12 @@ public class Util{
     }
 
     private static String doubleToString(Double doubleValue, int scale){
-        Double tmp = BigDecimal.valueOf(doubleValue)
+        Double roundedValue = BigDecimal.valueOf(doubleValue)
                 .setScale(scale, RoundingMode.DOWN)
                 .doubleValue();
-        if(scale == 0) return String.valueOf(tmp.intValue());
-        String tmp2 = "%." + scale + "f";
-        return String.format(Locale.ENGLISH, tmp2, tmp);
+        if(scale == 0) return String.valueOf(roundedValue.intValue());
+        String format = "%." + scale + "f";
+        return String.format(Locale.ENGLISH, format, roundedValue);
     }
 
     public static final ValueFormatter timeAxisValueFormatter = new ValueFormatter(){

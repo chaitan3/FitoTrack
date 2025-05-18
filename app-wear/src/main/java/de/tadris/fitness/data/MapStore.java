@@ -136,8 +136,8 @@ public class MapStore{
                         public void onUnavailable(){
                             super.onUnavailable();
                             Log.d(Main.LOG_TAG, "MapStore.getRemoteFile WIFI is not available");
+                            mapDownload.onWarning(R.string.fail_no_fast);
                             getRemoteFileDownload(mapDownload, fileRemote);
-                            mapDownload.onWarning(R.string.fail_fast);
                         }
                     },
                     2000
@@ -145,8 +145,8 @@ public class MapStore{
         }catch(Exception e){
             Log.d(Main.LOG_TAG, "MapStore.getRemoteFile.exception " + e);
             Log.d(Main.LOG_TAG, "MapStore.getRemoteFile.exception " + e.getMessage());
-            getRemoteFileDownload(mapDownload, fileRemote);
             mapDownload.onWarning(R.string.fail_fast);
+            getRemoteFileDownload(mapDownload, fileRemote);
         }
     }
     private void getRemoteFileDownload(MapDownload mapDownload, File fileRemote){
@@ -159,7 +159,7 @@ public class MapStore{
                         sleep100();
                         continue;
                     }
-                    byte[] buffer = new byte[2048];
+                    byte[] buffer = new byte[1048576];//1MB
                     int numBytes = inputStream.read(buffer);
                     if(numBytes < 0){
                         mapDownload.onError(R.string.error_maps_download);

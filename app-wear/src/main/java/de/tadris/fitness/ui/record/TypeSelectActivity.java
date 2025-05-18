@@ -33,14 +33,14 @@ import de.tadris.fitness.ui.Main;
 
 public class TypeSelectActivity extends Activity{
     private LinearLayout list;
-    private static int minTouchSize;
+    private static int _50dp;
     private static int screenTop;
     private static float padPerPixel;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        minTouchSize = (int) getResources().getDimension(R.dimen.minTouchSize);
+        _50dp = (int) getResources().getDimension(R.dimen._50dp);
         setContentView(R.layout.record_type_select);
         ScrollView scrollView = findViewById(R.id.scrollView);
         list = findViewById(R.id.list);
@@ -54,7 +54,7 @@ public class TypeSelectActivity extends Activity{
                 public void onGlobalLayout(){
                     list.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     if(screenTop == 0){
-                        screenTop = Main.vh50 - minTouchSize;
+                        screenTop = Main.vh50 - _50dp;
                         padPerPixel = (float) Main.vw20 / screenTop;
                     }
                     padItems(0);
@@ -66,7 +66,7 @@ public class TypeSelectActivity extends Activity{
     }
     private void addWorkoutType(WorkoutData.WorkoutType workoutType){
         TextView textView = new TextView(this);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, minTouchSize));
+        textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, _50dp));
         textView.setText(WorkoutData.getWorkoutTypeName(workoutType));
         textView.setCompoundDrawablesWithIntrinsicBounds(WorkoutData.getWorkoutTypeIcon(workoutType), 0, 0, 0);
         textView.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);

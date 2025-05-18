@@ -19,6 +19,18 @@
 
 <resources>
     <string name="app_name" translatable="false">FitoTrack</string>
+    <string name="b_back" translatable="false">↤</string>
+    <string name="b_done" translatable="false">✓</string>
+    <string name="_0" translatable="false">0</string>
+    <string name="_1" translatable="false">1</string>
+    <string name="_2" translatable="false">2</string>
+    <string name="_3" translatable="false">3</string>
+    <string name="_4" translatable="false">4</string>
+    <string name="_5" translatable="false">5</string>
+    <string name="_6" translatable="false">6</string>
+    <string name="_7" translatable="false">7</string>
+    <string name="_8" translatable="false">8</string>
+    <string name="_9" translatable="false">9</string>
 
     <!-- Main UI -->
     <string name="main_workouts_text">Workouts</string>
@@ -36,8 +48,17 @@
     <string name="record_location_desc">location status</string>
     <string name="record_heartRate_desc">heart rate status</string>
     <string name="record_target">Target</string>
-    <string name="record_target_auto_pause">auto pause on target</string>
-    <string name="record_target_done">done</string>
+    <string name="record_target_auto_pause">Auto pause on target</string>
+    <string name="target_secondary">Secondary target</string>
+    <string name="distance_preview">%d km</string>
+    <string name="distance_main">distance: %d km</string>
+    <string name="duration_preview">%d:%d%d</string>
+    <string name="duration_main">duration: %d:%d%d</string>
+    <string name="speed_preview">%d.%d kmh</string>
+    <string name="speed_main">speed: %d.%d kmh</string>
+    <string name="speed_main_whole">speed: %d kmh</string>
+    <string name="heart_rate_main">heart rate: %d-%d bpm</string>
+    <string name="dash">-</string>
     <string name="record_location_off">location is switched off</string>
     <string name="record_field_placeholder">--</string>
     <string name="record_map_waiting">waiting for location</string>
@@ -58,30 +79,6 @@
     <string name="gain">gain</string>
     <string name="loss">loss</string>
 
-    <string-array name="target_distances">
-        <item>0 km</item><item>1 km</item><item>2 km</item><item>3 km</item><item>4 km</item>
-        <item>5 km</item><item>6 km</item><item>7 km</item><item>8 km</item><item>9 km</item>
-        <item>10 km</item><item>11 km</item><item>12 km</item><item>13 km</item><item>14 km</item>
-        <item>15 km</item><item>16 km</item><item>17 km</item><item>18 km</item><item>19 km</item>
-        <item>20 km</item><item>21 km</item><item>22 km</item><item>23 km</item><item>24 km</item>
-        <item>25 km</item><item>26 km</item><item>27 km</item><item>28 km</item><item>29 km</item>
-        <item>30 km</item><item>31 km</item><item>32 km</item><item>33 km</item><item>34 km</item>
-        <item>35 km</item><item>36 km</item><item>37 km</item><item>38 km</item><item>39 km</item>
-        <item>40 km</item><item>41 km</item><item>42 km</item><item>43 km</item><item>44 km</item>
-        <item>45 km</item><item>46 km</item><item>47 km</item><item>48 km</item><item>49 km</item>
-        <item>50 km</item>
-    </string-array>
-    <string-array name="target_durations">
-        <item>0 min</item><item>5 min</item><item>10 min</item><item>15 min</item>
-        <item>20 min</item><item>25 min</item><item>30 min</item><item>35 min</item>
-        <item>40 min</item><item>45 min</item><item>50 min</item><item>55 min</item>
-        <item>1 hour</item><item>1:05</item><item>1:10</item><item>1:15</item><item>1:20</item>
-        <item>1:25</item><item>1:30</item><item>1:35</item><item>1:40</item><item>1:45</item>
-        <item>1:50</item><item>1:55</item><item>2 hours</item><item>2:05</item><item>2:10</item>
-        <item>2:15</item><item>2:20</item><item>2:25</item><item>2:30</item><item>2:35</item>
-        <item>2:40</item><item>2:45</item><item>2:50</item><item>2:55</item><item>3 hours</item>
-    </string-array>
-
     <string name="alert_cooldown_start">Track cooldown?</string>
     <string name="alert_cooldown_yes">yes</string>
     <string name="alert_cooldown_no">nah</string>
@@ -98,13 +95,13 @@
     <string name="settings_screen">Screen</string>
     <string name="settings_screen_on">keep on</string>
     <string name="settings_screen_off">auto off</string>
-    <string name="settings_auto_pause">Auto pause</string>
     <string name="settings_screen_map">Map screen</string>
     <string name="settings_screen_current">Current screen</string>
     <string name="settings_screen_total">Totals screen</string>
     <string name="settings_screen_speed">Speed screen</string>
     <string name="settings_screen_ele">Elevation screen</string>
     <string name="settings_screen_heart_rate">Heart rate screen</string>
+    <string name="settings_screen_target">Target screen</string>
 
     <!-- Settings.Maps UI -->
     <string name="maps">Maps</string>
@@ -127,7 +124,8 @@
 
     <string name="fail_unavailable">missing permission, or location is switched off</string>
     <string name="fail_open_settings">Failed to open settings</string>
-    <string name="fail_fast">No fast connection available</string>
+    <string name="fail_no_fast">No Wifi available</string>
+    <string name="fail_fast">Requesting fast connection failed</string>
     <string name="fail_no_maps">Download a map first</string>
 
     <!-- Notifications -->
@@ -147,9 +145,9 @@
     <string name="distance">distance</string>
     <string name="summary">Summary</string>
     <string name="duration">duration</string>
-    <string name="speed">Speed</string>
+    <string name="speed">speed</string>
     <string name="elevation">Elevation</string>
-    <string name="heart_rate">Heart rate</string>
+    <string name="heart_rate">heart rate</string>
     <string name="calories">Calories</string>
 
     <!-- Workout types -->
@@ -173,6 +171,7 @@
     <string name="error_start_exercise">Failed to start exercise</string>
     <string name="error_bt_request">Problem with request from phone</string>
     <string name="error_bt_response">Problem with response from phone</string>
+    <string name="error_maps_empty">Nothing found, check internet connection</string>
     <string name="error_maps_download">Failed to download map</string>
     <string name="error_maps_file_exists">Map already available</string>
 

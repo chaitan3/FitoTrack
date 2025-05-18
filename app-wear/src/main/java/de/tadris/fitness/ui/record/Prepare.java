@@ -60,11 +60,14 @@ public class Prepare extends Fragment{
         type = rootView.findViewById(R.id.type);
         type.setImageResource(RecordActivity.workoutData.getWorkoutTypeIcon());
         type.setOnClickListener(v->startActivity(new Intent(getContext(), TypeSelectActivity.class)));
+        recordActivity.addOnTouch(type);
 
         target = rootView.findViewById(R.id.target);
         target.setOnClickListener(v->startActivity(new Intent(getContext(), TargetActivity.class)));
+        recordActivity.addOnTouch(target);
 
         rootView.findViewById(R.id.start).setOnClickListener(v->recordActivity.startExercise());
+        recordActivity.addOnTouch(rootView.findViewById(R.id.start));
 
         location = rootView.findViewById(R.id.location);
         if(!RecordActivity.locationEnabled || !RecordActivity.hasLocationPermission){
@@ -77,6 +80,7 @@ public class Prepare extends Fragment{
         }
 
         rootView.findViewById(R.id.settings).setOnClickListener(v->startActivity(new Intent(getContext(), SettingsActivity.class)));
+        recordActivity.addOnTouch(rootView.findViewById(R.id.settings));
 
         if(Main.isScreenRound){
             type.setPadding(Main.vw20, 0, 0, 0);
@@ -86,8 +90,7 @@ public class Prepare extends Fragment{
     }
     @Override public void onResume(){
         type.setImageResource(RecordActivity.workoutData.getWorkoutTypeIcon());
-        if(RecordActivity.workoutData.targetType == WorkoutData.TargetType.NONE
-                || RecordActivity.workoutData.targetValue == 0){
+        if(RecordActivity.workoutData.primaryTargetType == WorkoutData.TargetType.NONE){
             target.setImageResource(R.drawable.ic_flag_unset);
         }else{
             target.setImageResource(R.drawable.ic_flag);
@@ -102,5 +105,4 @@ public class Prepare extends Fragment{
     void heartRatePermissionGranted(){heartRate.setColorFilter(Screen.colorActive);}
     void heartRateAvailable(){heartRate.setImageResource(R.drawable.ic_heart_fixed);}
     void heartRateUnavailable(){heartRate.setImageResource(R.drawable.ic_heart_no_fix);}
-
 }

@@ -36,6 +36,7 @@ public class SettingsStore{
         public WorkoutSetting screenMap = DISABLED;
         public WorkoutSetting screenCurrent = ENABLED;
         public WorkoutSetting screenTotal = DISABLED;
+        public WorkoutSetting screenTarget = DISABLED;
         public WorkoutSetting screenSpeed = DISABLED;
         public WorkoutSetting screenElevation = DISABLED;
         public WorkoutSetting screenHeartRate = DISABLED;
@@ -67,6 +68,7 @@ public class SettingsStore{
             screenSpeed = sharedPreferences.getBoolean("screenSpeed", screenSpeed == ENABLED) ? ENABLED : DISABLED;
             screenElevation = sharedPreferences.getBoolean("screenElevation", screenElevation == ENABLED) ? ENABLED : DISABLED;
             screenHeartRate = sharedPreferences.getBoolean("screenHeartRate", screenHeartRate == ENABLED) ? ENABLED : DISABLED;
+            screenTarget = sharedPreferences.getBoolean("screenTarget", screenTarget == ENABLED) ? ENABLED : DISABLED;
         }
     }
     public static boolean isSettingEnabled(WorkoutSetting settingsState){

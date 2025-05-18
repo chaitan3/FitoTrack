@@ -56,9 +56,12 @@ public class Main extends Activity{
     public static int vh75;
     public static int vh80;
     public static int vw10;
+    public static int vw15;
     public static int vw20;
+    public static int vw30;
     public static int vw80;
     public static int _10dp = 0;
+    public static int menuItemHeight = 0;
 
     @Override protected void onCreate(Bundle savedInstanceState){
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
@@ -74,9 +77,12 @@ public class Main extends Activity{
         vh75 = heightPixels - vh25;
         vh80 = (int) (heightPixels * .8);
         vw10 = (int) (widthPixels * .1);
+        vw15 = (int) (widthPixels * .15);
         vw20 = (int) (widthPixels * .2);
+        vw30 = (int) (widthPixels * .3);
         vw80 = (int) (widthPixels * .8);
         _10dp = (int) getResources().getDimension(R.dimen._10dp);
+        menuItemHeight = (int) getResources().getDimension(R.dimen.menuItemHeight);
 
         setContentView(R.layout.main);
 

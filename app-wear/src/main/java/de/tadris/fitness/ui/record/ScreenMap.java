@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+ *
+ * This file is part of FitoTrack
+ *
+ * FitoTrack is free software: you can redistribute it and/or modify
+ * 	it under the terms of the GNU General Public License as published by
+ * 	the Free Software Foundation, either version 3 of the License, or
+ * 	(at your option) any later version.
+ *
+ * 	FitoTrack is distributed in the hope that it will be useful,
+ * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * 	GNU General Public License for more details.
+ *
+ * 	You should have received a copy of the GNU General Public License
+ * 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package de.tadris.fitness.ui.record;
 
 import static android.content.Context.INPUT_SERVICE;
@@ -107,7 +125,10 @@ public class ScreenMap extends Screen implements InputListener{
     }
     @Override void show(){
         super.show();
-        if(RecordActivity.workoutData.locationSamples.isEmpty()) return;
+        if(RecordActivity.workoutData.locationSamples.isEmpty()){
+            backFill = false;
+            return;
+        }
         if(initMapDone){
             if(SettingsStore.getMapSource(recordActivity)){
                 showLocalLayer();
@@ -115,15 +136,20 @@ public class ScreenMap extends Screen implements InputListener{
                 showOnlineLayer();
             }
         }else{
-            initMap(RecordActivity.workoutData.locationSamples.get(0).toLatLong());
-            RecordActivity.workoutData.locationSamples.forEach(sample->{
-                if(sample.time > lastMapItemTime + 4500){
-                    path.addPoint(sample.toLatLong());
-                    lastMapItemTime = sample.time;
-                }
-            });
+            initMap();
         }
-        lastMapItemTime = 0;
+        RecordActivity.workoutData.locationSamples.forEach(sample->{
+            if(sample.time > lastMapItemTime + 4500){
+                path.addPoint(sample.toLatLong());
+                lastMapItemTime = sample.time;
+            }
+        });
+        LocationSample lastSample = RecordActivity.workoutData.locationSamples.get(RecordActivity.workoutData.locationSamples.size()-1);
+        if(lastMapItemTime < lastSample.time){
+            path.addPoint(lastSample.toLatLong());
+            lastMapItemTime = lastSample.time;
+        }
+        location.setLatLong(lastSample.toLatLong());
         centerMap();
         backFill = false;
     }
@@ -166,7 +192,8 @@ public class ScreenMap extends Screen implements InputListener{
         }
     }
 
-    private void initMap(LatLong latLong){
+    private void initMap(){
+        LatLong firstLatLong = RecordActivity.workoutData.locationSamples.get(0).toLatLong();
         initMapDone = true;
         try{
             mapView.setZoomLevel((byte) 15);
@@ -174,7 +201,7 @@ public class ScreenMap extends Screen implements InputListener{
             mapView.setZoomLevelMax((byte) 18);
             mapView.setBuiltInZoomControls(false);
             mapView.addInputListener(this);
-            mapView.setCenter(latLong);
+            mapView.setCenter(firstLatLong);
             waiting.setVisibility(View.GONE);
 
             AndroidGraphicFactory.createInstance(recordActivity);
@@ -200,7 +227,7 @@ public class ScreenMap extends Screen implements InputListener{
             paintPath.setStrokeWidth(10);
             paintPath.setColor(Screen.colorPrimary);
             path = new Polyline(paintPath, AndroidGraphicFactory.INSTANCE);
-            path.addPoint(latLong);
+            path.addPoint(firstLatLong);
             mapView.addLayer(path);
 
             //Location
@@ -211,8 +238,8 @@ public class ScreenMap extends Screen implements InputListener{
             Paint paintFill = AndroidGraphicFactory.INSTANCE.createPaint();
             paintFill.setStyle(Style.FILL);
             paintFill.setColor(colorCircleFill);
-            location = new FixedPixelCircle(latLong, 4f, paintFill, paintLocation);
-            location.setLatLong(latLong);
+            location = new FixedPixelCircle(firstLatLong, 4f, paintFill, paintLocation);
+            location.setLatLong(firstLatLong);
             mapView.addLayer(location);
         }catch(Exception e){
             Log.e(Main.LOG_TAG, "ScreenMap.initMap exception: " + e.getMessage());
@@ -292,7 +319,7 @@ public class ScreenMap extends Screen implements InputListener{
         if(backFill || sample.time < lastMapItemTime + 4500) return;
         lastMapItemTime = sample.time;
         LatLong latLong = sample.toLatLong();
-        if(!initMapDone) initMap(latLong);
+        if(!initMapDone) initMap();
         path.addPoint(latLong);
         if(isVisible()){
             location.setLatLong(latLong);

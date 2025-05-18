@@ -24,21 +24,21 @@
   <path
       android:strokeWidth="1"
       android:pathData="M2,2H8V4H4V8H2Z"
-      android:fillColor="@color/textDarkerWhite"
+      android:fillColor="@color/textWhite"
       android:strokeColor="@color/ic_border"/>
   <path
       android:strokeWidth="1"
       android:pathData="M22,2V8H20V4H16V2Z"
-      android:fillColor="@color/textDarkerWhite"
+      android:fillColor="@color/textWhite"
       android:strokeColor="@color/ic_border"/>
   <path
       android:strokeWidth="1"
       android:pathData="m2,22v-6h2v4h4v2z"
-      android:fillColor="@color/textDarkerWhite"
+      android:fillColor="@color/textWhite"
       android:strokeColor="@color/ic_border"/>
   <path
       android:strokeWidth="1"
       android:pathData="m22,22h-6v-2h4v-4h2z"
-      android:fillColor="@color/textDarkerWhite"
+      android:fillColor="@color/textWhite"
       android:strokeColor="@color/ic_border"/>
 </vector>

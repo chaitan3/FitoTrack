@@ -36,8 +36,8 @@ import de.tadris.fitness.ui.Main;
 
 public abstract class Screen extends Fragment{
     static int colorPrimary = -1;
-    static int progressDone;
-    static int progressDoneDark;
+    static int colorProgressDone;
+    static int colorProgressDoneDark;
     static int colorActive;
     static int colorInactive;
     static int colorCircleFill;
@@ -58,17 +58,17 @@ public abstract class Screen extends Fragment{
     private static ExerciseState lastExerciseState;
     private static String lastTime;
     private static double lastCalories;
-    private static double lastDistance;
-    private static long lastDuration;
+    static double lastDistance;
+    static long lastDuration;
     private static boolean hideEleGain = false;
-    static double lastEleGain;
+    private static double lastEleGain;
     private static boolean hideEleLoss = false;
-    static double lastEleLoss;
+    private static double lastEleLoss;
     static HeartRateSample lastHeartRate;
     private static long lastPause;
     private static double lastSpeed;
     private static double lastSpeedAvg;
-    private static int lastTargetProgress;
+    static int lastTargetProgress;
     private boolean isPaused = false;
     boolean backFill = true;
 
@@ -210,8 +210,14 @@ public abstract class Screen extends Fragment{
     }
     void setTargetAchieved(){
         if(targetProgress != null){
-            targetProgress.setIndicatorColor(progressDoneDark);
-            targetProgress.setTrackColor(progressDone);
+            targetProgress.setIndicatorColor(colorProgressDoneDark);
+            targetProgress.setTrackColor(colorProgressDone);
+        }
+    }
+    void setTargetUnAchieved(){
+        if(targetProgress != null){
+            targetProgress.setIndicatorColor(colorPrimary);
+            targetProgress.setTrackColor(0);
         }
     }
     void onScroll(boolean direction){

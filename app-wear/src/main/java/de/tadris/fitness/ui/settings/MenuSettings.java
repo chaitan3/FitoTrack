@@ -36,7 +36,6 @@ public class MenuSettings extends MenuScreen{
     private MenuItem bluetooth;
     @Override public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
         bluetooth = new MenuItem(this, R.string.settings_BT);
         setBluetoothValue();
         bluetooth.setOnClickListener(v->onBluetoothClick());
@@ -46,10 +45,9 @@ public class MenuSettings extends MenuScreen{
         maps.value.setVisibility(View.GONE);
         maps.setOnClickListener(v->startActivity(new Intent(this, MenuMaps.class)));
         list.addView(maps);
-
     }
     private void setBluetoothValue(){
-        if(!de.tadris.fitness.ui.Main.hasBTPermission){
+        if(!Main.hasBTPermission){
             bluetooth.value.setText(R.string.settings_BT_permission);
         }else if(SettingsStore.getBTEnabled(this)){
             bluetooth.value.setText(R.string.settings_BT_enabled);
@@ -82,6 +80,7 @@ public class MenuSettings extends MenuScreen{
                     && grantResults[i] == PackageManager.PERMISSION_GRANTED
             ){
                 Main.hasBTPermission = true;
+                setBluetoothValue();
                 startService(new Intent(this, CommsBT.class));
             }
         }

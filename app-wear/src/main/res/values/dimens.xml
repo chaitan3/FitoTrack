@@ -20,5 +20,6 @@
 
 <resources>
     <dimen name="_10dp">10dp</dimen>
-    <dimen name="minTouchSize">48dp</dimen>
+    <dimen name="_50dp">50dp</dimen>
+    <dimen name="menuItemHeight">65dp</dimen>
 </resources>

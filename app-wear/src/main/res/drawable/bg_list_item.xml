@@ -23,7 +23,7 @@
         android:width="5dp"
         android:color="#000" />
     <solid
-        android:color="@color/lineHighlight" />
+        android:color="@color/bg_list_item" />
     <corners
         android:radius="20dp" />
     <padding

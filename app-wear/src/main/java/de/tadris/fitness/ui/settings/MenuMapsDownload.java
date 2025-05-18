@@ -21,6 +21,7 @@ package de.tadris.fitness.ui.settings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -50,8 +51,13 @@ public class MenuMapsDownload extends MenuScreen{
             List<MapStore.Dir> dirs = MenuMaps.mapStore.getRemoteDirs(path);
             List<MapStore.File> files = MenuMaps.mapStore.getRemoteFiles(path);
             runOnUiThread(()->{
-                showDirectories(dirs);
-                showFiles(files);
+                if(dirs.isEmpty() && files.isEmpty()){
+                    Toast.makeText(this, R.string.error_maps_empty, Toast.LENGTH_SHORT).show();
+                    finishAndRemoveTask();
+                }else{
+                    showDirectories(dirs);
+                    showFiles(files);
+                }
             });
         });
     }

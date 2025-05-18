@@ -39,7 +39,7 @@
         <ImageView
             android:id="@+id/icon"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/minTouchSize"
+            android:layout_height="48dp"
             android:gravity="center"
             android:contentDescription="@string/workout_type_icon" />
         <TextView
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/background_dark"
                 android:text="@string/show_map"
-                android:textColor="@color/textDarkerWhite"
+                android:textColor="@color/textWhite"
                 android:textSize="20sp" />
             <TextView
                 android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/background_dark"
                 android:text="@string/show_chart"
-                android:textColor="@color/textDarkerWhite"
+                android:textColor="@color/textWhite"
                 android:textSize="20sp" />
             <LinearLayout
                 android:id="@+id/elevation_wrapper"
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/background_dark"
                     android:text="@string/show_chart"
-                    android:textColor="@color/textDarkerWhite"
+                    android:textColor="@color/textWhite"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/background_dark"
                 android:text="@string/show_chart"
-                android:textColor="@color/textDarkerWhite"
+                android:textColor="@color/textWhite"
                 android:textSize="20sp" />
         </LinearLayout>
         <LinearLayout
@@ -194,7 +194,7 @@
         <ImageView
             android:id="@+id/delete"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/minTouchSize"
+            android:layout_height="48dp"
             android:src="@drawable/ic_delete"
             android:contentDescription="@string/record_delete_desc" />
     </LinearLayout>

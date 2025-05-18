@@ -55,11 +55,15 @@ public class WorkoutData{
     public String description;
     public String name;
 
-    public enum TargetType{NONE, DISTANCE, DURATION}
+    public enum TargetType{NONE, DISTANCE, DURATION, SPEED, HEART_RATE}
 
-    public TargetType targetType = TargetType.NONE;
-    public int targetValue = 0;
+    public TargetType primaryTargetType = TargetType.NONE;
+    public int primaryTargetValue = 0;
+    public int primaryTargetValueHigh = 0;
     public boolean targetAutoPause = false;
+    public TargetType secondaryTargetType = TargetType.NONE;
+    public int secondaryTargetValue = 0;
+    public int secondaryTargetValueHigh = 0;
 
     public enum WorkoutType{BIKE, CLIMB, HIKE, RUN, SNOWBOARDING, SNOWSHOEING, SWIM_OUTDOOR, WALK, WINDSURFING, OTHER_INDOOR, OTHER_OUTDOOR}
 
