@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -20,7 +20,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '2.1.10'
     repositories {
         google()
         mavenCentral()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -69,21 +69,21 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Android
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation "androidx.preference:preference-ktx:1.2.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation "androidx.preference:preference-ktx:1.2.1"
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.documentfile:documentfile:1.0.1'
-    implementation "androidx.core:core-ktx:1.9.0"
+    implementation 'androidx.documentfile:documentfile:1.1.0'
+    implementation "androidx.core:core-ktx:1.16.0"
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
 
     // Maps
     def mapsforge_version = "0.17.0"
@@ -126,21 +126,21 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
 
     // Android Room Database
-    def room_version = "2.5.0"
+    def room_version = "2.7.1"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
 
     // Android Work Manager
-    def work_version = "2.8.0"
+    def work_version = "2.10.1"
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     // support for the new language APIs
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     implementation 'com.edmodo:rangebar:1.0.0'
 
 
@@ -149,7 +149,7 @@ dependencies {
 
     // OAuth2.0
     implementation 'com.github.scribejava:scribejava-apis:8.3.3'
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.1'
 
     configurations {
         all*.exclude group: 'xmlpull', module: 'xmlpull'
