@@ -64,24 +64,14 @@ public class WearSyncActivity extends FitoTrackActivity implements CommsBT.BTInt
         super.onResume();
         if(commsBT == null) finishAndRemoveTask();
         if(Build.VERSION.SDK_INT >= 31){
-            hasBTPermission = hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
-                    && hasPermission(android.Manifest.permission.BLUETOOTH_SCAN);
+            hasBTPermission = hasPermission(Manifest.permission.BLUETOOTH_CONNECT);
             if(!hasBTPermission){
-                ActivityCompat.requestPermissions(this
-                        ,new String[]{
-                                Manifest.permission.BLUETOOTH_CONNECT
-                                ,Manifest.permission.BLUETOOTH_SCAN
-                        }
-                        ,1
-                );
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT},1);
             }
         }else{
             hasBTPermission = hasPermission(Manifest.permission.BLUETOOTH);
             if(!hasBTPermission){
-                ActivityCompat.requestPermissions(this
-                        ,new String[]{Manifest.permission.BLUETOOTH}
-                        ,1
-                );
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH},1);
             }
         }
         if(hasBTPermission) runInBackground(()->commsBT.startBT(this));
@@ -102,7 +92,6 @@ public class WearSyncActivity extends FitoTrackActivity implements CommsBT.BTInt
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for(int i=0; i<permissions.length; i++){
             if(permissions[i].equals(Manifest.permission.BLUETOOTH_CONNECT) ||
-                    permissions[i].equals(Manifest.permission.BLUETOOTH_SCAN) ||
                     permissions[i].equals(Manifest.permission.BLUETOOTH)){
                 if(grantResults[i] == PackageManager.PERMISSION_GRANTED){
                     hasBTPermission = true;

@@ -29,25 +29,45 @@
         android:gravity="start"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:text="@string/wear_device_select_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/wearSyncKnown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wearSyncTitle" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wearSyncTitle"
+        app:layout_constraintTop_toBottomOf="@id/wearSyncKnown"
         app:layout_constraintBottom_toBottomOf="parent">
         <LinearLayout
             android:id="@+id/wearSyncList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:orientation="vertical"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/wearSyncNew"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:text="@string/wear_sync_new"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+        </LinearLayout>
     </ScrollView>
     <ImageView
         android:id="@+id/wearSyncIcon"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

@@ -321,6 +321,7 @@ public class CommsBT extends Service{
             }
         }
         private boolean isValidJSON(String json){
+            if(!json.endsWith("}")) return false;
             try{
                 new JSONObject(json);
             }catch(JSONException e){

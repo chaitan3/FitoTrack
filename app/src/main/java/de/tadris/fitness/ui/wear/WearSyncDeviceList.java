@@ -19,6 +19,7 @@
 package de.tadris.fitness.ui.wear;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -37,13 +38,17 @@ import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 import de.tadris.fitness.R;
 
+@SuppressLint("MissingPermission")//Permissions are handled in WearSyncActivity.onCreate
 public class WearSyncDeviceList extends Fragment implements CommsBT.BTInterface{
     private WearSyncActivity activity;
     private TextView title;
+    private LinearLayout known;
     private LinearLayout list;
     private ImageView icon;
     private AnimatedVectorDrawable iconDrawable;
@@ -59,21 +64,25 @@ public class WearSyncDeviceList extends Fragment implements CommsBT.BTInterface{
     @Override public @Nullable View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.fragment_wear_sync, container, false);
         title = rootView.findViewById(R.id.wearSyncTitle);
-        title.setText(R.string.wear_device_select_title);
+        known = rootView.findViewById(R.id.wearSyncKnown);
         list = rootView.findViewById(R.id.wearSyncList);
         icon = rootView.findViewById(R.id.wearSyncIcon);
         iconDrawable = (AnimatedVectorDrawable) icon.getBackground();
-        iconDrawable.start();
+        rootView.findViewById(R.id.wearSyncNew).setOnClickListener(v->{
+            showIcon();
+            Executors.newCachedThreadPool().execute(this::loadBTDevices);
+        });
 
         return rootView;
     }
     @Override public void onResume(){
         super.onResume();
+        if(activity == null || activity.commsBT == null) return;
         activity.commsBT.addListener(this);
     }
-    @Override public void onPause(){
-        super.onPause();
-        activity.commsBT.delListener(this);
+    @Override public void onDestroy(){
+        super.onDestroy();
+        if(activity != null && activity.commsBT != null) activity.commsBT.delListener(this);
     }
     private void showIcon(){
         list.setVisibility(View.GONE);
@@ -85,24 +94,44 @@ public class WearSyncDeviceList extends Fragment implements CommsBT.BTInterface{
         list.setVisibility(View.VISIBLE);
         iconDrawable.stop();
     }
-
-    @SuppressLint("MissingPermission")//Permissions are handled in WearSyncActivity.onCreate
-    @Override public void onBTStartDone(){
-        Log.d(WearSyncActivity.LOG_TAG, "onBTStartDone");
-        if(activity.commsBT.status == CommsBT.Status.CONNECTED) return;
+    private void loadBTDevices(){
         Set<BluetoothDevice> bluetoothDevices = activity.commsBT.getDevices();
         if(bluetoothDevices == null || bluetoothDevices.isEmpty()){
             onBTError(R.string.wear_error_no_devices);
             return;
         }
         activity.runOnUiThread(()->{
-            for(BluetoothDevice bluetoothDevice : bluetoothDevices){
-                TextView device = new TextView(activity, null, 0, R.style.wearDeviceStyle);
-                device.setText(bluetoothDevice.getName());
-                list.addView(device);
-                device.setOnClickListener(v->activity.commsBT.connectDevice(bluetoothDevice));
-            }
+            list.removeAllViews();
+            bluetoothDevices.forEach(d->deviceFound(list, d));
+            showList();
+        });
+    }
+    private void deviceFound(LinearLayout layout, BluetoothDevice bluetoothDevice){
+        TextView device = new TextView(activity, null, 0, R.style.wearDeviceStyle);
+        device.setText(bluetoothDevice.getName());
+        layout.addView(device);
+        device.setOnClickListener(v->activity.commsBT.connectDevice(bluetoothDevice));
+        device.setOnLongClickListener(v->{
+            new AlertDialog.Builder(activity)
+                    .setMessage(R.string.wear_sync_del)
+                    .setPositiveButton(R.string.delete, (d, w)->{
+                        v.setVisibility(View.GONE);
+                        activity.commsBT.removeKnownBTAddress(bluetoothDevice.getAddress());
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .create()
+                    .show();
+            return true;
+        });
+    }
+
+    @Override public void onBTStartDone(){
+        Log.d(WearSyncActivity.LOG_TAG, "onBTStartDone");
+        if(activity.commsBT.status == CommsBT.Status.CONNECTED) return;
+        List<BluetoothDevice> knownDevices = activity.commsBT.getKnownDevices();
+        activity.runOnUiThread(()->{
             title.setText(R.string.wear_device_select_title);
+            knownDevices.forEach(d->deviceFound(known, d));
             showList();
         });
     }

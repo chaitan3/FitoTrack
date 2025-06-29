@@ -85,7 +85,7 @@ class CommsBT{
 
         known_device_addresses = sharedPrefs.getStringSet("known_device_addresses", known_device_addresses);
         Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
-        Log.d(LOG_TAG, "startBT " + known_device_addresses.size() + " known of " + devices.size() + " total devices");
+        Log.d(LOG_TAG, "startBT " + known_device_addresses.size() + " known devices");
 
         if(devices.isEmpty()){
             onBTError(R.string.wear_error_no_devices);
@@ -105,11 +105,7 @@ class CommsBT{
                     break;
                 }
             }
-            if(!stillBonded){
-                known_device_addresses.remove(known_device_address);
-                sharedPrefsEditor.putStringSet("known_device_addresses", known_device_addresses);
-                sharedPrefsEditor.apply();
-            }
+            if(!stillBonded) removeKnownBTAddress(known_device_address);
         }
 
         //Try to connect to known device
@@ -144,6 +140,36 @@ class CommsBT{
             return null;
         }
         return bluetoothAdapter.getBondedDevices();
+    }
+    List<BluetoothDevice> getKnownDevices(){
+        ArrayList<BluetoothDevice> knownBTDevices = new ArrayList<>();
+        if(bluetoothAdapter == null){
+            onBTError(R.string.wear_error_denied);
+            return knownBTDevices;
+        }
+        if(bluetoothAdapter.getState() != BluetoothAdapter.STATE_ON){
+            onBTError(R.string.wear_error_off);
+            return knownBTDevices;
+        }
+        for(BluetoothDevice device : bluetoothAdapter.getBondedDevices()){
+            if(known_device_addresses.contains(device.getAddress())){
+                knownBTDevices.add(device);
+            }
+        }
+        return knownBTDevices;
+    }
+    void removeKnownBTAddress(String address){
+        if(!known_device_addresses.contains(address)) return;
+        known_device_addresses.remove(address);
+        storeKnownBTAddresses();
+    }
+    private void storeKnownBTAddresses(){
+        if(known_device_addresses.isEmpty()){
+            sharedPrefsEditor.remove("known_device_addresses");
+        }else{
+            sharedPrefsEditor.putStringSet("known_device_addresses", known_device_addresses);
+        }
+        sharedPrefsEditor.apply();
     }
 
     void connectDevice(BluetoothDevice device){
@@ -323,6 +349,7 @@ class CommsBT{
             }
         }
         private boolean isValidJSON(String json){
+            if(!json.endsWith("}")) return false;
             try{
                 new JSONObject(json);
             }catch(JSONException e){
@@ -366,8 +393,7 @@ class CommsBT{
         if(!startDone) onBTStartDone();
         if(!known_device_addresses.contains(device.getAddress())){
             known_device_addresses.add(device.getAddress());
-            sharedPrefsEditor.putStringSet("known_device_addresses", known_device_addresses);
-            sharedPrefsEditor.apply();
+            storeKnownBTAddresses();
         }
     }
     private void onBTDisconnected(){
