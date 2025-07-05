@@ -543,4 +543,6 @@
     <string name="debugPressureSensor">Debug du capteur de pression</string>
     <string name="askForComment">Demander un commentaire</string>
     <string name="askForCommentSummary">Demander un commentaire en arrêtant l’enregistrement</string>
+    <string name="removeOAuthToken">Supprimer le jeton d\'accès OAuth</string>
+    <string name="removedOAuthToken">Suppresion du jeton d\'accès OAuth</string>
 </resources>
