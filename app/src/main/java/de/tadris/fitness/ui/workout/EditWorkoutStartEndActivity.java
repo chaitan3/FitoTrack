@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
@@ -163,7 +164,7 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
                         .setNegativeButton(R.string.cancel, null)
                         .create().show();
             } else {
-                //TODO: TOAST nothing selected?
+                Toast.makeText(this, R.string.nothingSelected, Toast.LENGTH_SHORT).show();
             }
 
             return true;
