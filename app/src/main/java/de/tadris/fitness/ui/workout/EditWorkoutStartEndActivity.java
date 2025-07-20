@@ -156,13 +156,12 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
         if (item.getItemId() == R.id.actionMoveApply) {
             if (selectedStartSample != null || selectedEndSample != null){
-                WorkoutCutter cutter = new WorkoutCutter(this, new GpsWorkoutData(workout, new ArrayList<>(samples)));
-                cutter.cutWorkout(selectedStartSample,selectedEndSample);
-
-
-                Intent intent=new Intent();
-                setResult(INTENT_RESULT_CODE_WORKOUT_MODIFIED,intent);
-                finish();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.saveChangesQuestion)
+                        .setMessage(R.string.saveChangesQuestionMessage)
+                        .setPositiveButton(R.string.save, (dialog, which) -> applyChanges())
+                        .setNegativeButton(R.string.cancel, null)
+                        .create().show();
             } else {
                 //TODO: TOAST nothing selected?
             }
@@ -171,6 +170,15 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void applyChanges() {
+        WorkoutCutter cutter = new WorkoutCutter(this, new GpsWorkoutData(workout, new ArrayList<>(samples)));
+        cutter.cutWorkout(selectedStartSample,selectedEndSample);
+
+        Intent intent=new Intent();
+        setResult(INTENT_RESULT_CODE_WORKOUT_MODIFIED,intent);
+        finish();
     }
 
 }
