@@ -69,6 +69,7 @@
     </queries>
 
     <application
+        android:localeConfig="@xml/locales_config"
         android:allowBackup="true"
         android:appCategory="productivity"
         android:icon="@mipmap/ic_launcher"

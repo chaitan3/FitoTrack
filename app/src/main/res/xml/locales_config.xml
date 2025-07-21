@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en"/> <!-- English -->
+    <locale android:name="ar"/> <!-- Arabic -->
+    <locale android:name="ca"/> <!-- Catalan -->
+    <locale android:name="cs"/> <!-- Czech -->
+    <locale android:name="da"/> <!-- Danish -->
+    <locale android:name="de"/> <!-- German -->
+    <locale android:name="el"/> <!-- Greek -->
+    <locale android:name="eo"/>
+    <locale android:name="es"/> <!-- Spanish (Spain) -->
+    <locale android:name="fa"/> <!-- Farsi -->
+
+    <locale android:name="fi"/> <!-- Finnish -->
+    <locale android:name="fr"/> <!-- French (France) -->
+    <locale android:name="ga"/>
+    <locale android:name="gl"/> <!-- Galician -->
+    <locale android:name="he"/> <!-- Hebrew -->      <!-- This should be "iw" -->
+    <locale android:name="hr"/> <!-- Croatian -->
+    <locale android:name="hu"/> <!-- Hungarian -->
+    <locale android:name="id"/> <!-- Indonesian -->      <!-- This should be "in" -->
+    <locale android:name="it"/> <!-- Italian -->
+    <locale android:name="ja"/> <!-- Japanese -->
+
+    <locale android:name="lb"/> <!-- Luxembourgish -->
+    <locale android:name="lt"/> <!-- Lithuanian -->
+    <locale android:name="ms"/> <!-- Malay -->
+    <locale android:name="nb-rNO"/> <!-- Norwegian -->      <!-- This should be "nb" -->
+    <locale android:name="nl"/> <!-- Dutch -->
+    <locale android:name="pl"/> <!-- Polish -->
+    <locale android:name="pt"/> <!-- Portuguese -->
+    <locale android:name="ro"/> <!-- Romanian -->
+    <locale android:name="ru"/> <!-- Russian -->
+    <locale android:name="sk"/> <!-- Slovak -->
+
+    <locale android:name="sq"/> <!-- Albanian -->
+    <locale android:name="sr"/> <!-- Serbian (Cyrillic) -->
+    <locale android:name="sv"/> <!-- Swedish -->
+    <locale android:name="ta"/> <!-- Tamil -->
+    <locale android:name="tr"/> <!-- Turkish -->
+    <locale android:name="uk"/> <!-- Ukrainian -->
+    <locale android:name="vi"/> <!-- Vietnamese -->
+    <locale android:name="zh-rCN"/>
+    <locale android:name="zh-rTW"/>
+
+</locale-config>
