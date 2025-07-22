@@ -38,6 +38,48 @@
         <item>@string/light_theme</item>
         <item>@string/dark_theme</item>
     </string-array>
+    <string-array name="pref_languages">
+        <item>@string/system_default</item>
+        <item>Català</item>     <!-- Catalan -->
+        <item>Čeština</item>    <!-- Czech -->
+        <item>Dansk</item>      <!-- Danish -->
+        <item>Deutsch</item>    <!-- German -->
+        <item>English</item>    <!-- English -->
+        <item>Español</item>    <!-- Spanish -->
+        <item>Esperanto</item>  <!-- Esperanto -->
+        <item>Français</item>   <!-- French -->
+        <item>Gaeilge</item>    <!-- Irish -->
+        <item>Galego</item>     <!-- Galician -->
+        <item>Hrvatski</item>   <!-- Croatian -->
+        <item>Indonesia</item>  <!-- Indonesian -->
+        <item>Italiano</item>   <!-- Italian -->
+        <item>Lëtzebuergesch</item> <!-- Luxembourgish -->
+        <item>Lietuvių</item>   <!-- Lithuanian -->
+        <item>Magyar</item>     <!-- Hungarian -->
+        <item>Melayu</item>     <!-- Malay -->
+        <item>Nederlands</item> <!-- Dutch -->
+        <item>Norsk</item>      <!-- Norwegian -->
+        <item>Polski</item>     <!-- Polish -->
+        <item>Português</item>  <!-- Portuguese -->
+        <item>Română</item>     <!-- Romanian -->
+        <item>Shqip</item>      <!-- Albanian -->
+        <item>Slovenčina</item> <!-- Slovak -->
+        <item>Suomi</item>      <!-- Finnish -->
+        <item>Svenska</item>    <!-- Swedish -->
+        <item>Tiếng Việt</item> <!-- Vietnamese -->
+        <item>Türkçe</item>     <!-- Turkish -->
+        <item>Ελληνικά</item>   <!-- Greek -->
+        <item>Русский</item>    <!-- Russian -->
+        <item>Српски (ћирилица)</item> <!-- Serbian (Cyrillic) -->
+        <item>Українська</item> <!-- Ukrainian -->
+        <item>עברית</item>      <!-- Hebrew -->
+        <item>العربية</item>    <!-- Arabic -->
+        <item>فارسی</item>      <!-- Farsi -->
+        <item>தமிழ்</item>       <!-- Tamil -->
+        <item>中文 (简体)</item>  <!-- Chinese (Simplified) -->
+        <item>中文 (繁體)</item>  <!-- Chinese (Traditional) -->
+        <item>日本語</item>      <!-- Japanese -->
+    </string-array>
     <string-array name="pref_unit_systems">
         <item>@string/metric_unit_system</item>
         <item>@string/metric_with_m_s_unit_system</item>

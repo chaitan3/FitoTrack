@@ -23,6 +23,13 @@
 
     <ListPreference
         android:defaultValue="1"
+        android:entries="@array/pref_languages"
+        android:entryValues="@array/pref_language_values"
+        android:key="language"
+        android:title="@string/language" />
+
+    <ListPreference
+        android:defaultValue="1"
         android:entries="@array/pref_unit_systems"
         android:entryValues="@array/pref_unit_system_values"
         android:key="unitSystem"

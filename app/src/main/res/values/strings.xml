@@ -555,4 +555,5 @@
     </plurals>
     <string name="askForComment">Ask for comment</string>
     <string name="askForCommentSummary">Ask to enter a comment when stopping the record</string>
+    <string name="language">Language</string>
 </resources>

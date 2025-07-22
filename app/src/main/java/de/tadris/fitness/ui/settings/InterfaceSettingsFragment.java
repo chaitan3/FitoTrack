@@ -29,6 +29,8 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
@@ -48,6 +50,7 @@ public class InterfaceSettingsFragment extends FitoTrackSettingFragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         setPreferencesFromResource(R.xml.preferences_user_interface, rootKey);
 
+        bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("unitSystem"));
         bindPreferenceSummaryToValue(findPreference("mapStyle"));
         bindPreferenceSummaryToValue(findPreference("trackStyle"));
@@ -57,6 +60,18 @@ public class InterfaceSettingsFragment extends FitoTrackSettingFragment {
         bindPreferenceSummaryToValue(findPreference("timeFormat"));
         bindPreferenceSummaryToValue(findPreference("firstDayOfWeek"));
         bindPreferenceSummaryToValue(findPreference("energyUnit"));
+
+        findPreference("language").setOnPreferenceChangeListener((preference, newValue) -> {
+            if (newValue.equals("1")) {  // System default
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.create());
+            } else {
+                AppCompatDelegate.setApplicationLocales(
+                        LocaleListCompat.forLanguageTags(newValue.toString())
+                );
+            }
+            return true;
+        });
+
         findPreference("themeSetting").setOnPreferenceChangeListener((preference, newValue) -> {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, newValue);
             Toast.makeText(requireContext(), R.string.hintRestart, Toast.LENGTH_LONG).show();

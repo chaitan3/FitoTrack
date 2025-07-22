@@ -54,6 +54,49 @@
         <item>1</item>
     </string-array>
 
+    <string-array name="pref_language_values">
+        <item>1</item>  <!-- System default -->
+        <item>ca</item> <!-- Catalan -->
+        <item>cs</item> <!-- Czech -->
+        <item>da</item> <!-- Danish -->
+        <item>de</item> <!-- German -->
+        <item>en</item> <!-- English -->
+        <item>es</item> <!-- Spanish -->
+        <item>eo</item> <!-- Esperanto -->
+        <item>fr</item> <!-- French -->
+        <item>ga</item> <!-- Irish -->
+        <item>gl</item> <!-- Galician -->
+        <item>hr</item> <!-- Croatian -->
+        <item>id</item> <!-- Indonesian -->
+        <item>it</item> <!-- Italian -->
+        <item>lb</item> <!-- Luxembourgish -->
+        <item>lt</item> <!-- Lithuanian -->
+        <item>hu</item> <!-- Hungarian -->
+        <item>ms</item> <!-- Malay -->
+        <item>nl</item> <!-- Dutch -->
+        <item>nb</item> <!-- Norwegian -->
+        <item>pl</item> <!-- Polish -->
+        <item>pt</item> <!-- Portuguese -->
+        <item>ro</item> <!-- Romanian -->
+        <item>sq</item> <!-- Albanian -->
+        <item>sk</item> <!-- Slovak -->
+        <item>fi</item> <!-- Finnish -->
+        <item>sv</item> <!-- Swedish -->
+        <item>vi</item> <!-- Vietnamese -->
+        <item>tr</item> <!-- Turkish -->
+        <item>el</item> <!-- Greek -->
+        <item>ru</item> <!-- Russian -->
+        <item>sr</item> <!-- Serbian (Cyrillic) -->
+        <item>uk</item> <!-- Ukrainian -->
+        <item>he</item> <!-- Hebrew -->
+        <item>ar</item> <!-- Arabic -->
+        <item>fa</item> <!-- Farsi -->
+        <item>ta</item> <!-- Tamil -->
+        <item>zh-rCN</item> <!-- Chinese (Simplified) -->
+        <item>zh-rTW</item> <!-- Chinese (Traditional) -->
+        <item>ja</item> <!-- Japanese -->
+    </string-array>
+
     <string-array name="pref_unit_system_values">
         <item>1</item>
         <item>2</item>
