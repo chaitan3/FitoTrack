@@ -92,9 +92,9 @@
         <item>ar</item> <!-- Arabic -->
         <item>fa</item> <!-- Farsi -->
         <item>ta</item> <!-- Tamil -->
-        <item>zh-rCN</item> <!-- Chinese (Simplified) -->
-        <item>zh-rTW</item> <!-- Chinese (Traditional) -->
         <item>ja</item> <!-- Japanese -->
+        <item>zh-Hans-MO</item> <!-- Chinese (Simplified) -->
+        <item>zh-Hant-MO</item> <!-- Chinese (Traditional) -->
     </string-array>
 
     <string-array name="pref_unit_system_values">

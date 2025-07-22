@@ -76,9 +76,9 @@
         <item>العربية</item>    <!-- Arabic -->
         <item>فارسی</item>      <!-- Farsi -->
         <item>தமிழ்</item>       <!-- Tamil -->
+        <item>日本語</item>      <!-- Japanese -->
         <item>中文 (简体)</item>  <!-- Chinese (Simplified) -->
         <item>中文 (繁體)</item>  <!-- Chinese (Traditional) -->
-        <item>日本語</item>      <!-- Japanese -->
     </string-array>
     <string-array name="pref_unit_systems">
         <item>@string/metric_unit_system</item>
