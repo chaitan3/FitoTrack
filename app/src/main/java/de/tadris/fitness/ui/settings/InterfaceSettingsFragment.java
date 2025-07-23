@@ -32,6 +32,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
@@ -49,6 +50,23 @@ public class InterfaceSettingsFragment extends FitoTrackSettingFragment {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         setPreferencesFromResource(R.xml.preferences_user_interface, rootKey);
+
+        // Update the settings UI to reflect the current language setting
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String str = AppCompatDelegate.getApplicationLocales().toLanguageTags();
+        if (str.isEmpty()) {
+            editor.putString("language", "1");
+            ((ListPreference) findPreference("language")).setValue("1");
+        } else {
+            for (String value : getResources().getStringArray(R.array.pref_language_values)) {
+                if (str.startsWith(value)) {
+                    editor.putString("language", value);
+                    ((ListPreference) findPreference("language")).setValue(value);
+                    break;
+                }
+            }
+        }
+        editor.apply();
 
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("unitSystem"));
