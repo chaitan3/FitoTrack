@@ -67,14 +67,14 @@
         <item>ga</item> <!-- Irish -->
         <item>gl</item> <!-- Galician -->
         <item>hr</item> <!-- Croatian -->
-        <item>id</item> <!-- Indonesian -->
+        <item>in</item> <!-- Indonesian -->
         <item>it</item> <!-- Italian -->
         <item>lb</item> <!-- Luxembourgish -->
         <item>lt</item> <!-- Lithuanian -->
         <item>hu</item> <!-- Hungarian -->
         <item>ms</item> <!-- Malay -->
         <item>nl</item> <!-- Dutch -->
-        <item>nb</item> <!-- Norwegian -->
+        <item>nb-NO</item> <!-- Norwegian -->
         <item>pl</item> <!-- Polish -->
         <item>pt</item> <!-- Portuguese -->
         <item>ro</item> <!-- Romanian -->
@@ -88,13 +88,13 @@
         <item>ru</item> <!-- Russian -->
         <item>sr</item> <!-- Serbian (Cyrillic) -->
         <item>uk</item> <!-- Ukrainian -->
-        <item>he</item> <!-- Hebrew -->
+        <item>iw</item> <!-- Hebrew -->
         <item>ar</item> <!-- Arabic -->
         <item>fa</item> <!-- Farsi -->
         <item>ta</item> <!-- Tamil -->
         <item>ja</item> <!-- Japanese -->
-        <item>zh-Hans</item> <!-- Chinese (Simplified) -->
-        <item>zh-Hant</item> <!-- Chinese (Traditional) -->
+        <item>zh-CN</item> <!-- Chinese (Simplified) -->
+        <item>zh-TW</item> <!-- Chinese (Traditional) -->
     </string-array>
 
     <string-array name="pref_unit_system_values">
