@@ -114,7 +114,7 @@
     <string name="workoutStartTime">தொடக்க நேரம்</string>
     <string name="workoutEndTime">இறுதி நேரம்</string>
     <string name="workoutDistance">தூரம்</string>
-    <string name="workoutRepetitions">மறுபடியும் மறுபடியும்</string>
+    <string name="workoutRepetitions">மறுநிகழ்வுகள்</string>
     <string name="workoutSets">செட்</string>
     <string name="workoutPace">விரைவு</string>
     <string name="workoutRoute">பாதை</string>
@@ -313,7 +313,7 @@
     <string name="calendarWeekYear">காலண்டர் வாரம் / ஆண்டு</string>
     <string name="dayInMonth">மாதத்தில் நாள்</string>
     <string name="singleWorkout">ஒற்றை பயிற்சி</string>
-    <string name="workoutStatsHelpText">இந்த திரை உடற்பயிற்சிகளின் வரலாற்று புள்ளிவிவரங்களைக் காட்டுகிறது. இதைப் பயன்படுத்த நீங்கள் முதலில் வொர்க்அவுட் வகையை சொடுக்கு செய்வதன் மூலம் குறிப்பிட வேண்டும். பின்னர் நீங்கள் தெரிந்து கொள்ள விரும்பும் தகவல்களையும் கால அவகாசத்தையும் அமைக்கவும்.\n\n எ.கா. நீங்கள் EEK ஐ நேர இடைவெளியாகத் தேர்ந்தெடுத்தால், ஒவ்வொரு வாரத்தின் அனைத்து உடற்பயிற்சிகளும் ஒவ்வொரு வாரத்தின் சராசரி அல்லது தொகையை கணக்கிடும் ஒரு தரவு புள்ளியாக இணைக்கப்படும்.</string>
+    <string name="workoutStatsHelpText">இந்தத் திரை உடற்பயிற்சிகளின் வரலாற்று புள்ளிவிவரங்களைக் காட்டுகிறது. இதைப் பயன்படுத்த நீங்கள் முதலில் வொர்க்அவுட் வகையைச் சொடுக்கு செய்வதன் மூலம் குறிப்பிட வேண்டும். பின்னர் நீங்கள் தெரிந்து கொள்ள விரும்பும் தகவல்களையும் கால அவகாசத்தையும் அமைக்கவும்.\n\n எ.கா. நீங்கள் \"வாரம்\"ஐ நேர இடைவெளியாகத் தேர்ந்தெடுத்தால், ஒவ்வொரு வாரத்தின் அனைத்து உடற்பயிற்சிகளும் ஒவ்வொரு வாரத்தின் சராசரி அல்லது தொகையைக் கணக்கிடும் ஒரு தரவு புள்ளியாக இணைக்கப்படும்.</string>
     <string name="announcementSuppressDuringCall">அழைப்பின் போது அடக்கவும்</string>
     <string name="replaceOrMergeMessage">காப்புப்பிரதி கோப்புடன் தரவுத்தளத்தை மாற்ற வேண்டுமா அல்லது ஒன்றிணைக்கவா?</string>
     <string name="replace">மாற்றவும்</string>
@@ -391,9 +391,9 @@
     <string name="pref_render_theme_style_info">தேர்ந்தெடுக்கப்பட்ட கருப்பொருளுக்கு பட்டியல் எதுவும் கிடைக்கவில்லை.</string>
     <string name="downloadMapsTitle">வரைபடங்களைப் பதிவிறக்கவும்</string>
     <string name="downloadMapsSpecifyDirectory">முதலில் இணைப்பில்லாத வரைபடங்களுக்கான கோப்பகத்தைக் குறிப்பிடவும்</string>
-    <string name="overwriteMapConfirmation">தற்போதுள்ள எச் வரைபடக் கோப்பை மேலெழுதவா?</string>
+    <string name="overwriteMapConfirmation">தற்போதுள்ள \\\"%s\\\" வரைபடக் கோப்பை மேலெழுதவா?</string>
     <string name="actionDownloadMap">வரைபடத்தைப் பதிவிறக்கவும்</string>
-    <string name="downloadMapConfirmation">எச் வரைபடக் கோப்பைப் பதிவிறக்கவா?</string>
+    <string name="downloadMapConfirmation">\\\"%s\\\"வரைபடக் கோப்பைப் பதிவிறக்கவா?</string>
     <string name="alreadyDownloading">ஒரு கோப்பு ஏற்கனவே பதிவிறக்கம் செய்யப்பட்டுள்ளது</string>
     <string name="downloadFailed">பதிவிறக்கம் தோல்வியடைந்தது</string>
     <string name="downloadCanceled">பதிவிறக்கம் ரத்து செய்யப்பட்டது</string>
@@ -510,4 +510,6 @@
     </plurals>
     <string name="askForComment">கருத்து கேளுங்கள்</string>
     <string name="askForCommentSummary">பதிவை நிறுத்தும்போது ஒரு கருத்தை உள்ளிடச் சொல்லுங்கள்</string>
+    <string name="removeOAuthToken">ஒஆத் கிள்ளாக்கை அகற்று</string>
+    <string name="removedOAuthToken">ஒஆத் கிள்ளாக்கை அகற்றப்பட்டது</string>
 </resources>
