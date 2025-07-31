@@ -21,7 +21,7 @@ package de.tadris.fitness.aggregation;
 
 import androidx.annotation.StringRes;
 
-import de.tadris.fitness.data.BaseWorkout;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.util.unit.UnitUtils;
 
 /**
@@ -36,13 +36,13 @@ public interface WorkoutInformation {
 
     String getId();
 
-    boolean isInformationAvailableFor(BaseWorkout workout);
+    boolean isInformationAvailableFor(Workout workout);
 
-    double getValueFromWorkout(BaseWorkout workout);
+    double getValueFromWorkout(Workout workout);
 
     AggregationType getAggregationType();
 
-    default String getFormattedValueFromWorkout(BaseWorkout workout) {
+    default String getFormattedValueFromWorkout(Workout workout) {
         return UnitUtils.autoRound(getValueFromWorkout(workout)) + " " + getUnit();
     }
 

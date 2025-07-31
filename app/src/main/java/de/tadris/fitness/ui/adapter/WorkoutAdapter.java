@@ -33,9 +33,7 @@ import java.util.Date;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.GpsWorkout;
-import de.tadris.fitness.data.IndoorWorkout;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.util.Icon;
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>{
@@ -63,15 +61,15 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         }
     }
 
-    private BaseWorkout[] workouts;
+    private Workout[] workouts;
     private final WorkoutAdapterListener listener;
 
-    public WorkoutAdapter(BaseWorkout[] workouts, WorkoutAdapterListener listener) {
+    public WorkoutAdapter(Workout[] workouts, WorkoutAdapterListener listener) {
         setWorkouts(workouts);
         this.listener = listener;
     }
 
-    public void setWorkouts(BaseWorkout[] workouts) {
+    public void setWorkouts(Workout[] workouts) {
         this.workouts = workouts;
     }
 
@@ -86,7 +84,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
     @Override
     public void onBindViewHolder(WorkoutViewHolder holder, final int position) {
         Context context = holder.root.getContext();
-        BaseWorkout workout = workouts[position];
+        Workout workout = workouts[position];
         holder.dateText.setText(Instance.getInstance(context).userDateTimeUtils.formatDateTime(new Date(workout.start)));
         holder.typeText.setText(workout.getWorkoutType(context).title);
         if (workout.comment != null) {
@@ -120,9 +118,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
     }
 
     public interface WorkoutAdapterListener {
-        void onItemClick(int pos, BaseWorkout workout);
+        void onItemClick(int pos, Workout workout);
 
-        void onItemLongClick(int pos, BaseWorkout workout);
+        void onItemLongClick(int pos, Workout workout);
     }
 
 

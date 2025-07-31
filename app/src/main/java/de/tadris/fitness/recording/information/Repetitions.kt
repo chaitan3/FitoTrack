@@ -20,7 +20,6 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.indoor.IndoorWorkoutRecorder
 
 class Repetitions(context: Context) : IndoorRecordingInformation(context) {
 

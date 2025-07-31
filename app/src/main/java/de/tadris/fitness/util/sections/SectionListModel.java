@@ -4,22 +4,20 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
+import de.tadris.fitness.data.RouteSample;
 
 public class SectionListModel {
     private GpsWorkout workout;
-    private List<GpsSample> samples;
+    private List<RouteSample> samples;
     private List<String> units = new ArrayList<>();
     private SectionCriterion criterion = SectionCriterion.DISTANCE;
     private double sectionLength = 1;
     private int selectedUnitID = 1;
     private boolean paceToggle = true;
 
-    public SectionListModel(GpsWorkout workout, List<GpsSample> samples) {
+    public SectionListModel(GpsWorkout workout, List<RouteSample> samples) {
         this.samples = samples;
         this.workout = workout;
     }
@@ -89,8 +87,8 @@ public class SectionListModel {
         int worst = 0;
 
         for (int i = 1; i < samples.size(); ++i) {
-            GpsSample sample = samples.get(i);
-            GpsSample previous = samples.get(i - 1);
+            RouteSample sample = samples.get(i);
+            RouteSample previous = samples.get(i - 1);
 
             currentSection.dist += sample.toLatLong().sphericalDistance(previous.toLatLong());
             currentSection.time += sample.relativeTime - previous.relativeTime;

@@ -45,11 +45,10 @@ import java.util.ListIterator;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
-import de.tadris.fitness.data.GpsWorkoutData;
+import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.StatsDataTypes;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.ColoringStrategy;
 import de.tadris.fitness.map.GradientColoringStrategy;
@@ -63,29 +62,29 @@ import de.tadris.fitness.util.WorkoutCalculator;
 public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapSampleSelectionListener {
 
     protected GpsWorkout workout;
-    protected List<GpsSample> samples;
+    protected List<RouteSample> samples;
 
     protected MapView mapView;
     protected WorkoutLayer workoutLayer;
     private FixedPixelCircle highlightingCircle;
 
-    protected GpsSample selectedSample = null;
+    protected RouteSample selectedSample = null;
 
     @Override
     void initBeforeContent() {
         super.initBeforeContent();
         workout = (GpsWorkout) getWorkout();
-        samples = getBaseWorkoutData().castToGpsData().getSamples();
+        samples = getBaseWorkoutData().castToGpsData().samples;
     }
 
     @Override
-    BaseWorkout findWorkout(long id) {
-        return Instance.getInstance(this).db.gpsWorkoutDao().getWorkoutById(id);
+    Workout findWorkout(long id) {
+        return Instance.getInstance(this).db.workoutDao().getWorkoutById(id);
     }
 
     @Override
     List<BaseSample> findSamples(long workoutId) {
-        return Arrays.asList(Instance.getInstance(this).db.gpsWorkoutDao().getAllSamplesOfWorkout(workoutId));
+        return Arrays.asList(Instance.getInstance(this).db.workoutDao().getAllSamplesOfWorkout(workoutId));
     }
 
     void addMap() {
@@ -176,7 +175,7 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
     }
 
     @Override
-    public void onMapSelectionChanged(GpsSample sample) {
+    public void onMapSelectionChanged(RouteSample sample) {
         //nada onChartSelectionChanged(sample)
     }
 
@@ -197,8 +196,8 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
         }
 
         // Find real sample with same id as the clicked one
-        GpsSample diagramSample = (GpsSample) clickedSample;
-        for (GpsSample realSample : samples) {
+        RouteSample diagramSample = (RouteSample) clickedSample;
+        for (RouteSample realSample : samples) {
             if (diagramSample.id == realSample.id) {
                 selectedSample = realSample;
             }
@@ -249,8 +248,8 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
         }
     }
 
-    protected GpsWorkoutData getGpsWorkoutData() {
-        return new GpsWorkoutData(workout, samples);
+    protected WorkoutData getGpsWorkoutData() {
+        return new WorkoutData(workout, samples);
     }
 
     @Override
@@ -263,7 +262,7 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
 
         // Generating a list with all samples in the current view field
         for (BaseSample sample : samples) {
-            if (sample instanceof GpsSample) {
+            if (sample instanceof RouteSample) {
                 if (viewFieldSpan.contains(sample.relativeTime)) {
                     viewFieldSamples.add(sample);
                 }
@@ -281,23 +280,23 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
         int currentGroupIndex = firstGroupIndexInView;
         int aggregationGpsSampleNumber = 0; // We have to count separately since for the case
         // where there is a list combining GpsSamples and other  BaseSample types
-        GpsSample combinedSample = new GpsSample();
+        RouteSample combinedSample = new RouteSample();
         for (ListIterator<BaseSample> i = viewFieldSamples.listIterator(); i.hasNext();) {
             int originalIndex = i.nextIndex() + firstViewFieldSampleOriginalIndex;
             int groupIndex = originalIndex / aggregationSize;
             if (groupIndex != currentGroupIndex) {
-                combinedSample.divide(aggregationGpsSampleNumber);
+                combinedSample = combinedSample.divide(aggregationGpsSampleNumber);
                 aggregatedSamples.add(combinedSample);
 
-                combinedSample = new GpsSample();
+                combinedSample = new RouteSample();
                 aggregationGpsSampleNumber = 0;
                 currentGroupIndex++;
             }
 
             BaseSample sample = i.next();
-            if (sample instanceof GpsSample) {
-                GpsSample gpsSample = (GpsSample) sample;
-                combinedSample.add(gpsSample);
+            if (sample instanceof RouteSample) {
+                RouteSample gpsSample = (RouteSample) sample;
+                combinedSample = combinedSample.add(gpsSample);
                 combinedSample.id = gpsSample.id;
                 aggregationGpsSampleNumber++;
             }

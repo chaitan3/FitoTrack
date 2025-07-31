@@ -36,7 +36,7 @@ public class WorkoutType implements Serializable {
     /**
      * String-ID
      *
-     * @see BaseWorkout#workoutTypeId
+     * @see Workout#workoutTypeId
      */
     @PrimaryKey
     @NonNull

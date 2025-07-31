@@ -25,16 +25,16 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.BaseWorkoutData;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutData;
 
 public interface SampleConverter {
 
-    void onCreate(BaseWorkoutData data);
+    void onCreate(WorkoutData data);
 
-    float getMinValue(BaseWorkout workout);
+    float getMinValue(Workout workout);
 
-    float getMaxValue(BaseWorkout workout);
+    float getMaxValue(Workout workout);
 
     float getValue(BaseSample sample);
 

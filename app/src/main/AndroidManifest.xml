@@ -154,7 +154,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.workout.AggregatedWorkoutStatisticsActivity" />
         <activity
             android:name=".ui.statistics.StatisticsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -180,12 +179,8 @@
         </provider>
 
         <service
-            android:name=".recording.GpsRecorderService"
+            android:name=".recording.RecorderService"
             android:foregroundServiceType="location" />
-
-        <service
-            android:name=".recording.IndoorRecorderService"
-            android:foregroundServiceType="health" />
 
     </application>
 

@@ -23,10 +23,7 @@ import android.content.Context;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.BaseWorkoutData;
-import de.tadris.fitness.data.IndoorSample;
-import de.tadris.fitness.data.IndoorWorkout;
+import de.tadris.fitness.data.Workout;
 
 public class IntensityConverter extends AbstractSampleConverter {
 
@@ -39,12 +36,12 @@ public class IntensityConverter extends AbstractSampleConverter {
     }
 
     @Override
-    public float getMinValue(BaseWorkout workout) {
+    public float getMinValue(Workout workout) {
         return 0;
     }
 
     @Override
-    public float getMaxValue(BaseWorkout workout) {
+    public float getMaxValue(Workout workout) {
         return (float) ((IndoorWorkout) workout).maxIntensity;
     }
 

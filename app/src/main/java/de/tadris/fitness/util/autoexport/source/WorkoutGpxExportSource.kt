@@ -20,15 +20,15 @@ package de.tadris.fitness.util.autoexport.source
 
 import android.content.Context
 import de.tadris.fitness.Instance
-import de.tadris.fitness.data.GpsWorkoutData
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.io.general.IOHelper
 
 class WorkoutGpxExportSource(private val workoutId: Long) : ExportSource {
 
     override fun provideFile(context: Context): ExportSource.ExportedFile {
-        val workout = Instance.getInstance(context).db.gpsWorkoutDao().getWorkoutById(workoutId)
-        val data = GpsWorkoutData.fromWorkout(context, workout)
+        val workout = Instance.getInstance(context).db.workoutDao().getWorkoutById(workoutId)
+        val data = WorkoutData.fromWorkout(context, workout)
         val file =
             DataManager.createSharableFile(context, workout.getExportFileName(context) + ".gpx")
         IOHelper.GpxExporter.exportWorkout(data, file)

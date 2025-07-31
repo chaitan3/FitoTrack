@@ -25,7 +25,7 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
-import de.tadris.fitness.data.BaseWorkout;
+import de.tadris.fitness.data.Workout;
 
 public class Duration extends AbstractWorkoutInformation {
     public Duration(Context context) {
@@ -49,12 +49,12 @@ public class Duration extends AbstractWorkoutInformation {
     }
 
     @Override
-    public double getValueFromWorkout(BaseWorkout workout) {
+    public double getValueFromWorkout(Workout workout) {
         return (double) (workout.duration / 1000 / 60);
     }
 
     @Override
-    public String getFormattedValueFromWorkout(BaseWorkout workout) {
+    public String getFormattedValueFromWorkout(Workout workout) {
         return distanceUnitUtils.getHourMinuteSecondTime(workout.duration);
     }
 

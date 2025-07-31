@@ -20,8 +20,9 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.BaseWorkoutRecorder
-import java.util.*
+import de.tadris.fitness.recording.WorkoutRecorder
+import java.util.Calendar
+import java.util.Locale
 
 class CurrentTime(context: Context) : RecordingInformation(context) {
 
@@ -29,7 +30,7 @@ class CurrentTime(context: Context) : RecordingInformation(context) {
     override val isEnabledByDefault = false
     override fun canBeDisplayed() = false
 
-    override fun getSpokenText(recorder: BaseWorkoutRecorder): String {
+    override fun getSpokenText(recorder: WorkoutRecorder): String {
         return getString(R.string.currentTime) + ": " + getSpokenTime(Calendar.getInstance(Locale.getDefault())) + "."
     }
 
@@ -47,7 +48,7 @@ class CurrentTime(context: Context) : RecordingInformation(context) {
         return ""
     }
 
-    override fun getDisplayedText(recorder: BaseWorkoutRecorder): String {
+    override fun getDisplayedText(recorder: WorkoutRecorder): String {
         return ""
     }
 }

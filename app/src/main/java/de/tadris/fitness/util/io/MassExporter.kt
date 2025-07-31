@@ -20,9 +20,8 @@
 package de.tadris.fitness.util.io
 
 import android.content.Context
-import de.tadris.fitness.data.GpsWorkout
-import de.tadris.fitness.data.GpsWorkoutDao
-import de.tadris.fitness.data.GpsWorkoutData
+import de.tadris.fitness.data.WorkoutDao
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.util.io.general.IWorkoutExporter
 import java.io.File
 import java.util.zip.ZipEntry
@@ -30,7 +29,7 @@ import java.util.zip.ZipOutputStream
 
 class MassExporter(
     private val context: Context,
-    private val gpsWorkoutDao: GpsWorkoutDao,
+    private val workoutDao: WorkoutDao,
     private val export: IWorkoutExporter,
     file: File,
     private val listener: ProgressListener? = null,
@@ -40,7 +39,7 @@ class MassExporter(
     private val zipOut = ZipOutputStream(output)
 
     fun export(){
-        val workouts = gpsWorkoutDao.workouts
+        val workouts = workoutDao.workouts
         workouts.forEachIndexed { index, workout ->
             listener?.onProgressUpdate(index * 100 / workouts.size)
             exportWorkout(index, workout)
@@ -51,7 +50,7 @@ class MassExporter(
     }
 
     private fun exportWorkout(index: Int, workout: GpsWorkout){
-        val data = GpsWorkoutData.fromWorkout(gpsWorkoutDao, workout)
+        val data = WorkoutData.fromWorkout(workoutDao, workout)
         val zipEntryName =
             String.format("%05d", index) + "_" + workout.getWorkoutType(context) + ".gpx";
         val entry = ZipEntry(zipEntryName)

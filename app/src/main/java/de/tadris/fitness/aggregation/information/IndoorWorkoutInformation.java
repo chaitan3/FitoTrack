@@ -21,8 +21,7 @@ package de.tadris.fitness.aggregation.information;
 
 import android.content.Context;
 
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.IndoorWorkout;
+import de.tadris.fitness.data.Workout;
 
 public abstract class IndoorWorkoutInformation extends AbstractWorkoutInformation {
 
@@ -31,12 +30,12 @@ public abstract class IndoorWorkoutInformation extends AbstractWorkoutInformatio
     }
 
     @Override
-    public boolean isInformationAvailableFor(BaseWorkout workout) {
+    public boolean isInformationAvailableFor(Workout workout) {
         return workout instanceof IndoorWorkout;
     }
 
     @Override
-    public double getValueFromWorkout(BaseWorkout workout) {
+    public double getValueFromWorkout(Workout workout) {
         return getValueFromWorkout((IndoorWorkout) workout);
     }
 

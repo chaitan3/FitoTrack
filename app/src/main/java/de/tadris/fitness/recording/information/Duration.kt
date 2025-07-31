@@ -21,7 +21,7 @@ package de.tadris.fitness.recording.information
 import android.content.Context
 import androidx.preference.PreferenceManager
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.BaseWorkoutRecorder
+import de.tadris.fitness.recording.WorkoutRecorder
 
 class Duration(context: Context) : RecordingInformation(context) {
 
@@ -29,7 +29,7 @@ class Duration(context: Context) : RecordingInformation(context) {
     override val isEnabledByDefault = true
     override fun canBeDisplayed() = false
 
-    override fun getSpokenText(recorder: BaseWorkoutRecorder): String {
+    override fun getSpokenText(recorder: WorkoutRecorder): String {
         return getString(R.string.workoutDuration) + ": " + getSpokenTime(recorder.duration) + "."
     }
 
@@ -62,7 +62,7 @@ class Duration(context: Context) : RecordingInformation(context) {
         return ""
     }
 
-    override fun getDisplayedText(recorder: BaseWorkoutRecorder): String {
+    override fun getDisplayedText(recorder: WorkoutRecorder): String {
         return ""
     }
 

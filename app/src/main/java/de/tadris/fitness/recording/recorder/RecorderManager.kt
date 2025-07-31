@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.recording;
+package de.tadris.fitness.recording.recorder
 
-public class IndoorRecorderService extends RecorderService {
+class RecorderManager {
 }

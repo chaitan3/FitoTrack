@@ -25,11 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkoutData;
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.IndoorSample;
-import de.tadris.fitness.data.IndoorWorkout;
-import de.tadris.fitness.data.IndoorWorkoutData;
+import de.tadris.fitness.data.RouteSample;
 
 public class WorkoutCalculator {
 
@@ -88,8 +84,8 @@ public class WorkoutCalculator {
                     result.get(result.size() - 1).addDuration(diff);
                 } else {
                     LatLong location = null;
-                    if (sample instanceof GpsSample) {
-                        location = ((GpsSample) sample).toLatLong();
+                    if (sample instanceof RouteSample) {
+                        location = ((RouteSample) sample).toLatLong();
                     }
                     result.add(new Pause(absoluteTime, relativeTime, diff, location));
                 }

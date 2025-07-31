@@ -19,11 +19,11 @@
 
 package de.tadris.fitness.map;
 
-import de.tadris.fitness.data.GpsSample;
+import de.tadris.fitness.data.RouteSample;
 
 public interface MapSampleSelectionListener {
     /**
      * @param sample The sample changed or @null if the selection was removed
      */
-    void onMapSelectionChanged(GpsSample sample);
+    void onMapSelectionChanged(RouteSample sample);
 }

@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import de.tadris.fitness.data.GpsWorkout;
 import de.tadris.fitness.data.preferences.UserMeasurements;
 import de.tadris.fitness.util.calorie.CalorieCalculator;
 import de.tadris.fitness.util.calorie.FallbackMETProvider;

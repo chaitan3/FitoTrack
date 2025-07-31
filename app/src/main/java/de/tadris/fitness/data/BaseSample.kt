@@ -19,42 +19,26 @@
 
 package de.tadris.fitness.data;
 
-import androidx.room.ColumnInfo;
-import androidx.room.PrimaryKey;
-
-/**
- * Data point for workouts
- */
-public abstract class BaseSample {
+interface BaseSample {
 
     /**
-     * Unique id
+     * ID of the corresponding workout
      */
-    @PrimaryKey
-    public long id;
+    val workoutId: Long
 
     /**
-     * Absolute time in ms UNIX time
+     * ID of sample
      */
-    public long absoluteTime;
+    val id: Long
 
     /**
-     * Time since workout start in ms
+     * absolute Timestamp
      */
-    public long relativeTime;
+    val timestamp: Long
 
     /**
-     * Heart rate in bpm
-     * -1 if no heart rate is available
+     * relative time to the workout start excluding pauses
      */
-    @ColumnInfo(name = "heart_rate")
-    public int heartRate = -1;
-
-    /**
-     * -1 -> No interval was triggered
-     * greater than 0 -> Interval with this id was triggered at this sample
-     */
-    @ColumnInfo(name = "interval_triggered")
-    public long intervalTriggered = -1;
+    val relativeTime: Long
 
 }

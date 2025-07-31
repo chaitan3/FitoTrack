@@ -25,11 +25,8 @@ import java.util.List;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.IndoorSample;
-import de.tadris.fitness.data.IndoorWorkout;
-import de.tadris.fitness.data.IndoorWorkoutData;
 import de.tadris.fitness.data.StatsDataTypes;
+import de.tadris.fitness.data.Workout;
 
 public abstract class IndoorWorkoutActivity extends WorkoutActivity {
 
@@ -44,7 +41,7 @@ public abstract class IndoorWorkoutActivity extends WorkoutActivity {
     }
 
     @Override
-    BaseWorkout findWorkout(long id) {
+    Workout findWorkout(long id) {
         return Instance.getInstance(this).db.indoorWorkoutDao().getWorkoutById(id);
     }
 

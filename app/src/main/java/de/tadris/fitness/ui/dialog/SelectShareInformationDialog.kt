@@ -24,12 +24,12 @@ import android.content.Context
 import android.widget.ArrayAdapter
 import de.tadris.fitness.R
 import de.tadris.fitness.aggregation.WorkoutInformationManager
-import de.tadris.fitness.data.BaseWorkout
+import de.tadris.fitness.data.Workout
 
 class SelectShareInformationDialog(
     private val ctx: Context,
     informationManager: WorkoutInformationManager,
-    workout: BaseWorkout,
+    workout: Workout,
     private val slot: Int,
     private val callback: (slot: Int, informationTypeId: String) -> Unit
 ) {

@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.recording.BaseWorkoutRecorder;
+import de.tadris.fitness.recording.WorkoutRecorder;
 
 /**
  * This class provides countdown time announcements for uneven minutes, i.e. the amount of minutes
@@ -43,7 +43,7 @@ public class MinuteSecondCountdownTimeAnnouncement extends CountdownTimeAnnounce
     }
 
     @Override
-    public String getSpokenText(@NonNull BaseWorkoutRecorder recorder) {
+    public String getSpokenText(@NonNull WorkoutRecorder recorder) {
         int minutes = getCountdownS() / 60;
         int seconds = getCountdownS() - minutes * 60;
         String mins = context.getResources().getQuantityString(R.plurals.minutes, minutes, minutes);

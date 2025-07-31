@@ -42,9 +42,7 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.data.BaseWorkout
-import de.tadris.fitness.data.GpsWorkout
-import de.tadris.fitness.data.IndoorWorkout
+import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.adapter.WorkoutAdapter
@@ -71,7 +69,7 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
     private lateinit var menu: FloatingActionMenu
     private lateinit var hintText: TextView
 
-    private var workouts: Array<BaseWorkout> = emptyArray()
+    private var workouts: Array<Workout> = emptyArray()
 
     private var listSize = 0
     private var lastClickedIndex = 0
@@ -286,7 +284,7 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
         menu.close(true)
     }
 
-    override fun onItemClick(pos: Int, workout: BaseWorkout) {
+    override fun onItemClick(pos: Int, workout: Workout) {
         val intent =
             Intent(this, workout.getWorkoutType(this).getRecordingType().showDetailsActivityClass)
         intent.putExtra(ShowGpsWorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
@@ -294,10 +292,10 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
         lastClickedIndex = pos
     }
 
-    override fun onItemLongClick(pos: Int, workout: BaseWorkout) {
+    override fun onItemLongClick(pos: Int, workout: Workout) {
         DialogUtils.showDeleteWorkoutDialog(this) {
             if (workout is GpsWorkout) {
-                Instance.getInstance(this).db.gpsWorkoutDao().deleteWorkout(workout)
+                Instance.getInstance(this).db.workoutDao().deleteWorkout(workout)
             } else if (workout is IndoorWorkout) {
                 Instance.getInstance(this).db.indoorWorkoutDao().deleteWorkout(workout)
             }
@@ -355,7 +353,6 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
             return true
         }
         if (id == R.id.actionOpenStatisticss) {
-            //startActivity(Intent(this, AggregatedWorkoutStatisticsActivity::class.java))
             startActivity(Intent(this, StatisticsActivity::class.java))
             return true
         }

@@ -32,8 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
 import de.westnordost.osmapi.OsmConnection;
 import de.westnordost.osmapi.common.errors.OsmAuthorizationException;
@@ -47,15 +47,15 @@ public class OsmTraceUploader {
 
     private final Activity activity;
     private final Handler handler;
-    private final GpsWorkout workout;
-    private final List<GpsSample> samples;
+    private final Workout workout;
+    private final List<RouteSample> samples;
     private final GpsTraceDetails.Visibility visibility;
     private final String oauthToken;
     private final boolean cut;
     private final ProgressDialogController dialogController;
     private final String description;
 
-    public OsmTraceUploader(Activity activity, Handler handler, GpsWorkout workout, List<GpsSample> samples, GpsTraceDetails.Visibility visibility, String oauthToken, boolean cut, String description) {
+    public OsmTraceUploader(Activity activity, Handler handler, Workout workout, List<RouteSample> samples, GpsTraceDetails.Visibility visibility, String oauthToken, boolean cut, String description) {
         this.activity = activity;
         this.handler = handler;
         this.workout = workout;
@@ -75,9 +75,9 @@ public class OsmTraceUploader {
     private void cut(boolean last){
         double distance= 0;
         int count = 0;
-        GpsSample lastSample = samples.remove(last ? samples.size() - 1 : 0);
+        RouteSample lastSample = samples.remove(last ? samples.size() - 1 : 0);
         while(distance < CUT_DISTANCE){
-            GpsSample currentSample = samples.remove(last ? samples.size() - 1 : 0);
+            RouteSample currentSample = samples.remove(last ? samples.size() - 1 : 0);
             distance+= lastSample.toLatLong().sphericalDistance(currentSample.toLatLong());
             count++;
             lastSample= currentSample;
@@ -116,13 +116,13 @@ public class OsmTraceUploader {
 
         List<GpsTrackpoint> trackpoints= new LinkedList<>();
 
-        for (GpsSample sample : samples) {
+        for (RouteSample sample : samples) {
             GpsTrackpoint trackpoint = new GpsTrackpoint(
                     new GpsTraceLatLong(sample),
-                    Instant.ofEpochMilli(sample.absoluteTime),
+                    Instant.ofEpochMilli(sample.getTimestamp()),
                     sample == samples.get(0),
                     (float)0,
-                    (float) sample.elevation
+                    (float) sample.getElevation()
                     );
             trackpoints.add(trackpoint);
         }

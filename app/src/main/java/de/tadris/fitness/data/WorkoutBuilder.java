@@ -38,10 +38,8 @@ public class WorkoutBuilder {
 
     private String comment;
 
-    private GpsWorkout existingWorkout;
+    private Workout existingWorkout;
     private boolean fromExistingWorkout = false;
-
-    private boolean wasEdited = false;
 
     public WorkoutBuilder(Context context) {
         workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(context, WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING);
@@ -51,43 +49,19 @@ public class WorkoutBuilder {
         comment = "";
     }
 
-    public GpsWorkout create(Context context) {
-        GpsWorkout workout;
-
-        if (fromExistingWorkout) {
-            workout = existingWorkout;
-        } else {
-            workout = new GpsWorkout();
-        }
-
-        // Calculate values
-        workout.start = start.getTimeInMillis();
-        workout.duration = duration;
-        workout.end = workout.start + workout.duration + workout.pauseDuration;
-
-        if (!fromExistingWorkout) {
-            workout.id = workout.start;
-        }
-        workout.setWorkoutType(workoutType);
-
-        workout.length = length;
-
-        workout.avgSpeed = (double) length / (double) (duration / 1000);
-        workout.avgPace = ((double) workout.duration / 1000 / 60) / ((double) workout.length / 1000);
-
-        if (!fromExistingWorkout) {
-            workout.pauseDuration = 0;
-            workout.ascent = 0;
-            workout.descent = 0;
-            workout.topSpeed = workout.avgSpeed;
-        }
-
-        workout.calorie = new CalorieCalculator(context).calculateCalories(UserMeasurements.from(context), workout);
-        workout.comment = comment;
-
-        workout.edited = wasEdited;
-
-        return workout;
+    public Workout create(Context context) {
+        long pauseDuration = fromExistingWorkout ? existingWorkout.getPauseDuration() : 0L;
+        return new Workout(
+                fromExistingWorkout ? existingWorkout.getId() : start.getTimeInMillis(),
+                start.getTimeInMillis(),
+                start.getTimeInMillis() + duration + pauseDuration,
+                duration,
+                comment,
+                length,
+                new CalorieCalculator(context).calculateCalories(UserMeasurements.from(context), workout),
+                workoutType.id,
+                fromExistingWorkout ? existingWorkout.getIntervalSetUsedId() : 0
+        );
     }
 
     public GpsWorkout saveWorkout(Context context) {
@@ -101,11 +75,11 @@ public class WorkoutBuilder {
     }
 
     private void updateWorkout(Context context, GpsWorkout workout) {
-        Instance.getInstance(context).db.gpsWorkoutDao().updateWorkout(workout);
+        Instance.getInstance(context).db.workoutDao().updateWorkout(workout);
     }
 
     private void insertWorkout(Context context, GpsWorkout workout) {
-        Instance.getInstance(context).db.gpsWorkoutDao().insertWorkout(workout);
+        Instance.getInstance(context).db.workoutDao().insertWorkout(workout);
     }
 
     public WorkoutType getWorkoutType() {

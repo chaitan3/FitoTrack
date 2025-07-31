@@ -39,8 +39,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
 
 public class WorkoutLayer extends Layer {
@@ -51,7 +51,7 @@ public class WorkoutLayer extends Layer {
     private Paint paintStroke;
     private double strokeIncrease = 1;
     private BoundingBox boundingBox;
-    private final List<GpsSample> samples;
+    private final List<RouteSample> samples;
     private Set<MapSampleSelectionListener> listeners;
 
     private ColoringStrategy fallbackColoringStrategy; // if workout is displayed without coloring this will be used
@@ -68,7 +68,7 @@ public class WorkoutLayer extends Layer {
         return paint;
     }
 
-    public WorkoutLayer(List<GpsSample> samples, ColoringStrategy fallbackColoringStrategy, @Nullable ColoringStrategy coloringStrategy) {
+    public WorkoutLayer(List<RouteSample> samples, ColoringStrategy fallbackColoringStrategy, @Nullable ColoringStrategy coloringStrategy) {
         this(getDEFAULT_PAINT_STROKE(), samples);
         this.fallbackColoringStrategy = fallbackColoringStrategy;
         this.coloringStrategy = coloringStrategy;
@@ -79,7 +79,7 @@ public class WorkoutLayer extends Layer {
         this.listeners.add(listener);
     }
 
-    private WorkoutLayer(Paint paintStroke, List<GpsSample> samples) {
+    private WorkoutLayer(Paint paintStroke, List<RouteSample> samples) {
         super();
         this.keepAligned = false;
         this.paintStroke = paintStroke;
@@ -88,13 +88,13 @@ public class WorkoutLayer extends Layer {
 
         //We need to calculate the Bounding box hence need to still convert the items to latLongs
         List<LatLong> points = new ArrayList<>();
-        for (GpsSample sample : samples) {
+        for (RouteSample sample : samples) {
             points.add(sample.toLatLong());
         }
         boundingBox = points.isEmpty() ? null : new BoundingBox(points);
     }
 
-    private void onSampleSelected(GpsSample sample) {
+    private void onSampleSelected(RouteSample sample) {
         for (MapSampleSelectionListener listener : listeners) {
             listener.onMapSelectionChanged(sample);
         }
@@ -107,14 +107,14 @@ public class WorkoutLayer extends Layer {
 
     public boolean onTap(LatLong tapLatLong, Point layerXY, Point tapXY) {
 
-        if (listeners.size() ==0){
+        if (listeners.isEmpty()) {
             return false;
         }
         double max_distance = Math.max(20 / 2 * this.displayModel.getScaleFactor(),
                 this.paintStroke.getStrokeWidth() / 2);
 
         // on tap find the closest workout sample and if within a certain range select it
-        GpsSample sample = findClosestSample(tapLatLong);
+        RouteSample sample = findClosestSample(tapLatLong);
 
         assert sample != null;
         double distance =  sample.toLatLong().sphericalDistance(tapLatLong);
@@ -134,8 +134,8 @@ public class WorkoutLayer extends Layer {
      * @param latLong location
      * @return the sample that is closest to the selected location
      */
-    private GpsSample findClosestSample(LatLong latLong) {
-        GpsSample sample = null;
+    private RouteSample findClosestSample(LatLong latLong) {
+        RouteSample sample = null;
         double shortestDistance = 0;
 
         for (int i = 0; i < this.samples.size() - 1; i++) {
@@ -158,12 +158,12 @@ public class WorkoutLayer extends Layer {
             return;
         }
 
-        Iterator<GpsSample> sampleIterator = this.samples.iterator();
+        Iterator<RouteSample> sampleIterator = this.samples.iterator();
 
-        GpsSample sample = sampleIterator.next();
+        RouteSample sample = sampleIterator.next();
         long mapSize = MercatorProjection.getMapSize(zoomLevel, displayModel.getTileSize());
-        float x = (float) (MercatorProjection.longitudeToPixelX(sample.lon, mapSize) - topLeftPoint.x);
-        float y = (float) (MercatorProjection.latitudeToPixelY(sample.lat, mapSize) - topLeftPoint.y);
+        float x = (float) (MercatorProjection.longitudeToPixelX(sample.getLongitude(), mapSize) - topLeftPoint.x);
+        float y = (float) (MercatorProjection.latitudeToPixelY(sample.getLatitude(), mapSize) - topLeftPoint.y);
 
         if (this.keepAligned) {
             this.paintStroke.setBitmapShaderShift(topLeftPoint);
@@ -178,8 +178,8 @@ public class WorkoutLayer extends Layer {
         while (sampleIterator.hasNext()) {
             path.moveTo(x, y);
             sample = sampleIterator.next();
-            x = (float) (MercatorProjection.longitudeToPixelX(sample.lon, mapSize) - topLeftPoint.x);
-            y = (float) (MercatorProjection.latitudeToPixelY(sample.lat, mapSize) - topLeftPoint.y);
+            x = (float) (MercatorProjection.longitudeToPixelX(sample.getLongitude(), mapSize) - topLeftPoint.x);
+            y = (float) (MercatorProjection.latitudeToPixelY(sample.getLatitude(), mapSize) - topLeftPoint.y);
             paintStroke.setColor(getColorFromSample(sample));
             path.lineTo(x, y);
             canvas.drawPath(path, this.paintStroke);
@@ -188,7 +188,7 @@ public class WorkoutLayer extends Layer {
         this.paintStroke.setStrokeWidth(strokeWidth);
     }
 
-    private int getColorFromSample(GpsSample sample) {
+    private int getColorFromSample(RouteSample sample) {
         if (coloringStrategy != null && sampleConverter != null) {
             double value = sampleConverter.getValue(sample);
             return coloringStrategy.getColor(value);
@@ -197,17 +197,17 @@ public class WorkoutLayer extends Layer {
         }
     }
 
-    public void setColoringStrategy(GpsWorkout workout, ColoringStrategy coloringStrategy) {
+    public void setColoringStrategy(Workout workout, ColoringStrategy coloringStrategy) {
         this.coloringStrategy = coloringStrategy;
         refreshColoringMinMax(workout);
     }
 
-    public void setSampleConverter(GpsWorkout workout, @Nullable SampleConverter sampleConverter) {
+    public void setSampleConverter(Workout workout, @Nullable SampleConverter sampleConverter) {
         this.sampleConverter = sampleConverter;
         refreshColoringMinMax(workout);
     }
 
-    private void refreshColoringMinMax(GpsWorkout workout) {
+    private void refreshColoringMinMax(Workout workout) {
         if (coloringStrategy != null && sampleConverter != null) {
             coloringStrategy.setMin(sampleConverter.getMinValue(workout));
             coloringStrategy.setMax(sampleConverter.getMaxValue(workout));

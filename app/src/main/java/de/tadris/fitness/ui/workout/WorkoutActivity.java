@@ -23,9 +23,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -41,8 +39,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
@@ -52,12 +48,11 @@ import java.util.List;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.BaseWorkoutData;
-import de.tadris.fitness.data.GpsSample;
 import de.tadris.fitness.data.Interval;
 import de.tadris.fitness.data.IntervalSet;
+import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.StatsDataTypes;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
 import de.tadris.fitness.util.WorkoutCalculator;
 import de.tadris.fitness.util.charts.ChartStyles;
@@ -71,7 +66,7 @@ public abstract class WorkoutActivity extends InformationActivity {
     public static final String WORKOUT_ID_EXTRA = "de.tadris.fitness.WorkoutActivity.WORKOUT_ID_EXTRA";
 
     List<BaseSample> samples;
-    private BaseWorkout workout;
+    private Workout workout;
     private Resources.Theme theme;
     protected final Handler mHandler = new Handler();
     protected IntervalSet usedIntervalSet;
@@ -104,7 +99,7 @@ public abstract class WorkoutActivity extends InformationActivity {
         setTheme(Instance.getInstance(this).themes.getWorkoutTypeTheme(workout.getWorkoutType(this)));
     }
 
-    abstract BaseWorkout findWorkout(long id);
+    abstract Workout findWorkout(long id);
 
     abstract List<BaseSample> findSamples(long workoutId);
 
@@ -273,9 +268,9 @@ public abstract class WorkoutActivity extends InformationActivity {
         }
     }
 
-    private GpsSample findSample(Entry entry) {
-        if (entry.getData() instanceof GpsSample) {
-            return (GpsSample) entry.getData();
+    private RouteSample findSample(Entry entry) {
+        if (entry.getData() instanceof RouteSample) {
+            return (RouteSample) entry.getData();
         } else {
             return null;
         }
@@ -303,7 +298,7 @@ public abstract class WorkoutActivity extends InformationActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public BaseWorkout getWorkout() {
+    public Workout getWorkout() {
         return workout;
     }
 

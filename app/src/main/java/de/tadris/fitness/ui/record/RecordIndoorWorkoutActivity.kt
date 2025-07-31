@@ -35,13 +35,10 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.data.IndoorSample
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.recording.BaseWorkoutRecorder
-import de.tadris.fitness.recording.IndoorRecorderService
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.indoor.IndoorWorkoutRecorder
+import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.indoor.exercise.ExerciseRecognizer
 import de.tadris.fitness.util.unit.UnitUtils
 import org.greenrobot.eventbus.Subscribe
@@ -68,7 +65,7 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
 
         val wasAlreadyRunning = if (LAUNCH_ACTION != intent.action) {
             true
-        } else instance.recorder != null && instance.recorder.isActive && instance.recorder.state != BaseWorkoutRecorder.RecordingState.IDLE
+        } else instance.recorder != null && instance.recorder.isActive && instance.recorder.state != WorkoutRecorder.RecordingState.IDLE
 
         if (wasAlreadyRunning) {
             activity = instance.recorder.workout.getWorkoutType(this)
@@ -99,7 +96,7 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
         setTitle(R.string.recordWorkout)
 
         if (wasAlreadyRunning) {
-            if (instance.recorder.state != BaseWorkoutRecorder.RecordingState.IDLE) {
+            if (instance.recorder.state != WorkoutRecorder.RecordingState.IDLE) {
                 recordStartButtonsRoot.visibility = View.INVISIBLE
                 timeView.visibility = View.VISIBLE
                 invalidateOptionsMenu()

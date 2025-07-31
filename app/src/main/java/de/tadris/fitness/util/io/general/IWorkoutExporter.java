@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.tadris.fitness.data.GpsWorkoutData;
+import de.tadris.fitness.data.WorkoutData;
 
 public interface IWorkoutExporter {
 
@@ -34,9 +34,9 @@ public interface IWorkoutExporter {
      * @param data         Exported data
      * @param outputStream output, shouldn't be closed by the method
      */
-    void exportWorkout(GpsWorkoutData data, OutputStream outputStream) throws IOException;
+    void exportWorkout(WorkoutData data, OutputStream outputStream) throws IOException;
 
-    default void exportWorkout(GpsWorkoutData data, File file) throws IOException {
+    default void exportWorkout(WorkoutData data, File file) throws IOException {
         FileOutputStream fileOut = new FileOutputStream(file);
         exportWorkout(data, fileOut);
         fileOut.close();

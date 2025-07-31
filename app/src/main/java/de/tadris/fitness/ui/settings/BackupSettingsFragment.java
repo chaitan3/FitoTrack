@@ -114,7 +114,7 @@ public class BackupSettingsFragment extends FitoTrackSettingFragment {
             File file = DataManager.createSharableFile(getContext(), "workouts.zip");
             new MassExporter(
                     requireContext(),
-                    Instance.getInstance(getContext()).db.gpsWorkoutDao(),
+                    Instance.getInstance(getContext()).db.workoutDao(),
                     new GpxExporter(),
                     file,
                     progress -> mHandler.post(() -> progressDialog.setProgress(progress))

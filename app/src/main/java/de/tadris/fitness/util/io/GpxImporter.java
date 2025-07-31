@@ -29,9 +29,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
-import de.tadris.fitness.data.GpsWorkoutData;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.util.gpx.Gpx;
 import de.tadris.fitness.util.gpx.Track;
 import de.tadris.fitness.util.gpx.TrackPoint;
@@ -53,7 +52,7 @@ public class GpxImporter implements IWorkoutImporter {
             throw new IllegalArgumentException("given GPX file does not contain location data");
         }
 
-        List<GpsWorkoutData> workouts = new ArrayList<>();
+        List<WorkoutData> workouts = new ArrayList<>();
         for (Track track : gpx.getTrk()) {
             workouts.add(getWorkoutDataFromTrack(track));
         }
@@ -67,7 +66,7 @@ public class GpxImporter implements IWorkoutImporter {
         gpx = mapper.readValue(input, Gpx.class);
     }
 
-    private GpsWorkoutData getWorkoutDataFromTrack(Track track) {
+    private WorkoutData getWorkoutDataFromTrack(Track track) {
         TrackSegment firstSegment = track.getTrkseg().get(0);
         TrackPoint firstPoint = firstSegment.getTrkpt().get(0);
 
@@ -102,13 +101,13 @@ public class GpxImporter implements IWorkoutImporter {
             workout.workoutTypeId = extractedWorkoutTypeId;
         }
 
-        List<GpsSample> samples = getSamplesFromTrack(workout.start, gpx.getTrk().get(0));
+        List<RouteSample> samples = getSamplesFromTrack(workout.start, gpx.getTrk().get(0));
 
-        return new GpsWorkoutData(workout, samples);
+        return new WorkoutData(workout, samples);
     }
 
-    private static List<GpsSample> getSamplesFromTrack(long startTime, Track track) {
-        List<GpsSample> samples = new ArrayList<>();
+    private static List<RouteSample> getSamplesFromTrack(long startTime, Track track) {
+        List<RouteSample> samples = new ArrayList<>();
 
         for (TrackSegment segment : track.getTrkseg()) {
             samples.addAll(getSamplesFromTrackSegment(startTime, segment));
@@ -117,14 +116,14 @@ public class GpxImporter implements IWorkoutImporter {
         return samples;
     }
 
-    private static List<GpsSample> getSamplesFromTrackSegment(long startTime, TrackSegment segment) {
-        List<GpsSample> samples = new ArrayList<>();
+    private static List<RouteSample> getSamplesFromTrackSegment(long startTime, TrackSegment segment) {
+        List<RouteSample> samples = new ArrayList<>();
         for (TrackPoint point : segment.getTrkpt()) {
-            GpsSample sample = new GpsSample();
+            RouteSample sample = new RouteSample();
             sample.absoluteTime = parseDate(point.getTime()).getTime();
             sample.elevation = point.getEle();
-            sample.lat = point.getLat();
-            sample.lon = point.getLon();
+            sample.latitude = point.getLat();
+            sample.longitude = point.getLon();
             sample.relativeTime = sample.absoluteTime - startTime;
             TrackPointExtensions extensions = point.getExtensions();
             if (extensions != null) {

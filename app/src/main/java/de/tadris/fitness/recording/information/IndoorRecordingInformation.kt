@@ -19,12 +19,11 @@
 package de.tadris.fitness.recording.information
 
 import android.content.Context
-import de.tadris.fitness.recording.BaseWorkoutRecorder
-import de.tadris.fitness.recording.indoor.IndoorWorkoutRecorder
+import de.tadris.fitness.recording.WorkoutRecorder
 
 abstract class IndoorRecordingInformation(context: Context) : RecordingInformation(context) {
 
-    override fun getDisplayedText(recorder: BaseWorkoutRecorder): String {
+    override fun getDisplayedText(recorder: WorkoutRecorder): String {
         return if (recorder is IndoorWorkoutRecorder) {
             getDisplayedText(recorder)
         } else {
@@ -32,7 +31,7 @@ abstract class IndoorRecordingInformation(context: Context) : RecordingInformati
         }
     }
 
-    override fun getSpokenText(recorder: BaseWorkoutRecorder): String {
+    override fun getSpokenText(recorder: WorkoutRecorder): String {
         return if (recorder is IndoorWorkoutRecorder) {
             getSpokenText(recorder)
         } else {

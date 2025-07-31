@@ -52,8 +52,7 @@ import java.util.stream.Collectors;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.AppDatabase;
-import de.tadris.fitness.data.GpsWorkout;
-import de.tadris.fitness.data.GpsWorkoutData;
+import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.map.FitoTrackRenderThemeMenuCallback;
 import de.tadris.fitness.map.MapManager;
 import de.tadris.fitness.map.SimpleColoringStrategy;
@@ -98,11 +97,11 @@ public class XmlThemeStyleSettingFragment extends FitoTrackSettingFragment imple
         mapManager.setStyleMenuListener(this);
         mapView = mapManager.setupMap();
 
-        GpsWorkout workout = db.gpsWorkoutDao().getLastWorkout();
+        GpsWorkout workout = db.workoutDao().getLastWorkout();
         if (workout != null) {
-            GpsWorkoutData workoutData = GpsWorkoutData.fromWorkout(getContext(), workout);
+            WorkoutData workoutData = WorkoutData.fromWorkout(getContext(), workout);
             WorkoutLayer workoutLayer = new WorkoutLayer(
-                    workoutData.getSamples(),
+                    workoutData.samples,
                     new SimpleColoringStrategy(((FitoTrackActivity) requireActivity()).getThemePrimaryColor()),
                     null);
             mapView.addLayer(workoutLayer);

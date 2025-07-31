@@ -105,9 +105,9 @@ class OAuthAuthentication : FitoTrackActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent?.data == null) {
+        if (intent.data == null) {
             setResult(Activity.RESULT_CANCELED)
             finishAndReset()
         } else {

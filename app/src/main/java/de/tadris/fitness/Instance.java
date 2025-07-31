@@ -28,20 +28,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.tadris.fitness.data.AppDatabase;
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
+import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.data.preferences.UserPreferences;
-import de.tadris.fitness.recording.BaseWorkoutRecorder;
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
+import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.util.DataManager;
 import de.tadris.fitness.util.FitoTrackThemes;
+import de.tadris.fitness.util.ShortcutsUtils;
 import de.tadris.fitness.util.UserDateTimeUtils;
 import de.tadris.fitness.util.WorkoutLogger;
 import de.tadris.fitness.util.autoexport.AutoExportPlanner;
 import de.tadris.fitness.util.unit.DistanceUnitUtils;
 import de.tadris.fitness.util.unit.EnergyUnitUtils;
-import de.tadris.fitness.util.ShortcutsUtils;
 
 public class Instance {
 
@@ -67,7 +65,7 @@ public class Instance {
     }
 
     public final AppDatabase db;
-    public BaseWorkoutRecorder recorder;
+    public WorkoutRecorder recorder;
     public final UserPreferences userPreferences;
     public final FitoTrackThemes themes;
     public final UserDateTimeUtils userDateTimeUtils;
@@ -99,7 +97,7 @@ public class Instance {
     }
 
     private GpsWorkoutRecorder restoreRecorder(Context context) {
-        GpsWorkout lastWorkout = db.gpsWorkoutDao().getLastWorkout();
+        GpsWorkout lastWorkout = db.workoutDao().getLastWorkout();
         if (lastWorkout != null && lastWorkout.end == -1) {
             return restoreRecorder(context, lastWorkout);
         }
@@ -107,7 +105,7 @@ public class Instance {
     }
 
     private GpsWorkoutRecorder restoreRecorder(Context context, GpsWorkout workout) {
-        List<GpsSample> samples = Arrays.asList(db.gpsWorkoutDao().getAllSamplesOfWorkout(workout.id));
+        List<RouteSample> samples = Arrays.asList(db.workoutDao().getAllSamplesOfWorkout(workout.id));
         return new GpsWorkoutRecorder(context, workout, samples);
     }
 

@@ -19,21 +19,21 @@
 
 package de.tadris.fitness.util.io.general;
 
-import static de.tadris.fitness.recording.BaseWorkoutRecorder.MIN_DURATION_DIFF;
+import static de.tadris.fitness.recording.WorkoutRecorder.MIN_DURATION_DIFF;
 
 import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkoutData;
-import de.tadris.fitness.recording.BaseWorkoutRecorder;
-import de.tadris.fitness.recording.gps.GpsWorkoutSaver;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.WorkoutData;
+import de.tadris.fitness.recording.WorkoutRecorder;
+import de.tadris.fitness.recording.gps.WorkoutSaver;
 
-public class ImportWorkoutSaver extends GpsWorkoutSaver {
+public class ImportWorkoutSaver extends WorkoutSaver {
 
-    public ImportWorkoutSaver(Context context, GpsWorkoutData data) {
+    public ImportWorkoutSaver(Context context, WorkoutData data) {
         super(context, data);
     }
 
@@ -59,7 +59,7 @@ public class ImportWorkoutSaver extends GpsWorkoutSaver {
 
     private void setMSLElevationToElevation() {
         // Usually the elevation used in GPX files is already the median sea level
-        for (GpsSample sample : samples) {
+        for (RouteSample sample : samples) {
             sample.elevationMSL = sample.elevation;
         }
     }
@@ -76,8 +76,8 @@ public class ImportWorkoutSaver extends GpsWorkoutSaver {
             // Speed values already present
             return;
         }
-        GpsSample lastSample = samples.get(0);
-        for (GpsSample sample : samples) {
+        RouteSample lastSample = samples.get(0);
+        for (RouteSample sample : samples) {
             double distance = lastSample.toLatLong().sphericalDistance(sample.toLatLong());
             long timeDiff = sample.absoluteTime - lastSample.absoluteTime;
             if (timeDiff != 0) {
@@ -93,10 +93,10 @@ public class ImportWorkoutSaver extends GpsWorkoutSaver {
     private void eliminateDenseSamples() {
         int minDistance = workout.getWorkoutType(context).minDistance;
 
-        List<GpsSample> removedSamples = new ArrayList<>();
+        List<RouteSample> removedSamples = new ArrayList<>();
 
-        GpsSample lastSample = null;
-        for (GpsSample sample : samples) {
+        RouteSample lastSample = null;
+        for (RouteSample sample : samples) {
             if (lastSample == null) {
                 lastSample = sample;
                 continue;
@@ -121,9 +121,9 @@ public class ImportWorkoutSaver extends GpsWorkoutSaver {
         long absoluteTime = samples.get(0).absoluteTime;
         long relativeTime = 0L;
 
-        for (GpsSample sample : samples) {
+        for (RouteSample sample : samples) {
             long timeDiffToLastSample = sample.absoluteTime - absoluteTime;
-            if (timeDiffToLastSample > BaseWorkoutRecorder.PAUSE_TIME * 2) {
+            if (timeDiffToLastSample > WorkoutRecorder.PAUSE_TIME * 2) {
                 // insert pause here
                 absoluteTime = sample.absoluteTime;
             } else {

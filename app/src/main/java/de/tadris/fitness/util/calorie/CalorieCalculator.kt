@@ -19,9 +19,8 @@
 package de.tadris.fitness.util.calorie
 
 import android.content.Context
-import de.tadris.fitness.data.BaseWorkout
-import de.tadris.fitness.data.GpsWorkout
-import de.tadris.fitness.data.IndoorWorkout
+import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserMeasurements
 
 class CalorieCalculator(val provider: List<METProvider>) {
@@ -41,17 +40,13 @@ class CalorieCalculator(val provider: List<METProvider>) {
      * @param workout the workout
      * @return calories burned
      */
-    fun calculateCalories(measurements: UserMeasurements, workout: BaseWorkout): Int {
+    fun calculateCalories(measurements: UserMeasurements, duration: Long, ascent: Int): Int {
         val weight = measurements.weight.toDouble()
-        val mins = (workout.duration / 1000).toDouble() / 60
-        var ascent = 0
-        if (workout is GpsWorkout) {
-            ascent = workout.ascent.toInt() // 1 calorie per meter
-        }
-        return (mins * (getMET(measurements, workout) * 3.5 * weight) / 200).toInt() + ascent
+        val mins = (duration / 1000).toDouble() / 60
+        return (mins * (getMET(measurements) * 3.5 * weight) / 200).toInt() + ascent
     }
 
-    private fun getMET(measurements: UserMeasurements, workout: BaseWorkout): Double {
+    private fun getMET(measurements: UserMeasurements, workout: Workout): Double {
         val speedInKmh = getSpeedInKmh(measurements, workout)
 
         provider.forEach { provider ->
@@ -62,7 +57,9 @@ class CalorieCalculator(val provider: List<METProvider>) {
         return 0.0 // nothing found
     }
 
-    private fun getSpeedInKmh(measurements: UserMeasurements, workout: BaseWorkout) =
+    private fun getSpeedInKmh(measurements: UserMeasurements, workout: WorkoutData): Double {
+
+
         when (workout) {
             is GpsWorkout -> workout.avgSpeed * 3.6
             is IndoorWorkout ->
@@ -70,5 +67,6 @@ class CalorieCalculator(val provider: List<METProvider>) {
                 else 0.0
             else -> 0.0
         }
+    }
 
 }

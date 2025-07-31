@@ -61,10 +61,6 @@ public class BackupController {
         saveGpsWorkoutsToContainer();
         listener.onStatusChanged(20, context.getString(R.string.locationData));
         saveGpsSamplesToContainer();
-        listener.onStatusChanged(40, context.getString(R.string.workoutRecordingTypeIndoor));
-        saveIndoorWorkoutsToContainer();
-        listener.onStatusChanged(45, context.getString(R.string.workoutRecordingTypeIndoor));
-        saveIndoorSamplesToContainer();
         listener.onStatusChanged(50, context.getString(R.string.intervalSets));
         saveIntervalsToContainer();
         listener.onStatusChanged(55, context.getString(R.string.customWorkoutTypesTitle));
@@ -85,19 +81,11 @@ public class BackupController {
     }
 
     private void saveGpsWorkoutsToContainer() {
-        dataContainer.getWorkouts().addAll(Arrays.asList(database.gpsWorkoutDao().getWorkouts()));
+        dataContainer.getWorkouts().addAll(Arrays.asList(database.workoutDao().getWorkouts()));
     }
 
     private void saveGpsSamplesToContainer() {
-        dataContainer.getSamples().addAll(Arrays.asList(database.gpsWorkoutDao().getSamples()));
-    }
-
-    private void saveIndoorWorkoutsToContainer() {
-        dataContainer.getIndoorWorkouts().addAll(Arrays.asList(database.indoorWorkoutDao().getWorkouts()));
-    }
-
-    private void saveIndoorSamplesToContainer() {
-        dataContainer.getIndoorSamples().addAll(Arrays.asList(database.indoorWorkoutDao().getSamples()));
+        dataContainer.getRouteSamples().addAll(Arrays.asList(database.workoutDao().getSamples()));
     }
 
     private void saveIntervalsToContainer() {

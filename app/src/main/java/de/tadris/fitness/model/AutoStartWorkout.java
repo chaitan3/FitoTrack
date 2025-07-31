@@ -29,7 +29,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged;
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
 import de.tadris.fitness.recording.gps.MovementDetector;
 import de.tadris.fitness.util.event.EventBusMember;
 

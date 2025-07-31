@@ -25,16 +25,16 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkoutData;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.WorkoutData;
 
-public class WorkoutCutter extends GpsWorkoutSaver {
+public class WorkoutCutter extends WorkoutSaver {
 
-    public WorkoutCutter(Context context, GpsWorkoutData data) {
+    public WorkoutCutter(Context context, WorkoutData data) {
         super(context, data);
     }
 
-    public void cutWorkout(@Nullable GpsSample startSample, @Nullable GpsSample endSample) {
+    public void cutWorkout(@Nullable RouteSample startSample, @Nullable RouteSample endSample) {
         if (startSample != null) {
             cutStart(startSample);
         }
@@ -47,8 +47,8 @@ public class WorkoutCutter extends GpsWorkoutSaver {
         updateWorkoutAndSamples();
     }
 
-    private void cutStart(GpsSample startSample) {
-        for (GpsSample sample : new ArrayList<>(samples)) {
+    private void cutStart(RouteSample startSample) {
+        for (RouteSample sample : new ArrayList<>(samples)) {
             if (sample.id == startSample.id) {
                 break;
             } else {
@@ -57,14 +57,14 @@ public class WorkoutCutter extends GpsWorkoutSaver {
         }
         // Move relative times
         long startTime = startSample.relativeTime;
-        for (GpsSample sample : samples) {
+        for (RouteSample sample : samples) {
             sample.relativeTime -= startTime;
         }
     }
 
-    private void cutEnd(GpsSample endSample) {
+    private void cutEnd(RouteSample endSample) {
         boolean found = false;
-        for (GpsSample sample : new ArrayList<>(samples)) {
+        for (RouteSample sample : new ArrayList<>(samples)) {
             if (found) {
                 deleteSample(sample);
             } else if (sample.id == endSample.id) {
@@ -73,9 +73,9 @@ public class WorkoutCutter extends GpsWorkoutSaver {
         }
     }
 
-    private void deleteSample(GpsSample sample) {
+    private void deleteSample(RouteSample sample) {
         samples.remove(sample);
-        db.gpsWorkoutDao().deleteSample(sample);
+        db.workoutDao().deleteSample(sample);
     }
 
 }

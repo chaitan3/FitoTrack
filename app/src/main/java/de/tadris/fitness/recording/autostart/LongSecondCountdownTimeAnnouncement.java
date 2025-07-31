@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.recording.BaseWorkoutRecorder;
+import de.tadris.fitness.recording.WorkoutRecorder;
 
 /**
  * This class provides long countdown time announcements, i.e. the amount of seconds left plus some
@@ -44,7 +44,7 @@ public class LongSecondCountdownTimeAnnouncement extends CountdownTimeAnnounceme
     }
 
     @Override
-    public String getSpokenText(@NonNull BaseWorkoutRecorder recorder) {
+    public String getSpokenText(@NonNull WorkoutRecorder recorder) {
         int seconds = getCountdownS();
         String secs = context.getResources().getQuantityString(R.plurals.seconds, seconds, seconds);
         return context.getString(R.string.ttsLongSecondCountdownAnnouncement, secs);

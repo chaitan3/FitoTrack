@@ -25,7 +25,6 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
-import de.tadris.fitness.data.GpsWorkout;
 
 public class TopSpeed extends GpsWorkoutInformation {
     public TopSpeed(Context context) {

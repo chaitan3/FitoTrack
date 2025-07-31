@@ -37,7 +37,6 @@ import java.util.Calendar;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.GpsWorkout;
 import de.tadris.fitness.data.WorkoutBuilder;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.ui.dialog.DatePickerFragment;
@@ -139,7 +138,7 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
         Intent intent = getIntent();
         long workoutId = intent.getLongExtra(WORKOUT_ID_EXTRA, 0);
         if (workoutId != 0) {
-            GpsWorkout workout = Instance.getInstance(this).db.gpsWorkoutDao().getWorkoutById(workoutId);
+            GpsWorkout workout = Instance.getInstance(this).db.workoutDao().getWorkoutById(workoutId);
             if (workout != null) {
                 loadFromWorkout(workout);
             } else {

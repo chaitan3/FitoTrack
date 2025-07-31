@@ -22,11 +22,11 @@ package de.tadris.fitness.ui.workout.diagram;
 import android.content.Context;
 
 import java.util.List;
+
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.BaseWorkoutData;
-import de.tadris.fitness.data.GpsSample;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
 
 public class HeartRateConverter extends AbstractSampleConverter {
 
@@ -38,8 +38,8 @@ public class HeartRateConverter extends AbstractSampleConverter {
 
     @Override
     public void onCreate(BaseWorkoutData data) {
-        List<GpsSample> samples = data.castToGpsData().getSamples();
-        for (GpsSample sample : samples) {
+        List<RouteSample> samples = data.castToGpsData().samples;
+        for (RouteSample sample : samples) {
             if (sample.heartRate < this.min) {
                 this.min = sample.heartRate;
             }
@@ -67,12 +67,12 @@ public class HeartRateConverter extends AbstractSampleConverter {
     }
 
     @Override
-    public float getMinValue(BaseWorkout workout) {
+    public float getMinValue(Workout workout) {
         return this.min;
     }
 
     @Override
-    public float getMaxValue(BaseWorkout workout) {
+    public float getMaxValue(Workout workout) {
         return workout.maxHeartRate;
     }
 }

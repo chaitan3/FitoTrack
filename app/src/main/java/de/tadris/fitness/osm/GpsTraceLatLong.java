@@ -19,7 +19,7 @@
 
 package de.tadris.fitness.osm;
 
-import de.tadris.fitness.data.GpsSample;
+import de.tadris.fitness.data.RouteSample;
 import de.westnordost.osmapi.map.data.LatLon;
 
 class GpsTraceLatLong implements LatLon {
@@ -32,8 +32,8 @@ class GpsTraceLatLong implements LatLon {
         this.longitude = longitude;
     }
 
-    public GpsTraceLatLong(GpsSample sample) {
-        this(sample.lat, sample.lon);
+    public GpsTraceLatLong(RouteSample sample) {
+        this(sample.getLatitude(), sample.getLongitude());
     }
 
     @Override

@@ -86,7 +86,6 @@ import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent;
 import de.tadris.fitness.recording.event.TTSReadyEvent;
 import de.tadris.fitness.recording.event.WorkoutAutoStopEvent;
 import de.tadris.fitness.recording.gps.DefaultMovementDetector;
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
 import de.tadris.fitness.recording.gps.MovementDetector;
 import de.tadris.fitness.recording.information.InformationDisplay;
 import de.tadris.fitness.recording.information.RecordingInformation;

@@ -25,7 +25,7 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
-import de.tadris.fitness.data.BaseWorkout;
+import de.tadris.fitness.data.Workout;
 
 public class WorkoutCount extends AbstractWorkoutInformation {
     public WorkoutCount(Context context) {
@@ -49,7 +49,7 @@ public class WorkoutCount extends AbstractWorkoutInformation {
     }
 
     @Override
-    public double getValueFromWorkout(BaseWorkout workout) {
+    public double getValueFromWorkout(Workout workout) {
         return 1;
     }
 

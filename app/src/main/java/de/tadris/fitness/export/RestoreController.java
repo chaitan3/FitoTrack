@@ -32,15 +32,11 @@ import java.util.zip.ZipInputStream;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.AppDatabase;
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
-import de.tadris.fitness.data.IndoorSample;
-import de.tadris.fitness.data.IndoorWorkout;
 import de.tadris.fitness.data.Interval;
 import de.tadris.fitness.data.IntervalSet;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutType;
-import de.tadris.fitness.data.migration.Migration;
-import de.tadris.fitness.data.migration.Migration12IntervalSets;
 
 public class RestoreController {
 
@@ -121,47 +117,23 @@ public class RestoreController {
 
     private void restoreGpsWorkouts() {
         if (dataContainer.getWorkouts() != null) {
-            for (GpsWorkout workout : dataContainer.getWorkouts()) {
+            for (Workout workout : dataContainer.getWorkouts()) {
                 // Only Import Unknown Workouts on merge
-                if (replace || database.gpsWorkoutDao().findById(workout.id) == null) {
-                    database.gpsWorkoutDao().insertWorkout(workout);
+                if (replace || database.workoutDao().findById(workout.id) == null) {
+                    database.workoutDao().insertWorkout(workout);
                 }
             }
         }
     }
 
     private void restoreGpsSamples() {
-        if (dataContainer.getSamples() != null) {
-            for (GpsSample sample : dataContainer.getSamples()) {
+        if (dataContainer.getRouteSamples() != null) {
+            for (RouteSample sample : dataContainer.getRouteSamples()) {
                 // Only import unknown samples with known workout on merge
                 // Query not necessary on replace because data was cleared
-                if (replace || (database.gpsWorkoutDao().findById(sample.workoutId) != null &&
-                        database.gpsWorkoutDao().findSampleById(sample.id) == null)) {
-                    database.gpsWorkoutDao().insertSample(sample);
-                }
-            }
-        }
-    }
-
-    private void restoreIndoorWorkouts() {
-        if (dataContainer.getIndoorWorkouts() != null) {
-            for (IndoorWorkout workout : dataContainer.getIndoorWorkouts()) {
-                // Only Import Unknown Workouts on merge
-                if (replace || database.indoorWorkoutDao().findById(workout.id) == null) {
-                    database.indoorWorkoutDao().insertWorkout(workout);
-                }
-            }
-        }
-    }
-
-    private void restoreIndoorSamples() {
-        if (dataContainer.getIndoorSamples() != null) {
-            for (IndoorSample sample : dataContainer.getIndoorSamples()) {
-                // Only import unknown samples with known workout on merge
-                // Query not necessary on replace because data was cleared
-                if (replace || (database.indoorWorkoutDao().findById(sample.workoutId) != null &&
-                        database.indoorWorkoutDao().findSampleById(sample.id) == null)) {
-                    database.indoorWorkoutDao().insertSample(sample);
+                if (replace || (database.workoutDao().findById(sample.getWorkoutId()) != null &&
+                        database.workoutDao().findSampleById(sample.getId()) == null)) {
+                    database.workoutDao().insertSample(sample);
                 }
             }
         }
@@ -204,10 +176,10 @@ public class RestoreController {
 
     private void runMigrations() {
         if (dataContainer.getVersion() <= 1) {
-            for (GpsWorkout workout : dataContainer.getWorkouts()) {
+            for (Workout workout : dataContainer.getWorkouts()) {
                 float minHeight = 0f;
                 float maxHeight = 0f;
-                for (GpsSample sample : database.gpsWorkoutDao().getAllSamplesOfWorkout(workout.id)) {
+                for (RouteSample sample : database.workoutDao().getAllSamplesOfWorkout(workout.id)) {
                     if (minHeight == 0) {
                         minHeight = (float) sample.elevationMSL;
                         maxHeight = (float) sample.elevationMSL;
@@ -217,13 +189,7 @@ public class RestoreController {
                 }
                 workout.minElevationMSL = minHeight;
                 workout.maxElevationMSL = maxHeight;
-                database.gpsWorkoutDao().updateWorkout(workout);
-            }
-        }
-        if (dataContainer.getVersion() <= 2) {
-            Migration12IntervalSets migration = new Migration12IntervalSets(context, Migration.DUMMY_LISTENER);
-            for (GpsWorkout workout : dataContainer.getWorkouts()) {
-                migration.migrateWorkout(workout);
+                database.workoutDao().updateWorkout(workout);
             }
         }
     }

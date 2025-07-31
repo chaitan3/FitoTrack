@@ -23,13 +23,13 @@ import java.util.List;
 
 public class WorkoutManager {
 
-    public static void calculateInclination(List<GpsSample> samples) {
+    public static void calculateInclination(List<RouteSample> samples) {
         samples.get(0).tmpInclination = 0;
 
         // Calculate inclination
         for (int i = 1; i < samples.size(); i++) {
-            GpsSample sample = samples.get(i);
-            GpsSample lastSample = samples.get(i - 1);
+            RouteSample sample = samples.get(i);
+            RouteSample lastSample = samples.get(i - 1);
             double elevationDifference = sample.elevation - lastSample.elevation;
             double distance = sample.toLatLong().sphericalDistance(lastSample.toLatLong());
             sample.tmpInclination = (float) (elevationDifference * 100 / distance);

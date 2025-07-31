@@ -46,7 +46,6 @@ import de.tadris.fitness.recording.component.GpsComponent;
 import de.tadris.fitness.recording.component.HeartRateComponent;
 import de.tadris.fitness.recording.component.PressureComponent;
 import de.tadris.fitness.recording.component.RecorderServiceComponent;
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
 import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 import de.tadris.fitness.util.NotificationHelper;
 import de.tadris.fitness.util.WorkoutLogger;
@@ -57,7 +56,7 @@ import de.tadris.fitness.util.WorkoutLogger;
  * <p>
  * It starts RecorderServiceComponents depending on the workout type.
  */
-public abstract class RecorderService extends Service {
+public class RecorderService extends Service {
 
     protected Date serviceStartTime;
 

@@ -41,7 +41,7 @@ public class StatsDataProvider {
 
     public StatsDataTypes.DataPoint getFirstData(WorkoutProperty requestedProperty, List<WorkoutType> workoutTypes) throws NoDataException {
         ArrayList<StatsDataTypes.DataPoint> points = getData(requestedProperty, workoutTypes);
-        if (points.size() == 0)
+        if (points.isEmpty())
             throw new NoDataException();
         return points.get(0);
     }
@@ -59,8 +59,8 @@ public class StatsDataProvider {
 
     public ArrayList<StatsDataTypes.DataPoint> getData(WorkoutProperty requestedProperty, List<WorkoutType> workoutTypes, @Nullable StatsDataTypes.TimeSpan timeSpan) {
         ArrayList<StatsDataTypes.DataPoint> data = new ArrayList<>();
-        List<BaseWorkout> workouts = Instance.getInstance(context).db.getAllWorkouts();
-        for (BaseWorkout workout : workouts) {
+        List<Workout> workouts = Instance.getInstance(context).db.getAllWorkouts();
+        for (Workout workout : workouts) {
             if ((timeSpan == null) || timeSpan.contains(workout.start)) {
                 WorkoutType type = workout.getWorkoutType(context);
                 if (workoutTypes.contains(type)) { // in separate if cause getWorkoutType is sometimes costly
@@ -81,7 +81,7 @@ public class StatsDataProvider {
         return data;
     }
 
-    private double getPropertyValue(WorkoutProperty property, BaseWorkout workout) throws Exception {
+    private double getPropertyValue(WorkoutProperty property, Workout workout) throws Exception {
         switch (property.getType()) {
             case BASE:
                 return getBasePropertyValue(property, workout);
@@ -94,7 +94,7 @@ public class StatsDataProvider {
         }
     }
 
-    private double getBasePropertyValue(WorkoutProperty property, BaseWorkout workout) throws Exception {
+    private double getBasePropertyValue(WorkoutProperty property, Workout workout) throws Exception {
         switch (property) {
             case NUMBER:
                 return 1;

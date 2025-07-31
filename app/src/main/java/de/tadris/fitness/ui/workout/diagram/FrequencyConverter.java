@@ -21,15 +21,9 @@ package de.tadris.fitness.ui.workout.diagram;
 
 import android.content.Context;
 
-import com.github.mikephil.charting.formatter.DefaultValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.BaseWorkoutData;
-import de.tadris.fitness.data.IndoorSample;
-import de.tadris.fitness.data.IndoorWorkout;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.util.unit.UnitUtils;
 
 public class FrequencyConverter extends AbstractSampleConverter {
@@ -43,12 +37,12 @@ public class FrequencyConverter extends AbstractSampleConverter {
     }
 
     @Override
-    public float getMinValue(BaseWorkout workout) {
+    public float getMinValue(Workout workout) {
         return 0;
     }
 
     @Override
-    public float getMaxValue(BaseWorkout workout) {
+    public float getMaxValue(Workout workout) {
         return (float) ((IndoorWorkout) workout).maxFrequency;
     }
 

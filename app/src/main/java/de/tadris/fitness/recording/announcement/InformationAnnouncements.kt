@@ -21,14 +21,13 @@ package de.tadris.fitness.recording.announcement
 import android.content.Context
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.BaseWorkoutRecorder
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder
+import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.information.CurrentSpeed
 import de.tadris.fitness.recording.information.InformationManager
 
 class InformationAnnouncements(
     private val context: Context,
-    private val recorder: BaseWorkoutRecorder,
+    private val recorder: WorkoutRecorder,
     private val TTSController: TTSController
 ) {
 

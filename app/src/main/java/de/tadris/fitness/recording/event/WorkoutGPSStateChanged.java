@@ -1,7 +1,5 @@
 package de.tadris.fitness.recording.event;
 
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
-
 public class WorkoutGPSStateChanged {
 
     public final GpsWorkoutRecorder.GpsState oldState;

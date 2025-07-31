@@ -28,10 +28,10 @@ import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
 import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
-import de.tadris.fitness.recording.sensors.HRBatteryManager
-import de.tadris.fitness.recording.sensors.HRBatteryManager.HRBatteryManagerCallback
-import de.tadris.fitness.recording.sensors.HRManager
-import de.tadris.fitness.recording.sensors.HRManager.HRManagerCallback
+import de.tadris.fitness.recording.heart_rate.HRBatteryManager
+import de.tadris.fitness.recording.heart_rate.HRBatteryManager.HRBatteryManagerCallback
+import de.tadris.fitness.recording.heart_rate.HRManager
+import de.tadris.fitness.recording.heart_rate.HRManager.HRManagerCallback
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import org.greenrobot.eventbus.EventBus
 

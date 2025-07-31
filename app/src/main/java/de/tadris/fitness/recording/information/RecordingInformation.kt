@@ -22,7 +22,7 @@ import android.content.Context
 import android.preference.PreferenceManager
 import androidx.annotation.StringRes
 import de.tadris.fitness.Instance
-import de.tadris.fitness.recording.BaseWorkoutRecorder
+import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.announcement.Announcement
 
 abstract class RecordingInformation(protected val context: Context) : Announcement {
@@ -43,5 +43,5 @@ abstract class RecordingInformation(protected val context: Context) : Announceme
 
     abstract fun getTitle(): String
 
-    abstract fun getDisplayedText(recorder: BaseWorkoutRecorder): String
+    abstract fun getDisplayedText(recorder: WorkoutRecorder): String
 }

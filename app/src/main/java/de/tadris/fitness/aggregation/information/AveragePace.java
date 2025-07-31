@@ -25,8 +25,7 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
-import de.tadris.fitness.data.BaseWorkout;
-import de.tadris.fitness.data.GpsWorkout;
+import de.tadris.fitness.data.Workout;
 
 public class AveragePace extends GpsWorkoutInformation {
     public AveragePace(Context context) {
@@ -55,7 +54,7 @@ public class AveragePace extends GpsWorkoutInformation {
     }
 
     @Override
-    public String getFormattedValueFromWorkout(BaseWorkout workout) {
+    public String getFormattedValueFromWorkout(Workout workout) {
         return distanceUnitUtils.getPace(((GpsWorkout) workout).avgPace);
     }
 

@@ -24,7 +24,6 @@ import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.announcement.VoiceAnnouncements
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder
 import de.tadris.fitness.recording.information.GPSStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

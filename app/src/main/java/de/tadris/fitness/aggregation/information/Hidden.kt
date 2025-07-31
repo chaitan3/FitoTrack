@@ -22,7 +22,6 @@ package de.tadris.fitness.aggregation.information
 import android.content.Context
 import de.tadris.fitness.R
 import de.tadris.fitness.aggregation.AggregationType
-import de.tadris.fitness.data.GpsWorkout
 
 class Hidden(ctx: Context) : GpsWorkoutInformation(ctx) {
     override fun getTitleRes(): Int {

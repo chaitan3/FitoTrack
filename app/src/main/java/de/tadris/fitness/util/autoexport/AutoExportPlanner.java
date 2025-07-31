@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.ExportTargetConfiguration;
-import de.tadris.fitness.data.GpsWorkout;
 import de.tadris.fitness.util.autoexport.source.ExportSource;
 
 public class AutoExportPlanner {

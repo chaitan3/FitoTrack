@@ -29,15 +29,16 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Database(version = 16, entities = {
-        GpsWorkout.class,
-        GpsSample.class,
-        IndoorWorkout.class,
-        IndoorSample.class,
+@Database(version = 17, entities = {
+        Workout.class,
+        RouteSample.class,
+        WorkoutPause.class,
+        RepetitionSample.class,
+        HeartRateSample.class,
+        WorkoutEvent.class,
         Interval.class,
         IntervalSet.class,
         WorkoutType.class,
@@ -47,9 +48,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "fito-track";
 
-    public abstract GpsWorkoutDao gpsWorkoutDao();
-
-    public abstract IndoorWorkoutDao indoorWorkoutDao();
+    public abstract WorkoutDao workoutDao();
 
     public abstract WorkoutTypeDao workoutTypeDao();
 
@@ -58,59 +57,21 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ExportTargetDao exportTargetDao();
 
     @Nullable
-    public BaseWorkout getWorkoutByStart(long start) {
-        BaseWorkout workout = gpsWorkoutDao().getWorkoutByStart(start);
-        if (workout == null) {
-            workout = indoorWorkoutDao().getWorkoutByStart(start);
-        }
-        return workout;
+    public Workout getWorkoutByStart(long start) {
+        return workoutDao().getWorkoutByStart(start);
     }
 
-    public List<BaseWorkout> getAllWorkouts() {
-        List<BaseWorkout> allWorkouts = new ArrayList<>();
-
-        List<GpsWorkout> gpsWorkouts = new ArrayList<>(Arrays.asList(gpsWorkoutDao().getWorkouts()));
-        List<IndoorWorkout> indoorWorkouts = new ArrayList<>(Arrays.asList(indoorWorkoutDao().getWorkouts()));
-
-
-        // Merging gps workouts indoor workouts
-        while (gpsWorkouts.size() > 0 && indoorWorkouts.size() > 0) {
-            GpsWorkout firstGpsWorkout = gpsWorkouts.get(0);
-            IndoorWorkout firstIndoorWorkout = indoorWorkouts.get(0);
-            if (firstGpsWorkout.start > firstIndoorWorkout.start) {
-                allWorkouts.add(gpsWorkouts.remove(0));
-            } else {
-                allWorkouts.add(indoorWorkouts.remove(0));
-            }
-        }
-        if (gpsWorkouts.size() > 0) {
-            allWorkouts.addAll(gpsWorkouts);
-        }
-        if (indoorWorkouts.size() > 0) {
-            allWorkouts.addAll(indoorWorkouts);
-        }
-
-        return allWorkouts;
+    public List<Workout> getAllWorkouts() {
+        return Arrays.asList(workoutDao().getWorkouts());
     }
 
     public long getLastWorkoutTimeByType(String type) {
-        BaseWorkout workout = getLastWorkoutByType(type);
+        Workout workout = workoutDao().getLastWorkoutByType(type);
         if (workout != null) {
-            return workout.start;
+            return workout.getStart();
         } else {
             return 0;
         }
-    }
-
-    @Nullable
-    public BaseWorkout getLastWorkoutByType(String type) {
-        GpsWorkout gpsWorkout = gpsWorkoutDao().getLastWorkoutByType(type);
-        IndoorWorkout indoorWorkout = indoorWorkoutDao().getLastWorkoutByType(type);
-        if (gpsWorkout != null && indoorWorkout != null) {
-            return gpsWorkout.start > indoorWorkout.start ? gpsWorkout : indoorWorkout;
-        } else if (gpsWorkout != null) {
-            return gpsWorkout;
-        } else return indoorWorkout;
     }
 
     public static AppDatabase provideDatabase(Context context) {

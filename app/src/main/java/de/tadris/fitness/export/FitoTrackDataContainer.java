@@ -25,10 +25,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tadris.fitness.data.GpsSample;
-import de.tadris.fitness.data.GpsWorkout;
-import de.tadris.fitness.data.IndoorSample;
-import de.tadris.fitness.data.IndoorWorkout;
+import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutType;
 
 @JacksonXmlRootElement(localName = "fito-track")
@@ -36,10 +34,8 @@ import de.tadris.fitness.data.WorkoutType;
 class FitoTrackDataContainer {
 
     private int version;
-    private List<GpsWorkout> workouts = new ArrayList<>();
-    private List<GpsSample> samples = new ArrayList<>();
-    private List<IndoorWorkout> indoorWorkouts = new ArrayList<>();
-    private List<IndoorSample> indoorSamples = new ArrayList<>();
+    private List<Workout> workouts = new ArrayList<>();
+    private List<RouteSample> routeSamples = new ArrayList<>();
     private List<IntervalSetContainer> intervalSets = new ArrayList<>();
     private List<WorkoutType> workoutTypes = new ArrayList<>();
 
@@ -54,20 +50,20 @@ class FitoTrackDataContainer {
         this.version = version;
     }
 
-    public List<GpsWorkout> getWorkouts() {
+    public List<Workout> getWorkouts() {
         return workouts;
     }
 
-    public void setWorkouts(List<GpsWorkout> workouts) {
+    public void setWorkouts(List<Workout> workouts) {
         this.workouts = workouts;
     }
 
-    public List<GpsSample> getSamples() {
-        return samples;
+    public List<RouteSample> getRouteSamples() {
+        return routeSamples;
     }
 
-    public void setSamples(List<GpsSample> samples) {
-        this.samples = samples;
+    public void setRouteSamples(List<RouteSample> routeSamples) {
+        this.routeSamples = routeSamples;
     }
 
     public List<IntervalSetContainer> getIntervalSets() {
@@ -84,21 +80,5 @@ class FitoTrackDataContainer {
 
     public void setWorkoutTypes(List<WorkoutType> workoutTypes) {
         this.workoutTypes = workoutTypes;
-    }
-
-    public List<IndoorWorkout> getIndoorWorkouts() {
-        return indoorWorkouts;
-    }
-
-    public void setIndoorWorkouts(List<IndoorWorkout> indoorWorkouts) {
-        this.indoorWorkouts = indoorWorkouts;
-    }
-
-    public List<IndoorSample> getIndoorSamples() {
-        return indoorSamples;
-    }
-
-    public void setIndoorSamples(List<IndoorSample> indoorSamples) {
-        this.indoorSamples = indoorSamples;
     }
 }

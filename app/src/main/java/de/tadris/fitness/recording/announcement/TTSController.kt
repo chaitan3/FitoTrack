@@ -29,7 +29,7 @@ import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import androidx.core.app.ActivityCompat
-import de.tadris.fitness.recording.BaseWorkoutRecorder
+import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.util.WorkoutLogger
 import org.greenrobot.eventbus.EventBus
@@ -64,7 +64,7 @@ class TTSController(private val context: Context, val id: String = DEFAULT_TTS_C
         EventBus.getDefault().post(TTSReadyEvent(isTtsAvailable, id))
     }
 
-    fun speak(recorder: BaseWorkoutRecorder, announcement: Announcement) {
+    fun speak(recorder: WorkoutRecorder, announcement: Announcement) {
         if (!announcement.isAnnouncementEnabled) {
             return
         }

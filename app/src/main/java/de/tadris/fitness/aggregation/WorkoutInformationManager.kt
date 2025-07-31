@@ -19,8 +19,18 @@
 package de.tadris.fitness.aggregation
 
 import android.content.Context
-import de.tadris.fitness.aggregation.information.*
-import de.tadris.fitness.data.BaseWorkout
+import de.tadris.fitness.aggregation.information.AverageHeartRate
+import de.tadris.fitness.aggregation.information.AverageMotionSpeed
+import de.tadris.fitness.aggregation.information.AveragePace
+import de.tadris.fitness.aggregation.information.AverageTotalSpeed
+import de.tadris.fitness.aggregation.information.BurnedEnergy
+import de.tadris.fitness.aggregation.information.Distance
+import de.tadris.fitness.aggregation.information.Duration
+import de.tadris.fitness.aggregation.information.EnergyConsumption
+import de.tadris.fitness.aggregation.information.Repetitions
+import de.tadris.fitness.aggregation.information.TopSpeed
+import de.tadris.fitness.aggregation.information.WorkoutCount
+import de.tadris.fitness.data.Workout
 
 class WorkoutInformationManager(context: Context) {
 
@@ -46,7 +56,7 @@ class WorkoutInformationManager(context: Context) {
         return information
     }
 
-    fun getAvailableInformationFor(workout: BaseWorkout) =
+    fun getAvailableInformationFor(workout: Workout) =
         information.filter { it.isInformationAvailableFor(workout) }
 
     fun findById(typeId: String) = information.find { it.id == typeId }

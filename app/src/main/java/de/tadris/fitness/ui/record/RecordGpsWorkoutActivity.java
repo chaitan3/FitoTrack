@@ -56,17 +56,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.GpsSample;
+import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.map.MapManager;
-import de.tadris.fitness.recording.BaseWorkoutRecorder;
-import de.tadris.fitness.recording.GpsRecorderService;
 import de.tadris.fitness.recording.RecorderService;
+import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.recording.component.GpsComponent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged;
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
 import de.tadris.fitness.recording.gps.SatelliteCountEvent;
 
 public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
@@ -95,7 +93,7 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
         boolean wasAlreadyRunning = false;
         if (!LAUNCH_ACTION.equals(intent.getAction())) {
             wasAlreadyRunning = true;
-        } else if (instance.recorder != null && instance.recorder.isActive() && instance.recorder.getState() != BaseWorkoutRecorder.RecordingState.IDLE) {
+        } else if (instance.recorder != null && instance.recorder.isActive() && instance.recorder.getState() != WorkoutRecorder.RecordingState.IDLE) {
             wasAlreadyRunning = true;
         }
 
@@ -114,7 +112,7 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
             // TODO Add Dialog, prefere Resume or Delete
             if (instance.recorder != null &&
                 instance.recorder.getState() !=
-                    BaseWorkoutRecorder.RecordingState.IDLE) {
+                        WorkoutRecorder.RecordingState.IDLE) {
               instance.recorder.stop("New activity will be started");
               saveIfNotSaved();
             }
@@ -149,8 +147,8 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
             }
 
             recordedPositions.clear();
-            List<GpsSample> samples = ((GpsWorkoutRecorder) instance.recorder).getSamples();
-            for (GpsSample sample : samples) {
+            List<RouteSample> samples = ((GpsWorkoutRecorder) instance.recorder).getSamples();
+            for (RouteSample sample : samples) {
                 recordedPositions.add(sample.toLatLong());
             }
             updateLine(recordedPositions);

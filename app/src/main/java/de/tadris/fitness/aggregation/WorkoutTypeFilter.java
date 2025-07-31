@@ -19,7 +19,7 @@
 
 package de.tadris.fitness.aggregation;
 
-import de.tadris.fitness.data.BaseWorkout;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutType;
 
 public class WorkoutTypeFilter implements WorkoutFilter {
@@ -33,7 +33,7 @@ public class WorkoutTypeFilter implements WorkoutFilter {
     }
 
     @Override
-    public boolean isAccepted(BaseWorkout workout) {
+    public boolean isAccepted(Workout workout) {
         if (type.id.equals(ID_ALL)) {
             return true;
         } else {

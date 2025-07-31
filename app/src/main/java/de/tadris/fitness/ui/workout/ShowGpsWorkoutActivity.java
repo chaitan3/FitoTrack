@@ -34,8 +34,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
@@ -51,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.GpsSample;
+import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.StatsProvider;
 import de.tadris.fitness.osm.OAuthAuthentication;
 import de.tadris.fitness.osm.OsmTraceUploader;
@@ -251,7 +249,7 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
 
     private void changeComment(String comment) {
         workout.comment = comment;
-        Instance.getInstance(this).db.gpsWorkoutDao().updateWorkout(workout);
+        Instance.getInstance(this).db.workoutDao().updateWorkout(workout);
         updateCommentText();
     }
 
@@ -290,11 +288,11 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
     }
 
     private boolean isLastWorkout() {
-        return Instance.getInstance(this).db.gpsWorkoutDao().getLastWorkout().id == workout.id;
+        return Instance.getInstance(this).db.workoutDao().getLastWorkout().id == workout.id;
     }
 
     public void deleteWorkout() {
-        Instance.getInstance(this).db.gpsWorkoutDao().deleteWorkout(workout);
+        Instance.getInstance(this).db.workoutDao().deleteWorkout(workout);
         finish();
     }
 
@@ -374,7 +372,7 @@ public class ShowGpsWorkoutActivity extends GpsWorkoutActivity implements Dialog
 
     private void uploadToOsm(boolean cut, GpsTraceDetails.Visibility visibility, String description) {
         String token = OAuthAuthentication.Companion.getAccessToken(this);
-        List<GpsSample> samples = new ArrayList<>(this.samples);
+        List<RouteSample> samples = new ArrayList<>(this.samples);
         new OsmTraceUploader(this, mHandler, workout, samples, visibility, token, cut, description).upload();
     }
 

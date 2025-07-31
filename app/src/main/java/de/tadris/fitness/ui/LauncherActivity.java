@@ -34,13 +34,11 @@ import de.tadris.fitness.BuildConfig;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.migration.Migration;
-import de.tadris.fitness.data.migration.Migration12IntervalSets;
 import de.tadris.fitness.data.migration.Migration15DistancePeriod;
 import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.MapManager;
-import de.tadris.fitness.recording.BaseWorkoutRecorder;
-import de.tadris.fitness.recording.gps.GpsWorkoutRecorder;
+import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
 import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 
@@ -81,9 +79,6 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
     private void runMigrations() {
         UserPreferences preferences = Instance.getInstance(this).userPreferences;
         List<Migration> migrations = new ArrayList<>();
-        if (preferences.getLastVersionCode() < 1200) {
-            migrations.add(new Migration12IntervalSets(this, this));
-        }
         if (preferences.getLastVersionCode() < 1300) {
             migrations.add(new MigrationCleanData(this, this));
         }
@@ -124,7 +119,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
     }
 
     private void start() {
-        BaseWorkoutRecorder recorder = Instance.getInstance(this).recorder;
+        WorkoutRecorder recorder = Instance.getInstance(this).recorder;
         if (recorder.getState() == GpsWorkoutRecorder.RecordingState.PAUSED ||
                 recorder.getState() == GpsWorkoutRecorder.RecordingState.RUNNING) {
             // Resume to running Workout
