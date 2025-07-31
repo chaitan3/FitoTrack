@@ -27,6 +27,8 @@ interface RecorderServiceComponent {
 
     fun unregister()
 
-    fun check(){ }
+    fun checkFast() {}
+
+    fun checkSlow() {}
 
 }

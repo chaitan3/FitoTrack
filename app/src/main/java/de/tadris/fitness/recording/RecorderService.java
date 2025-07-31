@@ -20,34 +20,32 @@
 package de.tadris.fitness.recording;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-import androidx.core.app.NotificationManagerCompat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import de.tadris.fitness.BuildConfig;
 import de.tadris.fitness.Instance;
-import de.tadris.fitness.R;
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.recording.component.AnnouncementComponent;
+import de.tadris.fitness.recording.component.AutoPauseComponent;
+import de.tadris.fitness.recording.component.AutoStopComponent;
 import de.tadris.fitness.recording.component.ExerciseRecognitionComponent;
 import de.tadris.fitness.recording.component.GnssComponent;
 import de.tadris.fitness.recording.component.GpsComponent;
+import de.tadris.fitness.recording.component.GpsSampleComponent;
+import de.tadris.fitness.recording.component.GpsStateComponent;
 import de.tadris.fitness.recording.component.HeartRateComponent;
 import de.tadris.fitness.recording.component.PressureComponent;
 import de.tadris.fitness.recording.component.RecorderServiceComponent;
-import de.tadris.fitness.ui.record.RecordWorkoutActivity;
-import de.tadris.fitness.util.NotificationHelper;
+import de.tadris.fitness.recording.component.ServiceNotificationComponent;
+import de.tadris.fitness.recording.component.TemporaryAggregationComponent;
 import de.tadris.fitness.util.WorkoutLogger;
 
 /**
@@ -61,33 +59,35 @@ public class RecorderService extends Service {
     protected Date serviceStartTime;
 
     public static final String TAG = "RecorderService";
-    protected static final int NOTIFICATION_ID = 10;
 
-    protected static final int WATCHDOG_INTERVAL = 2_500; // Trigger Watchdog every 2.5 Seconds
+    public static final int MIN_DURATION_DIFF = 500; // minimum time between samples
+    private static final int COMPONENT_INTERVAL_FAST = 1000;
+    private static final int COMPONENT_INTERVAL_SLOW_MULTIPLIER = 5;
 
     protected PowerManager.WakeLock wakeLock;
 
     public Instance instance = null;
 
     private final List<RecorderServiceComponent> components = new ArrayList<>();
+    private ServiceNotificationComponent notificationComponent;
+    public RecordingStateHolder stateHolder; // TODO needs to be initialized
+    public RecorderServiceActions actions = new RecorderServiceActions(); // TODO needs to be initialized correctly
 
     protected WatchDogRunner mWatchdogRunner;
     protected Thread mWatchdogThread = null;
 
     private class WatchDogRunner implements Runnable {
-        boolean running = true;
+        private int count = 0;
+        private boolean running = true;
 
         @Override
         public void run() {
             running = true;
             try {
                 while (running) {
-                    while (instance.recorder.handleWatchdog() && running) {
-                        updateNotification();
-                        checkAllComponents();
-                        Thread.sleep(WATCHDOG_INTERVAL);
-                    }
-                    Thread.sleep(WATCHDOG_INTERVAL); // Additional Retry Interval
+                    count++;
+                    checkAllComponents(count % COMPONENT_INTERVAL_SLOW_MULTIPLIER == 0);
+                    Thread.sleep(COMPONENT_INTERVAL_FAST);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -110,64 +110,13 @@ public class RecorderService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         serviceStartTime = new Date();
-        Notification notification = this.getNotification();
+        Notification notification = notificationComponent.getNotification();
 
-        startForeground(NOTIFICATION_ID, notification);
+        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification);
 
         acquireWakelock();
 
         return START_STICKY;
-    }
-
-    private String getRecordingStateString() {
-        switch (instance.recorder.getState()) {
-            case IDLE:
-                return getString(R.string.recordingStateIdle);
-            case RUNNING:
-                return getString(R.string.recordingStateRunning);
-            case PAUSED:
-                return getString(R.string.recordingStatePaused);
-            case STOPPED:
-                return getString(R.string.recordingStateStopped);
-        }
-        return "";
-    }
-
-    private Notification getNotification() {
-        String contentText = getText(R.string.trackerWaitingMessage).toString();
-        if (instance.recorder.getState() != GpsWorkoutRecorder.RecordingState.IDLE) {
-            contentText = String.format(Locale.getDefault(), "\n%s\n%s: %s",
-                    getRecordingStateString(),
-                    getText(R.string.workoutDuration),
-                    instance.distanceUnitUtils.getHourMinuteSecondTime(instance.recorder.getDuration()));
-        }
-        if (BuildConfig.DEBUG && serviceStartTime != null) {
-            contentText = String.format("%s\n\nServiceCreateTime: %s",
-                    contentText,
-                    instance.userDateTimeUtils.formatTime(serviceStartTime));
-        }
-        Notification.Builder builder = new Notification.Builder(this)
-                .setContentTitle(getText(R.string.trackerRunning))
-                .setContentText(contentText)
-                .setStyle(new Notification.BigTextStyle().bigText(contentText))
-                .setSmallIcon(R.drawable.notification);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationHelper.createChannels(this);
-            builder.setChannelId(NotificationHelper.CHANNEL_WORKOUT);
-        }
-
-        Intent recorderActivityIntent = new Intent(this, instance.recorder.getActivityClass());
-        recorderActivityIntent.setAction(RecordWorkoutActivity.RESUME_ACTION);
-        int flag = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0;
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, recorderActivityIntent, flag);
-        builder.setContentIntent(pendingIntent);
-
-        return builder.build();
-    }
-
-    private void updateNotification() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, getNotification());
     }
 
     @Override
@@ -201,9 +150,18 @@ public class RecorderService extends Service {
     }
 
     private void startRelevantComponents(){
-        RecordingType type = instance.recorder.getRecordingType();
+        RecordingType type = stateHolder.getRecordingType();
+
+        notificationComponent = new ServiceNotificationComponent(this);
+        startComponent(notificationComponent);
+
+        startComponent(new AutoPauseComponent());
+        startComponent(new AutoStopComponent());
+        startComponent(new TemporaryAggregationComponent());
         if(type == RecordingType.GPS) {
             startComponent(new GpsComponent());
+            startComponent(new GpsSampleComponent());
+            startComponent(new GpsStateComponent());
             startComponent(new PressureComponent());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 startComponent(new GnssComponent());
@@ -221,9 +179,10 @@ public class RecorderService extends Service {
         WorkoutLogger.log(TAG, "Started component " + component.getClass().getSimpleName());
     }
 
-    private void checkAllComponents(){
+    private void checkAllComponents(boolean alsoSlow) {
         for(RecorderServiceComponent component : components){
-            component.check();
+            component.checkFast();
+            if (alsoSlow) component.checkSlow();
         }
     }
 

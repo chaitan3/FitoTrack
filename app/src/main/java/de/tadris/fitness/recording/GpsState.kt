@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,6 +17,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.recording.gps
+package de.tadris.fitness.recording;
 
-class SatelliteCountEvent(val count: Int)
+import android.graphics.Color
+
+enum class GpsState(val color: Int) {
+    SIGNAL_LOST(Color.RED),
+    SIGNAL_GOOD(Color.GREEN),
+    SIGNAL_BAD(Color.YELLOW),
+}

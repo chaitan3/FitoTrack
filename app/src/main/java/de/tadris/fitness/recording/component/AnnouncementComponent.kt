@@ -56,8 +56,8 @@ class AnnouncementComponent : RecorderServiceComponent {
         mTTSController.destroy()
     }
 
-    override fun check() {
-        super.check()
+    override fun checkSlow() {
+        super.checkSlow()
         // UPDATE INTERVAL LIST IF NEEDED
         val intervalList = service.instance.recorder.intervalList
         if (lastList != intervalList) {

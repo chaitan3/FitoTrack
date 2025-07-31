@@ -19,8 +19,6 @@
 
 package de.tadris.fitness.recording.gps;
 
-import static de.tadris.fitness.recording.WorkoutRecorder.MIN_DURATION_DIFF;
-
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
@@ -29,6 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.recording.component.GpsComponent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
 
@@ -93,7 +92,7 @@ public class DefaultMovementDetector extends MovementDetector {
                         sphericalDistance(GpsComponent.locationToLatLong(location)));
                 long timeDiff = (location.getElapsedRealtimeNanos() -
                         lastLocation.getElapsedRealtimeNanos()) / 1_000_000L;
-                if (distance < workout.getWorkoutType(context).minDistance || timeDiff < MIN_DURATION_DIFF) {
+                if (distance < workout.getWorkoutType(context).minDistance || timeDiff < RecorderService.MIN_DURATION_DIFF) {
                     Log.d(TAG, "onLocationChange: not moving");
                     detectionState = DetectionState.NOT_MOVING;
                 } else {

@@ -31,7 +31,6 @@ import de.tadris.fitness.data.AppDatabase;
 import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.data.preferences.UserPreferences;
-import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.util.DataManager;
 import de.tadris.fitness.util.FitoTrackThemes;
 import de.tadris.fitness.util.ShortcutsUtils;
@@ -65,7 +64,6 @@ public class Instance {
     }
 
     public final AppDatabase db;
-    public WorkoutRecorder recorder;
     public final UserPreferences userPreferences;
     public final FitoTrackThemes themes;
     public final UserDateTimeUtils userDateTimeUtils;

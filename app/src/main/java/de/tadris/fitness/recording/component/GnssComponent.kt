@@ -25,7 +25,7 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.gps.SatelliteCountEvent
+import de.tadris.fitness.recording.event.SatelliteCountEvent
 import de.tadris.fitness.util.WorkoutLogger
 import org.greenrobot.eventbus.EventBus
 

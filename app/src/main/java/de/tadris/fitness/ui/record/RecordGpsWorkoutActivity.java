@@ -64,8 +64,8 @@ import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.recording.component.GpsComponent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
+import de.tadris.fitness.recording.event.SatelliteCountEvent;
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged;
-import de.tadris.fitness.recording.gps.SatelliteCountEvent;
 
 public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
 

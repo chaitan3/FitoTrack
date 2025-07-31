@@ -17,7 +17,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.recording.recorder
+package de.tadris.fitness.recording
 
-class RecorderManager {
+enum class RecordingState {
+    IDLE, RUNNING, AUTO_PAUSE, MANUAL_PAUSE, STOPPED;
+
+    fun isPause() = this == AUTO_PAUSE || this == MANUAL_PAUSE
 }
