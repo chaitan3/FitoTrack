@@ -96,11 +96,6 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="announcement_speed_last_minute"
-            android:title="@string/speedLastMinute" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
             android:key="announcement_avgSpeedMotion"
             android:title="@string/avgSpeedInMotion" />
 
