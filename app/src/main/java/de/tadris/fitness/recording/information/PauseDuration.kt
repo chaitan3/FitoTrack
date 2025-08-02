@@ -20,7 +20,7 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.WorkoutRecorder
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
 class PauseDuration(context: Context) : RecordingInformation(context) {
 
@@ -32,11 +32,11 @@ class PauseDuration(context: Context) : RecordingInformation(context) {
         return getString(R.string.workoutPauseDuration)
     }
 
-    override fun getDisplayedText(recorder: WorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return distanceUnitUtils.getHourMinuteSecondTime(recorder.pauseDuration)
     }
 
-    override fun getSpokenText(recorder: WorkoutRecorder): String? {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String? {
         return null
     }
 }

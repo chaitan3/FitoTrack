@@ -38,7 +38,6 @@ import de.tadris.fitness.data.migration.Migration15DistancePeriod;
 import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.MapManager;
-import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
 import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 

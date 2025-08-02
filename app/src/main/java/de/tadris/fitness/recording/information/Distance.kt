@@ -20,14 +20,15 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
-class Distance(context: Context) : GpsRecordingInformation(context) {
+class Distance(context: Context) : RecordingInformation(context) {
 
     override val id = "distance"
     override val isEnabledByDefault = true
     override fun canBeDisplayed() = true
 
-    override fun getSpokenText(recorder: GpsWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         val distance = distanceUnitUtils.getDistance(recorder.distanceInMeters, true)
         return getString(R.string.workoutDistance) + ": " + distance + "."
     }
@@ -36,7 +37,7 @@ class Distance(context: Context) : GpsRecordingInformation(context) {
         return getString(R.string.workoutDistance)
     }
 
-    override fun getDisplayedText(recorder: GpsWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return distanceUnitUtils.getDistance(recorder.distanceInMeters)
     }
 }

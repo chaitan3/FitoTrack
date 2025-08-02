@@ -20,7 +20,6 @@
 package de.tadris.fitness.recording.announcement.interval
 
 import de.tadris.fitness.data.Interval
-import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.announcement.Announcement
 
 class IntervalAnnouncement(private val interval: Interval) : Announcement {

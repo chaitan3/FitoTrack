@@ -19,17 +19,16 @@
 
 package de.tadris.fitness.recording.announcement;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import de.tadris.fitness.recording.WorkoutRecorder;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 
 public interface Announcement {
 
     boolean isAnnouncementEnabled();
 
     @Nullable
-    String getSpokenText(@NotNull WorkoutRecorder recorder);
+    String getSpokenText(AggregatedRecordingValuesEvent values);
 
     default boolean isPlayedAlways() {
         return false;

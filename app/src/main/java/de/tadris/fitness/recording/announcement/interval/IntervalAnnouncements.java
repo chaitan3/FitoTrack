@@ -26,7 +26,6 @@ import java.util.List;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.Interval;
 import de.tadris.fitness.data.preferences.UserPreferences;
-import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.recording.announcement.TTSController;
 
 public class IntervalAnnouncements {

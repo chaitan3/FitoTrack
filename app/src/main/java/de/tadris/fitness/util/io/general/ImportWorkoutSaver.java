@@ -28,7 +28,6 @@ import java.util.List;
 
 import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.WorkoutData;
-import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.recording.gps.WorkoutSaver;
 
 public class ImportWorkoutSaver extends WorkoutSaver {

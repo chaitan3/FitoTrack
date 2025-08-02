@@ -20,15 +20,16 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
-class Repetitions(context: Context) : IndoorRecordingInformation(context) {
+class Repetitions(context: Context) : RecordingInformation(context) {
 
     override val id = "repetitions"
     override val isEnabledByDefault = true
     override fun canBeDisplayed() =
         false // Useless, because the total rep count is displayed in big on the screen
 
-    override fun getSpokenText(recorder: IndoorWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.workoutRepetitions) + ": " + recorder.repetitionsTotal + "."
     }
 
@@ -36,7 +37,7 @@ class Repetitions(context: Context) : IndoorRecordingInformation(context) {
         return getString(R.string.workoutRepetitions)
     }
 
-    override fun getDisplayedText(recorder: IndoorWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return recorder.repetitionsTotal.toString()
     }
 

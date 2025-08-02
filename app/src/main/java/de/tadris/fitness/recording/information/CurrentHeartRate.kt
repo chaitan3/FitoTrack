@@ -20,7 +20,7 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.WorkoutRecorder
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
 class CurrentHeartRate(context: Context) : RecordingInformation(context) {
 
@@ -32,7 +32,7 @@ class CurrentHeartRate(context: Context) : RecordingInformation(context) {
         return getString(R.string.workoutHeartRate)
     }
 
-    override fun getDisplayedText(recorder: WorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return if (isHeartRateAvailable(recorder)) {
             recorder.currentHeartRate.toString() + " " + getString(R.string.unitHeartBeatsPerMinute)
         } else {
@@ -40,7 +40,7 @@ class CurrentHeartRate(context: Context) : RecordingInformation(context) {
         }
     }
 
-    override fun getSpokenText(recorder: WorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return if (isHeartRateAvailable(recorder)) {
             getTitle() + ": " + getDisplayedText(recorder)
         } else {
@@ -48,7 +48,7 @@ class CurrentHeartRate(context: Context) : RecordingInformation(context) {
         }
     }
 
-    private fun isHeartRateAvailable(recorder: WorkoutRecorder): Boolean {
+    private fun isHeartRateAvailable(values: AggregatedRecordingValuesEvent): Boolean {
         return recorder.currentHeartRate > 0
     }
 }

@@ -20,8 +20,10 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import kotlin.math.roundToInt
 
-class Ascent(context: Context) : GpsRecordingInformation(context) {
+class Ascent(context: Context) : RecordingInformation(context) {
 
     override val id = "ascent"
     override val isEnabledByDefault = false
@@ -29,13 +31,13 @@ class Ascent(context: Context) : GpsRecordingInformation(context) {
 
     override fun getTitle(): String = getString(R.string.workoutAscent)
 
-    override fun getDisplayedText(recorder: GpsWorkoutRecorder): String {
-        return distanceUnitUtils.getDistance(recorder.ascent)
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
+        return distanceUnitUtils.getDistance(values.ascent.roundToInt())
     }
 
-    override fun getSpokenText(recorder: GpsWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.workoutAscent) + ": " + distanceUnitUtils.getElevation(
-            recorder.ascent,
+            values.ascent.roundToInt(),
             true
         ) + "."
     }

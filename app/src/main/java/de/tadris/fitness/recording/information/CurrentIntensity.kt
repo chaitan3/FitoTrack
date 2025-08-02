@@ -20,14 +20,15 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
-class CurrentIntensity(context: Context) : IndoorRecordingInformation(context) {
+class CurrentIntensity(context: Context) : RecordingInformation(context) {
 
     override val id = "current_intensity"
     override val isEnabledByDefault = false
     override fun canBeDisplayed() = true
 
-    override fun getSpokenText(recorder: IndoorWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.workoutIntensity) + ": " + recorder.currentIntensity.toInt() + "."
     }
 
@@ -35,7 +36,7 @@ class CurrentIntensity(context: Context) : IndoorRecordingInformation(context) {
         return getString(R.string.workoutIntensity)
     }
 
-    override fun getDisplayedText(recorder: IndoorWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return if (recorder.currentIntensity.toInt() == 0) "-" else recorder.currentIntensity.toInt()
             .toString()
     }

@@ -25,7 +25,7 @@ import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.preferences.RecordingScreenInformationPreferences;
 import de.tadris.fitness.data.preferences.UserPreferences;
-import de.tadris.fitness.recording.WorkoutRecorder;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 
 public class InformationDisplay {
 
@@ -39,7 +39,7 @@ public class InformationDisplay {
         this.manager = new InformationManager(mode, context);
     }
 
-    public DisplaySlot getDisplaySlot(WorkoutRecorder recorder, int slot) {
+    public DisplaySlot getDisplaySlot(AggregatedRecordingValuesEvent values, int slot) {
         String informationId = null;
         try {
             informationId = preferences.getRecordingScreenInformationPreferences().getIdOfDisplayedInformation(mode.id, slot);

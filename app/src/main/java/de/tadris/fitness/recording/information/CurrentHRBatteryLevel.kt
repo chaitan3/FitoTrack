@@ -21,7 +21,7 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.WorkoutRecorder
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
 class CurrentHRBatteryLevel(context: Context) : RecordingInformation(context) {
 
@@ -33,7 +33,7 @@ class CurrentHRBatteryLevel(context: Context) : RecordingInformation(context) {
         return getString(R.string.heartRateSensorBattery)
     }
 
-    override fun getDisplayedText(recorder: WorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return if (isHRBatteryAvailable(recorder)) {
             recorder.currentHRBatteryLevel.toString() + getString(R.string.unitHeartRateSensorBattery)
         } else {
@@ -41,7 +41,7 @@ class CurrentHRBatteryLevel(context: Context) : RecordingInformation(context) {
         }
     }
 
-    override fun getSpokenText(recorder: WorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return if (isHRBatteryAvailable(recorder)) {
             getTitle() + ": " + getDisplayedText(recorder)
         } else {
@@ -49,7 +49,7 @@ class CurrentHRBatteryLevel(context: Context) : RecordingInformation(context) {
         }
     }
 
-    private fun isHRBatteryAvailable(recorder: WorkoutRecorder): Boolean {
+    private fun isHRBatteryAvailable(values: AggregatedRecordingValuesEvent): Boolean {
         return recorder.currentHRBatteryLevel >= 0
     }
 }

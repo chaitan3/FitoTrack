@@ -21,10 +21,16 @@ package de.tadris.fitness.recording.component
 
 import android.hardware.SensorManager
 import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
+import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
+import de.tadris.fitness.recording.event.HeartRateChangeEvent
+import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
 import de.tadris.fitness.recording.event.RouteSampleEvent
+import de.tadris.fitness.util.totalDistance
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -47,6 +53,13 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     private var ascent = 0.0
     private var descent = 0.0
 
+    private var useAverageForCurrentSpeed = false
+    private var currentSpeedAverageTime = 0 // ms
+    private var samplesForSpeedAverage = mutableListOf<RouteSample>()
+
+    private var lastHeartRate = -1
+    private var lastHRBatteryLevel = -1
+
     private val timeSinceLastStateChange get() = System.currentTimeMillis() - lastStateChange
 
     private val currentActiveDuration
@@ -62,6 +75,10 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     override fun register(service: RecorderService) {
         this.service = service
         EventBus.getDefault().register(this)
+
+        val prefs = UserPreferences(service)
+        useAverageForCurrentSpeed = prefs.useAverageForCurrentSpeed
+        currentSpeedAverageTime = prefs.timeForCurrentSpeed * 1000
     }
 
     override fun unregister() {
@@ -73,14 +90,17 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     }
 
     private fun publishAggregatedValues() {
-        EventBus.getDefault().post(
+        EventBus.getDefault().postSticky(
             AggregatedRecordingValuesEvent(
-                currentPauseDuration,
+                currentActiveDuration,
                 currentPauseDuration,
                 distance,
                 ascent,
                 descent,
-                calories
+                calories,
+                getCurrentSpeed(),
+                lastHeartRate,
+                lastHRBatteryLevel,
             )
         )
     }
@@ -89,7 +109,34 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     fun onNewRouteSample(e: RouteSampleEvent) {
         lastSample?.let { addDifference(it, e.sample) }
         lastSample = e.sample
+        addSampleToAverageList(e.sample)
         addElevation(e.sample)
+    }
+
+    @Subscribe
+    fun onHeartRateChange(event: HeartRateChangeEvent) {
+        lastHeartRate = event.heartRate
+    }
+
+    @Subscribe
+    fun onHeartRateConnectionChange(event: HeartRateConnectionChangeEvent) {
+        if (event.state != HeartRateComponent.HeartRateConnectionState.CONNECTED) {
+            // If heart rate sensor currently not available
+            lastHeartRate = -1
+        }
+    }
+
+    @Subscribe
+    fun onHRBatteryChange(event: HRBatteryLevelChangeEvent) {
+        lastHRBatteryLevel = event.batteryLevel
+    }
+
+    @Subscribe
+    fun onHRBatteryConnectionChange(event: HRBatteryLevelConnectionEvent) {
+        if (event.state != HeartRateComponent.HeartRateConnectionState.CONNECTED) {
+            // If heart rate sensor currently not available
+            lastHRBatteryLevel = -1
+        }
     }
 
     private fun addDifference(first: RouteSample, second: RouteSample) {
@@ -115,6 +162,30 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     private fun getElevationForPressure(pressure: Float): Double {
         return SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure)
             .toDouble()
+    }
+
+    private fun addSampleToAverageList(sample: RouteSample) {
+        if (useAverageForCurrentSpeed) {
+            samplesForSpeedAverage += sample
+            // remove stale samples from list
+            samplesForSpeedAverage.removeAll { sample.timestamp - it.timestamp > currentSpeedAverageTime }
+        }
+    }
+
+    /**
+     * Returns speed with the method from user preferences
+     * @return speed in m/s
+     */
+    private fun getCurrentSpeed(): Double {
+        if (useAverageForCurrentSpeed && samplesForSpeedAverage.size >= 2) {
+            val distance = samplesForSpeedAverage.totalDistance
+            val timeStart = samplesForSpeedAverage.first().timestamp
+            val timeEnd = samplesForSpeedAverage.last().timestamp
+            val duration = timeEnd - timeStart
+            return distance / (duration / 1000.0)
+        } else {
+            return lastSample?.speed ?: 0.0
+        }
     }
 
 }

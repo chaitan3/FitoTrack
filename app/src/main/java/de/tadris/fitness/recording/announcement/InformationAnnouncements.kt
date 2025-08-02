@@ -21,7 +21,6 @@ package de.tadris.fitness.recording.announcement
 import android.content.Context
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.information.CurrentSpeed
 import de.tadris.fitness.recording.information.InformationManager
 

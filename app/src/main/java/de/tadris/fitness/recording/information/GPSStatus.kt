@@ -20,8 +20,9 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
-class GPSStatus(context: Context) : GpsRecordingInformation(context) {
+class GPSStatus(context: Context) : RecordingInformation(context) {
 
     override val id = "gps-lost"
     override val isEnabledByDefault = true
@@ -33,11 +34,11 @@ class GPSStatus(context: Context) : GpsRecordingInformation(context) {
         get() = getString(R.string.gpsFound)
 
 
-    override fun getDisplayedText(recorder: GpsWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return ""
     }
 
-    override fun getSpokenText(recorder: GpsWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return ""
     }
 

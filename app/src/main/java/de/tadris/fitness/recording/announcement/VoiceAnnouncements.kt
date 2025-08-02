@@ -20,7 +20,6 @@ package de.tadris.fitness.recording.announcement
 
 import android.content.Context
 import de.tadris.fitness.data.Interval
-import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.announcement.interval.IntervalAnnouncements
 
 class VoiceAnnouncements(

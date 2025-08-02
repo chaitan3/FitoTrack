@@ -22,7 +22,6 @@ package de.tadris.fitness.recording.autostart;
 import androidx.annotation.NonNull;
 
 import de.tadris.fitness.Instance;
-import de.tadris.fitness.recording.WorkoutRecorder;
 
 /**
  * This class provides short countdown time announcements, i.e. only the amount of seconds left will

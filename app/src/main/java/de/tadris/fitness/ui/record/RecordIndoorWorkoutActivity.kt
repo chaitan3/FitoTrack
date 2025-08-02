@@ -38,7 +38,6 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.indoor.exercise.ExerciseRecognizer
 import de.tadris.fitness.util.unit.UnitUtils
 import org.greenrobot.eventbus.Subscribe

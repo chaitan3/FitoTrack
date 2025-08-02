@@ -20,7 +20,7 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.WorkoutRecorder
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
 class BurnedEnergy(context: Context) : RecordingInformation(context) {
 
@@ -32,11 +32,11 @@ class BurnedEnergy(context: Context) : RecordingInformation(context) {
         return getString(R.string.workoutBurnedEnergy)
     }
 
-    override fun getDisplayedText(recorder: WorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return energyUnitUtils.getEnergy(recorder.calories.toDouble())
     }
 
-    override fun getSpokenText(recorder: WorkoutRecorder): String? {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String? {
         return null
     }
 }

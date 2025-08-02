@@ -20,8 +20,9 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
-class CurrentSpeed(context: Context) : GpsRecordingInformation(context) {
+class CurrentSpeed(context: Context) : RecordingInformation(context) {
 
     override val id = "current_speed"
     override val isEnabledByDefault = true
@@ -31,11 +32,11 @@ class CurrentSpeed(context: Context) : GpsRecordingInformation(context) {
         return getString(R.string.currentSpeed)
     }
 
-    override fun getDisplayedText(recorder: GpsWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return distanceUnitUtils.getSpeed(recorder.currentSpeed)
     }
 
-    override fun getSpokenText(recorder: GpsWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.currentSpeed) + ": " + distanceUnitUtils.getSpeed(
             recorder.currentSpeed,
             true

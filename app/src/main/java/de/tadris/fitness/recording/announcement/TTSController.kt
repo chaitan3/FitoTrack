@@ -29,7 +29,6 @@ import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import androidx.core.app.ActivityCompat
-import de.tadris.fitness.recording.WorkoutRecorder
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.util.WorkoutLogger
 import org.greenrobot.eventbus.EventBus

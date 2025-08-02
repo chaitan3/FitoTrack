@@ -20,8 +20,9 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
-class AverageSpeedMotion(context: Context) : GpsRecordingInformation(context) {
+class AverageSpeedMotion(context: Context) : RecordingInformation(context) {
 
     override val id = "avgSpeedMotion"
     override val isEnabledByDefault = false
@@ -31,11 +32,11 @@ class AverageSpeedMotion(context: Context) : GpsRecordingInformation(context) {
         return getString(R.string.avgSpeedInMotion)
     }
 
-    override fun getDisplayedText(recorder: GpsWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return distanceUnitUtils.getSpeed(recorder.avgSpeed)
     }
 
-    override fun getSpokenText(recorder: GpsWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         val avgSpeed = distanceUnitUtils.getSpeed(recorder.avgSpeed, true)
         return getString(R.string.workoutAvgSpeedLong) + ": " + avgSpeed + "."
     }

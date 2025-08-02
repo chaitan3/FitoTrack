@@ -25,7 +25,6 @@ import androidx.annotation.NonNull;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.recording.WorkoutRecorder;
 
 /**
  * This class provides long countdown time announcements, i.e. the amount of seconds left plus some

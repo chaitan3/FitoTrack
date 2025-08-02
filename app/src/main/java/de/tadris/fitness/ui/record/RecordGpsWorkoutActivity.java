@@ -61,7 +61,6 @@ import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.map.MapManager;
 import de.tadris.fitness.recording.RecorderService;
-import de.tadris.fitness.recording.WorkoutRecorder;
 import de.tadris.fitness.recording.component.GpsComponent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
 import de.tadris.fitness.recording.event.SatelliteCountEvent;

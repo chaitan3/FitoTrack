@@ -20,15 +20,16 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.util.unit.UnitUtils
 
-class CurrentFrequency(context: Context) : IndoorRecordingInformation(context) {
+class CurrentFrequency(context: Context) : RecordingInformation(context) {
 
     override val id = "current_frequency"
     override val isEnabledByDefault = false
     override fun canBeDisplayed() = true
 
-    override fun getSpokenText(recorder: IndoorWorkoutRecorder): String {
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.workoutCurrentFrequency) + ": " + getFrequency(recorder) + " " + getString(
             R.string.unitHertzLong
         ) + "."
@@ -38,10 +39,10 @@ class CurrentFrequency(context: Context) : IndoorRecordingInformation(context) {
         return getString(R.string.workoutCurrentFrequency)
     }
 
-    override fun getDisplayedText(recorder: IndoorWorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return getFrequency(recorder).toString() + " " + UnitUtils.unitHertzShort
     }
 
-    private fun getFrequency(recorder: IndoorWorkoutRecorder) =
+    private fun getFrequency(values: AggregatedRecordingValuesEvent) =
         UnitUtils.roundDouble(recorder.currentFrequency, 1)
 }
