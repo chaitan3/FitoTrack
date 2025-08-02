@@ -29,7 +29,7 @@ class CurrentIntensity(context: Context) : RecordingInformation(context) {
     override fun canBeDisplayed() = true
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getString(R.string.workoutIntensity) + ": " + recorder.currentIntensity.toInt() + "."
+        return getString(R.string.workoutIntensity) + ": " + values.currentIntensity.toInt() + "."
     }
 
     override fun getTitle(): String {
@@ -37,7 +37,7 @@ class CurrentIntensity(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return if (recorder.currentIntensity.toInt() == 0) "-" else recorder.currentIntensity.toInt()
+        return if (values.currentIntensity.toInt() == 0) "-" else values.currentIntensity.toInt()
             .toString()
     }
 }

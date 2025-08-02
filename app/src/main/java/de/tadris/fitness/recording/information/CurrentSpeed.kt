@@ -33,12 +33,12 @@ class CurrentSpeed(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return distanceUnitUtils.getSpeed(recorder.currentSpeed)
+        return distanceUnitUtils.getSpeed(values.currentSpeed)
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.currentSpeed) + ": " + distanceUnitUtils.getSpeed(
-            recorder.currentSpeed,
+            values.currentSpeed,
             true
         ) + "."
     }

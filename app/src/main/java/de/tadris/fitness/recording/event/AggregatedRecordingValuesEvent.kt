@@ -19,18 +19,23 @@
 
 package de.tadris.fitness.recording.event
 
+import de.tadris.fitness.recording.RecordingState
 import org.greenrobot.eventbus.EventBus
 
 data class AggregatedRecordingValuesEvent(
+    val currentState: RecordingState,
     val activeDuration: Long, // in ms
     val pauseDuration: Long, // in ms
     val distance: Double, // in m
     val ascent: Double, // in m
     val descent: Double, // in m
-    val calories: Double, // in joule
+    val energy: Double, // in joule
     val currentSpeed: Double, // in m/s
     val currentHeartRate: Int,
     val currentHeartRateBattery: Int,
+    val currentFrequency: Double,
+    val currentIntensity: Double,
+    val repetitions: Int,
 ) {
 
     companion object {
@@ -39,5 +44,17 @@ data class AggregatedRecordingValuesEvent(
             EventBus.getDefault().getStickyEvent(AggregatedRecordingValuesEvent::class.java)
 
     }
+
+    val averageFrequency get() = repetitions / (activeDuration / 1000.0) // 1/s
+
+    val averageSpeedMotion get() = distance / (activeDuration / 1000.0) // m/s
+
+    val averageSpeedTotal get() = distance / ((activeDuration + pauseDuration) / 1000.0) // m/s
+
+    // min/km
+    val averagePaceMotion
+        get() =
+            if (averageSpeedMotion < 0.001) 0.0
+            else (1 / averageSpeedMotion) * 1000 / 60
 
 }

@@ -4,7 +4,9 @@ import androidx.annotation.StringRes;
 
 public interface EnergyUnit {
 
-    double getEnergy(double energyInKcal);
+    double getFromJoules(double energyInJoules);
+
+    double toJoules(double energyInUnit);
 
     String getInternationalShortName();
 

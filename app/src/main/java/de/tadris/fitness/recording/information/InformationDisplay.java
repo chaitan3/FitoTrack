@@ -50,7 +50,7 @@ public class InformationDisplay {
         }
         RecordingInformation information = manager.getInformationById(informationId);
         if (information != null) {
-            return new DisplaySlot(slot, information.getTitle(), information.getDisplayedText(recorder));
+            return new DisplaySlot(slot, information.getTitle(), information.getDisplayedText(values));
         } else {
             return new DisplaySlot(slot, "", "");
         }

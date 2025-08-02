@@ -19,15 +19,21 @@
 
 package de.tadris.fitness.data;
 
+import de.tadris.fitness.ui.record.RecordGpsWorkoutActivity;
+import de.tadris.fitness.ui.record.RecordIndoorWorkoutActivity;
+import de.tadris.fitness.ui.record.RecordWorkoutActivity;
+
 public enum RecordingType {
 
-    INDOOR("indoor"),
-    GPS("gps");
+    INDOOR("indoor", RecordIndoorWorkoutActivity.class),
+    GPS("gps", RecordGpsWorkoutActivity.class);
 
     public final String id;
+    public final Class<? extends RecordWorkoutActivity> recorderActivityClass;
 
-    RecordingType(String id) {
+    RecordingType(String id, Class<? extends RecordWorkoutActivity> recorderActivityClass) {
         this.id = id;
+        this.recorderActivityClass = recorderActivityClass;
     }
 
     public static RecordingType findById(String id) {

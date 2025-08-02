@@ -31,10 +31,10 @@ class AveragePace(context: Context) : RecordingInformation(context) {
     override fun getTitle(): String = getString(R.string.workoutPace)
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return distanceUnitUtils.getPace(recorder.avgPace)
+        return distanceUnitUtils.getPace(values.averagePaceMotion)
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getTitle() + ": " + distanceUnitUtils.getPace(recorder.avgPace, true)
+        return getTitle() + ": " + distanceUnitUtils.getPace(values.averagePaceMotion, true)
     }
 }

@@ -30,7 +30,7 @@ class AverageFrequency(context: Context) : RecordingInformation(context) {
     override fun canBeDisplayed() = true
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getString(R.string.workoutAvgFrequencyLong) + ": " + getFrequency(recorder) + " " + getString(
+        return getString(R.string.workoutAvgFrequencyLong) + ": " + getFrequency(values) + " " + getString(
             R.string.unitHertzLong
         ) + "."
     }
@@ -40,9 +40,9 @@ class AverageFrequency(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return getFrequency(recorder).toString() + " " + UnitUtils.unitHertzShort
+        return getFrequency(values).toString() + " " + UnitUtils.unitHertzShort
     }
 
     private fun getFrequency(values: AggregatedRecordingValuesEvent) =
-        UnitUtils.roundDouble(recorder.averageFrequency, 1)
+        UnitUtils.roundDouble(values.averageFrequency, 1)
 }

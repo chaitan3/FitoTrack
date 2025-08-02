@@ -45,7 +45,6 @@ public class InformationManager {
             information.add(new GPSStatus(context));
             information.add(new Distance(context));
             information.add(new CurrentSpeed(context));
-            information.add(new SpeedLastMinute(context));
             information.add(new AverageSpeedMotion(context));
             information.add(new AverageSpeedTotal(context));
             information.add(new AveragePace(context));

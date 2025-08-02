@@ -33,22 +33,22 @@ class CurrentHeartRate(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return if (isHeartRateAvailable(recorder)) {
-            recorder.currentHeartRate.toString() + " " + getString(R.string.unitHeartBeatsPerMinute)
+        return if (isHeartRateAvailable(values)) {
+            values.currentHeartRate.toString() + " " + getString(R.string.unitHeartBeatsPerMinute)
         } else {
             "-" // No heart rate data available
         }
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return if (isHeartRateAvailable(recorder)) {
-            getTitle() + ": " + getDisplayedText(recorder)
+        return if (isHeartRateAvailable(values)) {
+            getTitle() + ": " + getDisplayedText(values)
         } else {
             getString(R.string.heartRateNotAvailable)
         }
     }
 
     private fun isHeartRateAvailable(values: AggregatedRecordingValuesEvent): Boolean {
-        return recorder.currentHeartRate > 0
+        return values.currentHeartRate > 0
     }
 }

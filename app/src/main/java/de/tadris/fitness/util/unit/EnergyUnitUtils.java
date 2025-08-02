@@ -46,12 +46,16 @@ public class EnergyUnitUtils extends UnitUtils {
         }
     }
 
-    public String getEnergy(double energyInKcal) {
-        return getEnergy(energyInKcal, false);
+    public String getEnergyFromJoules(double energyInJoules) {
+        return getEnergy(energyInJoules / 4186.8);
     }
 
-    public String getEnergy(double energyInKcal, boolean useLongNames) {
-        int value = (int) Math.round(energyUnit.getEnergy(energyInKcal));
+    public String getEnergy(double energyInJoules) {
+        return getEnergy(energyInJoules, false);
+    }
+
+    public String getEnergy(double energyInJoules, boolean useLongNames) {
+        int value = (int) Math.round(energyUnit.getFromJoules(energyInJoules));
         if (useLongNames) {
             return value + " " + getString(energyUnit.getLongNameTitle());
         } else {
@@ -59,8 +63,8 @@ public class EnergyUnitUtils extends UnitUtils {
         }
     }
 
-    public String getRelativeEnergy(double energyInKcalPerMinute) {
-        String value = round(energyUnit.getEnergy(energyInKcalPerMinute), 2);
+    public String getRelativeEnergy(double energyInJoulesPerMinute) {
+        String value = round(energyUnit.getFromJoules(energyInJoulesPerMinute), 2);
         return value + " " + energyUnit.getInternationalShortName() + "/min";
     }
 

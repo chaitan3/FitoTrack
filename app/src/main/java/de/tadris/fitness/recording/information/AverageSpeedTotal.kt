@@ -33,11 +33,11 @@ class AverageSpeedTotal(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return distanceUnitUtils.getSpeed(recorder.avgSpeedTotal)
+        return distanceUnitUtils.getSpeed(values.averageSpeedTotal)
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        val avgSpeed = distanceUnitUtils.getSpeed(recorder.avgSpeedTotal, true)
+        val avgSpeed = distanceUnitUtils.getSpeed(values.averageSpeedTotal, true)
         return getString(R.string.avgSpeedTotalLong) + ": " + avgSpeed + "."
     }
 }

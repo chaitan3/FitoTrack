@@ -34,22 +34,22 @@ class CurrentHRBatteryLevel(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return if (isHRBatteryAvailable(recorder)) {
-            recorder.currentHRBatteryLevel.toString() + getString(R.string.unitHeartRateSensorBattery)
+        return if (isHRBatteryAvailable(values)) {
+            values.currentHeartRateBattery.toString() + getString(R.string.unitHeartRateSensorBattery)
         } else {
             "-" // No heart rate data available
         }
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return if (isHRBatteryAvailable(recorder)) {
-            getTitle() + ": " + getDisplayedText(recorder)
+        return if (isHRBatteryAvailable(values)) {
+            getTitle() + ": " + getDisplayedText(values)
         } else {
             ""
         }
     }
 
     private fun isHRBatteryAvailable(values: AggregatedRecordingValuesEvent): Boolean {
-        return recorder.currentHRBatteryLevel >= 0
+        return values.currentHeartRateBattery >= 0
     }
 }

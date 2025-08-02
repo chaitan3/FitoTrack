@@ -128,6 +128,7 @@ public class RecorderService extends Service {
         WorkoutLogger.log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL);
 
         startRelevantComponents();
+        actions.register();
 
         initializeWatchdog();
     }
@@ -136,6 +137,7 @@ public class RecorderService extends Service {
     public void onDestroy() {
         WorkoutLogger.log(TAG, "onDestroy");
 
+        actions.unregister();
         stopAllComponents();
 
         // Shutdown Watchdog

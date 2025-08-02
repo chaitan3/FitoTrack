@@ -21,6 +21,7 @@ package de.tadris.fitness.recording.information
 import android.content.Context
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import kotlin.math.roundToInt
 
 class Distance(context: Context) : RecordingInformation(context) {
 
@@ -29,7 +30,7 @@ class Distance(context: Context) : RecordingInformation(context) {
     override fun canBeDisplayed() = true
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        val distance = distanceUnitUtils.getDistance(recorder.distanceInMeters, true)
+        val distance = distanceUnitUtils.getDistance(values.distance.roundToInt(), true)
         return getString(R.string.workoutDistance) + ": " + distance + "."
     }
 
@@ -38,6 +39,6 @@ class Distance(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return distanceUnitUtils.getDistance(recorder.distanceInMeters)
+        return distanceUnitUtils.getDistance(values.distance.roundToInt())
     }
 }

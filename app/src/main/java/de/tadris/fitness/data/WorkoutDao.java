@@ -91,6 +91,9 @@ public interface WorkoutDao {
     @Insert
     void insertSample(RouteSample sample);
 
+    @Insert
+    void insertPause(WorkoutPause pause);
+
     @Delete
     void deleteSample(RouteSample sample);
 

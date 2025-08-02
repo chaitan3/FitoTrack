@@ -70,7 +70,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         get() = pauseDuration +
                 if (service.stateHolder.state.isPause()) timeSinceLastStateChange else 0
 
-    private val calories get() = 0.0 // TODO
+    private val energy get() = 0.0 // joules // TODO
 
     override fun register(service: RecorderService) {
         this.service = service
@@ -97,7 +97,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
                 distance,
                 ascent,
                 descent,
-                calories,
+                energy,
                 getCurrentSpeed(),
                 lastHeartRate,
                 lastHRBatteryLevel,

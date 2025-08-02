@@ -26,5 +26,6 @@ class RecordingStateHolder {
     var recordingType: RecordingType = RecordingType.GPS
     var workoutId: Long = -1
     var state = RecordingState.IDLE
+    var pausedSince = 0L
 
 }

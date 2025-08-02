@@ -33,7 +33,7 @@ class PauseDuration(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return distanceUnitUtils.getHourMinuteSecondTime(recorder.pauseDuration)
+        return distanceUnitUtils.getHourMinuteSecondTime(values.pauseDuration)
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String? {

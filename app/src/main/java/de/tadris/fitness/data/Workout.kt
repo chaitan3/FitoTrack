@@ -42,7 +42,7 @@ import kotlin.math.min
 @Entity(tableName = "workout")
 data class Workout(
     @PrimaryKey
-    val id: Long,
+    val id: String,
     val start: Long,
     val end: Long,
     val activeDuration: Long,

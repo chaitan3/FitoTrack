@@ -20,8 +20,8 @@ package de.tadris.fitness.util.calorie
 
 import android.content.Context
 import de.tadris.fitness.data.Workout
-import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserMeasurements
+import de.tadris.fitness.util.unit.Kcal
 
 class CalorieCalculator(val provider: List<METProvider>) {
 
@@ -33,40 +33,41 @@ class CalorieCalculator(val provider: List<METProvider>) {
         )
     )
 
-    /**
-     * workoutType, duration, ascent and avgSpeed of workout have to be set
-     *
-     * @param measurements user measurements which affect the calorie calculation
-     * @param workout the workout
-     * @return calories burned
-     */
-    fun calculateCalories(measurements: UserMeasurements, duration: Long, ascent: Int): Int {
+    fun calculateEnergy(context: Context, workout: Workout): Double =
+        calculateEnergy(UserMeasurements.from(context), workout.activeDuration, workout.ascent)
+
+    fun calculateEnergy(
+        measurements: UserMeasurements,
+        duration: Long,
+        ascent: Int,
+        workoutTypeId: String,
+        speed: Double
+    ) =
+        Kcal().toJoules(calculateCalories(measurements, duration, ascent, workoutTypeId, speed))
+
+    fun calculateCalories(
+        measurements: UserMeasurements,
+        duration: Long,
+        ascent: Int,
+        workoutTypeId: String,
+        speed: Double
+    ): Double {
         val weight = measurements.weight.toDouble()
         val mins = (duration / 1000).toDouble() / 60
-        return (mins * (getMET(measurements) * 3.5 * weight) / 200).toInt() + ascent
+        return (mins * (getMET(measurements, workoutTypeId, speed) * 3.5 * weight) / 200) + ascent
     }
 
-    private fun getMET(measurements: UserMeasurements, workout: Workout): Double {
-        val speedInKmh = getSpeedInKmh(measurements, workout)
-
+    private fun getMET(
+        measurements: UserMeasurements,
+        workoutTypeId: String,
+        speed: Double
+    ): Double {
         provider.forEach { provider ->
-            val result = provider.calculateMET(measurements, workout.workoutTypeId, speedInKmh)
+            val result = provider.calculateMET(measurements, workoutTypeId, speed * 3.6)
             result?.let { return it } // return if not null
         }
 
         return 0.0 // nothing found
-    }
-
-    private fun getSpeedInKmh(measurements: UserMeasurements, workout: WorkoutData): Double {
-
-
-        when (workout) {
-            is GpsWorkout -> workout.avgSpeed * 3.6
-            is IndoorWorkout ->
-                if (workout.hasEstimatedDistance()) workout.estimateSpeed(measurements) * 3.6
-                else 0.0
-            else -> 0.0
-        }
     }
 
 }

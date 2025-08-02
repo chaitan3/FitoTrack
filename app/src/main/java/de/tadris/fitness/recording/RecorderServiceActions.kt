@@ -19,22 +19,101 @@
 
 package de.tadris.fitness.recording
 
-class RecorderServiceActions {
+import de.tadris.fitness.data.WorkoutPause
+import de.tadris.fitness.recording.actions.WorkoutActionPause
+import de.tadris.fitness.recording.actions.WorkoutActionResume
+import de.tadris.fitness.recording.actions.WorkoutActionStart
+import de.tadris.fitness.recording.actions.WorkoutActionStop
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent
+import de.tadris.fitness.util.WorkoutLogger.Companion.log
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
-    fun start() {
+class RecorderServiceActions(private val service: RecorderService) {
 
+    var state
+        get() = service.stateHolder.state
+        set(value) {
+            val oldState = service.stateHolder.state
+            service.stateHolder.state = value
+            EventBus.getDefault().post(RecordingStateChangeEvent(oldState, value))
+        }
+
+    companion object {
+        private const val TAG = "RecorderServiceActions"
     }
 
-    fun pause(isAutomatic: Boolean) {
+    fun register() {
+        EventBus.getDefault().register(this)
+    }
 
+    fun unregister() {
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun receiveStart(e: WorkoutActionStart) {
+        start(e.reason)
+    }
+
+    @Subscribe
+    fun receiveResume(e: WorkoutActionResume) {
+        resume()
+    }
+
+    @Subscribe
+    fun receivePause(e: WorkoutActionPause) {
+        pause(e.isAutomatic)
+    }
+
+    @Subscribe
+    fun receiveStop(e: WorkoutActionStop) {
+        stop(e.reason)
+    }
+
+    fun start(reason: StartReason) {
+        log(TAG, "Called start, reason: ${reason.logMessage}")
+        if (state == RecordingState.IDLE) {
+            log(TAG, "Start")
+            resume()
+        } else if (state.isPause()) {
+            resume()
+        } else check(state == RecordingState.RUNNING) { "Cannot start or resume recording. state = $state" }
     }
 
     fun resume() {
-
+        log(TAG, "Called resume")
+        if (state.isPause()) {
+            service.instance.db.workoutDao().insertPause(
+                WorkoutPause(
+                    service.stateHolder.workoutId,
+                    0L,
+                    service.stateHolder.pausedSince,
+                    System.currentTimeMillis(),
+                    state == RecordingState.MANUAL_PAUSE
+                )
+            )
+        }
+        state = RecordingState.RUNNING
     }
 
-    fun stop(reason: String) {
+    fun pause(isAutomatic: Boolean) {
+        if (state == RecordingState.RUNNING) {
+            log("Recorder", "Pause, isAutomatic=$isAutomatic")
+            state = if (isAutomatic) {
+                RecordingState.AUTO_PAUSE
+            } else {
+                RecordingState.MANUAL_PAUSE
+            }
+            service.stateHolder.pausedSince = System.currentTimeMillis()
+        }
+    }
 
+    fun stop(reason: StopReason) {
+        log(TAG, "Called stop, reason: ${reason.logMessage}")
+        pause(isAutomatic = true)
+        state = RecordingState.STOPPED
+        WorkoutFinalizer(service.instance.db.workoutDao(), service.stateHolder.workoutId).finalize()
     }
 
 }

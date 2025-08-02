@@ -33,7 +33,7 @@ class BurnedEnergy(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return energyUnitUtils.getEnergy(recorder.calories.toDouble())
+        return energyUnitUtils.getEnergyFromJoules(values.energy)
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String? {

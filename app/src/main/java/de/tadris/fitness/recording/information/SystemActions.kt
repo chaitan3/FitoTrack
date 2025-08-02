@@ -20,37 +20,42 @@ package de.tadris.fitness.recording.information
 
 import android.content.Context
 import de.tadris.fitness.R
+import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
 class SystemActions(context: Context) : RecordingInformation(context) {
 
-    private var lastState: WorkoutRecorder.RecordingState =
-        WorkoutRecorder.RecordingState.IDLE
+    private var lastState = RecordingState.IDLE
 
     override val id = "system_actions"
+
     override val isEnabledByDefault = true
+
     override fun canBeDisplayed() = false
-    override fun getSpokenText(recorder: WorkoutRecorder): String {
+
+    override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         var text = ""
-        if (lastState != recorder.state) {
-            text = speakState(recorder.state)
+        if (lastState != values.currentState && !(lastState.isPause() && values.currentState.isPause())) {
+            text = speakState(values.currentState)
         }
-        lastState = recorder.state
+        lastState = values.currentState
         return text
     }
 
-    private fun speakState(newState: WorkoutRecorder.RecordingState): String {
-        if (lastState == WorkoutRecorder.RecordingState.IDLE) {
+    private fun speakState(newState: RecordingState): String {
+        if (lastState == RecordingState.IDLE) {
             return getString(R.string.workoutStarted)
         }
         return when (newState) {
-            WorkoutRecorder.RecordingState.RUNNING -> getString(R.string.workoutResumed)
-            WorkoutRecorder.RecordingState.PAUSED -> getString(R.string.workoutPaused)
-            WorkoutRecorder.RecordingState.STOPPED -> getString(R.string.workoutStopped)
+            RecordingState.RUNNING -> getString(R.string.workoutResumed)
+            RecordingState.AUTO_PAUSE -> getString(R.string.workoutPaused)
+            RecordingState.MANUAL_PAUSE -> getString(R.string.workoutPaused)
+            RecordingState.STOPPED -> getString(R.string.workoutStopped)
             else -> ""
         }
     }
 
-    override fun getDisplayedText(recorder: WorkoutRecorder): String {
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
         return ""
     }
 

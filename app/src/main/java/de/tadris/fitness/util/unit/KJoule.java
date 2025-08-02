@@ -5,8 +5,13 @@ import de.tadris.fitness.R;
 public class KJoule implements EnergyUnit {
 
     @Override
-    public double getEnergy(double energyInKcal) {
-        return energyInKcal * 4.1868;
+    public double getFromJoules(double energyInJoules) {
+        return energyInJoules / 1000;
+    }
+
+    @Override
+    public double toJoules(double energyInUnit) {
+        return energyInUnit * 1000;
     }
 
     @Override

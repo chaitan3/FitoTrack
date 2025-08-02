@@ -30,7 +30,7 @@ class Duration(context: Context) : RecordingInformation(context) {
     override fun canBeDisplayed() = false
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getString(R.string.workoutDuration) + ": " + getSpokenTime(recorder.duration) + "."
+        return getString(R.string.workoutDuration) + ": " + getSpokenTime(values.activeDuration) + "."
     }
 
     private fun getSpokenTime(duration: Long): String {

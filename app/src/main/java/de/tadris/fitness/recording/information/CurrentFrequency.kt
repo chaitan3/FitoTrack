@@ -30,7 +30,7 @@ class CurrentFrequency(context: Context) : RecordingInformation(context) {
     override fun canBeDisplayed() = true
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getString(R.string.workoutCurrentFrequency) + ": " + getFrequency(recorder) + " " + getString(
+        return getString(R.string.workoutCurrentFrequency) + ": " + getFrequency(values) + " " + getString(
             R.string.unitHertzLong
         ) + "."
     }
@@ -40,9 +40,9 @@ class CurrentFrequency(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return getFrequency(recorder).toString() + " " + UnitUtils.unitHertzShort
+        return getFrequency(values).toString() + " " + UnitUtils.unitHertzShort
     }
 
     private fun getFrequency(values: AggregatedRecordingValuesEvent) =
-        UnitUtils.roundDouble(recorder.currentFrequency, 1)
+        UnitUtils.roundDouble(values.currentFrequency, 1)
 }

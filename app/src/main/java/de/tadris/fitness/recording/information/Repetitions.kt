@@ -30,7 +30,7 @@ class Repetitions(context: Context) : RecordingInformation(context) {
         false // Useless, because the total rep count is displayed in big on the screen
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getString(R.string.workoutRepetitions) + ": " + recorder.repetitionsTotal + "."
+        return getString(R.string.workoutRepetitions) + ": " + values.repetitions + "."
     }
 
     override fun getTitle(): String {
@@ -38,7 +38,7 @@ class Repetitions(context: Context) : RecordingInformation(context) {
     }
 
     override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return recorder.repetitionsTotal.toString()
+        return values.repetitions.toString()
     }
 
 }
