@@ -113,7 +113,7 @@ class RecorderServiceActions(private val service: RecorderService) {
         log(TAG, "Called stop, reason: ${reason.logMessage}")
         pause(isAutomatic = true)
         state = RecordingState.STOPPED
-        WorkoutFinalizer(service.instance.db.workoutDao(), service.stateHolder.workoutId).finalize()
+        WorkoutFinalizer(service, service.instance.db.workoutDao(), service.stateHolder.workoutId).finalize()
     }
 
 }

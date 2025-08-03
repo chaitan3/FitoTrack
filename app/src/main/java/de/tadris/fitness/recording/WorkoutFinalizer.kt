@@ -21,6 +21,7 @@ package de.tadris.fitness.recording
 
 import android.content.Context
 import de.tadris.fitness.data.WorkoutDao
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.util.calorie.CalorieCalculator
 import de.tadris.fitness.util.totalDistance
 
@@ -28,14 +29,15 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
 
     private val workout =
         workoutDao.getWorkoutById(workoutId) ?: throw Exception("Workout not found")
-    private val samples = workoutDao.getAllSamplesOfWorkout(workoutId)
+    private val data = WorkoutData.fromWorkout(workoutDao, workout)
 
     fun finalize() {
         workoutDao.updateWorkout(
             workout.copy(
                 activeDuration =,
-                distance =,
-                energy =,
+                distance = data.samples.totalDistance,
+                repetitions = data.repetitionSamples.sumOf { it.repetitions },
+                energy = getEnergy(),
             )
         )
     }

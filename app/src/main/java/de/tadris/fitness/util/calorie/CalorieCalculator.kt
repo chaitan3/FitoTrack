@@ -19,9 +19,12 @@
 package de.tadris.fitness.util.calorie
 
 import android.content.Context
+import de.tadris.fitness.data.CalculatedValues
 import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.util.unit.Kcal
+import kotlin.math.roundToInt
 
 class CalorieCalculator(val provider: List<METProvider>) {
 
@@ -33,8 +36,14 @@ class CalorieCalculator(val provider: List<METProvider>) {
         )
     )
 
-    fun calculateEnergy(context: Context, workout: Workout): Double =
-        calculateEnergy(UserMeasurements.from(context), workout.activeDuration, workout.ascent)
+    fun calculateEnergy(context: Context, data: WorkoutData): Double =
+        calculateEnergy(
+            UserMeasurements.from(context),
+            data.workout.activeDuration,
+            CalculatedValues(data).getAscentAndDescent().first.roundToInt(),
+            data.workout.workoutTypeId,
+            data.workout.speed
+        )
 
     fun calculateEnergy(
         measurements: UserMeasurements,

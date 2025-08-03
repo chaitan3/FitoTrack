@@ -71,7 +71,7 @@ public class RecorderService extends Service {
     private final List<RecorderServiceComponent> components = new ArrayList<>();
     private ServiceNotificationComponent notificationComponent;
     public RecordingStateHolder stateHolder; // TODO needs to be initialized
-    public RecorderServiceActions actions = new RecorderServiceActions(); // TODO needs to be initialized correctly
+    public RecorderServiceActions actions = new RecorderServiceActions(this); // TODO needs to be initialized correctly
 
     protected WatchDogRunner mWatchdogRunner;
     protected Thread mWatchdogThread = null;

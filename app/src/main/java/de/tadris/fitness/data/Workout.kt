@@ -48,6 +48,7 @@ data class Workout(
     val activeDuration: Long,
     val comment: String? = null,
     val distance: Double,
+    val repetitions: Int,
     val energy: Double,
     @JsonProperty(value = "workoutType")
     @ColumnInfo(name = "workout_type_id")
@@ -58,7 +59,13 @@ data class Workout(
 
     val kcal get() = energy / 4186.8
 
-    val pauseDuration get() = end - start - activeDuration
+    val totalDuration get() = end - start
+
+    val pauseDuration get() = totalDuration - activeDuration
+
+    val averageSpeedActive get() = distance / activeDuration
+
+    val averageSpeedTotal get() = distance / totalDuration
 
     // returns a file name string without suffix that can be used for exports
     fun getExportFileName(context: Context?): String {

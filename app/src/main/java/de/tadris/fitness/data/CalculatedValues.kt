@@ -19,20 +19,46 @@
 
 package de.tadris.fitness.data
 
-class CalculatedValues(private val workoutData: WorkoutData) {
+import kotlin.math.max
+import kotlin.math.min
+
+class CalculatedValues(private val data: WorkoutData) {
 
     companion object {
         const val ASCENT_FLOATING_CONSTANT = 1.0 // meter
+        const val ROUNDED_ELEVATION_WINDOW = 7
     }
 
-    fun getAscentDescent(): Pair<Double, Double> {
+    fun getAscentAndDescent(): Pair<Double, Double> {
+        val elevationValues = getRoundedElevationsMSL()
         var ascent = 0.0
         var descent = 0.0
-        if (workoutData.samples.isNotEmpty()) {
-            var floatingConstant = workoutData.samples.first().elevation
+        if (elevationValues.isNotEmpty()) {
+            var floatingThreshold = elevationValues.first()
+            elevationValues.forEach { elevation ->
+                val upperLimit = floatingThreshold + ASCENT_FLOATING_CONSTANT
+                val lowerLimit = floatingThreshold - ASCENT_FLOATING_CONSTANT
 
+                if(elevation > upperLimit){
+                    ascent += elevation - upperLimit
+                    floatingThreshold = upperLimit
+                }else if(elevation < lowerLimit){
+                    descent += lowerLimit - elevation
+                    floatingThreshold = lowerLimit
+                }
+            }
         }
         return ascent to descent
     }
+
+    fun getRoundedElevationsMSL(): List<Double> {
+        return List(data.samples.size) { index ->
+            val minIndex = max(index - ROUNDED_ELEVATION_WINDOW, 0)
+            val maxIndex = min(index + ROUNDED_ELEVATION_WINDOW, data.samples.size - 1)
+            data.samples.subList(minIndex, maxIndex).averageBy { it.elevationMSL }
+        }
+    }
+
+    private inline fun <T> List<T>.averageBy(selector: (T) -> Double) = sumOf(selector) / size
 
 }

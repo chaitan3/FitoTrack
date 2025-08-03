@@ -227,11 +227,7 @@ public class WorkoutSaver {
 
     private void roundSampleElevation() {
         int range = 7;
-        for (int i = 0; i < samples.size(); i++) {
-            int minIndex = Math.max(i - range, 0);
-            int maxIndex = Math.min(i + range, samples.size() - 1);
-            samples.get(i).tmpElevation = getAverageElevation(samples.subList(minIndex, maxIndex));
-        }
+
     }
 
     protected void setMSLElevation() {

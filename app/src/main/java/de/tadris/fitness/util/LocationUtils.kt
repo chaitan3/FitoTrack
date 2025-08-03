@@ -21,15 +21,23 @@ package de.tadris.fitness.util
 
 import de.tadris.fitness.data.RouteSample
 
-val List<RouteSample>.totalDistance
-    get(): Double {
-        if (size <= 1) return 0.0
-        var distance = 0.0
-        var last = first()
-        for (i in 1..lastIndex) {
-            val next = this[i]
-            distance += last.toLatLong().vincentyDistance(next.toLatLong())
-            last = next
-        }
-        return distance
+val List<RouteSample>.totalDistance get() =
+    sumByPairsDouble { first, second -> first.toLatLong().vincentyDistance(second.toLatLong()) }
+
+inline fun <T> List<T>.sumByPairsDouble(action: (first: T, second: T) -> Double): Double {
+    var sum = 0.0
+    forEachPair { first, second ->
+        sum += action(first, second)
     }
+    return sum
+}
+
+inline fun <T> List<T>.forEachPair(action: (first: T, second: T) -> Unit){
+    if(size <= 1) return
+    var last = first()
+    for(i in 1..lastIndex){
+        val next = this[i]
+        action(last, next)
+        last = next
+    }
+}
