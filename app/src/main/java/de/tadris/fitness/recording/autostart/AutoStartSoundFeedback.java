@@ -8,7 +8,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import de.tadris.fitness.Instance;
-import de.tadris.fitness.model.AutoStartWorkout;
 import de.tadris.fitness.recording.event.TTSReadyEvent;
 import de.tadris.fitness.util.ToneGeneratorController;
 import de.tadris.fitness.util.event.EventBusMember;

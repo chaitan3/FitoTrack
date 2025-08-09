@@ -35,7 +35,7 @@ import de.tadris.fitness.aggregation.AggregationSpan;
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
-import de.tadris.fitness.model.AutoStartWorkout;
+import de.tadris.fitness.recording.autostart.AutoStartWorkout;
 
 public class UserPreferences {
     private static final String USE_NFC_START_VARIABLE = "nfcStart";

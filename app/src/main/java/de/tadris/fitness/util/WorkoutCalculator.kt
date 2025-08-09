@@ -16,136 +16,92 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.util
 
-package de.tadris.fitness.util;
+import de.tadris.fitness.data.BaseSample
+import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.WorkoutPause
+import org.mapsforge.core.model.LatLong
 
-import org.mapsforge.core.model.LatLong;
+object WorkoutCalculator {
+    fun getSetsFromWorkout(data: IndoorWorkoutData): MutableList<Set?> {
+        val workout: IndoorWorkout = data.getWorkout()
+        val samples: MutableList<IndoorSample?> = ArrayList<Any?>(data.getSamples())
+        val result: MutableList<Set?> = ArrayList<Set?>()
 
-import java.util.ArrayList;
-import java.util.List;
+        var lastAbsoluteTimeEnd: Long = workout.start
+        var lastRelativeTimeEnd: Long = 0
+        val pauses = getPausesFromWorkout(data.castToBaseWorkoutData())
+        pauses.add(
+            PauseLocation(
+                workout.end,
+                workout.duration,
+                0,
+                null
+            )
+        ) // Append a last pause so every set ends with a pause
 
-import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.RouteSample;
+        for (pause in pauses) {
+            val set = Set(
+                lastAbsoluteTimeEnd,
+                lastRelativeTimeEnd,
+                pause.relativeTimeStart - lastRelativeTimeEnd,
+                0
+            )
 
-public class WorkoutCalculator {
-
-    public static List<Set> getSetsFromWorkout(IndoorWorkoutData data) {
-        IndoorWorkout workout = data.getWorkout();
-        List<IndoorSample> samples = new ArrayList<>(data.getSamples());
-        List<Set> result = new ArrayList<>();
-
-        long lastAbsoluteTimeEnd = workout.start;
-        long lastRelativeTimeEnd = 0;
-        List<Pause> pauses = getPausesFromWorkout(data.castToBaseWorkoutData());
-        pauses.add(new Pause(workout.end, workout.duration, 0, null)); // Append a last pause so every set ends with a pause
-
-        for (Pause pause : pauses) {
-            Set set = new Set(lastAbsoluteTimeEnd, lastRelativeTimeEnd, pause.relativeTimeStart - lastRelativeTimeEnd, 0);
-
-            while (samples.size() > 0 && samples.get(0).relativeTime < set.relativeTimeStart + set.duration) {
-                set.repetitions += samples.remove(0).repetitions;
+            while (samples.size > 0 && samples.get(0).relativeTime < set.relativeTimeStart + set.duration) {
+                set.repetitions += samples.removeAt(0).repetitions
             }
 
             if (set.repetitions > 0) {
-                result.add(set);
+                result.add(set)
             }
-            lastAbsoluteTimeEnd = pause.absoluteTimeStart + pause.duration;
-            lastRelativeTimeEnd = pause.relativeTimeStart + pause.duration;
+            lastAbsoluteTimeEnd = pause.absoluteTimeStart + pause.duration
+            lastRelativeTimeEnd = pause.relativeTimeStart + pause.duration
         }
 
-        return result;
+        return result
     }
 
-    public static long calculatePauseDuration(BaseWorkoutData data) {
-        long pauseDuration = 0;
-        for (WorkoutCalculator.Pause pause : getPausesFromWorkout(data)) {
-            pauseDuration += pause.duration;
+    fun calculatePauseDuration(data: BaseWorkoutData): Long {
+        var pauseDuration: Long = 0
+        for (pause in getPausesFromWorkout(data)) {
+            pauseDuration += pause.duration
         }
 
-        return pauseDuration;
+        return pauseDuration
     }
 
-    public static List<Pause> getPausesFromWorkout(BaseWorkoutData data) {
-        List<Pause> result = new ArrayList<>();
-        List<BaseSample> samples = data.getSamples();
-
-        long absoluteTime = data.getWorkout().start;
-        long relativeTime = 0;
-        boolean lastWasPause = false;
-
-        for (BaseSample sample : samples) {
-            long absoluteDiff = sample.absoluteTime - absoluteTime;
-            long relativeDiff = sample.relativeTime - relativeTime;
-            long diff = absoluteDiff - relativeDiff;
-
-            if (diff > 1000) {
-                if (lastWasPause) {
-                    // Add duration to last pause if there is no sample between detected pauses
-                    result.get(result.size() - 1).addDuration(diff);
-                } else {
-                    LatLong location = null;
-                    if (sample instanceof RouteSample) {
-                        location = ((RouteSample) sample).toLatLong();
-                    }
-                    result.add(new Pause(absoluteTime, relativeTime, diff, location));
-                }
-                lastWasPause = true;
-            } else {
-                lastWasPause = false;
-            }
-            absoluteTime = sample.absoluteTime;
-            relativeTime = sample.relativeTime;
-        }
-        return result;
-    }
-
-    public static class Set {
-
-        public final long absoluteTimeStart;
-        public final long relativeTimeStart;
-        public long duration;
-        public int repetitions;
-
-        public Set(long absoluteTimeStart, long relativeTimeStart, long duration, int repetitions) {
-            this.absoluteTimeStart = absoluteTimeStart;
-            this.relativeTimeStart = relativeTimeStart;
-            this.duration = duration;
-            this.repetitions = repetitions;
-        }
-    }
-
-    public static class Pause {
-        public final long absoluteTimeStart;
-        public final long relativeTimeStart;
-        public long duration;
-        public final LatLong location;
-
-        public Pause(long absoluteTimeStart, long relativeTimeStart, long duration, LatLong location) {
-            this.absoluteTimeStart = absoluteTimeStart;
-            this.relativeTimeStart = relativeTimeStart;
-            this.duration = duration;
-            this.location = location;
-        }
-
-        private void addDuration(long duration) {
-            this.duration += duration;
-        }
-
+    @JvmStatic
+    fun getPausesFromWorkout(data: WorkoutData) = data.pauses.mapNotNull { pause ->
+        data.samples
+            .find { it.timestamp < pause.startDate }
+            ?.toLatLong()
+            ?.let { PauseLocation(pause, it) }
     }
 
     /**
      * Returns a list of relative times when intervals were triggered
      */
-    public static List<Long> getIntervalSetTimesFromWorkout(BaseWorkoutData data) {
-        List<Long> result = new ArrayList<>();
-        List<BaseSample> samples = data.getSamples();
+    fun getIntervalSetTimesFromWorkout(data: BaseWorkoutData): MutableList<Long?> {
+        val result: MutableList<Long?> = ArrayList<Long?>()
+        val samples: MutableList<BaseSample> = data.getSamples()
 
-        for (BaseSample sample : samples) {
+        for (sample in samples) {
             if (sample.intervalTriggered > 0) {
-                result.add(sample.relativeTime);
+                result.add(sample.relativeTime)
             }
         }
-        return result;
+        return result
     }
 
+    class Set(
+        val absoluteTimeStart: Long,
+        val relativeTimeStart: Long,
+        var duration: Long,
+        var repetitions: Int
+    )
+
+    class PauseLocation(val pause: WorkoutPause, val location: LatLong)
 }

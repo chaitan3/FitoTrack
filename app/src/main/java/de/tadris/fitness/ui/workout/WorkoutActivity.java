@@ -53,6 +53,7 @@ import de.tadris.fitness.data.IntervalSet;
 import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.StatsDataTypes;
 import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
 import de.tadris.fitness.util.WorkoutCalculator;
 import de.tadris.fitness.util.charts.ChartStyles;
@@ -65,8 +66,8 @@ public abstract class WorkoutActivity extends InformationActivity {
     public static final int NUMBER_OF_SAMPLES_IN_DIAGRAM = 100;
     public static final String WORKOUT_ID_EXTRA = "de.tadris.fitness.WorkoutActivity.WORKOUT_ID_EXTRA";
 
-    List<BaseSample> samples;
-    private Workout workout;
+    protected Workout workout;
+    protected WorkoutData data;
     private Resources.Theme theme;
     protected final Handler mHandler = new Handler();
     protected IntervalSet usedIntervalSet;
@@ -83,7 +84,7 @@ public abstract class WorkoutActivity extends InformationActivity {
         Intent intent = getIntent();
         long workoutId = intent.getLongExtra(WORKOUT_ID_EXTRA, 0);
         if (workoutId != 0) {
-            workout = findWorkout(workoutId);
+            workout = Instance.getInstance(this).db.workoutDao().getWorkoutById(workoutId);
         }
         if (workout == null) {
             Toast.makeText(this, R.string.cannotFindWorkout, Toast.LENGTH_LONG).show();
@@ -91,17 +92,14 @@ public abstract class WorkoutActivity extends InformationActivity {
             return;
         }
 
-        samples = findSamples(workoutId);
-        if (workout.intervalSetUsedId != 0) {
-            usedIntervalSet = Instance.getInstance(this).db.intervalDao().getSet(workout.intervalSetUsedId);
+        data = WorkoutData.fromWorkout(this, workout);
+
+        if (workout.getIntervalSetUsedId() != 0) {
+            usedIntervalSet = Instance.getInstance(this).db.intervalDao().getSet(workout.getIntervalSetUsedId());
             intervals = Instance.getInstance(this).db.intervalDao().getAllIntervalsOfSet(usedIntervalSet.id);
         }
         setTheme(Instance.getInstance(this).themes.getWorkoutTypeTheme(workout.getWorkoutType(this)));
     }
-
-    abstract Workout findWorkout(long id);
-
-    abstract List<BaseSample> findSamples(long workoutId);
 
     void initAfterContent() {
         setupActionBar();
@@ -164,17 +162,13 @@ public abstract class WorkoutActivity extends InformationActivity {
     protected void onChartSelectionChanged(BaseSample sample) {
     }
 
-    abstract List<BaseSample> aggregatedSamples(int aggregationLength, StatsDataTypes.TimeSpan viewFieldSpan);
-
     protected void updateChart(CombinedChart chart, List<SampleConverter> converters, boolean showIntervalSets) {
         boolean hasMultipleConverters = converters.size() > 1;
         CombinedData combinedData = new CombinedData();
 
         String xLabel="", yLabel="";
-        if (hasMultipleConverters) {
-            xLabel = converters.get(0).getXAxisLabel();
-        } else {
-            xLabel = converters.get(0).getXAxisLabel();
+        xLabel = converters.get(0).getXAxisLabel();
+        if (!hasMultipleConverters) {
             yLabel = converters.get(0).getYAxisLabel();
         }
         ChartStyles.setXAxisLabel(chart, xLabel, this);
@@ -182,18 +176,21 @@ public abstract class WorkoutActivity extends InformationActivity {
 
 
         // Generate a time span from the view field of the chart
-        StatsDataTypes.TimeSpan chartViewField = new StatsDataTypes.TimeSpan(Math.round(chart.getLowestVisibleX()*1000f*60f), Math.round(chart.getHighestVisibleX()*1000f*60f));
+        StatsDataTypes.TimeSpan chartViewField = new StatsDataTypes.TimeSpan(
+                Math.round(chart.getLowestVisibleX() * 1000f * 60f),
+                Math.round(chart.getHighestVisibleX() * 1000f * 60f)
+        );
 
         // At the Before zooming/scrolling in the chart the chartViewField starts and ends at 0
         if (chartViewField.startTime == 0 && chartViewField.endTime == 0) {
-            chartViewField.startTime = samples.get(0).relativeTime;
-            chartViewField.endTime = samples.get(samples.size() - 1).relativeTime;
+            chartViewField.endTime = workout.getActiveDuration();
         }
 
         LineData lineData = new LineData();
 
         int converterIndex = 0;
         for (SampleConverter converter : converters) {
+
             converter.onCreate(getBaseWorkoutData());
 
             List<Entry> entries = new ArrayList<>();
@@ -236,9 +233,10 @@ public abstract class WorkoutActivity extends InformationActivity {
         if (showIntervalSets && intervals != null && intervals.length > 0) {
             List<BarEntry> barEntries = new ArrayList<>();
 
+            /* TODO reimplement display of interval set
             for (long relativeTime : WorkoutCalculator.getIntervalSetTimesFromWorkout(getBaseWorkoutData())) {
                 barEntries.add(new BarEntry((float) (relativeTime) / 1000f / 60f, yMax));
-            }
+            }*/
 
             BarDataSet barDataSet = new BarDataSet(barEntries, getString(R.string.intervalSet));
             barDataSet.setBarBorderWidth(3);
@@ -279,14 +277,6 @@ public abstract class WorkoutActivity extends InformationActivity {
     protected boolean showPauses = false;
     boolean fullScreenItems = false;
     LinearLayout mapRoot;
-
-    protected boolean hasSamples() {
-        return samples.size() > 1;
-    }
-
-    protected BaseWorkoutData getBaseWorkoutData() {
-        return new BaseWorkoutData(workout, samples);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -21,7 +21,7 @@ package de.tadris.fitness.data
 import android.content.Context
 import de.tadris.fitness.Instance
 
-class WorkoutData(
+data class WorkoutData(
     val workout: Workout,
     val samples: List<RouteSample>,
     val pauses: List<WorkoutPause>,

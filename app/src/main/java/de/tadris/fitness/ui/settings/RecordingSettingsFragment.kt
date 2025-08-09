@@ -29,7 +29,7 @@ import androidx.preference.Preference
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.preferences.UserPreferences
-import de.tadris.fitness.model.AutoStartWorkout
+import de.tadris.fitness.recording.autostart.AutoStartWorkout
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog

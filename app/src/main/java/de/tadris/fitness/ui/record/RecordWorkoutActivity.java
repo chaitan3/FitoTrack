@@ -75,7 +75,7 @@ import de.tadris.fitness.data.IntervalSet;
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
-import de.tadris.fitness.model.AutoStartWorkout;
+import de.tadris.fitness.recording.autostart.AutoStartWorkout;
 import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.recording.announcement.TTSController;
 import de.tadris.fitness.recording.autostart.AutoStartAnnouncements;

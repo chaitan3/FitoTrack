@@ -22,19 +22,23 @@ package de.tadris.fitness.ui.workout.diagram;
 import androidx.annotation.ColorRes;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+
+import java.util.List;
 
 import de.tadris.fitness.data.BaseSample;
 import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutData;
+import kotlin.Pair;
 
 public interface SampleConverter {
 
-    void onCreate(WorkoutData data);
+    float getMinValue(WorkoutData data);
 
-    float getMinValue(Workout workout);
+    float getMaxValue(WorkoutData data);
 
-    float getMaxValue(Workout workout);
+    List<Pair<BaseSample, Float>> getEntries(WorkoutData data);
 
     float getValue(BaseSample sample);
 

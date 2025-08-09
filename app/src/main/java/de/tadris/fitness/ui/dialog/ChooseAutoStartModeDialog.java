@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.model.AutoStartWorkout;
+import de.tadris.fitness.recording.autostart.AutoStartWorkout;
 
 public class ChooseAutoStartModeDialog extends NumberPickerDialog<AutoStartWorkout.Mode> {
     private final AutoStartModeSelectListener listener;

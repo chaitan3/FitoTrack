@@ -20,21 +20,33 @@
 package de.tadris.fitness.recording
 
 import android.content.Context
+import android.hardware.SensorManager
+import android.util.Log
+import de.tadris.fitness.data.CalculatedValues
 import de.tadris.fitness.data.WorkoutDao
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.preferences.UserMeasurements
+import de.tadris.fitness.util.AltitudeCorrection
+import de.tadris.fitness.util.WorkoutLogger
 import de.tadris.fitness.util.calorie.CalorieCalculator
 import de.tadris.fitness.util.totalDistance
+import kotlin.math.roundToInt
 
 class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val workoutId: Long) {
 
     private val workout =
         workoutDao.getWorkoutById(workoutId) ?: throw Exception("Workout not found")
-    private val data = WorkoutData.fromWorkout(workoutDao, workout)
+    private var data = WorkoutData.fromWorkout(workoutDao, workout)
+    private val calculatedValues = CalculatedValues(data)
 
     fun finalize() {
+        recalculateElevation()
+        updateMSLValues()
+        updateRouteSamples()
+
         workoutDao.updateWorkout(
             workout.copy(
-                activeDuration =,
+                activeDuration = getActiveDuration(),
                 distance = data.samples.totalDistance,
                 repetitions = data.repetitionSamples.sumOf { it.repetitions },
                 energy = getEnergy(),
@@ -43,27 +55,92 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
     }
 
     fun recalculateElevation() {
+        if (data.samples.isEmpty()) return
 
+        val pressureDataAvailable = data.samples[0].pressure != -1f
+
+        if (!pressureDataAvailable) {
+            // Because pressure data isn't available we just use the use GPS elevation
+            // in WorkoutSample.elevation which was already set
+            WorkoutLogger.log("WorkoutFinalizer", "No pressure data available, not recalculating elevation")
+            return
+        }else{
+            WorkoutLogger.log("WorkoutFinalizer", "Pressure data available, recalculating elevation")
+        }
+
+        val avgElevation: Double = data.samples.sumOf { it.elevation } / data.samples.size
+        val avgPressure: Double = data.samples.sumOf { it.pressure.toDouble() } / data.samples.size
+
+        val avgPressureAltitude = SensorManager.getAltitude(
+            SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+            avgPressure.toFloat()
+        )
+
+        data = data.copy(
+            samples = data.samples.mapIndexed { index, sample ->
+                // Altitude Difference to Average Elevation in meters
+                val altitudeDifference =
+                    SensorManager.getAltitude(
+                        SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+                        sample.pressure
+                    ) - avgPressureAltitude
+
+                if (!altitudeDifference.isNaN()) {
+                    sample.copy(elevation = avgElevation + altitudeDifference)
+                } else {
+                    Log.w(
+                        "WorkoutFinalizer",
+                        "Cannot determine elevation for sample " + index + ": pressure=" + sample.pressure
+                    )
+                    sample
+                }
+            }
+        )
     }
 
     fun updateMSLValues() {
+        if (data.samples.isEmpty()) return
 
+        try {
+            val firstSample = data.samples[0]
+            val lat = firstSample.latitude.toInt()
+            val lon = firstSample.longitude.toInt()
+            val correction = AltitudeCorrection(context, lat, lon)
+
+            data = data.copy(
+                samples = data.samples.map { sample ->
+                    if (sample.elevationMSL == 0.0 || sample.elevationMSL == sample.elevation) {
+                        sample.copy(elevationMSL = correction.getHeightOverSeaLevel(sample.elevation))
+                    } else {
+                        sample
+                    }
+                }
+            )
+            
+            WorkoutLogger.log("WorkoutFinalizer", "Updated MSL values for ${data.samples.size} samples")
+        } catch (e: Exception) {
+            WorkoutLogger.log("WorkoutFinalizer", "Failed to update MSL values: ${e.message}")
+        }
+    }
+
+    private fun updateRouteSamples(){
+        data.samples.forEach { workoutDao.updateSample(it) }
     }
 
     private fun getActiveDuration(): Long {
         var activeDuration = workout.end - workout.start
-        workoutDao.getAllPausesOfWorkout(workoutId).forEach {
+        data.pauses.forEach {
             activeDuration -= it.endDate - it.startDate
         }
         return activeDuration
     }
 
-    private fun getDistance(): Double {
-        return workoutDao.getAllSamplesOfWorkout(workoutId).toList().totalDistance
-    }
-
-    private fun getEnergy() {
-        CalorieCalculator(context).calculateCalories()
-    }
+    private fun getEnergy() = CalorieCalculator(context).calculateCalories(
+        UserMeasurements.from(context),
+        getActiveDuration(),
+        calculatedValues.getAscentAndDescent().first.roundToInt(),
+        workout.workoutTypeId,
+        data.samples.totalDistance / (getActiveDuration() / 1000.0)
+    )
 
 }

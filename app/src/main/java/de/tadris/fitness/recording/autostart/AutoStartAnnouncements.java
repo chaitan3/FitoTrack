@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.model.AutoStartWorkout;
 import de.tadris.fitness.recording.announcement.TTSController;
 import de.tadris.fitness.util.event.EventBusMember;
 

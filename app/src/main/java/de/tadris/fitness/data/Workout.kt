@@ -30,7 +30,8 @@ import java.util.Locale
 import kotlin.math.min
 
 /**
- * @property id Unique ID
+ * @property id Unique ID (internal, fast)
+ * @property uuid Unique UUID (external, fully unique)
  * @property start timestamp of start
  * @property end timestamp of end
  * @property activeDuration active duration in ms
@@ -42,7 +43,8 @@ import kotlin.math.min
 @Entity(tableName = "workout")
 data class Workout(
     @PrimaryKey
-    val id: String,
+    val id: Long,
+    val uuid: String,
     val start: Long,
     val end: Long,
     val activeDuration: Long,

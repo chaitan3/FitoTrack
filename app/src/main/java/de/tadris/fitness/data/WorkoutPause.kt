@@ -52,4 +52,8 @@ data class WorkoutPause(
     val startDate: Long,
     val endDate: Long,
     val userInitiated: Boolean,
-)
+){
+
+    val time get() = endDate - startDate
+
+}

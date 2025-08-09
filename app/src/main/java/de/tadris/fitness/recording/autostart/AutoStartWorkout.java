@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.model;
+package de.tadris.fitness.recording.autostart;
 
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -28,7 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.tadris.fitness.recording.autostart.MovementDetector;
+import de.tadris.fitness.recording.GpsState;
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged;
 import de.tadris.fitness.util.event.EventBusMember;
 
@@ -412,6 +412,6 @@ public class AutoStartWorkout implements EventBusMember {
      */
     @Subscribe
     public void onGpsStateChanged(WorkoutGPSStateChanged gpsStateChanged) {
-        gpsOkay = gpsStateChanged.newState == GpsWorkoutRecorder.GpsState.SIGNAL_GOOD;
+        gpsOkay = gpsStateChanged.newState == GpsState.SIGNAL_GOOD;
     }
 }

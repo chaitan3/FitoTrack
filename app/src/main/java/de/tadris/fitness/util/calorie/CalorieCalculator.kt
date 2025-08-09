@@ -42,7 +42,7 @@ class CalorieCalculator(val provider: List<METProvider>) {
             data.workout.activeDuration,
             CalculatedValues(data).getAscentAndDescent().first.roundToInt(),
             data.workout.workoutTypeId,
-            data.workout.speed
+            data.workout.averageSpeedActive
         )
 
     fun calculateEnergy(
@@ -50,7 +50,7 @@ class CalorieCalculator(val provider: List<METProvider>) {
         duration: Long,
         ascent: Int,
         workoutTypeId: String,
-        speed: Double
+        speed: Double // m/s
     ) =
         Kcal().toJoules(calculateCalories(measurements, duration, ascent, workoutTypeId, speed))
 
@@ -59,7 +59,7 @@ class CalorieCalculator(val provider: List<METProvider>) {
         duration: Long,
         ascent: Int,
         workoutTypeId: String,
-        speed: Double
+        speed: Double // m/s
     ): Double {
         val weight = measurements.weight.toDouble()
         val mins = (duration / 1000).toDouble() / 60
@@ -69,7 +69,7 @@ class CalorieCalculator(val provider: List<METProvider>) {
     private fun getMET(
         measurements: UserMeasurements,
         workoutTypeId: String,
-        speed: Double
+        speed: Double // m/s
     ): Double {
         provider.forEach { provider ->
             val result = provider.calculateMET(measurements, workoutTypeId, speed * 3.6)

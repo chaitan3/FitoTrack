@@ -1,13 +1,9 @@
 package de.tadris.fitness.recording.autostart;
 
-import androidx.annotation.NonNull;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import de.tadris.fitness.model.AutoStartWorkout;
 import de.tadris.fitness.util.VibratorController;
-import de.tadris.fitness.util.event.EventBusHelper;
 import de.tadris.fitness.util.event.EventBusMember;
 
 public class AutoStartVibratorFeedback implements EventBusMember {

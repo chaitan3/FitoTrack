@@ -25,7 +25,7 @@ import de.tadris.fitness.util.event.EventBusMember;
 
 /**
  * This class implements a basic interface for movement detectors.<p>
- *     Movement detectors are used by {@link de.tadris.fitness.model.AutoStartWorkout} in {@link de.tadris.fitness.model.AutoStartWorkout.Mode#ON_MOVE}
+ *     Movement detectors are used by {@link AutoStartWorkout} in {@link AutoStartWorkout.Mode#ON_MOVE}
  * Why an extra class: Movement detection may need to be tailored to a specific workout type to
  * reach an acceptable depending on the algorithm used to
  * detect user movement. E.g. differences in the x-,y- and z-acceleration profile (for example

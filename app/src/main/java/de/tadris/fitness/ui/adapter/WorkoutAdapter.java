@@ -85,24 +85,24 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
     public void onBindViewHolder(WorkoutViewHolder holder, final int position) {
         Context context = holder.root.getContext();
         Workout workout = workouts[position];
-        holder.dateText.setText(Instance.getInstance(context).userDateTimeUtils.formatDateTime(new Date(workout.start)));
+        holder.dateText.setText(Instance.getInstance(context).userDateTimeUtils.formatDateTime(new Date(workout.getStart())));
         holder.typeText.setText(workout.getWorkoutType(context).title);
-        if (workout.comment != null) {
-            if (workout.comment.length() > 33) {
-                holder.commentText.setText(workout.comment.substring(0, 30) + "...");
+        if (workout.getComment() != null) {
+            if (workout.getComment().length() > 33) {
+                holder.commentText.setText(workout.getComment().substring(0, 30) + "...");
             } else {
-                holder.commentText.setText(workout.comment);
+                holder.commentText.setText(workout.getComment());
             }
         } else {
             holder.commentText.setText("");
         }
-        if (workout instanceof GpsWorkout) {
-            holder.lengthText.setText(Instance.getInstance(context).distanceUnitUtils.getDistance(((GpsWorkout) workout).length));
-        } else if (workout instanceof IndoorWorkout) {
-            int repetitions = ((IndoorWorkout) workout).repetitions;
+        if (workout.getDistance() == 0.0 && workout.getRepetitions() > 0) {
+            int repetitions = workout.getRepetitions();
             holder.lengthText.setText(repetitions + " " + context.getResources().getQuantityString(workout.getWorkoutType(context).repeatingExerciseName, repetitions));
+        } else {
+            holder.lengthText.setText(Instance.getInstance(context).distanceUnitUtils.getDistance((int)Math.round(workout.getDistance())));
         }
-        holder.timeText.setText(Instance.getInstance(context).distanceUnitUtils.getHourMinuteTime(workout.duration));
+        holder.timeText.setText(Instance.getInstance(context).distanceUnitUtils.getHourMinuteTime(workout.getActiveDuration()));
         holder.iconView.setImageResource(Icon.getIcon(workout.getWorkoutType(context).icon));
         holder.root.setOnClickListener(v -> listener.onItemClick(position, workout));
         holder.root.setOnLongClickListener(v -> {
