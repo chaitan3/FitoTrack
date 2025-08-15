@@ -1,0 +1,6 @@
+- Neuer Statistikbildschirm, überarbeitete Kurvendarstellung und Geschwindigkeitshistogramm
+- Massenexport von GPX-Dateien
+- Schwimmen als Standard hinzugefügtAdd swimming as default type
+- Eine Menge mehr Verbesserungen :)
+
+eine komplette Liste der Änderungen findet man im Repository des Projekts auf Codeberg
