@@ -48,7 +48,7 @@ import de.tadris.fitness.util.io.general.IWorkoutExporter;
 public class GpxExporter implements IWorkoutExporter {
 
     @SuppressLint("SimpleDateFormat") // This has nothing to do with localisation
-    public final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public GpxExporter() {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
