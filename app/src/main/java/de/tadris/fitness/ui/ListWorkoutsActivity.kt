@@ -146,8 +146,7 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
                 Intent.createChooser(intent, getString(R.string.importWorkout)),
                 FILE_IMPORT_SELECT_CODE
             )
-        } catch (ignored: ActivityNotFoundException) {
-        }
+        } catch (_: ActivityNotFoundException) { }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -285,8 +284,7 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
     }
 
     override fun onItemClick(pos: Int, workout: Workout) {
-        val intent =
-            Intent(this, workout.getWorkoutType(this).getRecordingType().showDetailsActivityClass)
+        val intent = Intent(this, ShowGpsWorkoutActivity::class.java)
         intent.putExtra(ShowGpsWorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
         startActivity(intent)
         lastClickedIndex = pos
@@ -294,11 +292,7 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
 
     override fun onItemLongClick(pos: Int, workout: Workout) {
         DialogUtils.showDeleteWorkoutDialog(this) {
-            if (workout is GpsWorkout) {
-                Instance.getInstance(this).db.workoutDao().deleteWorkout(workout)
-            } else if (workout is IndoorWorkout) {
-                Instance.getInstance(this).db.indoorWorkoutDao().deleteWorkout(workout)
-            }
+            Instance.getInstance(this).db.workoutDao().deleteWorkout(workout)
             refresh()
         }
     }

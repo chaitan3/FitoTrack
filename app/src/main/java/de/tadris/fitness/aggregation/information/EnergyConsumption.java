@@ -50,7 +50,7 @@ public class EnergyConsumption extends AbstractWorkoutInformation {
 
     @Override
     public double getValueFromWorkout(Workout workout) {
-        return workout.calorie / ((double) workout.duration / 1000 / 60);
+        return workout.getKcal() / ((double) workout.getActiveDuration() / 1000 / 60);
     }
 
     @Override

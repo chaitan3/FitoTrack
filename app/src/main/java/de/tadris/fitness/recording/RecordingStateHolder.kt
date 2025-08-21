@@ -19,13 +19,45 @@
 
 package de.tadris.fitness.recording
 
+import android.content.Context
+import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.data.WorkoutTypeManager
+import java.util.UUID
 
 class RecordingStateHolder {
 
+    lateinit var workoutType: WorkoutType
     var recordingType: RecordingType = RecordingType.GPS
     var workoutId: Long = -1
     var state = RecordingState.IDLE
     var pausedSince = 0L
+
+    fun init(context: Context){
+        val lastTypeId = Instance.getInstance(context).db.workoutDao().lastWorkout?.workoutTypeId
+            ?: WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING
+        workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(context, lastTypeId)
+        recordingType = RecordingType.findById(workoutType.recordingType)
+        createFreshWorkout().also {
+            workoutId = it.id
+            Instance.getInstance(context).db.workoutDao().insertWorkout(it)
+        }
+    }
+
+    private fun createFreshWorkout() = Workout(
+        id = System.nanoTime(),
+        uuid = UUID.randomUUID().toString(),
+        start = -1,
+        end = -1,
+        activeDuration = 0,
+        comment = "",
+        distance = 0.0,
+        repetitions = 0,
+        energy = 0.0,
+        workoutTypeId = workoutType.id,
+        intervalSetUsedId = -1
+    )
 
 }

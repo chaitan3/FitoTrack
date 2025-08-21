@@ -20,6 +20,7 @@
 package de.tadris.fitness.util.io
 
 import android.content.Context
+import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutDao
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.util.io.general.IWorkoutExporter
@@ -49,7 +50,7 @@ class MassExporter(
         listener?.onProgressUpdate(100)
     }
 
-    private fun exportWorkout(index: Int, workout: GpsWorkout){
+    private fun exportWorkout(index: Int, workout: Workout){
         val data = WorkoutData.fromWorkout(workoutDao, workout)
         val zipEntryName =
             String.format("%05d", index) + "_" + workout.getWorkoutType(context) + ".gpx";

@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.ExportTargetConfiguration;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.util.autoexport.source.ExportSource;
 
 public class AutoExportPlanner {
@@ -75,16 +76,17 @@ public class AutoExportPlanner {
         WorkManager.getInstance(context).enqueue(workRequest);
     }
 
-    public void onWorkoutRecorded(GpsWorkout workout) {
+    // TODO call after workout was recorded
+    public void onWorkoutRecorded(Workout workout) {
         for (ExportTargetConfiguration configuration : getConfigurations(ExportSource.EXPORT_SOURCE_WORKOUT_GPX)) {
             planWorkoutExportFor(workout, configuration);
         }
     }
 
-    private void planWorkoutExportFor(GpsWorkout workout, ExportTargetConfiguration configuration) {
+    private void planWorkoutExportFor(Workout workout, ExportTargetConfiguration configuration) {
         Data data = new Data.Builder()
                 .putString(AutoExporter.DATA_SOURCE_TYPE, ExportSource.EXPORT_SOURCE_WORKOUT_GPX)
-                .putString(AutoExporter.DATA_SOURCE_DATA, String.valueOf(workout.id))
+                .putString(AutoExporter.DATA_SOURCE_DATA, String.valueOf(workout.getId()))
                 .putLong(AutoExporter.DATA_TARGET_CONFIG_ID, configuration.id)
                 .build();
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AutoExporter.class)

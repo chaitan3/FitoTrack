@@ -61,13 +61,15 @@ data class Workout(
 
     val kcal get() = energy / 4186.8
 
-    val totalDuration get() = end - start
+    val totalDuration get() = end - start // ms
 
-    val pauseDuration get() = totalDuration - activeDuration
+    val pauseDuration get() = totalDuration - activeDuration // ms
 
-    val averageSpeedActive get() = distance / activeDuration
+    val averageSpeedActive get() = distance / activeDuration // m/s
 
-    val averageSpeedTotal get() = distance / totalDuration
+    val averageSpeedTotal get() = distance / totalDuration // m/s
+
+    val averagePaceActive get() = (activeDuration / 1000.0 / 60.0) / (distance / 1000.0) // min/km
 
     // returns a file name string without suffix that can be used for exports
     fun getExportFileName(context: Context?): String {

@@ -50,12 +50,12 @@ public class Duration extends AbstractWorkoutInformation {
 
     @Override
     public double getValueFromWorkout(Workout workout) {
-        return (double) (workout.duration / 1000 / 60);
+        return (double) (workout.getActiveDuration() / 1000 / 60);
     }
 
     @Override
     public String getFormattedValueFromWorkout(Workout workout) {
-        return distanceUnitUtils.getHourMinuteSecondTime(workout.duration);
+        return distanceUnitUtils.getHourMinuteSecondTime(workout.getActiveDuration());
     }
 
     @Override

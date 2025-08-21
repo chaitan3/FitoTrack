@@ -37,7 +37,7 @@ public class WorkoutTypeFilter implements WorkoutFilter {
         if (type.id.equals(ID_ALL)) {
             return true;
         } else {
-            return workout.workoutTypeId.equals(type.id);
+            return workout.getWorkoutTypeId().equals(type.id);
         }
     }
 }

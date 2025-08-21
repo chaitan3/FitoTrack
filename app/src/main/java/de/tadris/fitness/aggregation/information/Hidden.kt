@@ -22,8 +22,10 @@ package de.tadris.fitness.aggregation.information
 import android.content.Context
 import de.tadris.fitness.R
 import de.tadris.fitness.aggregation.AggregationType
+import de.tadris.fitness.aggregation.information.AbstractWorkoutInformation
+import de.tadris.fitness.data.Workout
 
-class Hidden(ctx: Context) : GpsWorkoutInformation(ctx) {
+class Hidden(ctx: Context) : AbstractWorkoutInformation(ctx) {
     override fun getTitleRes(): Int {
         return R.string.hidden
     }
@@ -34,7 +36,7 @@ class Hidden(ctx: Context) : GpsWorkoutInformation(ctx) {
 
     override fun getId() = "hidden"
 
-    override fun getValueFromWorkout(workout: GpsWorkout?): Double {
+    override fun getValueFromWorkout(workout: Workout?): Double {
         return 0.0
     }
 

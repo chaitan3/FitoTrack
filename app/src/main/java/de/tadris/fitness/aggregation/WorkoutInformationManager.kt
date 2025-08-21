@@ -19,7 +19,6 @@
 package de.tadris.fitness.aggregation
 
 import android.content.Context
-import de.tadris.fitness.aggregation.information.AverageHeartRate
 import de.tadris.fitness.aggregation.information.AverageMotionSpeed
 import de.tadris.fitness.aggregation.information.AveragePace
 import de.tadris.fitness.aggregation.information.AverageTotalSpeed
@@ -43,7 +42,6 @@ class WorkoutInformationManager(context: Context) {
         TopSpeed(context),
         BurnedEnergy(context),
         EnergyConsumption(context),
-        AverageHeartRate(context),
         Repetitions(context),
         WorkoutCount(context),
     )

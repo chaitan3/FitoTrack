@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.util.gpx.Gpx;
 import de.tadris.fitness.util.gpx.GpxTpxExtension;
@@ -63,35 +64,35 @@ public class GpxExporter implements IWorkoutExporter {
     }
 
     private Gpx getGpxFromWorkout(WorkoutData data) {
-        GpsWorkout workout = data.workout;
+        Workout workout = data.getWorkout();
         Track track = getTrackFromWorkout(data, 0);
         ArrayList<Track> tracks = new ArrayList<>();
         tracks.add(track);
-        Metadata meta = new Metadata(workout.toString(), workout.comment, getDateTime(workout.start));
+        Metadata meta = new Metadata(workout.toString(), workout.getComment(), getDateTime(workout.getStart()));
         return new Gpx("1.1", "FitoTrack", meta, tracks);
     }
 
     private Track getTrackFromWorkout(WorkoutData data, int number) {
-        GpsWorkout workout = data.workout;
+        Workout workout = data.getWorkout();
         Track track = new Track();
         track.setNumber(number);
         track.setName(workout.toString());
-        track.setCmt(workout.comment);
-        track.setDesc(workout.comment);
+        track.setCmt(workout.getComment());
+        track.setDesc(workout.getComment());
         track.setSrc("FitoTrack");
-        track.setType(workout.workoutTypeId);
+        track.setType(workout.getWorkoutTypeId());
         track.setTrkseg(new ArrayList<>());
 
         TrackSegment segment = new TrackSegment();
         ArrayList<TrackPoint> trkpt = new ArrayList<>();
 
-        for (RouteSample sample : data.samples) {
+        for (RouteSample sample : data.getSamples()) {
             trkpt.add(new TrackPoint(
-                    sample.latitude,
-                    sample.longitude,
-                    sample.elevation,
-                    getDateTime(sample.absoluteTime),
-                    new TrackPointExtensions(sample.speed, new GpxTpxExtension(sample.heartRate))
+                    sample.getLatitude(),
+                    sample.getLongitude(),
+                    sample.getElevation(),
+                    getDateTime(sample.getTimestamp()),
+                    new TrackPointExtensions(sample.getSpeed(), new GpxTpxExtension(sample.heartRate))
             ));
         }
         segment.setTrkpt(trkpt);

@@ -20,7 +20,6 @@
 package de.tadris.fitness.data.migration;
 
 import android.content.Context;
-import android.util.Log;
 
 public abstract class Migration {
 
@@ -39,7 +38,5 @@ public abstract class Migration {
         void onProgressUpdate(int progress);
 
     }
-
-    public static final MigrationListener DUMMY_LISTENER = progress -> Log.d("Migration", "Progress: " + progress);
 
 }

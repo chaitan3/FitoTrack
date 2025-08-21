@@ -19,6 +19,7 @@
 
 package de.tadris.fitness.data;
 
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -52,6 +53,7 @@ public interface WorkoutDao {
     @Query("SELECT * FROM workout ORDER BY start DESC")
     Workout[] getWorkouts();
 
+    @Nullable
     @Query("SELECT * FROM workout ORDER BY start DESC LIMIT 1")
     Workout getLastWorkout();
 
@@ -80,7 +82,7 @@ public interface WorkoutDao {
     void deleteWorkoutAndSamples(Workout workout, RouteSample[] toArray);
 
     @Insert
-    void insertWorkout(Workout workout);
+    Workout insertWorkout(Workout workout);
 
     @Delete
     void deleteWorkout(Workout workout);

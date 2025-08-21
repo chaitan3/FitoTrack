@@ -25,8 +25,9 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
+import de.tadris.fitness.data.Workout;
 
-public class AverageMotionSpeed extends GpsWorkoutInformation {
+public class AverageMotionSpeed extends AbstractWorkoutInformation {
     public AverageMotionSpeed(Context context) {
         super(context);
     }
@@ -48,8 +49,8 @@ public class AverageMotionSpeed extends GpsWorkoutInformation {
     }
 
     @Override
-    public double getValueFromWorkout(GpsWorkout workout) {
-        return distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond((double) workout.length / ((double) workout.duration / 1000));
+    public double getValueFromWorkout(Workout workout) {
+        return distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(workout.getDistance() / ((double) workout.getActiveDuration() / 1000));
     }
 
     @Override

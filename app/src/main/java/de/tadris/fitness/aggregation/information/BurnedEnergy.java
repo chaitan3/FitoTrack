@@ -50,7 +50,7 @@ public class BurnedEnergy extends AbstractWorkoutInformation {
 
     @Override
     public double getValueFromWorkout(Workout workout) {
-        return workout.calorie;
+        return workout.getKcal();
     }
 
     @Override

@@ -25,8 +25,9 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
+import de.tadris.fitness.data.Workout;
 
-public class Distance extends GpsWorkoutInformation {
+public class Distance extends AbstractWorkoutInformation {
     public Distance(Context context) {
         super(context);
     }
@@ -48,8 +49,8 @@ public class Distance extends GpsWorkoutInformation {
     }
 
     @Override
-    public double getValueFromWorkout(GpsWorkout workout) {
-        return distanceUnitUtils.getDistanceUnitSystem().getDistanceFromKilometers(workout.length / 1000d);
+    public double getValueFromWorkout(Workout workout) {
+        return distanceUnitUtils.getDistanceUnitSystem().getDistanceFromKilometers(workout.getDistance() / 1000d);
     }
 
     @Override

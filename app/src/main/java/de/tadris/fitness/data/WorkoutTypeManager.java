@@ -48,9 +48,8 @@ public class WorkoutTypeManager {
     public static final String WORKOUT_TYPE_ID_PUSH_UPS = "push-ups";
     public static final String WORKOUT_TYPE_ID_PULL_UPS = "pull-ups";
 
-    private List<WorkoutType> allWorkoutTypes = new ArrayList<>();
+    private final List<WorkoutType> allWorkoutTypes = new ArrayList<>();
 
-    public String str;
     private static WorkoutTypeManager instance;
 
     private WorkoutTypeManager() {
@@ -121,7 +120,7 @@ public class WorkoutTypeManager {
     }
 
     private void buildPresets(Context context) {
-        if (allWorkoutTypes.size() > 0) return; // Don't build a second time
+        if (!allWorkoutTypes.isEmpty()) return; // Don't build a second time
         allWorkoutTypes.addAll(Arrays.asList(new WorkoutType(WORKOUT_TYPE_ID_RUNNING,
                 context.getString(R.string.workoutTypeRunning),
                 5,

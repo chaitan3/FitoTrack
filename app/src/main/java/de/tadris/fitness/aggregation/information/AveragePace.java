@@ -27,7 +27,7 @@ import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
 import de.tadris.fitness.data.Workout;
 
-public class AveragePace extends GpsWorkoutInformation {
+public class AveragePace extends AbstractWorkoutInformation {
     public AveragePace(Context context) {
         super(context);
     }
@@ -49,13 +49,13 @@ public class AveragePace extends GpsWorkoutInformation {
     }
 
     @Override
-    public double getValueFromWorkout(GpsWorkout workout) {
-        return ((double) workout.duration / 1000 / 60) / distanceUnitUtils.getDistanceUnitSystem().getDistanceFromKilometers((double) workout.length / 1000);
+    public double getValueFromWorkout(Workout workout) {
+        return ((double) workout.getActiveDuration() / 1000 / 60) / distanceUnitUtils.getDistanceUnitSystem().getDistanceFromKilometers(workout.getDistance() / 1000);
     }
 
     @Override
     public String getFormattedValueFromWorkout(Workout workout) {
-        return distanceUnitUtils.getPace(((GpsWorkout) workout).avgPace);
+        return distanceUnitUtils.getPace(workout.getAverageSpeedActive());
     }
 
     @Override

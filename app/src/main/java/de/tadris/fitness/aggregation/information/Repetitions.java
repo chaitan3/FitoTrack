@@ -25,16 +25,17 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
+import de.tadris.fitness.data.Workout;
 
-public class Repetitions extends IndoorWorkoutInformation {
+public class Repetitions extends AbstractWorkoutInformation {
 
     public Repetitions(Context context) {
         super(context);
     }
 
     @Override
-    public double getValueFromWorkout(IndoorWorkout workout) {
-        return workout.repetitions;
+    public double getValueFromWorkout(Workout workout) {
+        return workout.getRepetitions();
     }
 
     @Override
