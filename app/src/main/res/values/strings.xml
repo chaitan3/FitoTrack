@@ -555,4 +555,6 @@
     </plurals>
     <string name="askForComment">Ask for comment</string>
     <string name="askForCommentSummary">Ask to enter a comment when stopping the record</string>
+    <string name="saveChangesQuestion">Save changes?</string>
+    <string name="saveChangesQuestionMessage">Do you really want to save the changes?</string>
 </resources>
