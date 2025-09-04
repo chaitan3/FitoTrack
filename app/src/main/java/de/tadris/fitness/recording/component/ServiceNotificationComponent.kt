@@ -32,8 +32,10 @@ import de.tadris.fitness.BuildConfig
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.util.NotificationHelper
+import java.util.Date
 import java.util.Locale
 
 class ServiceNotificationComponent(private val context: Context) : RecorderServiceComponent {
@@ -42,6 +44,7 @@ class ServiceNotificationComponent(private val context: Context) : RecorderServi
         const val NOTIFICATION_ID: Int = 10
     }
 
+    private val serviceStartTime = Date()
     private lateinit var service: RecorderService
 
     override fun register(service: RecorderService) {
@@ -70,15 +73,16 @@ class ServiceNotificationComponent(private val context: Context) : RecorderServi
 
     fun getNotification(): Notification {
         var contentText: String = context.getText(R.string.trackerWaitingMessage).toString()
+        val info = AggregatedRecordingValuesEvent.getCurrent()
         if (service.stateHolder.state != RecordingState.IDLE) {
             contentText = String.format(
                 Locale.getDefault(), "\n%s\n%s: %s",
                 getRecordingStateString(),
                 context.getText(R.string.workoutDuration),
-                service.instance.distanceUnitUtils.getHourMinuteSecondTime(service.instance.recorder.getDuration())
+                service.instance.distanceUnitUtils.getHourMinuteSecondTime(info.activeDuration)
             )
         }
-        if (BuildConfig.DEBUG && serviceStartTime != null) {
+        if (BuildConfig.DEBUG) {
             contentText = String.format(
                 "%s\n\nServiceCreateTime: %s",
                 contentText,
@@ -95,7 +99,7 @@ class ServiceNotificationComponent(private val context: Context) : RecorderServi
             builder.setChannelId(NotificationHelper.CHANNEL_WORKOUT)
         }
 
-        val recorderActivityIntent = Intent(context, service.instance.recorder.getActivityClass())
+        val recorderActivityIntent = Intent(context, service.stateHolder.recordingType.recorderActivityClass)
         recorderActivityIntent.setAction(RecordWorkoutActivity.RESUME_ACTION)
         val flag =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0

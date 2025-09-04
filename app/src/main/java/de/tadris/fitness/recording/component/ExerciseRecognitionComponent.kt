@@ -39,7 +39,7 @@ class ExerciseRecognitionComponent : RecorderServiceComponent, SensorEventListen
     private var exerciseRecognizer: ExerciseRecognizer? = null
 
     override fun register(service: RecorderService) {
-        init(service as Context)
+        init(service)
         if (exerciseRecognizer != null) {
             WorkoutLogger.log(
                 "RecoderService",
@@ -54,10 +54,9 @@ class ExerciseRecognitionComponent : RecorderServiceComponent, SensorEventListen
         }
     }
 
-    fun init(context: Context) {
+    fun init(context: RecorderService) {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        exerciseRecognizer =
-            ExerciseRecognizer.findByType(Instance.getInstance(context).recorder.workout.workoutTypeId)
+        exerciseRecognizer = ExerciseRecognizer.findByType(context.stateHolder.workoutType.id)
     }
 
     override fun unregister() {

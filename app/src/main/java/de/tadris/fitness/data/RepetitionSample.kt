@@ -51,4 +51,15 @@ data class RepetitionSample(
     val repetitions: Int,
     val intensity: Double,
     val frequency: Double,
-) : BaseSample
+) : BaseSample {
+
+    companion object {
+
+        const val REPETITION_TYPE_STEP = "step"
+        const val REPETITION_TYPE_JUMP = "jump"
+        const val REPETITION_TYPE_PUSH_UP = "push-up"
+        const val REPETITION_TYPE_PULL_UP = "pull-up"
+
+    }
+
+}

@@ -93,6 +93,9 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     private fun publishAggregatedValues() {
         EventBus.getDefault().postSticky(
             AggregatedRecordingValuesEvent(
+                service.stateHolder.recordingType,
+                service.stateHolder.workoutType,
+                service.stateHolder.state,
                 currentActiveDuration,
                 currentPauseDuration,
                 distance,
@@ -102,6 +105,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
                 getCurrentSpeed(),
                 lastHeartRate,
                 lastHRBatteryLevel,
+
             )
         )
     }
@@ -113,6 +117,9 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         addSampleToAverageList(e.sample)
         addElevation(e.sample)
     }
+
+    @Subscribe
+    fun onNewRepetitionSample(e: RepetitionSampleEvent)
 
     @Subscribe
     fun onHeartRateChange(event: HeartRateChangeEvent) {

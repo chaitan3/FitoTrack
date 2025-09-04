@@ -58,6 +58,5 @@ abstract class ExerciseRecognizer {
 
     }
 
-    class RepetitionRecognizedEvent(val timestamp: Long, val intensity: Double = 0.0)
-
 }
+

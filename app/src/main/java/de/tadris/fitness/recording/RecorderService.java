@@ -44,6 +44,7 @@ import de.tadris.fitness.recording.component.GpsStateComponent;
 import de.tadris.fitness.recording.component.HeartRateComponent;
 import de.tadris.fitness.recording.component.PressureComponent;
 import de.tadris.fitness.recording.component.RecorderServiceComponent;
+import de.tadris.fitness.recording.component.RepetitionSampleComponent;
 import de.tadris.fitness.recording.component.ServiceNotificationComponent;
 import de.tadris.fitness.recording.component.TemporaryAggregationComponent;
 import de.tadris.fitness.util.WorkoutLogger;
@@ -171,6 +172,7 @@ public class RecorderService extends Service {
             }
         }else{
             startComponent(new ExerciseRecognitionComponent());
+            startComponent(new RepetitionSampleComponent());
         }
         startComponent(new AnnouncementComponent());
         startComponent(new HeartRateComponent());

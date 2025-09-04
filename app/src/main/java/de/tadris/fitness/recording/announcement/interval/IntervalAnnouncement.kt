@@ -21,10 +21,11 @@ package de.tadris.fitness.recording.announcement.interval
 
 import de.tadris.fitness.data.Interval
 import de.tadris.fitness.recording.announcement.Announcement
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 
 class IntervalAnnouncement(private val interval: Interval) : Announcement {
 
     override fun isAnnouncementEnabled() = true
 
-    override fun getSpokenText(recorder: WorkoutRecorder): String = interval.name
+    override fun getSpokenText(recorder: AggregatedRecordingValuesEvent): String = interval.name
 }

@@ -21,6 +21,7 @@ package de.tadris.fitness.recording.indoor.exercise
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
+import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.component.FitoTrackSensorOption
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -32,7 +33,7 @@ class StepRecognizer : ExerciseRecognizer() {
     @Subscribe
     fun onSensorEvent(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
-            EventBus.getDefault().post(RepetitionRecognizedEvent(System.currentTimeMillis()))
+            EventBus.getDefault().post(RepetitionRecognizedEvent(RepetitionSample.REPETITION_TYPE_STEP,System.currentTimeMillis()))
         }
     }
 

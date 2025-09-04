@@ -38,7 +38,7 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.indoor.exercise.ExerciseRecognizer
+import de.tadris.fitness.recording.indoor.exercise.RepetitionRecognizedEvent
 import de.tadris.fitness.util.unit.UnitUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -213,7 +213,7 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
     override fun onListenerStart() { }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRepetitionRecognized(event: ExerciseRecognizer.RepetitionRecognizedEvent) {
+    fun onRepetitionRecognized(event: RepetitionRecognizedEvent) {
         refreshRepetitions()
     }
 
