@@ -38,6 +38,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     companion object {
         private const val PRESSURE_ELEVATION_AVERAGE = 0.1
+
     }
 
     private lateinit var service: RecorderService

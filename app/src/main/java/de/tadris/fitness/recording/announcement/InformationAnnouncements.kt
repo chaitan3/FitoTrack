@@ -21,16 +21,19 @@ package de.tadris.fitness.recording.announcement
 import android.content.Context
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
+import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.information.CurrentSpeed
 import de.tadris.fitness.recording.information.InformationManager
 
 class InformationAnnouncements(
     private val context: Context,
-    private val recorder: WorkoutRecorder,
+    private val recordingType: RecordingType,
     private val TTSController: TTSController
 ) {
 
-    private val manager: InformationManager = InformationManager(recorder.recordingType, context)
+    private val info get() = AggregatedRecordingValuesEvent.getCurrent()
+    private val manager: InformationManager = InformationManager(recordingType, context)
     private var lastSpokenUpdateTime = 0L
     private var lastSpokenUpdateDistance = 0
     private var lastSpokenSpeedWarningTime = 0L
@@ -62,11 +65,11 @@ class InformationAnnouncements(
         }
         checkSpeed()
         var shouldSpeak = false
-        if (intervalTime != 0L && recorder.duration - lastSpokenUpdateTime > intervalTime) {
+        if (intervalTime != 0L && info.activeDuration - lastSpokenUpdateTime > intervalTime) {
             shouldSpeak = true
         }
-        if (recorder is GpsWorkoutRecorder) {
-            if (intervalInMeters != 0 && recorder.distanceInMeters - lastSpokenUpdateDistance > intervalInMeters) {
+        if (recordingType == RecordingType.GPS) {
+            if (intervalInMeters != 0 && info.distance - lastSpokenUpdateDistance > intervalInMeters) {
                 shouldSpeak = true
             }
         }
@@ -78,38 +81,38 @@ class InformationAnnouncements(
     }
 
     private fun checkSpeed() {
-        if (recorder is GpsWorkoutRecorder) {
-            if (speedWarningIntervalTime == 0L || recorder.getDuration() - lastSpokenSpeedWarningTime <= speedWarningIntervalTime) {
+        if (recordingType == RecordingType.GPS) {
+            if (speedWarningIntervalTime == 0L || info.activeDuration - lastSpokenSpeedWarningTime <= speedWarningIntervalTime) {
                 return
             }
-            val speed: Float = recorder.currentSpeed.toFloat()
+            val speed: Float = info.currentSpeed.toFloat()
             if (speed == 0f) {
                 return;
             }
             if (lowerTargetSpeedLimit != 0f && lowerTargetSpeedLimit > speed) {
                 TTSController.speak(context.getString(R.string.ttsBelowTargetSpeed) + ".")
-                TTSController.speak(CurrentSpeed(context).getSpokenText(recorder))
-                lastSpokenSpeedWarningTime = recorder.getDuration()
+                TTSController.speak(CurrentSpeed(context).getSpokenText(info))
+                lastSpokenSpeedWarningTime = info.activeDuration
             } else if (upperTargetSpeedLimit != 0f && upperTargetSpeedLimit < speed) {
                 TTSController.speak(context.getString(R.string.ttsAboveTargetSpeed) + ".")
-                TTSController.speak(CurrentSpeed(context).getSpokenText(recorder))
-                lastSpokenSpeedWarningTime = recorder.getDuration()
+                TTSController.speak(CurrentSpeed(context).getSpokenText(info))
+                lastSpokenSpeedWarningTime = info.activeDuration
             }
         }
     }
 
     private fun speak() {
         speakAnnouncements(true)
-        lastSpokenUpdateTime = recorder.duration
-        if (recorder is GpsWorkoutRecorder) {
-            lastSpokenUpdateDistance = recorder.distanceInMeters
+        lastSpokenUpdateTime = info.activeDuration
+        if (recordingType == RecordingType.GPS) {
+            lastSpokenUpdateDistance = info.distance.toInt()
         }
     }
 
     private fun speakAnnouncements(playAllAnnouncements: Boolean) {
         for (announcement in manager.information) {
             if (playAllAnnouncements || announcement.isPlayedAlways) {
-                TTSController.speak(recorder, announcement)
+                TTSController.speak(info, announcement)
             }
         }
     }

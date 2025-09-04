@@ -20,19 +20,21 @@ package de.tadris.fitness.recording.announcement
 
 import android.content.Context
 import de.tadris.fitness.data.Interval
+import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.announcement.interval.IntervalAnnouncements
 
 class VoiceAnnouncements(
     context: Context,
-    recorder: WorkoutRecorder,
+    service: RecorderService,
     ttsController: TTSController,
     intervals: List<Interval>
 ) {
 
     private val informationAnnouncements =
-        InformationAnnouncements(context, recorder, ttsController)
+        InformationAnnouncements(context, service.stateHolder.recordingType, ttsController)
     private val intervalAnnouncements =
-        IntervalAnnouncements(context, recorder, ttsController, intervals)
+        IntervalAnnouncements(context, service, ttsController, intervals)
 
     fun check() {
         intervalAnnouncements.check()

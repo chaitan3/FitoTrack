@@ -104,4 +104,7 @@ public interface WorkoutDao {
 
     @Update
     void updateSample(RouteSample sample);
+
+    @Insert
+    void insertWorkoutEvent(WorkoutEvent event);
 }

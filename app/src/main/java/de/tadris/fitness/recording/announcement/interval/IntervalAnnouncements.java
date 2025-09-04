@@ -24,23 +24,30 @@ import android.content.Context;
 import java.util.List;
 
 import de.tadris.fitness.Instance;
+import de.tadris.fitness.data.AppDatabase;
 import de.tadris.fitness.data.Interval;
+import de.tadris.fitness.data.WorkoutDao;
+import de.tadris.fitness.data.WorkoutEvent;
 import de.tadris.fitness.data.preferences.UserPreferences;
+import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.recording.announcement.TTSController;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 
 public class IntervalAnnouncements {
 
-    private final WorkoutRecorder recorder;
     private final TTSController ttsController;
     private List<Interval> intervals;
     private final UserPreferences preferences;
+    private final AppDatabase db;
+    private final RecorderService service;
 
     private int index = -1; // Last spoken interval
     private long speakNextAt = 0;
 
-    public IntervalAnnouncements(Context context, WorkoutRecorder recorder, TTSController ttsController, List<Interval> intervals) {
+    public IntervalAnnouncements(Context context, RecorderService service, TTSController ttsController, List<Interval> intervals) {
         this.preferences = Instance.getInstance(context).userPreferences;
-        this.recorder = recorder;
+        this.service = service;
+        this.db = Instance.getInstance(context).db;
         this.ttsController = ttsController;
         this.intervals = intervals;
     }
@@ -52,10 +59,11 @@ public class IntervalAnnouncements {
     }
 
     private long getWorkoutDuration() {
+        AggregatedRecordingValuesEvent event = AggregatedRecordingValuesEvent.Companion.getCurrent();
         if (preferences.intervalsIncludePauses()) {
-            return recorder.getTimeSinceStart();
+            return event.getActiveDuration();
         } else {
-            return recorder.getDuration();
+            return event.getTotalDuration();
         }
     }
 
@@ -69,13 +77,19 @@ public class IntervalAnnouncements {
         }
         Interval interval= intervals.get(index);
         speak(interval);
-        recorder.onIntervalWasTriggered(interval);
+        db.workoutDao().insertWorkoutEvent(new WorkoutEvent(
+                service.stateHolder.getWorkoutId(),
+                System.nanoTime(),
+                System.currentTimeMillis(),
+                AggregatedRecordingValuesEvent.Companion.getCurrent().getActiveDuration(),
+                WorkoutEvent.TYPE_ID_INTERVAL
+        ));
         speakNextAt += interval.delayMillis;
     }
 
     private void speak(Interval interval){
         IntervalAnnouncement announcement= new IntervalAnnouncement(interval);
-        ttsController.speak(recorder, announcement);
+        ttsController.speak(AggregatedRecordingValuesEvent.Companion.getCurrent(), announcement);
     }
 
     public void setIntervals(List<Interval> intervals) {

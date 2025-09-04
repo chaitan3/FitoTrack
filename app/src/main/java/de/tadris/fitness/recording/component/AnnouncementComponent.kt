@@ -19,10 +19,12 @@
 
 package de.tadris.fitness.recording.component
 
-import de.tadris.fitness.data.Interval
+import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecorderService
+import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.announcement.VoiceAnnouncements
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged
 import de.tadris.fitness.recording.information.GPSStatus
 import org.greenrobot.eventbus.EventBus
@@ -41,12 +43,10 @@ class AnnouncementComponent : RecorderServiceComponent {
     private lateinit var mTTSController: TTSController
     private lateinit var announcements: VoiceAnnouncements
 
-    private var lastList: List<Interval>? = null
-
     override fun register(service: RecorderService) {
         this.service = service
         mTTSController = TTSController(service, TTS_CONTROLLER_ID)
-        announcements = VoiceAnnouncements(service, service.instance.recorder, mTTSController, ArrayList())
+        announcements = VoiceAnnouncements(service, service, mTTSController, ArrayList())
         EventBus.getDefault().register(this)
     }
 
@@ -58,12 +58,6 @@ class AnnouncementComponent : RecorderServiceComponent {
 
     override fun checkSlow() {
         super.checkSlow()
-        // UPDATE INTERVAL LIST IF NEEDED
-        val intervalList = service.instance.recorder.intervalList
-        if (lastList != intervalList) {
-            announcements.applyIntervals(intervalList)
-            lastList = intervalList
-        }
 
         // CHECK FOR ANNOUNCEMENTS
         announcements.check()
@@ -72,10 +66,11 @@ class AnnouncementComponent : RecorderServiceComponent {
     @Subscribe
     fun onGPSStateChange(event: WorkoutGPSStateChanged) {
         val announcement = GPSStatus(service)
-        if (service.instance.recorder.isResumed && announcement.isAnnouncementEnabled) {
-            if (event.oldState == GpsWorkoutRecorder.GpsState.SIGNAL_LOST) { // GPS Signal found
+        val info = AggregatedRecordingValuesEvent.getCurrent()
+        if (info.currentState == RecordingState.RUNNING && announcement.isAnnouncementEnabled) {
+            if (event.oldState == GpsState.SIGNAL_LOST) { // GPS Signal found
                 mTTSController.speak(announcement.spokenGPSFound)
-            } else if (event.newState == GpsWorkoutRecorder.GpsState.SIGNAL_LOST) {
+            } else if (event.newState == GpsState.SIGNAL_LOST) {
                 mTTSController.speak(announcement.spokenGPSLost)
             }
         }

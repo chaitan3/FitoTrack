@@ -19,10 +19,14 @@
 
 package de.tadris.fitness.recording.event
 
+import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.recording.RecordingState
 import org.greenrobot.eventbus.EventBus
 
 data class AggregatedRecordingValuesEvent(
+    val recordingType: RecordingType,
+    val workoutType: WorkoutType,
     val currentState: RecordingState,
     val activeDuration: Long, // in ms
     val pauseDuration: Long, // in ms
@@ -40,16 +44,29 @@ data class AggregatedRecordingValuesEvent(
 
     companion object {
 
-        fun getCurrent(): AggregatedRecordingValuesEvent? =
+        private val EMPTY = AggregatedRecordingValuesEvent(
+            RecordingType.GPS,
+            WorkoutType(),
+            RecordingState.IDLE,
+            0L, 0L, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0, -1,
+            0.0, 0.0, 0
+        )
+
+        fun getCurrent() = getCurrentOptional() ?: EMPTY
+
+        fun getCurrentOptional(): AggregatedRecordingValuesEvent? =
             EventBus.getDefault().getStickyEvent(AggregatedRecordingValuesEvent::class.java)
 
     }
+
+    val totalDuration get() = activeDuration + pauseDuration
 
     val averageFrequency get() = repetitions / (activeDuration / 1000.0) // 1/s
 
     val averageSpeedMotion get() = distance / (activeDuration / 1000.0) // m/s
 
-    val averageSpeedTotal get() = distance / ((activeDuration + pauseDuration) / 1000.0) // m/s
+    val averageSpeedTotal get() = distance / (totalDuration / 1000.0) // m/s
 
     // min/km
     val averagePaceMotion
