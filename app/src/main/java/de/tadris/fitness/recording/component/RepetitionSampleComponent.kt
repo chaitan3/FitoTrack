@@ -4,6 +4,7 @@ import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent
+import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.indoor.exercise.RepetitionRecognizedEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,7 +63,7 @@ class RepetitionSampleComponent : RecorderServiceComponent {
         )
 
         service.instance.db.workoutDao().insertSample(sample)
-        EventBus.getDefault().post(sample)
+        EventBus.getDefault().post(RepetitionSampleEvent(sample))
     }
 
 }

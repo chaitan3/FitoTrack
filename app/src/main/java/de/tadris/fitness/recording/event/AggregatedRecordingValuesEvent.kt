@@ -40,6 +40,7 @@ data class AggregatedRecordingValuesEvent(
     val currentFrequency: Double,
     val currentIntensity: Double,
     val repetitions: Int,
+    val sampleCount: Int,
 ) {
 
     companion object {
@@ -50,7 +51,7 @@ data class AggregatedRecordingValuesEvent(
             RecordingState.IDLE,
             0L, 0L, 0.0, 0.0, 0.0,
             0.0, 0.0, 0, -1,
-            0.0, 0.0, 0
+            0.0, 0.0, 0, 0
         )
 
         fun getCurrent() = getCurrentOptional() ?: EMPTY
@@ -73,5 +74,7 @@ data class AggregatedRecordingValuesEvent(
         get() =
             if (averageSpeedMotion < 0.001) 0.0
             else (1 / averageSpeedMotion) * 1000 / 60
+
+    val recordedSomething get() = sampleCount >= 2
 
 }

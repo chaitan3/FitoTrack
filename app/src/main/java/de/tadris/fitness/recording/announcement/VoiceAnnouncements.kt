@@ -41,7 +41,7 @@ class VoiceAnnouncements(
         informationAnnouncements.check()
     }
 
-    fun applyIntervals(intervals: List<Interval?>?) {
+    fun applyIntervals(intervals: List<Interval>) {
         intervalAnnouncements.setIntervals(intervals)
     }
 

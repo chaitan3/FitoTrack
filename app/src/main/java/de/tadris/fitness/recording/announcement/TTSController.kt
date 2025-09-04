@@ -64,7 +64,8 @@ class TTSController(private val context: Context, val id: String = DEFAULT_TTS_C
         EventBus.getDefault().post(TTSReadyEvent(isTtsAvailable, id))
     }
 
-    fun speak(values: AggregatedRecordingValuesEvent, announcement: Announcement) {
+    @JvmOverloads
+    fun speak(values: AggregatedRecordingValuesEvent = AggregatedRecordingValuesEvent.getCurrent(), announcement: Announcement) {
         if (!announcement.isAnnouncementEnabled) {
             return
         }

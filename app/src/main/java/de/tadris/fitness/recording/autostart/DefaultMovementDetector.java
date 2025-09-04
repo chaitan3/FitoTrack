@@ -36,18 +36,18 @@ import de.tadris.fitness.recording.event.LocationChangeEvent;
  *
  */
 public class DefaultMovementDetector extends MovementDetector {
+    private static final double MIN_DISTANCE = 13.0;
+
     private static final String TAG = "DefaultMovementDetector";
 
     private boolean started;
     private Context context;
-    private Workout workout;
     private Location lastLocation;
 
-    public DefaultMovementDetector(Context context, Workout workout) {
+    public DefaultMovementDetector(Context context) {
         super();
         started = false;
         this.context = context;
-        this.workout = workout;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class DefaultMovementDetector extends MovementDetector {
                         sphericalDistance(GpsComponent.locationToLatLong(location)));
                 long timeDiff = (location.getElapsedRealtimeNanos() -
                         lastLocation.getElapsedRealtimeNanos()) / 1_000_000L;
-                if (distance < workout.getWorkoutType(context).minDistance || timeDiff < RecorderService.MIN_DURATION_DIFF) {
+                if (distance < MIN_DISTANCE || timeDiff < RecorderService.MIN_DURATION_DIFF) {
                     Log.d(TAG, "onLocationChange: not moving");
                     detectionState = DetectionState.NOT_MOVING;
                 } else {

@@ -20,6 +20,7 @@
 package de.tadris.fitness.recording
 
 import de.tadris.fitness.data.WorkoutPause
+import de.tadris.fitness.recording.actions.WorkoutActionDiscard
 import de.tadris.fitness.recording.actions.WorkoutActionPause
 import de.tadris.fitness.recording.actions.WorkoutActionResume
 import de.tadris.fitness.recording.actions.WorkoutActionStart
@@ -59,6 +60,11 @@ class RecorderServiceActions(private val service: RecorderService) {
     @Subscribe
     fun receiveResume(e: WorkoutActionResume) {
         resume()
+    }
+
+    @Subscribe
+    fun receiveDiscard(e: WorkoutActionDiscard) {
+        discard()
     }
 
     @Subscribe
@@ -114,6 +120,14 @@ class RecorderServiceActions(private val service: RecorderService) {
         pause(isAutomatic = true)
         state = RecordingState.STOPPED
         WorkoutFinalizer(service, service.instance.db.workoutDao(), service.stateHolder.workoutId).finalize()
+        service.stopSelf()
+    }
+
+    fun discard(){
+        log(TAG, "Discard called")
+        val workout = service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)
+        service.instance.db.workoutDao().deleteWorkout(workout)
+        service.stopSelf()
     }
 
 }

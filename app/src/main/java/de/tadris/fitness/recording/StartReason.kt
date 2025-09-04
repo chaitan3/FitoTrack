@@ -20,5 +20,7 @@
 package de.tadris.fitness.recording
 
 enum class StartReason(val logMessage: String) {
-
+    AUTO_START("Auto-Start"),
+    START_BUTTON_IMMEDIATE("Immediate Start-Button pressed"),
+    NFC("NFC-Tag triggered start"),
 }

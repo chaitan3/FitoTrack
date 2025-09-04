@@ -20,5 +20,8 @@
 package de.tadris.fitness.recording
 
 enum class StopReason(val logMessage: String) {
-
+    ACTIVITY_DESTROY("Activity was destroyed while in IDLE/STOPPED"),
+    NFC("NFC-Tag triggered end"),
+    STOP_BUTTON_PRESSED("Stop button pressed"),
+    BACK_BUTTON_PRESSED("Back button pressed"),
 }

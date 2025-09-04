@@ -16,203 +16,202 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.recording
 
-package de.tadris.fitness.recording;
-
-import android.app.Notification;
-import android.app.Service;
-import android.content.Intent;
-import android.os.Build;
-import android.os.IBinder;
-import android.os.PowerManager;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.data.RecordingType;
-import de.tadris.fitness.recording.component.AnnouncementComponent;
-import de.tadris.fitness.recording.component.AutoPauseComponent;
-import de.tadris.fitness.recording.component.AutoStopComponent;
-import de.tadris.fitness.recording.component.ExerciseRecognitionComponent;
-import de.tadris.fitness.recording.component.GnssComponent;
-import de.tadris.fitness.recording.component.GpsComponent;
-import de.tadris.fitness.recording.component.GpsSampleComponent;
-import de.tadris.fitness.recording.component.GpsStateComponent;
-import de.tadris.fitness.recording.component.HeartRateComponent;
-import de.tadris.fitness.recording.component.PressureComponent;
-import de.tadris.fitness.recording.component.RecorderServiceComponent;
-import de.tadris.fitness.recording.component.RepetitionSampleComponent;
-import de.tadris.fitness.recording.component.ServiceNotificationComponent;
-import de.tadris.fitness.recording.component.TemporaryAggregationComponent;
-import de.tadris.fitness.util.WorkoutLogger;
+import android.app.Service
+import android.content.Intent
+import android.os.Build
+import android.os.IBinder
+import android.os.PowerManager
+import android.os.PowerManager.WakeLock
+import de.tadris.fitness.Instance
+import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.data.WorkoutTypeManager
+import de.tadris.fitness.recording.component.AnnouncementComponent
+import de.tadris.fitness.recording.component.AutoPauseComponent
+import de.tadris.fitness.recording.component.AutoStopComponent
+import de.tadris.fitness.recording.component.ExerciseRecognitionComponent
+import de.tadris.fitness.recording.component.GnssComponent
+import de.tadris.fitness.recording.component.GpsComponent
+import de.tadris.fitness.recording.component.GpsSampleComponent
+import de.tadris.fitness.recording.component.GpsStateComponent
+import de.tadris.fitness.recording.component.HeartRateComponent
+import de.tadris.fitness.recording.component.PressureComponent
+import de.tadris.fitness.recording.component.RecorderServiceComponent
+import de.tadris.fitness.recording.component.RepetitionSampleComponent
+import de.tadris.fitness.recording.component.ServiceNotificationComponent
+import de.tadris.fitness.recording.component.TemporaryAggregationComponent
+import de.tadris.fitness.util.WorkoutLogger.Companion.log
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 /**
  * The RecorderService is responsible for collecting data and publishing it to other app parts like
  * the WorkoutRecorder or RecorderActivity. Also it handles the notification and a watchdog.
- * <p>
+ *
+ *
  * It starts RecorderServiceComponents depending on the workout type.
  */
-public class RecorderService extends Service {
+class RecorderService : Service() {
 
-    protected Date serviceStartTime;
+    companion object {
+        const val EXTRA_WORKOUT_TYPE = "workoutType"
 
-    public static final String TAG = "RecorderService";
+        const val TAG: String = "RecorderService"
 
-    public static final int MIN_DURATION_DIFF = 500; // minimum time between samples
-    private static final int COMPONENT_INTERVAL_FAST = 1000;
-    private static final int COMPONENT_INTERVAL_SLOW_MULTIPLIER = 5;
+        const val MIN_DURATION_DIFF: Int = 500 // minimum time between samples
+        private const val COMPONENT_INTERVAL_FAST = 1000
+        private const val COMPONENT_INTERVAL_SLOW_MULTIPLIER = 5
+    }
 
-    protected PowerManager.WakeLock wakeLock;
+    private var wakeLock: WakeLock? = null
 
-    public Instance instance = null;
+    private val components = mutableListOf<RecorderServiceComponent>()
+    private var notificationComponent: ServiceNotificationComponent? = null
+    var actions: RecorderServiceActions = RecorderServiceActions(this)
 
-    private final List<RecorderServiceComponent> components = new ArrayList<>();
-    private ServiceNotificationComponent notificationComponent;
-    public RecordingStateHolder stateHolder;
-    public RecorderServiceActions actions = new RecorderServiceActions(this);
+    lateinit var instance: Instance
+    lateinit var stateHolder: RecordingStateHolder
 
-    protected WatchDogRunner mWatchdogRunner;
-    protected Thread mWatchdogThread = null;
+    private var mWatchdogRunner: WatchDogRunner? = null
+    private var mWatchdogThread: Thread? = null
 
-    private class WatchDogRunner implements Runnable {
-        private int count = 0;
-        private boolean running = true;
+    private inner class WatchDogRunner : Runnable {
+        private var count = 0
+        private var running = true
 
-        @Override
-        public void run() {
-            running = true;
+        override fun run() {
+            running = true
             try {
                 while (running) {
-                    count++;
-                    checkAllComponents(count % COMPONENT_INTERVAL_SLOW_MULTIPLIER == 0);
-                    Thread.sleep(COMPONENT_INTERVAL_FAST);
+                    count++
+                    checkAllComponents(count % COMPONENT_INTERVAL_SLOW_MULTIPLIER == 0)
+                    Thread.sleep(COMPONENT_INTERVAL_FAST.toLong())
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
             }
         }
 
-        public void stop() {
-            running = false;
+        fun stop() {
+            running = false
         }
     }
 
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
+    override fun onBind(arg0: Intent?): IBinder? {
+        return null
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        WorkoutLogger.log(TAG, "onStartCommand");
-        super.onStartCommand(intent, flags, startId);
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        log(TAG, "onStartCommand")
+        super.onStartCommand(intent, flags, startId)
 
-        serviceStartTime = new Date();
-        stateHolder = new RecordingStateHolder();
-        Notification notification = notificationComponent.getNotification();
+        stateHolder = RecordingStateHolder()
+        stateHolder.workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(
+            this, intent?.getStringExtra(EXTRA_WORKOUT_TYPE) ?: WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
+        )
 
-        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification);
+        val notification = notificationComponent!!.getNotification()
+        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
 
-        acquireWakelock();
+        acquireWakelock()
 
-        return START_STICKY;
+        return START_STICKY
     }
 
-    @Override
-    public void onCreate() {
-        this.instance = Instance.getInstance(getBaseContext());
+    override fun onCreate() {
+        this.instance = Instance.getInstance(baseContext)
 
-        WorkoutLogger.log(TAG, "Service created");
-        WorkoutLogger.log(TAG, "Android: " + Build.VERSION.RELEASE + " Sdk: " + Build.VERSION.SDK_INT);
-        WorkoutLogger.log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL);
+        log(TAG, "Service created")
+        log(TAG, "Android: " + Build.VERSION.RELEASE + " Sdk: " + Build.VERSION.SDK_INT)
+        log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL)
 
-        startRelevantComponents();
-        actions.register();
+        startRelevantComponents()
+        actions.register()
 
-        initializeWatchdog();
+        initializeWatchdog()
     }
 
-    @Override
-    public void onDestroy() {
-        WorkoutLogger.log(TAG, "onDestroy");
+    override fun onDestroy() {
+        log(TAG, "onDestroy")
 
-        actions.unregister();
-        stopAllComponents();
+        actions.unregister()
+        stopAllComponents()
 
         // Shutdown Watchdog
-        mWatchdogRunner.stop();
+        mWatchdogRunner!!.stop()
 
-        if (wakeLock != null && wakeLock.isHeld()) {
-            wakeLock.release();
+        if (wakeLock != null && wakeLock!!.isHeld) {
+            wakeLock!!.release()
         }
 
-        stopForeground(true);
-        super.onDestroy();
+        stopForeground(true)
+        super.onDestroy()
     }
 
-    private void startRelevantComponents(){
-        RecordingType type = stateHolder.getRecordingType();
+    private fun startRelevantComponents() {
+        val type = stateHolder.recordingType
 
-        notificationComponent = new ServiceNotificationComponent(this);
-        startComponent(notificationComponent);
+        notificationComponent = ServiceNotificationComponent(this)
+        startComponent(notificationComponent!!)
 
-        startComponent(new AutoPauseComponent());
-        startComponent(new AutoStopComponent());
-        startComponent(new TemporaryAggregationComponent());
-        if(type == RecordingType.GPS) {
-            startComponent(new GpsComponent());
-            startComponent(new GpsSampleComponent());
-            startComponent(new GpsStateComponent());
-            startComponent(new PressureComponent());
+        startComponent(AutoPauseComponent())
+        startComponent(AutoStopComponent())
+        startComponent(TemporaryAggregationComponent())
+        if (type == RecordingType.GPS) {
+            startComponent(GpsComponent())
+            startComponent(GpsSampleComponent())
+            startComponent(GpsStateComponent())
+            startComponent(PressureComponent())
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                startComponent(new GnssComponent());
+                startComponent(GnssComponent())
             }
-        }else{
-            startComponent(new ExerciseRecognitionComponent());
-            startComponent(new RepetitionSampleComponent());
+        } else {
+            startComponent(ExerciseRecognitionComponent())
+            startComponent(RepetitionSampleComponent())
         }
-        startComponent(new AnnouncementComponent());
-        startComponent(new HeartRateComponent());
+        startComponent(AnnouncementComponent())
+        startComponent(HeartRateComponent())
     }
 
-    private void startComponent(RecorderServiceComponent component){
-        component.register(this);
-        components.add(component);
-        WorkoutLogger.log(TAG, "Started component " + component.getClass().getSimpleName());
+    private fun startComponent(component: RecorderServiceComponent) {
+        component.register(this)
+        components.add(component)
+        log(TAG, "Started component " + component.javaClass.getSimpleName())
     }
 
-    private void checkAllComponents(boolean alsoSlow) {
-        for(RecorderServiceComponent component : components){
-            component.checkFast();
-            if (alsoSlow) component.checkSlow();
-        }
-    }
-
-    private void stopAllComponents(){
-        for(RecorderServiceComponent component : components){
-            component.unregister();
-            WorkoutLogger.log(TAG, "Stopped component " + component.getClass().getSimpleName());
-        }
-        components.clear();
-    }
-
-    private void initializeWatchdog() {
-        if (mWatchdogThread == null || !mWatchdogThread.isAlive()) {
-            mWatchdogRunner = new WatchDogRunner();
-            mWatchdogThread = new Thread(mWatchdogRunner, "WorkoutWatchdog");
-        }
-        if (!mWatchdogThread.isAlive()) {
-            mWatchdogThread.start();
+    private fun checkAllComponents(alsoSlow: Boolean) {
+        for (component in components) {
+            component.checkFast()
+            if (alsoSlow) component.checkSlow()
         }
     }
 
-    private void acquireWakelock() {
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "de.tadris.fitotrack:workout_recorder");
-        wakeLock.acquire(TimeUnit.HOURS.toMillis(4));
+    private fun stopAllComponents() {
+        for (component in components) {
+            component.unregister()
+            log(TAG, "Stopped component " + component.javaClass.getSimpleName())
+        }
+        components.clear()
+    }
+
+    private fun initializeWatchdog() {
+        if (mWatchdogThread == null || !mWatchdogThread!!.isAlive) {
+            mWatchdogRunner = WatchDogRunner()
+            mWatchdogThread = Thread(mWatchdogRunner, "WorkoutWatchdog")
+        }
+        if (!mWatchdogThread!!.isAlive) {
+            mWatchdogThread!!.start()
+        }
+    }
+
+    private fun acquireWakelock() {
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "de.tadris.fitotrack:workout_recorder"
+        )
+        wakeLock!!.acquire(TimeUnit.HOURS.toMillis(4))
     }
 
 }

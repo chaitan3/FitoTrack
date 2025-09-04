@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.recording.announcement.TTSController;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 import de.tadris.fitness.util.event.EventBusMember;
 
 /**
@@ -47,20 +48,14 @@ import de.tadris.fitness.util.event.EventBusMember;
 public class AutoStartAnnouncements implements EventBusMember {
     private Context context;
     private EventBus eventBus;
-    private AutoStartWorkout autoStartWorkout;
     private Instance instance;
-    private WorkoutRecorder recorder;
     private TTSController ttsController;
     private ArrayList<CountdownTimeAnnouncement> countdownTimeAnnouncementList = new ArrayList<>();
     private CountdownTimeAnnouncement lastSpoken;
 
-    public AutoStartAnnouncements(Context context, AutoStartWorkout autoStartWorkout,
-                                  Instance instance, WorkoutRecorder recorder,
-                                  TTSController ttsController) {
+    public AutoStartAnnouncements(Context context, Instance instance, TTSController ttsController) {
         this.context = context;
-        this.autoStartWorkout = autoStartWorkout;
         this.instance = instance;
-        this.recorder = recorder;
         this.ttsController = ttsController;
 
         // initialize default set of announcements
@@ -106,7 +101,7 @@ public class AutoStartAnnouncements implements EventBusMember {
         for (CountdownTimeAnnouncement countdownTimeAnnouncement : countdownTimeAnnouncementList) {
             if (event.countdownS == countdownTimeAnnouncement.getCountdownS() &&
                     (lastSpoken == null || event.countdownS != lastSpoken.getCountdownS())) {   // prevent duplicate announcements
-                ttsController.speak(recorder, countdownTimeAnnouncement);
+                ttsController.speak(countdownTimeAnnouncement);
                 lastSpoken = countdownTimeAnnouncement;
                 break;  // there can and should only be one announcement at a time
             }
@@ -122,18 +117,18 @@ public class AutoStartAnnouncements implements EventBusMember {
         switch (event.newState) {
             case WAITING_FOR_GPS:
                 // tell the user we're waiting for more a accurate GPS position
-                ttsController.speak(recorder, new CountdownAnnouncement(instance) {
+                ttsController.speak(new CountdownAnnouncement(instance) {
                     @Override
-                    public String getSpokenText(@NonNull WorkoutRecorder recorder) {
+                    public String getSpokenText(@NonNull AggregatedRecordingValuesEvent recorder) {
                         return context.getString(R.string.autoStartCountdownMsgGps);
                     }
                 });
                 break;
             case WAITING_FOR_MOVE:
                 // tell the user we're waiting for more a accurate GPS position
-                ttsController.speak(recorder, new CountdownAnnouncement(instance) {
+                ttsController.speak(new CountdownAnnouncement(instance) {
                     @Override
-                    public String getSpokenText(@NonNull WorkoutRecorder recorder) {
+                    public String getSpokenText(@NonNull AggregatedRecordingValuesEvent recorder) {
                         return context.getString(R.string.autoStartCountdownMsgMove);
                     }
                 });
@@ -141,9 +136,9 @@ public class AutoStartAnnouncements implements EventBusMember {
             case ABORTED_BY_USER:
                 if (event.oldState == AutoStartWorkout.State.COUNTDOWN ||
                         event.oldState == AutoStartWorkout.State.WAITING_FOR_GPS) {
-                    ttsController.speak(recorder, new CountdownAnnouncement(instance) {
+                    ttsController.speak(new CountdownAnnouncement(instance) {
                         @Override
-                        public String getSpokenText(@NonNull WorkoutRecorder recorder) {
+                        public String getSpokenText(@NonNull AggregatedRecordingValuesEvent recorder) {
                             return context.getString(R.string.workoutAutoStartAborted);
                         }
                     });

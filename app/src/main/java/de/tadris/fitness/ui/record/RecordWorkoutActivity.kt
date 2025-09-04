@@ -16,709 +16,707 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.record
 
-package de.tadris.fitness.ui.record;
+import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.app.AlertDialog
+import android.app.KeyguardManager
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.DialogInterface
+import android.content.Intent
+import android.media.AudioManager
+import android.net.Uri
+import android.nfc.NfcAdapter
+import android.nfc.Tag
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.provider.Settings
+import android.text.InputType
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
+import android.view.WindowManager
+import android.view.animation.AccelerateInterpolator
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import de.tadris.fitness.Instance
+import de.tadris.fitness.R
+import de.tadris.fitness.data.Interval
+import de.tadris.fitness.data.IntervalSet
+import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.data.WorkoutTypeManager
+import de.tadris.fitness.recording.RecorderService
+import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.StartReason
+import de.tadris.fitness.recording.StopReason
+import de.tadris.fitness.recording.actions.WorkoutActionDiscard
+import de.tadris.fitness.recording.actions.WorkoutActionPause
+import de.tadris.fitness.recording.actions.WorkoutActionResume
+import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
+import de.tadris.fitness.recording.actions.WorkoutActionStart
+import de.tadris.fitness.recording.actions.WorkoutActionStop
+import de.tadris.fitness.recording.announcement.TTSController
+import de.tadris.fitness.recording.autostart.AutoStartAnnouncements
+import de.tadris.fitness.recording.autostart.AutoStartSoundFeedback
+import de.tadris.fitness.recording.autostart.AutoStartVibratorFeedback
+import de.tadris.fitness.recording.autostart.AutoStartWorkout
+import de.tadris.fitness.recording.autostart.AutoStartWorkout.AbortEvent
+import de.tadris.fitness.recording.autostart.AutoStartWorkout.BeginEvent
+import de.tadris.fitness.recording.autostart.AutoStartWorkout.CountdownChangeEvent
+import de.tadris.fitness.recording.autostart.AutoStartWorkout.StateChangeEvent
+import de.tadris.fitness.recording.autostart.DefaultMovementDetector
+import de.tadris.fitness.recording.autostart.MovementDetector
+import de.tadris.fitness.recording.component.AnnouncementComponent
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent.Companion.getCurrent
+import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
+import de.tadris.fitness.recording.event.TTSReadyEvent
+import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
+import de.tadris.fitness.recording.information.InformationDisplay
+import de.tadris.fitness.recording.information.RecordingInformation
+import de.tadris.fitness.ui.FitoTrackActivity
+import de.tadris.fitness.ui.LauncherActivity
+import de.tadris.fitness.ui.dialog.AlertDialogWrapper
+import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog
+import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog.AutoStartDelaySelectListener
+import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog
+import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog.AutoStartModeSelectListener
+import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
+import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog.BluetoothDeviceSelectListener
+import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog.BluetoothNotAvailableException
+import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog
+import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog.IntervalSetSelectListener
+import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog
+import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog.WorkoutInformationSelectListener
+import de.tadris.fitness.ui.record.InfoViewHolder.InfoViewClickListener
+import de.tadris.fitness.util.AbstractAnimatorListener
+import de.tadris.fitness.util.BluetoothDevicePreferences
+import de.tadris.fitness.util.NfcAdapterHelper
+import de.tadris.fitness.util.NotificationHelper
+import de.tadris.fitness.util.PermissionUtils.checkPermission
+import de.tadris.fitness.util.ToneGeneratorController
+import de.tadris.fitness.util.VibratorController
+import de.tadris.fitness.util.WorkoutLogger.Companion.log
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.util.Arrays
+import java.util.concurrent.Semaphore
+import kotlin.math.hypot
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.app.KeyguardManager;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.net.Uri;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
-import android.text.InputType;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
+abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectListener,
+    InfoViewClickListener, WorkoutInformationSelectListener, BluetoothDeviceSelectListener {
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.StringRes;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
+    companion object {
+        const val TAG: String = "RecordWorkoutActivity"
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+        const val LAUNCH_ACTION: String = "de.tadris.fitness.RecordWorkoutActivity.LAUNCH_ACTION"
+        const val RESUME_ACTION: String = "de.tadris.fitness.RecordWorkoutActivity.RESUME_ACTION"
+        const val WORKOUT_TYPE_EXTRA: String =
+            "de.tadris.fitness.RecordWorkoutActivity.WORKOUT_TYPE_EXTRA"
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Semaphore;
+        const val REQUEST_CODE_ENABLE_BLUETOOTH: Int = 12
+        const val REQUEST_CODE_BLUETOOTH_PERMISSION: Int = 13
 
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.Interval;
-import de.tadris.fitness.data.IntervalSet;
-import de.tadris.fitness.data.RecordingType;
-import de.tadris.fitness.data.WorkoutType;
-import de.tadris.fitness.data.WorkoutTypeManager;
-import de.tadris.fitness.recording.autostart.AutoStartWorkout;
-import de.tadris.fitness.recording.RecorderService;
-import de.tadris.fitness.recording.announcement.TTSController;
-import de.tadris.fitness.recording.autostart.AutoStartAnnouncements;
-import de.tadris.fitness.recording.autostart.AutoStartSoundFeedback;
-import de.tadris.fitness.recording.autostart.AutoStartVibratorFeedback;
-import de.tadris.fitness.recording.autostart.DefaultMovementDetector;
-import de.tadris.fitness.recording.autostart.MovementDetector;
-import de.tadris.fitness.recording.component.AnnouncementComponent;
-import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent;
-import de.tadris.fitness.recording.event.TTSReadyEvent;
-import de.tadris.fitness.recording.event.WorkoutAutoStopEvent;
-import de.tadris.fitness.recording.information.InformationDisplay;
-import de.tadris.fitness.recording.information.RecordingInformation;
-import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.ui.LauncherActivity;
-import de.tadris.fitness.ui.dialog.AlertDialogWrapper;
-import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog;
-import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog;
-import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog;
-import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog;
-import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog;
-import de.tadris.fitness.util.BluetoothDevicePreferences;
-import de.tadris.fitness.util.NfcAdapterHelper;
-import de.tadris.fitness.util.NotificationHelper;
-import de.tadris.fitness.util.PermissionUtils;
-import de.tadris.fitness.util.ToneGeneratorController;
-import de.tadris.fitness.util.VibratorController;
-import de.tadris.fitness.util.WorkoutLogger;
+        // used to convert auto start time timebase from/to ms
+        private const val AUTO_START_DELAY_MULTIPLIER = 1000 // s to ms
+    }
 
-public abstract class RecordWorkoutActivity extends FitoTrackActivity implements
-        SelectIntervalSetDialog.IntervalSetSelectListener,
-        InfoViewHolder.InfoViewClickListener, SelectWorkoutInformationDialog.WorkoutInformationSelectListener,
-        ChooseBluetoothDeviceDialog.BluetoothDeviceSelectListener {
+    protected lateinit var instance: Instance
+    protected val infoViews: Array<InfoViewHolder?> = arrayOfNulls(4)
 
-    public static final String TAG = "RecordWorkoutActivity";
-    public static final String TTS_CONTROLLER_ID = TAG;
+    protected var isResumed: Boolean = false
 
-    public static final String LAUNCH_ACTION = "de.tadris.fitness.RecordWorkoutActivity.LAUNCH_ACTION";
-    public static final String RESUME_ACTION = "de.tadris.fitness.RecordWorkoutActivity.RESUME_ACTION";
-    public static final String WORKOUT_TYPE_EXTRA = "de.tadris.fitness.RecordWorkoutActivity.WORKOUT_TYPE_EXTRA";
 
-    public static final int REQUEST_CODE_ENABLE_BLUETOOTH = 12;
-    public static final int REQUEST_CODE_BLUETOOTH_PERMISSION = 13;
+    private lateinit var startPopupButton: Button
+    private var startPopupMenu: PopupMenu? = null
+    protected lateinit var timeView: TextView
+    protected lateinit var hrStatusView: ImageView
+    protected lateinit var waitingForGPSOverlay: View
+    protected lateinit var startButton: Button
+    protected lateinit var recordStartButtonsRoot: ConstraintLayout
+    protected lateinit var informationDisplay: InformationDisplay
 
-    // used to convert auto start time timebase from/to ms
-    private static final int AUTO_START_DELAY_MULTIPLIER = 1_000; // s to ms
+    private var useNfcStart = false
+    private var autoStartDelayMs: Long = 0 // in ms
+    private var autoStartMode: AutoStartWorkout.Mode? = null
+    private var autoStartCountdownOverlay: View? = null
+    private var autoStartDelayDialog: AlertDialogWrapper? = null
+    private val autoStartModeDialog: ChooseAutoStartModeDialog? = null
+    private var movementDetector: MovementDetector? = null
+    private var autoStartWorkout: AutoStartWorkout? = null
+    private var askForComment = false
+    private var vibratorController: VibratorController? = null
+    private var autoStartVibratorFeedback: AutoStartVibratorFeedback? = null
+    private var toneGeneratorController: ToneGeneratorController? = null
+    private var autoStartSoundFeedback: AutoStartSoundFeedback? = null
+    private var autoStartAnnouncements: AutoStartAnnouncements? = null
+    private var ttsController: TTSController? = null
 
-    private Button startPopupButton;
-    private PopupMenu startPopupMenu = null;
+    private var voiceFeedbackAvailable = false
+    private var finished = false
 
-    public WorkoutType activity;
-
-    protected Instance instance;
-
-    protected final InfoViewHolder[] infoViews = new InfoViewHolder[4];
-    protected TextView timeView;
-    protected ImageView hrStatusView;
-    protected View waitingForGPSOverlay;
-    protected Button startButton;
-    protected ConstraintLayout recordStartButtonsRoot;
-    protected boolean isResumed = false;
-    protected final Handler mHandler = new Handler();
-    protected InformationDisplay informationDisplay;
-
-    private boolean useNfcStart;
-    private long autoStartDelayMs;    // in ms
-    private AutoStartWorkout.Mode autoStartMode;
-    private View autoStartCountdownOverlay;
-    private AlertDialogWrapper autoStartDelayDialog;
-    private ChooseAutoStartModeDialog autoStartModeDialog;
-    private MovementDetector movementDetector;
-    private AutoStartWorkout autoStartWorkout;
-    private boolean askForComment;
-    private VibratorController vibratorController;
-    private AutoStartVibratorFeedback autoStartVibratorFeedback;
-    private ToneGeneratorController toneGeneratorController;
-    private AutoStartSoundFeedback autoStartSoundFeedback;
-    private AutoStartAnnouncements autoStartAnnouncements;
-    private TTSController ttsController;
-
-    private boolean voiceFeedbackAvailable = false;
-    private Thread updater;
-    private boolean finished;
+    @JvmField
+    var activity: WorkoutType? = null
 
     /**
      * This ensures that the workout is only started once. Different threads (user input, auto start)
      * might otherwise lead to nasty race conditions possibly starting a workout multiple times.
      */
-    private final Semaphore startedSem = new Semaphore(1);
+    private val startedSem = Semaphore(1)
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        instance = Instance.getInstance(this);
-        activity = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        instance = Instance.getInstance(this)
+        activity = WorkoutTypeManager.getInstance()
+            .getWorkoutTypeById(this, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER)
 
         // only use NFC when it's enabled in settings AND supported by the device
-        this.useNfcStart = instance.userPreferences.getUseNfcStart() &&
-                NfcAdapterHelper.isNfcPresent(this);
-        Log.d(TAG, "NFC start enabled:" + this.useNfcStart);
+        this.useNfcStart = instance.userPreferences.useNfcStart &&
+                NfcAdapterHelper.isNfcPresent(this)
+        Log.d(TAG, "NFC start enabled:" + this.useNfcStart)
 
-        this.autoStartDelayMs = (long) instance.userPreferences.getAutoStartDelay() * AUTO_START_DELAY_MULTIPLIER;
-        this.autoStartMode = instance.userPreferences.getAutoStartMode();
-        Log.d(TAG, "auto start enabled, auto start delay: " +
-                this.autoStartDelayMs + ", auto start mode: " + autoStartMode);
-        this.askForComment = instance.userPreferences.getAskForComment();
+        this.autoStartDelayMs =
+            instance.userPreferences.autoStartDelay.toLong() * AUTO_START_DELAY_MULTIPLIER
+        this.autoStartMode = instance.userPreferences.autoStartMode
+        Log.d(
+            TAG, "auto start enabled, auto start delay: " +
+                    this.autoStartDelayMs + ", auto start mode: " + autoStartMode
+        )
+        this.askForComment = instance.userPreferences.askForComment
 
-        WorkoutLogger.log(TAG, "Activity created");
+        log(TAG, "Activity created")
     }
 
-    protected void initBeforeContent() {
-        setTheme(instance.themes.getWorkoutTypeTheme(activity));
+    protected fun initBeforeContent() {
+        setTheme(instance.themes.getWorkoutTypeTheme(activity))
     }
 
-    protected void initAfterContent() {
+    protected fun initAfterContent() {
         if (useNfcStart) {
             // ask the user to enable NFC in device settings if it isn't at the moment
             if (!NfcAdapterHelper.isNfcEnabled(this)) {
-                NfcAdapterHelper.createNfcEnableDialog(this).show();
+                NfcAdapterHelper.createNfcEnableDialog(this).show()
             }
         }
 
-        recordStartButtonsRoot = findViewById(R.id.recordStartButtonsRoot);
-        timeView = findViewById(R.id.recordTime);
-        timeView.setVisibility(View.INVISIBLE);
-        hrStatusView = findViewById(R.id.recordHrStatus);
-        startButton = findViewById(R.id.recordStart);
+        recordStartButtonsRoot = findViewById<ConstraintLayout>(R.id.recordStartButtonsRoot)
+        timeView = findViewById(R.id.recordTime)
+        timeView.visibility = View.INVISIBLE
+        hrStatusView = findViewById<ImageView>(R.id.recordHrStatus)
+        startButton = findViewById<Button>(R.id.recordStart)
 
-        startPopupButton = findViewById(R.id.recordStartPopup);
+        startPopupButton = findViewById<Button>(R.id.recordStartPopup)
 
         // instantiate TTSController in app context to be able to completely play the auto start
         // abort announcement even when this activity has been destroyed already
-        ttsController = new TTSController(getApplicationContext(), TTS_CONTROLLER_ID);
-        movementDetector = new DefaultMovementDetector(this, instance.recorder.getWorkout());
-        autoStartWorkout = new AutoStartWorkout(new AutoStartWorkout.Config(autoStartDelayMs,
-                autoStartMode), movementDetector);
-        movementDetector.registerTo(EventBus.getDefault());
-        movementDetector.start();
-        vibratorController = new VibratorController(this);
-        autoStartVibratorFeedback = new AutoStartVibratorFeedback(vibratorController);
-        toneGeneratorController = new ToneGeneratorController(this, AudioManager.STREAM_NOTIFICATION);
-        autoStartSoundFeedback = new AutoStartSoundFeedback(toneGeneratorController, instance);
-        autoStartVibratorFeedback.registerTo(EventBus.getDefault());
-        autoStartSoundFeedback.registerTo(EventBus.getDefault());
-        autoStartAnnouncements = new AutoStartAnnouncements(this, autoStartWorkout, instance, instance.recorder, ttsController);
-        autoStartAnnouncements.registerTo(EventBus.getDefault());
-        if (!autoStartWorkout.registerTo(EventBus.getDefault())) {
-            Log.e(TAG, "onCreate: Failed to setup auto start helper, not using auto start");
-            startPopupButton.setVisibility(View.GONE);
+        ttsController = TTSController(applicationContext, TAG)
+        movementDetector = DefaultMovementDetector(this)
+        autoStartWorkout = AutoStartWorkout(
+            AutoStartWorkout.Config(
+                autoStartDelayMs,
+                autoStartMode
+            ), movementDetector
+        )
+        movementDetector!!.registerTo(EventBus.getDefault())
+        movementDetector!!.start()
+        vibratorController = VibratorController(this)
+        autoStartVibratorFeedback = AutoStartVibratorFeedback(vibratorController)
+        toneGeneratorController = ToneGeneratorController(this, AudioManager.STREAM_NOTIFICATION)
+        autoStartSoundFeedback = AutoStartSoundFeedback(toneGeneratorController, instance)
+        autoStartVibratorFeedback!!.registerTo(EventBus.getDefault())
+        autoStartSoundFeedback!!.registerTo(EventBus.getDefault())
+        autoStartAnnouncements = AutoStartAnnouncements(this, instance, ttsController)
+        autoStartAnnouncements!!.registerTo(EventBus.getDefault())
+        if (!autoStartWorkout!!.registerTo(EventBus.getDefault())) {
+            Log.e(TAG, "onCreate: Failed to setup auto start helper, not using auto start")
+            startPopupButton!!.visibility = View.GONE
         } else {
-            show(startPopupButton);
+            show(startPopupButton!!)
         }
 
-        updateStartButton(false, R.string.cannotStart, null);
+        updateStartButton(false, R.string.cannotStart, null)
 
-        informationDisplay = new InformationDisplay(RecordingType.findById(activity.recordingType), this);
+        informationDisplay =
+            InformationDisplay(RecordingType.findById(activity!!.recordingType), this)
 
-        infoViews[0] = new InfoViewHolder(0, this, findViewById(R.id.recordInfo1Title), findViewById(R.id.recordInfo1Value));
-        infoViews[1] = new InfoViewHolder(1, this, findViewById(R.id.recordInfo2Title), findViewById(R.id.recordInfo2Value));
-        infoViews[2] = new InfoViewHolder(2, this, findViewById(R.id.recordInfo3Title), findViewById(R.id.recordInfo3Value));
-        infoViews[3] = new InfoViewHolder(3, this, findViewById(R.id.recordInfo4Title), findViewById(R.id.recordInfo4Value));
+        infoViews[0] = InfoViewHolder(
+            0, this, findViewById<TextView?>(R.id.recordInfo1Title), findViewById<TextView?>(
+                R.id.recordInfo1Value
+            )
+        )
+        infoViews[1] = InfoViewHolder(
+            1, this, findViewById<TextView?>(R.id.recordInfo2Title), findViewById<TextView?>(
+                R.id.recordInfo2Value
+            )
+        )
+        infoViews[2] = InfoViewHolder(
+            2, this, findViewById<TextView?>(R.id.recordInfo3Title), findViewById<TextView?>(
+                R.id.recordInfo3Value
+            )
+        )
+        infoViews[3] = InfoViewHolder(
+            3, this, findViewById<TextView?>(R.id.recordInfo4Title), findViewById<TextView?>(
+                R.id.recordInfo4Value
+            )
+        )
 
-        findViewById(R.id.autoStartCountdownAbort).setOnClickListener(v -> {
-            onAutoStartCountdownAbortButtonClicked();
-        });
+        findViewById<View?>(R.id.autoStartCountdownAbort).setOnClickListener(View.OnClickListener { v: View? ->
+            onAutoStartCountdownAbortButtonClicked()
+        })
 
         if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
+            EventBus.getDefault().register(this)
         }
 
-        startService();
+        startService()
     }
 
     /**
      * Cancel auto start
      */
-    private void cancelAutoStart(boolean userReq) {
+    private fun cancelAutoStart(userReq: Boolean) {
         // make sure auto start is cancelled
-        EventBus.getDefault().post(new AutoStartWorkout.AbortEvent(userReq ?
-                AutoStartWorkout.AbortEvent.Reason.USER_REQ :
-                AutoStartWorkout.AbortEvent.Reason.STARTED));
+        EventBus.getDefault()
+            .post(AbortEvent(if (userReq) AbortEvent.Reason.USER_REQ else AbortEvent.Reason.STARTED))
     }
 
-    private void autoStart() {
-        WorkoutLogger.log(TAG, "Starting workout automatically");
+    private fun autoStart() {
+        log(TAG, "Starting workout automatically")
 
         // start the workout
-        start("Auto-Start");
-        Toast.makeText(this, R.string.workoutAutoStarted, Toast.LENGTH_SHORT).show();
+        start(StartReason.AUTO_START)
+        Toast.makeText(this, R.string.workoutAutoStarted, Toast.LENGTH_SHORT).show()
     }
 
-    private void showAutoStartCountdownOverlay() {
+    private fun showAutoStartCountdownOverlay() {
         if (autoStartCountdownOverlay != null) {
-            autoStartCountdownOverlay.clearAnimation();
+            autoStartCountdownOverlay!!.clearAnimation()
 
             // if the view's not visible currently, we should start the animation from full transparency
-            if (autoStartCountdownOverlay.getVisibility() != View.VISIBLE) {
-                autoStartCountdownOverlay.setAlpha(0f);
+            if (autoStartCountdownOverlay!!.visibility != View.VISIBLE) {
+                autoStartCountdownOverlay!!.setAlpha(0f)
             }
             // animation should take 1s max, if the view's not entirely hidden yet, it needs to be
             // proportionally shorter of course
-            int durationMs = (int) ((1 - autoStartCountdownOverlay.getAlpha()) * 1000 + 0.5);
+            val durationMs = ((1 - autoStartCountdownOverlay!!.alpha) * 1000 + 0.5).toInt()
 
             // and finally start the animation
-            autoStartCountdownOverlay.animate().alpha(1f).setDuration(durationMs).setListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    // don't forget to make the view visible, needs to be done here in case hide
-                    // animation is cancelled prematurely by show animation. There was a race
-                    // condition when it was made visible again outside of the animation.
-                    autoStartCountdownOverlay.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                }
-            }).start();
+            autoStartCountdownOverlay!!.animate().alpha(1f).setDuration(durationMs.toLong())
+                .setListener(object : AbstractAnimatorListener() {
+                    override fun onAnimationStart(animator: Animator) {
+                        // don't forget to make the view visible, needs to be done here in case hide
+                        // animation is cancelled prematurely by show animation. There was a race
+                        // condition when it was made visible again outside of the animation.
+                        autoStartCountdownOverlay!!.visibility = View.VISIBLE
+                    }
+                }).start()
         }
     }
 
-    private void hideAutoStartCountdownOverlay() {
+    private fun hideAutoStartCountdownOverlay() {
         if (autoStartCountdownOverlay != null &&
-                autoStartCountdownOverlay.getVisibility() != View.GONE) {
-            autoStartCountdownOverlay.clearAnimation();
+            autoStartCountdownOverlay!!.visibility != View.GONE
+        ) {
+            autoStartCountdownOverlay!!.clearAnimation()
 
             // animation should take 1s max, if the view's not entirely shown yet, it needs to be
             // proportionally shorter of course
-            int durationMs = (int) (autoStartCountdownOverlay.getAlpha() * 1000 + 0.5);
-            autoStartCountdownOverlay.animate().alpha(0f).setDuration(durationMs).setListener(new Animator.AnimatorListener() {
-                private boolean cancelled = false;
+            val durationMs = (autoStartCountdownOverlay!!.alpha * 1000 + 0.5).toInt()
+            autoStartCountdownOverlay!!.animate().alpha(0f).setDuration(durationMs.toLong())
+                .setListener(object : AbstractAnimatorListener() {
+                    private var cancelled = false
 
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-                    cancelled = true;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    // prevent screen flickering
-                    if (!cancelled) {
-                        autoStartCountdownOverlay.setVisibility(View.GONE);
+                    override fun onAnimationCancel(animator: Animator) {
+                        cancelled = true
                     }
-                }
-            }).start();
+
+                    override fun onAnimationEnd(animator: Animator) {
+                        // prevent screen flickering
+                        if (!cancelled) {
+                            autoStartCountdownOverlay!!.visibility = View.GONE
+                        }
+                    }
+                }).start()
         }
     }
 
-    private void startUpdater() {
-        if (updater == null || !updater.isAlive()) {
-            updater = new Thread(() -> {
-                try {
-                    while (instance.recorder.isActive()) {
-                        Thread.sleep(1000);
-                        mHandler.post(this::updateDescription);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        if (!updater.isAlive()) {
-            updater.start();
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNewInfo(e: AggregatedRecordingValuesEvent) {
+        updateDescription(e)
     }
 
-    private void updateDescription() {
+    private fun updateDescription(e: AggregatedRecordingValuesEvent) {
         if (isResumed) {
-            timeView.setText(instance.distanceUnitUtils.getHourMinuteSecondTime(instance.recorder.getDuration()));
-            for (int i = 0; i < 4; i++) {
-                updateSlot(i);
+            timeView!!.text = instance!!.distanceUnitUtils.getHourMinuteSecondTime(e.activeDuration)
+            for (i in 0..3) {
+                updateSlot(e, i)
             }
         }
     }
 
-    private void updateSlot(int slot) {
-        InformationDisplay.DisplaySlot data = informationDisplay.getDisplaySlot(instance.recorder, slot);
-        infoViews[slot].setText(data.getTitle(), data.getValue());
+    private fun updateSlot(e: AggregatedRecordingValuesEvent?, slot: Int) {
+        val data = informationDisplay.getDisplaySlot(e, slot)
+        infoViews[slot]!!.setText(data.title, data.value)
     }
 
-    private void hideStartButton() {
-        hide(recordStartButtonsRoot);
-        timeView.setVisibility(View.VISIBLE);
+    private fun hideStartButton() {
+        hide(recordStartButtonsRoot)
+        timeView.visibility = View.VISIBLE
     }
 
-    private void showStartButton() {
-        show(recordStartButtonsRoot);
-        timeView.setVisibility(View.INVISIBLE);
+    private fun showStartButton() {
+        show(recordStartButtonsRoot)
+        timeView.visibility = View.INVISIBLE
     }
 
-    protected void hide(View view) {
+    protected fun hide(view: View) {
         if (startPopupMenu != null
-                && (view.getId() == recordStartButtonsRoot.getId()
-                || view.getId() == startPopupButton.getId())) {
-            startPopupMenu.dismiss();
+            && (view.id == recordStartButtonsRoot!!.id
+                    || view.id == startPopupButton!!.id)
+        ) {
+            startPopupMenu!!.dismiss()
         }
-        int cx = view.getWidth() / 2;
-        int cy = view.getHeight() / 2;
-        float initialRadius = (float) Math.hypot(cx, cy);
-        Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0f);
-        anim.setDuration(500);
-        anim.setInterpolator(new AccelerateInterpolator());
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                view.setVisibility(View.INVISIBLE);
+        val cx = view.width / 2
+        val cy = view.height / 2
+        val initialRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+        val anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0f)
+        anim.duration = 500
+        anim.interpolator = AccelerateInterpolator()
+        anim.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                super.onAnimationEnd(animation)
+                view.visibility = View.INVISIBLE
             }
-        });
+        })
 
-        anim.start();
+        anim.start()
     }
 
-    protected void show(View view) {
-        view.setAlpha(1);
-        if (view.getVisibility() != View.VISIBLE) {
-            view.clearAnimation();
-            view.setAlpha(0);
-            view.animate().alpha(1).setDuration(500).start();
+    protected fun show(view: View) {
+        view.setAlpha(1f)
+        if (view.visibility != View.VISIBLE) {
+            view.clearAnimation()
+            view.setAlpha(0f)
+            view.animate().alpha(1f).setDuration(500).start()
         }
-        view.setVisibility(View.VISIBLE);
+        view.visibility = View.VISIBLE
     }
 
-    protected void updateStartButton(boolean enabled, @StringRes int text, View.OnClickListener listener) {
-        showStartButton();
-        startButton.setEnabled(enabled);
-        startButton.setText(text);
-        startButton.setOnClickListener(listener);
+    protected fun updateStartButton(
+        enabled: Boolean,
+        @StringRes text: Int,
+        listener: View.OnClickListener?
+    ) {
+        showStartButton()
+        startButton!!.setEnabled(enabled)
+        startButton!!.setText(text)
+        startButton!!.setOnClickListener(listener)
     }
 
-    protected void start(String reason) {
+    protected fun start(reason: StartReason) {
         // some nasty race conditions might occur between auto start and the user pressing the start
         // button, so better make sure we only start once
         // TODO is this really necessary or would the flag isStarted be enough
         if (startedSem.drainPermits() == 0) {   // consuming all permits just to be sure..
-            Log.w(TAG, "Cannot start the workout, it has already been started.");
-            return;
+            Log.w(TAG, "Cannot start the workout, it has already been started.")
+            return
         }
 
         // take care of auto start (hide stuff and/or abort it whatever's necessary)
-        cancelAutoStart(false);
+        cancelAutoStart(false)
 
         if (autoStartDelayDialog != null) {
-            autoStartDelayDialog.getDialog().cancel();
-            autoStartDelayDialog = null;
+            autoStartDelayDialog!!.getDialog().cancel()
+            autoStartDelayDialog = null
         }
 
         // show workout timer
-        hideStartButton();
+        hideStartButton()
 
         // and start workout recorder
-        instance.recorder.start(reason);
-        invalidateOptionsMenu();
+        EventBus.getDefault().post(WorkoutActionStart(reason))
+        invalidateOptionsMenu()
     }
 
-    protected void stop(String reason) {
+    protected fun stop(reason: StopReason) {
         // allow restarts after stopping
         // TODO is it save to do this right on entry and not on exit??
-        startedSem.release();
+        startedSem.release()
 
         // cancel auto start if necessary
-        cancelAutoStart(true);
+        cancelAutoStart(true)
 
-        if (instance.recorder.getState() != GpsWorkoutRecorder.RecordingState.IDLE) { // Only Running Records can be stopped
-            instance.recorder.stop(reason);
-            if (instance.recorder.hasRecordedSomething()) {
+        val current = getCurrent()
+        if (current.currentState != RecordingState.IDLE) { // Only Running Records can be stopped
+            EventBus.getDefault().post(WorkoutActionStop(reason))
+            if (current.recordedSomething) {
                 if (askForComment) {
-                    showEnterDescriptionDialog();
+                    showEnterDescriptionDialog()
                 } else {
-                    saveAndClose();
+                    activityFinish()
                 }
             } else {
-                Toast.makeText(this, R.string.workoutDiscarded, Toast.LENGTH_LONG).show();
-                instance.recorder.discard();
-                activityFinish();
+                Toast.makeText(this, R.string.workoutDiscarded, Toast.LENGTH_LONG).show()
+                EventBus.getDefault().post(WorkoutActionDiscard)
+                activityFinish()
             }
         } else {
-            activityFinish();
+            activityFinish()
         }
     }
 
-    private void saveAndClose() {
-        save();
-        activityFinish();
+    private fun showEnterDescriptionDialog() {
+        val editText = EditText(this)
+        editText.setSingleLine(true)
+        editText.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+        requestKeyboard(editText)
+        AlertDialog.Builder(this).setTitle(R.string.enterComment).setPositiveButton(
+            R.string.okay
+        ) { dialog: DialogInterface?, which: Int ->
+            dialog!!.dismiss()
+            val workout = instance.db.workoutDao().getLastWorkout()!!
+            instance.db.workoutDao().updateWorkout(workout.copy(
+                comment = editText.text.toString()
+            ))
+            activityFinish()
+        }.setView(editText)
+            .setOnCancelListener { dialog: DialogInterface? -> activityFinish() }
+            .create().show()
     }
 
-    private boolean save() {
-        if (instance.recorder.getState() != GpsWorkoutRecorder.RecordingState.IDLE) {
-            if (instance.recorder.hasRecordedSomething()) {
-                instance.recorder.save();
-                return true;
-            } else {
-                // Inform the user about not saving the workout
-                Toast.makeText(this, R.string.workoutDiscarded, Toast.LENGTH_LONG).show();
-                instance.recorder.discard();
-                return false;
+    private fun showAreYouSureToStopDialog(stopReason: StopReason) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.stopRecordingQuestion)
+            .setMessage(R.string.stopRecordingQuestionMessage)
+            .setPositiveButton(R.string.stop) { _: DialogInterface?, _: Int -> stop(stopReason) }
+            .setNegativeButton(R.string.continue_, null)
+            .create().show()
+    }
+
+    protected val isServiceRunning: Boolean
+        get() {
+            val activityManager =
+                this.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+            val services =
+                activityManager.getRunningServices(Int.Companion.MAX_VALUE)
+
+            for (runningServiceInfo in services) {
+                if (runningServiceInfo.service.className == this.serviceClass!!.getName()) {
+                    return true
+                }
             }
+            return false
         }
-        // Only Started Workouts need to be discarded
-        return false;
+
+    protected fun restartService() {
+        stopService()
+        startService()
     }
 
-    protected void saveIfNotSaved() {
-        // ONLY SAVE WHEN WAS ONCE ACTIVE and Not Already Saved
-        if (instance.recorder.getState() != GpsWorkoutRecorder.RecordingState.IDLE &&
-                !instance.recorder.isSaved()) {
-            save();
-        }
-    }
-
-    private void showEnterDescriptionDialog() {
-        final EditText editText = new EditText(this);
-        editText.setSingleLine(true);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        editText.setText(instance.recorder.getWorkout().comment);
-        requestKeyboard(editText);
-        new AlertDialog.Builder(this).setTitle(R.string.enterComment).setPositiveButton(R.string.okay, (dialog, which) -> {
-            dialog.dismiss();
-            instance.recorder.setComment(editText.getText().toString());
-            saveAndClose();
-        }).setView(editText).setOnCancelListener(dialog -> saveAndClose()).create().show();
-    }
-
-    private void showAreYouSureToStopDialog(String reasonContext) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.stopRecordingQuestion)
-                .setMessage(R.string.stopRecordingQuestionMessage)
-                .setPositiveButton(R.string.stop, (dialog, which) -> stop(String.format("User requested: %s", reasonContext)))
-                .setNegativeButton(R.string.continue_, null)
-                .create().show();
-    }
-
-    protected boolean isServiceRunning() {
-        final ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-
-        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-            if (runningServiceInfo.service.getClassName().equals(getServiceClass().getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected void restartService() {
-        stopService();
-        startService();
-    }
-
-    protected void startService() {
-        if (!isServiceRunning()) {
+    protected fun startService() {
+        if (!this.isServiceRunning) {
             if (hasServicePermission()) {
-                WorkoutLogger.log(TAG, "Starting service");
-                Intent locationListener = new Intent(getApplicationContext(), getServiceClass());
-                NotificationHelper.requestNotificationPermissionIfNecessary(this);
+                log(TAG, "Starting service")
+                val locationListener = Intent(applicationContext, this.serviceClass)
+                NotificationHelper.requestNotificationPermissionIfNecessary(this)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(locationListener);
+                    startForegroundService(locationListener)
                 } else {
-                    startService(locationListener);
+                    startService(locationListener)
                 }
-                onListenerStart();
+                onListenerStart()
             } else {
-                Log.i(TAG, "Not starting service, no permission");
+                Log.i(TAG, "Not starting service, no permission")
             }
         } else {
-            Log.d(TAG, "Listener Already Running");
+            Log.d(TAG, "Listener Already Running")
         }
     }
 
-    protected void stopService() {
-        if (isServiceRunning()) {
-            WorkoutLogger.log(TAG, "Stopping service");
-            Intent locationListener = new Intent(getApplicationContext(), getServiceClass());
-            stopService(locationListener);
+    protected fun stopService() {
+        if (this.isServiceRunning) {
+            log(TAG, "Stopping service")
+            val locationListener = Intent(applicationContext, this.serviceClass)
+            stopService(locationListener)
         }
     }
 
-    protected abstract Class<? extends RecorderService> getServiceClass();
+    protected abstract val serviceClass: Class<out RecorderService?>?
 
-    protected abstract boolean hasServicePermission();
+    protected abstract fun hasServicePermission(): Boolean
 
-    protected abstract void onListenerStart();
+    protected abstract fun onListenerStart()
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onHeartRateConnectionChange(HeartRateConnectionChangeEvent e) {
-        hrStatusView.setImageResource(e.state.getIconRes());
-        hrStatusView.setColorFilter(getResources().getColor(e.state.getColorRes()));
+    fun onHeartRateConnectionChange(e: HeartRateConnectionChangeEvent) {
+        hrStatusView!!.setImageResource(e.state.iconRes)
+        hrStatusView!!.setColorFilter(getResources().getColor(e.state.colorRes))
     }
 
-    @Override
-    protected void onDestroy() {
-        WorkoutLogger.log(TAG, "Activity onDestroy");
+    override fun onDestroy() {
+        log(TAG, "Activity onDestroy")
         // abort any ongoing auto start procedure
-        cancelAutoStart(true);
+        cancelAutoStart(true)
 
         // once that's done, make sure no one stays registered to its event bus thereby creating
         // a stale process
-        movementDetector.stop();
-        movementDetector.unregisterFromBus();
-        autoStartWorkout.unregisterFromBus();
-        autoStartVibratorFeedback.unregisterFromBus();
-        autoStartSoundFeedback.unregisterFromBus();
-        autoStartAnnouncements.unregisterFromBus();
+        movementDetector!!.stop()
+        movementDetector!!.unregisterFromBus()
+        autoStartWorkout!!.unregisterFromBus()
+        autoStartVibratorFeedback!!.unregisterFromBus()
+        autoStartSoundFeedback!!.unregisterFromBus()
+        autoStartAnnouncements!!.unregisterFromBus()
 
         // shutdown Text-to-Speech engine
         if (ttsController != null) {
-            ttsController.destroyWhenDone();
+            ttsController!!.destroyWhenDone()
         }
 
         if (autoStartDelayDialog != null) {
-            autoStartDelayDialog.getDialog().cancel();
-            autoStartDelayDialog = null;
+            autoStartDelayDialog!!.getDialog().cancel()
+            autoStartDelayDialog = null
         }
 
-        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this)
 
         // Kill Service on Finished or not Started Recording
-        if (instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.STOPPED ||
-                instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.IDLE) {
-            WorkoutLogger.log(TAG, "Recorder state is " + instance.recorder.getState() + ", stopping recording");
-            //ONLY SAVE WHEN STOPPED
-            saveIfNotSaved();
-            stopService();
-            if (instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.IDLE) {
+        val state = getCurrent().currentState
+        if (state == RecordingState.STOPPED || state == RecordingState.IDLE) {
+            log(TAG, "Recorder state is " + state + ", stopping recording")
+            stop(StopReason.ACTIVITY_DESTROY)
+            stopService()
+            if (state == RecordingState.IDLE) {
                 // Inform the user
-                Toast.makeText(this, R.string.noWorkoutStarted, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.noWorkoutStarted, Toast.LENGTH_LONG).show()
             }
         }
-        super.onDestroy();
+        super.onDestroy()
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WorkoutLogger.log(TAG, "Activity onPause");
+    override fun onPause() {
+        super.onPause()
+        log(TAG, "Activity onPause")
 
         // stop intercepting NFC intents
         if (useNfcStart && NfcAdapterHelper.isNfcEnabled(this)) {
             if (!NfcAdapterHelper.disableNfcForegroundDispatch(this)) {
-                Log.w(TAG, "onPause: Failed to disable NFC foreground dispatch system. " +
-                        "NFC is not enabled or present in this device.");
+                Log.w(
+                    TAG, "onPause: Failed to disable NFC foreground dispatch system. " +
+                            "NFC is not enabled or present in this device."
+                )
             }
         }
 
-        isResumed = false;
+        isResumed = false
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        WorkoutLogger.log(TAG, "Activity onResume");
-        finished = false;
-        if (instance.userPreferences.getShowOnLockScreen()) {
-            enableLockScreenVisibility();
+    override fun onResume() {
+        super.onResume()
+        log(TAG, "Activity onResume")
+        finished = false
+        if (instance!!.userPreferences.showOnLockScreen) {
+            enableLockScreenVisibility()
         }
-        invalidateOptionsMenu();
-        isResumed = true;
-        updateDescription();
-        startUpdater();
+        invalidateOptionsMenu()
+        isResumed = true
+        updateDescription(getCurrent())
 
         // start intercepting NFC intents
         if (useNfcStart && NfcAdapterHelper.isNfcEnabled(this)) {
             if (!NfcAdapterHelper.enableNfcForegroundDispatch(this)) {
-                Log.w(TAG, "onPause: Failed to disable NFC foreground dispatch system. " +
-                        "NFC is not enabled or present in this device.");
+                Log.w(
+                    TAG, "onPause: Failed to disable NFC foreground dispatch system. " +
+                            "NFC is not enabled or present in this device."
+                )
             }
         }
 
         // update countdown field if necessary
         if (autoStartWorkout != null
-                && autoStartWorkout.getState() == AutoStartWorkout.State.COUNTDOWN) {
-            onCountdownChange(new AutoStartWorkout.CountdownChangeEvent(autoStartWorkout.getCountdownMs()));
+            && autoStartWorkout!!.state == AutoStartWorkout.State.COUNTDOWN
+        ) {
+            onCountdownChange(CountdownChangeEvent(autoStartWorkout!!.countdownMs))
         }
     }
 
-    public void onStartPopupButtonClicked(View v) {
+    fun onStartPopupButtonClicked(v: View?) {
         // only show if not started yet
         // => disables this button for the short time of the hide animation, when a workout has just
         // started
-        if (isRecordingStarted()) {
-            return;
+        if (this.isRecordingStarted) {
+            return
         }
-        startPopupMenu = new PopupMenu(this, v);
-        startPopupMenu.setOnMenuItemClickListener(menuItem -> {
-            int itemId = menuItem.getItemId();
+        startPopupMenu = PopupMenu(this, v)
+        startPopupMenu!!.setOnMenuItemClickListener { menuItem: MenuItem? ->
+            val itemId = menuItem!!.itemId
             if (itemId == R.id.auto_start) {
-                Log.d(TAG, "Auto start from popup menu selected");
-                AutoStartWorkout.Config config = autoStartWorkout.getDefaultStartConfig();
-                beginAutoStart(config.countdownMs, config.mode);
+                Log.d(TAG, "Auto start from popup menu selected")
+                val config = autoStartWorkout!!.defaultStartConfig
+                beginAutoStart(config.countdownMs, config.mode)
             } else if (itemId == R.id.auto_start_immediately) {
-                start("Immediate Start-Button pressed");
+                start(StartReason.START_BUTTON_IMMEDIATE)
             } else if (itemId == R.id.auto_start_on_move) {
-                beginAutoStart(0, AutoStartWorkout.Mode.ON_MOVE);
+                beginAutoStart(0, AutoStartWorkout.Mode.ON_MOVE)
             } else if (itemId == R.id.auto_start_wait_for_gps) {
-                beginAutoStart(0, AutoStartWorkout.Mode.WAIT_FOR_GPS);
+                beginAutoStart(0, AutoStartWorkout.Mode.WAIT_FOR_GPS)
             } else if (itemId == R.id.auto_start_delay) {
-                Log.d(TAG, "Auto start with custom settings from popup menu selected");
+                Log.d(TAG, "Auto start with custom settings from popup menu selected")
                 // show the reduced delay picker dialog first (then, if selected, the custom ine)
                 // and lastly the mode picker dialog
                 // they'll be preloaded with either the last selected or the default value from
                 // preferences
-                autoStartDelayDialog = new ChooseAutoStartDelayDialog(this, delayS -> {
-                    autoStartDelayDialog = new ChooseAutoStartModeDialog(this, mode -> {
-                        beginAutoStart(delayS * 1_000L, mode);
-                        Log.d(TAG, "Auto start from popup menu with delay of " + delayS +
-                                "s and mode " + mode);
-                    }, autoStartWorkout.getLastStartConfig().mode);
-                    autoStartDelayDialog.show();
-                }, autoStartWorkout.getLastStartConfig().countdownMs);
-                autoStartDelayDialog.show();
+                autoStartDelayDialog =
+                    ChooseAutoStartDelayDialog(this, AutoStartDelaySelectListener { delayS: Int ->
+                        autoStartDelayDialog = ChooseAutoStartModeDialog(
+                            this,
+                            AutoStartModeSelectListener { mode: AutoStartWorkout.Mode? ->
+                                beginAutoStart(delayS * 1000L, mode)
+                                Log.d(
+                                    TAG, "Auto start from popup menu with delay of " + delayS +
+                                            "s and mode " + mode
+                                )
+                            },
+                            autoStartWorkout!!.lastStartConfig.mode
+                        )
+                        autoStartDelayDialog!!.show()
+                    }, autoStartWorkout!!.lastStartConfig.countdownMs)
+                autoStartDelayDialog!!.show()
             } else {
-                return false;
+                return@setOnMenuItemClickListener false
             }
-            return true;
-        });
-        startPopupMenu.inflate(R.menu.start_popup_menu);
-        if (!(this instanceof RecordGpsWorkoutActivity)) {
-            Menu menu = startPopupMenu.getMenu();
-            menu.findItem(R.id.auto_start_immediately).setVisible(false);
-            menu.findItem(R.id.auto_start_on_move).setVisible(false);
-            menu.findItem(R.id.auto_start_wait_for_gps).setVisible(false);
+            true
         }
-        startPopupMenu.show();
+        startPopupMenu!!.inflate(R.menu.start_popup_menu)
+        if (this !is RecordGpsWorkoutActivity) {
+            val menu = startPopupMenu!!.menu
+            menu.findItem(R.id.auto_start_immediately).isVisible = false
+            menu.findItem(R.id.auto_start_on_move).isVisible = false
+            menu.findItem(R.id.auto_start_wait_for_gps).isVisible = false
+        }
+        startPopupMenu!!.show()
     }
 
-    public void onAutoStartCountdownAbortButtonClicked() {
-        cancelAutoStart(true);
-        Toast.makeText(this, R.string.workoutAutoStartAborted, Toast.LENGTH_SHORT).show();
+    fun onAutoStartCountdownAbortButtonClicked() {
+        cancelAutoStart(true)
+        Toast.makeText(this, R.string.workoutAutoStartAborted, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -727,319 +725,331 @@ public abstract class RecordWorkoutActivity extends FitoTrackActivity implements
      * @param delayMs the delay in milliseconds after which the workout should be started
      * @param mode    the auto start mode with which the workout should be started
      */
-    public void beginAutoStart(long delayMs, @Nullable AutoStartWorkout.Mode mode) {
-        WorkoutLogger.log(TAG, "Begin autostart after " + delayMs + "ms, mode: " + mode);
-        // show the countdown overlay (at least, if we're actually counting down)
-        if (autoStartCountdownOverlay == null) {
-            autoStartCountdownOverlay = findViewById(R.id.recorderAutoStartOverlay);
-        }
-        AutoStartWorkout.Config config;
-        if (mode == null) {
-            config = new AutoStartWorkout.Config(delayMs);
-        } else if (delayMs == Long.MIN_VALUE) {
-            config = new AutoStartWorkout.Config(mode);
-        } else {
-            config = new AutoStartWorkout.Config(delayMs, mode);
-        }
-        EventBus.getDefault().post(new AutoStartWorkout.BeginEvent(config));
-    }
-
     /**
      * Start the auto start sequence in default mode.
      */
-    public void beginAutoStart(long delayMs) {
-        beginAutoStart(delayMs, null);
+    @JvmOverloads
+    fun beginAutoStart(delayMs: Long, mode: AutoStartWorkout.Mode? = null) {
+        log(TAG, "Begin autostart after " + delayMs + "ms, mode: " + mode)
+        // show the countdown overlay (at least, if we're actually counting down)
+        if (autoStartCountdownOverlay == null) {
+            autoStartCountdownOverlay = findViewById(R.id.recorderAutoStartOverlay)
+        }
+        val config = when {
+            mode == null -> AutoStartWorkout.Config(delayMs)
+            delayMs == Long.Companion.MIN_VALUE -> AutoStartWorkout.Config(mode)
+            else -> AutoStartWorkout.Config(delayMs, mode)
+        }
+        EventBus.getDefault().post(BeginEvent(config))
     }
 
     /**
      * Start the auto start sequence with default delay.
      */
-    public void beginAutoStart(AutoStartWorkout.Mode mode) {
-        beginAutoStart(Long.MIN_VALUE, mode);
+    fun beginAutoStart(mode: AutoStartWorkout.Mode?) {
+        beginAutoStart(Long.Companion.MIN_VALUE, mode)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAutoStartWorkoutStateChange(AutoStartWorkout.StateChangeEvent stateChangeEvent) {
-        switch (stateChangeEvent.newState) {
-            case COUNTDOWN:
-                showAutoStartCountdownOverlay();
-                break;
-            case WAITING_FOR_GPS:
-                ((TextView) findViewById(R.id.autoStartCountdownVal)).setText("");
-                ((TextView) findViewById(R.id.autoStartCountdownMsg)).setText(getString(R.string.autoStartCountdownMsgGps));
-                showAutoStartCountdownOverlay();
-                break;
-            case WAITING_FOR_MOVE:
-                ((TextView) findViewById(R.id.autoStartCountdownVal)).setText("");
-                ((TextView) findViewById(R.id.autoStartCountdownMsg)).setText(getString(R.string.autoStartCountdownMsgMove));
-                showAutoStartCountdownOverlay();
-                break;
-            case AUTO_START_REQUESTED:
-                autoStart();
-                break;
-            case ABORTED_BY_USER:
-            case ABORTED_ALREADY_STARTED:
-                hideAutoStartCountdownOverlay();
-                break;
-            default:
-                break;
+    fun onAutoStartWorkoutStateChange(stateChangeEvent: StateChangeEvent) {
+        when (stateChangeEvent.newState) {
+            AutoStartWorkout.State.COUNTDOWN -> showAutoStartCountdownOverlay()
+            AutoStartWorkout.State.WAITING_FOR_GPS -> {
+                (findViewById<View?>(R.id.autoStartCountdownVal) as TextView).text = ""
+                (findViewById<View?>(R.id.autoStartCountdownMsg) as TextView).text = getString(R.string.autoStartCountdownMsgGps)
+                showAutoStartCountdownOverlay()
+            }
+
+            AutoStartWorkout.State.WAITING_FOR_MOVE -> {
+                (findViewById<View?>(R.id.autoStartCountdownVal) as TextView).text = ""
+                (findViewById<View?>(R.id.autoStartCountdownMsg) as TextView).text = getString(R.string.autoStartCountdownMsgMove)
+                showAutoStartCountdownOverlay()
+            }
+
+            AutoStartWorkout.State.AUTO_START_REQUESTED -> autoStart()
+            AutoStartWorkout.State.ABORTED_BY_USER, AutoStartWorkout.State.ABORTED_ALREADY_STARTED -> hideAutoStartCountdownOverlay()
+            else -> {}
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCountdownChange(AutoStartWorkout.CountdownChangeEvent countdownChangeEvent) {
-        ((TextView) findViewById(R.id.autoStartCountdownMsg)).setText(getString(R.string.autoStartCountdownMsg));
-        String text;
-        if (countdownChangeEvent.countdownS > 60) {
+    fun onCountdownChange(countdownChangeEvent: CountdownChangeEvent) {
+        (findViewById<View?>(R.id.autoStartCountdownMsg) as TextView).text = getString(R.string.autoStartCountdownMsg)
+        val text: String?
+        text = if (countdownChangeEvent.countdownS > 60) {
             // use countdownS because that is rounded properly already
-            text = instance.distanceUnitUtils.getMinuteSecondTime(countdownChangeEvent.countdownS * 1_000);
+            instance.distanceUnitUtils.getMinuteSecondTime(countdownChangeEvent.countdownS * 1000L)
         } else {
-            text = String.format(getString(R.string.autoStartCountdownVal),
-                    countdownChangeEvent.countdownS, getText(R.string.timeSecondsShort));
+            String.format(
+                getString(R.string.autoStartCountdownVal),
+                countdownChangeEvent.countdownS, getText(R.string.timeSecondsShort)
+            )
         }
-        Log.d(TAG, "Updating auto start countdown: " + text + " (" +
-                countdownChangeEvent.countdownMs + ")");
-        ((TextView) findViewById(R.id.autoStartCountdownVal)).setText(text);
+        Log.d(
+            TAG, "Updating auto start countdown: " + text + " (" +
+                    countdownChangeEvent.countdownMs + ")"
+        )
+        (findViewById<View?>(R.id.autoStartCountdownVal) as TextView).text = text
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
+    override fun onNewIntent(intent: Intent) {
         // should have only gotten here when an NFC tag has been detected
         if (useNfcStart) {
             // above check should actually not be necessary, b/c NFC should only be enabled if we
             // want to use it. But it's cheep so let's keep it just to be sure..
 
             // let's see if the intent contains an NFC tag and start/stop recording if it does
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            val tag = intent.getParcelableExtra<Tag?>(NfcAdapter.EXTRA_TAG)
             if (tag != null) {
-                if (isRecordingStarted()) {
-                    Log.i(TAG, "onNewIntent: NFC tag triggered workout end");
-                    stop("NFC-Tag triggered end");
+                if (this.isRecordingStarted) {
+                    Log.i(TAG, "onNewIntent: NFC tag triggered workout end")
+                    stop(StopReason.NFC)
                 } else {
-                    Log.i(TAG, "onNewIntent: NFC tag triggered workout start");
-                    start("NFC-Tag triggered start"); // start immediately, don't care about signal quality or anything
+                    Log.i(TAG, "onNewIntent: NFC tag triggered workout start")
+                    start(StartReason.NFC) // start immediately, don't care about signal quality or anything
                 }
             }
         }
-        super.onNewIntent(intent);
+        super.onNewIntent(intent)
     }
 
-    private void enableLockScreenVisibility() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    private fun enableLockScreenVisibility() {
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        )
     }
 
-    private boolean isRestrictedInput() {
-        KeyguardManager myKM = (KeyguardManager) this.getSystemService(Context.KEYGUARD_SERVICE);
-        return myKM.inKeyguardRestrictedInputMode(); // return whether phone is in locked state
-    }
+    private val isRestrictedInput: Boolean
+        get() {
+            val myKM =
+                this.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+            return myKM.inKeyguardRestrictedInputMode() // return whether phone is in locked state
+        }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.record_menu, menu);
-        return true;
+        menuInflater.inflate(R.menu.record_menu, menu)
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.actionRecordingStop:
-                onPressStopButton();
-                return true;
-            case R.id.actionSelectIntervalSet:
-                showIntervalSelection();
-                return true;
-            case R.id.actionEditHint:
-                showEditInformationHint();
-                return true;
-            case R.id.actionConnectHR:
-                chooseHRDevice();
-                return true;
-            case R.id.actionManualPause:
-                onManualPauseButtonClick();
-                return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.actionRecordingStop -> {
+                onPressStopButton()
+                return true
+            }
+
+            R.id.actionSelectIntervalSet -> {
+                showIntervalSelection()
+                return true
+            }
+
+            R.id.actionEditHint -> {
+                showEditInformationHint()
+                return true
+            }
+
+            R.id.actionConnectHR -> {
+                chooseHRDevice()
+                return true
+            }
+
+            R.id.actionManualPause -> {
+                onManualPauseButtonClick()
+                return true
+            }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    private void onManualPauseButtonClick() {
-        if (instance.recorder.isResumed()) {
-            startPopupButton.setVisibility(View.GONE);
-            showStartButton();
-            instance.recorder.pause();
-            updateStartButton(true, R.string.actionResume, v -> {
-                if (instance.recorder.isPaused()) {
-                    onManualPauseButtonClick();
-                }
-            });
-        } else if (instance.recorder.isPaused()) {
-            instance.recorder.resume();
-            hideStartButton();
+    private fun onManualPauseButtonClick() {
+        val state = getCurrent().currentState
+        if (state == RecordingState.RUNNING || state == RecordingState.AUTO_PAUSE) {
+            startPopupButton!!.visibility = View.GONE
+            showStartButton()
+            EventBus.getDefault().post(WorkoutActionPause(false))
+            updateStartButton(
+                true,
+                R.string.actionResume,
+                View.OnClickListener { v: View? -> onManualPauseButtonClick() })
+        } else if (state == RecordingState.MANUAL_PAUSE) {
+            EventBus.getDefault().post(WorkoutActionResume)
+            hideStartButton()
         }
-        invalidateOptionsMenu();
+        invalidateOptionsMenu()
     }
 
-    private void showEditInformationHint() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.editDisplayedInformation)
-                .setMessage(R.string.editDisplayedInformationHint)
-                .setPositiveButton(R.string.okay, null)
-                .show();
+    private fun showEditInformationHint() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.editDisplayedInformation)
+            .setMessage(R.string.editDisplayedInformationHint)
+            .setPositiveButton(R.string.okay, null)
+            .show()
     }
 
-    private void chooseHRDevice() {
+    private fun chooseHRDevice() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !hasBluetoothPermissions()) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN}, REQUEST_CODE_BLUETOOTH_PERMISSION);
-            return;
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ),
+                REQUEST_CODE_BLUETOOTH_PERMISSION
+            )
+            return
         }
         try {
-            new ChooseBluetoothDeviceDialog(this, this).show();
-        } catch (ChooseBluetoothDeviceDialog.BluetoothNotAvailableException ignored) {
-            askToActivateBluetooth();
+            ChooseBluetoothDeviceDialog(this, this).show()
+        } catch (ignored: BluetoothNotAvailableException) {
+            askToActivateBluetooth()
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.S)
-    private boolean hasBluetoothPermissions() {
-        return PermissionUtils.checkPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
-                && PermissionUtils.checkPermission(this, Manifest.permission.BLUETOOTH_SCAN);
+    private fun hasBluetoothPermissions(): Boolean {
+        return checkPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+                && checkPermission(this, Manifest.permission.BLUETOOTH_SCAN)
     }
 
-    @SuppressLint("MissingPermission")
-    // can be suppressed because method will only be called if the permission is granted
-    private void askToActivateBluetooth() {
-        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH);
+    @SuppressLint("MissingPermission") // can be suppressed because method will only be called if the permission is granted
+    private fun askToActivateBluetooth() {
+        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        startActivityForResult(enableBtIntent, REQUEST_CODE_ENABLE_BLUETOOTH)
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if ((requestCode == REQUEST_CODE_ENABLE_BLUETOOTH || requestCode == REQUEST_CODE_BLUETOOTH_PERMISSION)
-                && resultCode == RESULT_OK) {
-            chooseHRDevice();
+            && resultCode == RESULT_OK
+        ) {
+            chooseHRDevice()
         }
     }
 
-    private void onPressStopButton() {
-        if (isRestrictedInput()) {
-            Toast.makeText(this, R.string.unlockPhoneStopWorkout, Toast.LENGTH_LONG).show();
+    private fun onPressStopButton() {
+        if (this.isRestrictedInput) {
+            Toast.makeText(this, R.string.unlockPhoneStopWorkout, Toast.LENGTH_LONG).show()
         } else {
-            showAreYouSureToStopDialog("Stop button pressed");
+            showAreYouSureToStopDialog(StopReason.STOP_BUTTON_PRESSED)
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean preparationPhase = instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.IDLE;
-        menu.findItem(R.id.actionSelectIntervalSet).setVisible(preparationPhase && voiceFeedbackAvailable);
-        menu.findItem(R.id.actionEditHint).setVisible(preparationPhase);
-        menu.findItem(R.id.actionConnectHR).setVisible(isBluetoothSupported());
-        MenuItem pauseResumeItem = menu.findItem(R.id.actionManualPause);
-        if (!instance.recorder.isAutoPauseEnabled() && instance.recorder.isActive() && !preparationPhase) {
-            pauseResumeItem.setVisible(true);
-            pauseResumeItem.setIcon(instance.recorder.isResumed() ? R.drawable.ic_pause : R.drawable.ic_resume);
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val state = this.currentState
+        val preparationPhase = state == RecordingState.IDLE
+        menu.findItem(R.id.actionSelectIntervalSet).isVisible = preparationPhase && voiceFeedbackAvailable
+        menu.findItem(R.id.actionEditHint).isVisible = preparationPhase
+        menu.findItem(R.id.actionConnectHR).isVisible = this.isBluetoothSupported
+        val pauseResumeItem = menu.findItem(R.id.actionManualPause)
+        if (!instance.userPreferences.useAutoPause && !preparationPhase) {
+            pauseResumeItem.isVisible = true
+            pauseResumeItem.setIcon(if (state == RecordingState.RUNNING) R.drawable.ic_pause else R.drawable.ic_resume)
         } else {
-            pauseResumeItem.setVisible(false);
+            pauseResumeItem.isVisible = false
         }
-        return super.onPrepareOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu)
     }
 
-    @Override
-    public void onBackPressed() {
-        cancelAutoStart(true);
-        if (instance.recorder.isActive() && instance.recorder.getState() != GpsWorkoutRecorder.RecordingState.IDLE) {
+    override fun onBackPressed() {
+        cancelAutoStart(true)
+        if (this.currentState != RecordingState.IDLE) {
             // Still Running Workout
-            showAreYouSureToStopDialog("Back button clicked");
+            showAreYouSureToStopDialog(StopReason.BACK_BUTTON_PRESSED)
         } else {
             // Stopped or Idle Workout
-            activityFinish();
+            activityFinish()
             //super.onBackPressed();
         }
     }
 
-    protected synchronized void activityFinish() {
+    @Synchronized
+    protected fun activityFinish() {
         if (!this.finished) {
-            this.finished = true;
-            this.finish();
-            Intent launcherIntent = new Intent(this, LauncherActivity.class);
-            launcherIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            this.startActivity(launcherIntent);
+            this.finished = true
+            this.finish()
+            val launcherIntent = Intent(this, LauncherActivity::class.java)
+            launcherIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(launcherIntent)
         }
     }
 
-    private void showIntervalSelection() {
-        new SelectIntervalSetDialog(this, this).show();
+    private fun showIntervalSelection() {
+        SelectIntervalSetDialog(this, this).show()
     }
 
-    @Override
-    public void onIntervalSetSelect(IntervalSet set) {
-        Interval[] intervals = instance.db.intervalDao().getAllIntervalsOfSet(set.id);
-        List<Interval> intervalList = new ArrayList<>(Arrays.asList(intervals));
-        instance.recorder.setIntervalList(intervalList);
-        instance.recorder.setUsedIntervalSet(set);
-        Toast.makeText(this, R.string.intervalSetSelected, Toast.LENGTH_LONG).show();
+    override fun onIntervalSetSelect(set: IntervalSet) {
+        val intervals = instance.db.intervalDao().getAllIntervalsOfSet(set.id).toList()
+        EventBus.getDefault().post(WorkoutActionSelectIntervalSet(set, intervals))
+        Toast.makeText(this, R.string.intervalSetSelected, Toast.LENGTH_LONG).show()
     }
 
     @Subscribe
-    public void onVoiceAnnouncementIsReady(TTSReadyEvent e) {
+    fun onVoiceAnnouncementIsReady(e: TTSReadyEvent) {
         // actually, we only care for the RecorderService's TTS controller here
-        if (e.id.equals(AnnouncementComponent.TTS_CONTROLLER_ID)) {
-            this.voiceFeedbackAvailable = e.ttsAvailable;
-            invalidateOptionsMenu();
+        if (e.id == AnnouncementComponent.TTS_CONTROLLER_ID) {
+            this.voiceFeedbackAvailable = e.ttsAvailable
+            invalidateOptionsMenu()
         }
     }
 
-    @Override
-    public void onInfoViewClick(int slot, boolean isLongClick) {
-        if (instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.IDLE || isLongClick) {
-            new SelectWorkoutInformationDialog(
-                    this,
-                    RecordingType.findById(activity.recordingType),
-                    slot,
-                    this)
-                    .show();
+    override fun onInfoViewClick(slot: Int, isLongClick: Boolean) {
+        if (this.currentState == RecordingState.IDLE || isLongClick) {
+            SelectWorkoutInformationDialog(
+                this,
+                RecordingType.findById(activity!!.recordingType),
+                slot,
+                this
+            )
+                .show()
         }
     }
 
     @Subscribe
-    public void onAutoStop(WorkoutAutoStopEvent e) {
-        activityFinish();
+    fun onAutoStop(e: WorkoutAutoStopEvent?) {
+        activityFinish()
     }
 
-    @Override
-    public void onSelectWorkoutInformation(int slot, RecordingInformation information) {
-        String mode = RecordingType.findById(activity.recordingType).id;
-        Instance.getInstance(this).userPreferences.setIdOfDisplayedInformation(mode, slot, information.getId());
-        this.updateDescription();
+    override fun onSelectWorkoutInformation(slot: Int, information: RecordingInformation) {
+        val mode = RecordingType.findById(activity!!.recordingType).id
+        Instance.getInstance(this).userPreferences.setIdOfDisplayedInformation(
+            mode,
+            slot,
+            information.id
+        )
+        this.updateDescription(getCurrent())
     }
 
-    @Override
-    public void onSelectBluetoothDevice(BluetoothDevice device) {
-        new BluetoothDevicePreferences(this).setAddress(BluetoothDevicePreferences.DEVICE_HEART_RATE, device.getAddress());
-        restartService();
+    override fun onSelectBluetoothDevice(device: BluetoothDevice) {
+        BluetoothDevicePreferences(this).setAddress(
+            BluetoothDevicePreferences.DEVICE_HEART_RATE,
+            device.getAddress()
+        )
+        restartService()
     }
 
-    private boolean isBluetoothSupported() {
-        // Check if device has a bluetooth adapter
-        return BluetoothAdapter.getDefaultAdapter() != null;
+    private val isBluetoothSupported: Boolean
+        get() =// Check if device has a bluetooth adapter
+            BluetoothAdapter.getDefaultAdapter() != null
+
+    protected fun openSystemSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.setData(uri)
+        startActivity(intent)
     }
 
-    protected void openSystemSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
-    }
+    protected val isRecordingStarted: Boolean
+        /**
+         * Check whether recording has already been started yet
+         */
+        get() = startedSem.availablePermits() == 0
 
-    /**
-     * Check whether recording has already been started yet
-     */
-    protected boolean isRecordingStarted() {
-        return startedSem.availablePermits() == 0;
-    }
+    protected val currentState: RecordingState
+        get() = getCurrent().currentState
 
 }

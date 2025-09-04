@@ -22,6 +22,7 @@ package de.tadris.fitness.recording.component
 import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.announcement.VoiceAnnouncements
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
@@ -61,6 +62,11 @@ class AnnouncementComponent : RecorderServiceComponent {
 
         // CHECK FOR ANNOUNCEMENTS
         announcements.check()
+    }
+
+    @Subscribe
+    fun onIntervalSetUpdated(e: WorkoutActionSelectIntervalSet){
+        announcements.applyIntervals(e.intervals)
     }
 
     @Subscribe

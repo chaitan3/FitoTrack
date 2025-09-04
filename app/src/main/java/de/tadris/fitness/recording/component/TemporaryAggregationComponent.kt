@@ -29,6 +29,7 @@ import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
 import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
+import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.event.RouteSampleEvent
 import de.tadris.fitness.util.totalDistance
 import org.greenrobot.eventbus.EventBus
@@ -60,8 +61,12 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     private var lastHeartRate = -1
     private var lastHRBatteryLevel = -1
+    private var currentFrequency = 0.0
+    private var currentIntensity = 0.0
+    private var repetitions = 0
 
     private val timeSinceLastStateChange get() = System.currentTimeMillis() - lastStateChange
+    private var sampleCount = 0
 
     private val currentActiveDuration
         get() = activeDuration +
@@ -105,7 +110,10 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
                 getCurrentSpeed(),
                 lastHeartRate,
                 lastHRBatteryLevel,
-
+                currentFrequency,
+                currentIntensity,
+                repetitions,
+                sampleCount
             )
         )
     }
@@ -116,10 +124,15 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         lastSample = e.sample
         addSampleToAverageList(e.sample)
         addElevation(e.sample)
+        sampleCount++
     }
 
     @Subscribe
-    fun onNewRepetitionSample(e: RepetitionSampleEvent)
+    fun onNewRepetitionSample(e: RepetitionSampleEvent){
+        currentIntensity = e.sample.intensity
+        currentFrequency = e.sample.frequency
+        repetitions += e.sample.repetitions
+    }
 
     @Subscribe
     fun onHeartRateChange(event: HeartRateChangeEvent) {
