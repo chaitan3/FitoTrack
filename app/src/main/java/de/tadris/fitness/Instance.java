@@ -72,6 +72,7 @@ public class Instance {
     public final AutoExportPlanner planner;
     public final WorkoutLogger logger;
     public final ShortcutsUtils shortcuts;
+    public final int 
 
     private Instance(Context context) {
         instance = this;
@@ -84,8 +85,6 @@ public class Instance {
         planner = new AutoExportPlanner(context);
         logger = new WorkoutLogger(context);
         shortcuts = new ShortcutsUtils(context);
-
-        recorder = restoreRecorder(context);
 
         startBackgroundClean(context);
     }

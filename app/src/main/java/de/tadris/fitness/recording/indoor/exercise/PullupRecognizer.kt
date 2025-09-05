@@ -22,6 +22,7 @@ package de.tadris.fitness.recording.indoor.exercise
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.util.Log
+import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.component.FitoTrackSensorOption
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -102,6 +103,7 @@ class PullupRecognizer : ExerciseRecognizer() {
         if (valid) {
             EventBus.getDefault().post(
                 RepetitionRecognizedEvent(
+                    RepetitionSample.REPETITION_TYPE_PULL_UP,
                     lastPullupDetected,
                     maxIntensity
                 )

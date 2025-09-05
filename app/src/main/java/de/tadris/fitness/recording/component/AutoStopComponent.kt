@@ -22,6 +22,7 @@ package de.tadris.fitness.recording.component
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.StopReason
 import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
 import de.tadris.fitness.util.WorkoutLogger.Companion.log
 import org.greenrobot.eventbus.EventBus
@@ -44,7 +45,7 @@ class AutoStopComponent : LastSampleTimeComponent() {
 
         if (autoTimeoutMs > 0 && timeDiff > autoTimeoutMs && service.stateHolder.state == RecordingState.AUTO_PAUSE) {
             log("WorkoutRecorder", "Auto timeout was set to: $autoTimeoutMs")
-            service.actions.stop("Auto timeout, timediff: $timeDiff")
+            service.actions.stop(StopReason.AUTO_STOP)
             EventBus.getDefault().post(WorkoutAutoStopEvent())
         }
     }

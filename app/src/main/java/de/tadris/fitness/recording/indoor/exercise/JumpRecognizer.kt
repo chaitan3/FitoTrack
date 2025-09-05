@@ -22,6 +22,7 @@ package de.tadris.fitness.recording.indoor.exercise
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.util.Log
+import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.component.FitoTrackSensorOption
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -67,7 +68,7 @@ class JumpRecognizer(private val maxJumpDuration: Long) : ExerciseRecognizer() {
                 motionState = MotionState.FALLING
 
                 val intensity = thisJumpMaxAcceleration
-                EventBus.getDefault().post(RepetitionRecognizedEvent(lastJumpDetected, intensity))
+                EventBus.getDefault().post(RepetitionRecognizedEvent(RepetitionSample.REPETITION_TYPE_JUMP, lastJumpDetected, intensity))
 
                 lastJumpMaxAcceleration = thisJumpMaxAcceleration
                 Log.d("JumpRecognizer", "max acceleration: $lastJumpMaxAcceleration")

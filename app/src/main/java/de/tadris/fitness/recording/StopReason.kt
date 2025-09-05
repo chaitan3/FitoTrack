@@ -24,4 +24,5 @@ enum class StopReason(val logMessage: String) {
     NFC("NFC-Tag triggered end"),
     STOP_BUTTON_PRESSED("Stop button pressed"),
     BACK_BUTTON_PRESSED("Back button pressed"),
+    AUTO_STOP("Auto-Stop"),
 }

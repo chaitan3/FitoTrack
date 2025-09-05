@@ -21,6 +21,7 @@ package de.tadris.fitness.recording.indoor.exercise
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
+import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.component.FitoTrackSensorOption
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -37,7 +38,7 @@ class ProximityRecognizer : ExerciseRecognizer() {
             if (event.values[0] < 2) {
                 if (!lastState) {
                     EventBus.getDefault()
-                        .post(RepetitionRecognizedEvent(System.currentTimeMillis()))
+                        .post(RepetitionRecognizedEvent(RepetitionSample.REPETITION_TYPE_PUSH_UP, System.currentTimeMillis()))
                     lastState = true
                 }
             } else {
