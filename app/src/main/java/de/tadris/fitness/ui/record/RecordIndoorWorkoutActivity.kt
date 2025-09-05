@@ -35,9 +35,14 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
+import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.recording.RecorderService
+import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.StartReason
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.indoor.exercise.RepetitionRecognizedEvent
 import de.tadris.fitness.util.unit.UnitUtils
 import org.greenrobot.eventbus.Subscribe
@@ -64,10 +69,10 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
 
         val wasAlreadyRunning = if (LAUNCH_ACTION != intent.action) {
             true
-        } else instance.recorder != null && instance.recorder.isActive && instance.recorder.state != WorkoutRecorder.RecordingState.IDLE
+        } else currentState != RecordingState.IDLE
 
         if (wasAlreadyRunning) {
-            activity = instance.recorder.workout.getWorkoutType(this)
+            activity = AggregatedRecordingValuesEvent.getCurrent().workoutType
         } else {
             val workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA)
             if (workoutType is WorkoutType) {
@@ -76,7 +81,6 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
                 val workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA)
                 activity = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
             }
-            instance.recorder = IndoorWorkoutRecorder(applicationContext, activity)
         }
 
         initBeforeContent()
@@ -90,19 +94,21 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
 
         checkPermissions()
 
-        updateStartButton(true, R.string.start) { start("Start-Button pressed") }
+        updateStartButton(true, R.string.start) { start(StartReason.START_BUTTON) }
 
         setTitle(R.string.recordWorkout)
 
         if (wasAlreadyRunning) {
-            if (instance.recorder.state != WorkoutRecorder.RecordingState.IDLE) {
+            if (currentState != RecordingState.IDLE) {
                 recordStartButtonsRoot.visibility = View.INVISIBLE
                 timeView.visibility = View.VISIBLE
                 invalidateOptionsMenu()
             }
-            val samples = (instance.recorder as IndoorWorkoutRecorder).samples
+            val samples = instance.db.workoutDao().getAllRepetitionSamplesOfWorkout(
+                RecordingStateChangeEvent.getCurrent().workoutId
+            ).toList()
             if (samples.isNotEmpty()) {
-                lastSampleTime = samples.first().absoluteTime
+                lastSampleTime = samples.first().timestamp
                 samples.subList(0, samples.size - 1).forEach {
                     onSampleFinalized(it)
                 }
@@ -144,10 +150,6 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
     override fun onResume() {
         super.onResume()
         refreshRepetitions()
-    }
-
-    override fun getServiceClass(): Class<out RecorderService?> {
-        return IndoorRecorderService::class.java
     }
 
     override fun hasServicePermission(): Boolean {
@@ -220,10 +222,10 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
     private var lastSampleTime = System.currentTimeMillis()
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSampleFinalized(sample: IndoorSample) {
+    fun onSampleFinalized(sample: RepetitionSample) {
         val frequency =
-            1000 * sample.repetitions.toDouble() / (sample.absoluteEndTime - lastSampleTime + 1)
-        lastSampleTime = sample.absoluteEndTime
+            1000 * sample.repetitions.toDouble() / (sample.timestampEnd - lastSampleTime + 1)
+        lastSampleTime = sample.timestampEnd
         frequencyEntries.add(Entry(sample.relativeTime.toFloat() / 1000 / 60, frequency.toFloat()))
         if (sample.intensity > 0) {
             intensityEntries.add(
@@ -273,10 +275,11 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
     }
 
     private fun refreshRepetitions() {
-        val recorder = Instance.getInstance(this).recorder as IndoorWorkoutRecorder
-        repetitionsText.text = recorder.repetitionsTotal.toString()
-        exerciseText.text =
-            resources.getQuantityString(activity.repeatingExerciseName, recorder.repetitionsTotal)
+        val last = AggregatedRecordingValuesEvent.getCurrent()
+        repetitionsText.text = last.repetitions.toString()
+        exerciseText.text = resources.getQuantityString(
+            activity.repeatingExerciseName, last.repetitions
+        )
     }
 
 }

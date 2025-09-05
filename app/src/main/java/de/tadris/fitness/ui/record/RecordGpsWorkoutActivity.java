@@ -60,9 +60,13 @@ import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.map.MapManager;
-import de.tadris.fitness.recording.RecorderService;
+import de.tadris.fitness.recording.GpsState;
+import de.tadris.fitness.recording.RecordingState;
+import de.tadris.fitness.recording.StartReason;
 import de.tadris.fitness.recording.component.GpsComponent;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent;
 import de.tadris.fitness.recording.event.SatelliteCountEvent;
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged;
 
@@ -92,13 +96,13 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
         boolean wasAlreadyRunning = false;
         if (!LAUNCH_ACTION.equals(intent.getAction())) {
             wasAlreadyRunning = true;
-        } else if (instance.recorder != null && instance.recorder.isActive() && instance.recorder.getState() != WorkoutRecorder.RecordingState.IDLE) {
+        } else if (getCurrentState() != RecordingState.IDLE) {
             wasAlreadyRunning = true;
         }
 
 
         if (wasAlreadyRunning) {
-            activity = instance.recorder.getWorkout().getWorkoutType(this);
+            activity = AggregatedRecordingValuesEvent.Companion.getCurrent().getWorkoutType();
         } else {
             Serializable workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA);
             if (workoutType instanceof WorkoutType) {
@@ -107,15 +111,6 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
                 String workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA);
                 activity = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId);
             }
-
-            // TODO Add Dialog, prefere Resume or Delete
-            if (instance.recorder != null &&
-                instance.recorder.getState() !=
-                        WorkoutRecorder.RecordingState.IDLE) {
-              instance.recorder.stop("New activity will be started");
-              saveIfNotSaved();
-            }
-            instance.recorder = new GpsWorkoutRecorder(getApplicationContext(), activity);
         }
 
         initBeforeContent();
@@ -136,24 +131,23 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
 
         setupMapControls();
 
-        onGPSStateChanged(new WorkoutGPSStateChanged(GpsWorkoutRecorder.GpsState.SIGNAL_LOST, GpsWorkoutRecorder.GpsState.SIGNAL_LOST));
+        onGPSStateChanged(new WorkoutGPSStateChanged(GpsState.SIGNAL_LOST, GpsState.SIGNAL_LOST));
 
         if (wasAlreadyRunning) {
-            if (instance.recorder.getState() != GpsWorkoutRecorder.RecordingState.IDLE) {
+            if (getCurrentState() != RecordingState.IDLE) {
                 recordStartButtonsRoot.setVisibility(View.INVISIBLE);
                 timeView.setVisibility(View.VISIBLE);
                 invalidateOptionsMenu();
             }
 
             recordedPositions.clear();
-            List<RouteSample> samples = ((GpsWorkoutRecorder) instance.recorder).getSamples();
+            RouteSample[] samples = instance.db.workoutDao().getAllSamplesOfWorkout(
+                    RecordingStateChangeEvent.Companion.getCurrent().getWorkoutId()
+            );
             for (RouteSample sample : samples) {
                 recordedPositions.add(sample.toLatLong());
             }
             updateLine(recordedPositions);
-
-            GpsWorkoutRecorder.GpsState gpsState = ((GpsWorkoutRecorder) instance.recorder).getGpsState();
-            onGPSStateChanged(new WorkoutGPSStateChanged(gpsState, gpsState));
         }
     }
 
@@ -226,7 +220,7 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
     }
 
     private boolean isWorkoutRunning() {
-        return instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.RUNNING;
+        return getCurrentState() == RecordingState.RUNNING;
     }
 
     private void updateLine(final List<LatLong> latLongs) {
@@ -265,11 +259,6 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
         fill.setColor(getResources().getColor(R.color.locationCircle));
         locationPoint = new FixedPixelCircle(currentLocation, 15f, fill, stroke);
         mapView.addLayer(locationPoint);
-    }
-
-    @Override
-    protected Class<? extends RecorderService> getServiceClass() {
-        return GpsRecorderService.class;
     }
 
     @Override
@@ -395,18 +384,16 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGPSStateChanged(WorkoutGPSStateChanged e) {
+        GpsState state = e.newState;
+        gpsStatusView.setTextColor(state.getColor());
 
-        GpsWorkoutRecorder.GpsState state = e.newState;
-        gpsStatusView.setTextColor(state.color);
-
-
-        if (state != GpsWorkoutRecorder.GpsState.SIGNAL_LOST) {
+        if (state != GpsState.SIGNAL_LOST) {
             foundGPS();
         }
 
-        if (instance.recorder.getState() == GpsWorkoutRecorder.RecordingState.IDLE) {
-            if (state == GpsWorkoutRecorder.GpsState.SIGNAL_GOOD) {
-                updateStartButton(true, R.string.start, v -> start("Start-Button pressed"));
+        if (getCurrentState() == RecordingState.IDLE) {
+            if (state == GpsState.SIGNAL_GOOD) {
+                updateStartButton(true, R.string.start, v -> start(StartReason.START_BUTTON));
             } else {
                 updateStartButton(false, R.string.cannotStart, null);
             }

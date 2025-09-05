@@ -29,6 +29,7 @@ import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
 import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.event.RouteSampleEvent
 import de.tadris.fitness.util.totalDistance
@@ -116,6 +117,18 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
                 sampleCount
             )
         )
+    }
+
+    @Subscribe
+    fun onStateChange(e: RecordingStateChangeEvent){
+        if(e.oldState.isPause() && !e.newState.isPause()){
+            pauseDuration += timeSinceLastStateChange
+        }
+        if(!e.oldState.isPause() && e.newState.isPause()){
+            activeDuration += timeSinceLastStateChange
+        }
+
+        lastStateChange = System.currentTimeMillis()
     }
 
     @Subscribe

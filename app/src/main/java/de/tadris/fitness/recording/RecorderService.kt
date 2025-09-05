@@ -41,7 +41,10 @@ import de.tadris.fitness.recording.component.RecorderServiceComponent
 import de.tadris.fitness.recording.component.RepetitionSampleComponent
 import de.tadris.fitness.recording.component.ServiceNotificationComponent
 import de.tadris.fitness.recording.component.TemporaryAggregationComponent
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.util.WorkoutLogger.Companion.log
+import org.greenrobot.eventbus.EventBus
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -144,6 +147,9 @@ class RecorderService : Service() {
         if (wakeLock != null && wakeLock!!.isHeld) {
             wakeLock!!.release()
         }
+
+        EventBus.getDefault().postSticky(AggregatedRecordingValuesEvent.EMPTY)
+        EventBus.getDefault().postSticky(RecordingStateChangeEvent.EMPTY)
 
         stopForeground(true)
         super.onDestroy()

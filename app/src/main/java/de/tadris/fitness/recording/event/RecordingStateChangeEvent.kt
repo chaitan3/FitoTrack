@@ -20,5 +20,27 @@
 package de.tadris.fitness.recording.event
 
 import de.tadris.fitness.recording.RecordingState
+import org.greenrobot.eventbus.EventBus
 
-data class RecordingStateChangeEvent(val oldState: RecordingState, val newState: RecordingState)
+data class RecordingStateChangeEvent(
+    val workoutId: Long,
+    val oldState: RecordingState,
+    val newState: RecordingState,
+){
+
+    companion object {
+
+        val EMPTY = RecordingStateChangeEvent(
+            -1,
+            RecordingState.IDLE,
+            RecordingState.IDLE,
+        )
+
+        fun getCurrent() = getCurrentOptional() ?: EMPTY
+
+        fun getCurrentOptional(): RecordingStateChangeEvent? =
+            EventBus.getDefault().getStickyEvent(RecordingStateChangeEvent::class.java)
+
+    }
+
+}

@@ -160,8 +160,8 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     private var autoStartCountdownOverlay: View? = null
     private var autoStartDelayDialog: AlertDialogWrapper? = null
     private val autoStartModeDialog: ChooseAutoStartModeDialog? = null
-    private var movementDetector: MovementDetector? = null
-    private var autoStartWorkout: AutoStartWorkout? = null
+    private lateinit var movementDetector: MovementDetector
+    private lateinit var autoStartWorkout: AutoStartWorkout
     private var askForComment = false
     private var vibratorController: VibratorController? = null
     private var autoStartVibratorFeedback: AutoStartVibratorFeedback? = null
@@ -172,9 +172,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
     private var voiceFeedbackAvailable = false
     private var finished = false
-
-    @JvmField
-    var activity: WorkoutType? = null
+    protected lateinit var activity: WorkoutType
 
     /**
      * This ensures that the workout is only started once. Different threads (user input, auto start)
@@ -519,7 +517,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
                 activityManager.getRunningServices(Int.Companion.MAX_VALUE)
 
             for (runningServiceInfo in services) {
-                if (runningServiceInfo.service.className == this.serviceClass!!.getName()) {
+                if (runningServiceInfo.service.className == RecorderService::class.java.name) {
                     return true
                 }
             }
@@ -535,7 +533,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         if (!this.isServiceRunning) {
             if (hasServicePermission()) {
                 log(TAG, "Starting service")
-                val locationListener = Intent(applicationContext, this.serviceClass)
+                val locationListener = Intent(applicationContext, RecorderService::class.java)
                 NotificationHelper.requestNotificationPermissionIfNecessary(this)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     startForegroundService(locationListener)
@@ -554,12 +552,10 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     protected fun stopService() {
         if (this.isServiceRunning) {
             log(TAG, "Stopping service")
-            val locationListener = Intent(applicationContext, this.serviceClass)
+            val locationListener = Intent(applicationContext, RecorderService::class.java)
             stopService(locationListener)
         }
     }
-
-    protected abstract val serviceClass: Class<out RecorderService?>?
 
     protected abstract fun hasServicePermission(): Boolean
 
@@ -567,8 +563,8 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onHeartRateConnectionChange(e: HeartRateConnectionChangeEvent) {
-        hrStatusView!!.setImageResource(e.state.iconRes)
-        hrStatusView!!.setColorFilter(getResources().getColor(e.state.colorRes))
+        hrStatusView.setImageResource(e.state.iconRes)
+        hrStatusView.setColorFilter(getResources().getColor(e.state.colorRes))
     }
 
     override fun onDestroy() {

@@ -45,7 +45,7 @@ data class AggregatedRecordingValuesEvent(
 
     companion object {
 
-        private val EMPTY = AggregatedRecordingValuesEvent(
+        val EMPTY = AggregatedRecordingValuesEvent(
             RecordingType.GPS,
             WorkoutType(),
             RecordingState.IDLE,

@@ -37,7 +37,7 @@ class RecorderServiceActions(private val service: RecorderService) {
         set(value) {
             val oldState = service.stateHolder.state
             service.stateHolder.state = value
-            EventBus.getDefault().post(RecordingStateChangeEvent(oldState, value))
+            EventBus.getDefault().post(RecordingStateChangeEvent(service.stateHolder.workoutId, oldState, value))
         }
 
     companion object {
