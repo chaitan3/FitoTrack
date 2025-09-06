@@ -262,8 +262,8 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
     private fun addSpeedHistogram() {
         val chart = BarChart(this)
-        val data: MutableList<Double?> = ArrayList<Double?>()
-        val weights: MutableList<Double?> = ArrayList<Double?>()
+        val data: MutableList<Double?> = ArrayList()
+        val weights: MutableList<Double?> = ArrayList()
 
         // Gather the data for the histogram
         val sectionListModel = SectionListModel(this.data)
@@ -273,7 +273,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
         // and using this value makes it just a bit less obvious that we don't have more precise values.
         // The goal here is to depend not to much on outliers but apply the histogram on an averaged
         // speed diagram.
-        sectionListModel.setSectionLength(sectionTime)
+        sectionListModel.sectionLength = sectionTime
         val sections: MutableList<SectionListModel.Section> = sectionListModel.getSectionList()
         for (section in sections) {
             weights.add(section.getTime(true))

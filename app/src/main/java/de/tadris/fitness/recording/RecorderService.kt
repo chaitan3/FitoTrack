@@ -45,7 +45,6 @@ import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.util.WorkoutLogger.Companion.log
 import org.greenrobot.eventbus.EventBus
-import java.util.Date
 import java.util.concurrent.TimeUnit
 
 /**
@@ -105,6 +104,14 @@ class RecorderService : Service() {
         return null
     }
 
+    override fun onCreate() {
+        this.instance = Instance.getInstance(baseContext)
+
+        log(TAG, "Service created")
+        log(TAG, "Android: " + Build.VERSION.RELEASE + " Sdk: " + Build.VERSION.SDK_INT)
+        log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         log(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
@@ -113,26 +120,18 @@ class RecorderService : Service() {
         stateHolder.workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(
             this, intent?.getStringExtra(EXTRA_WORKOUT_TYPE) ?: WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
         )
-
-        val notification = notificationComponent!!.getNotification()
-        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
+        stateHolder.init(this)
 
         acquireWakelock()
-
-        return START_STICKY
-    }
-
-    override fun onCreate() {
-        this.instance = Instance.getInstance(baseContext)
-
-        log(TAG, "Service created")
-        log(TAG, "Android: " + Build.VERSION.RELEASE + " Sdk: " + Build.VERSION.SDK_INT)
-        log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL)
 
         startRelevantComponents()
         actions.register()
 
         initializeWatchdog()
+        val notification = notificationComponent!!.getNotification()
+        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
+
+        return START_STICKY
     }
 
     override fun onDestroy() {

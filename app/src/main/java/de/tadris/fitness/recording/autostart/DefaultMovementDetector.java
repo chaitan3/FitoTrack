@@ -19,14 +19,12 @@
 
 package de.tadris.fitness.recording.autostart;
 
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.recording.component.GpsComponent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
@@ -41,13 +39,11 @@ public class DefaultMovementDetector extends MovementDetector {
     private static final String TAG = "DefaultMovementDetector";
 
     private boolean started;
-    private Context context;
     private Location lastLocation;
 
-    public DefaultMovementDetector(Context context) {
+    public DefaultMovementDetector() {
         super();
         started = false;
-        this.context = context;
     }
 
     @Override

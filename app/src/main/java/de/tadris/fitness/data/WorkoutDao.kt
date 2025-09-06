@@ -16,98 +16,100 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.data
 
-package de.tadris.fitness.data;
-
-import androidx.annotation.Nullable;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 
 @Dao
-public interface WorkoutDao {
+interface WorkoutDao {
+
+    fun editWorkout(id: Long, editor: (Workout) -> Workout) {
+        val workout = findById(id)!!
+        updateWorkout(editor(workout))
+    }
 
     @Query("SELECT * FROM workout WHERE id = :id")
-    Workout findById(long id);
+    fun findById(id: Long): Workout?
 
     @Query("SELECT * FROM route_sample WHERE id = :id")
-    RouteSample findSampleById(long id);
+    fun findSampleById(id: Long): RouteSample?
 
     @Query("SELECT * FROM route_sample WHERE workout_id = :workout_id")
-    RouteSample[] getAllSamplesOfWorkout(long workout_id);
+    fun getAllSamplesOfWorkout(workout_id: Long): Array<RouteSample>
 
     @Query("SELECT * FROM workout_pause WHERE workout_id = :workout_id")
-    WorkoutPause[] getAllPausesOfWorkout(long workout_id);
+    fun getAllPausesOfWorkout(workout_id: Long): Array<WorkoutPause>
 
     @Query("SELECT * FROM workout_event WHERE workout_id = :workout_id")
-    WorkoutEvent[] getEventsOfWorkout(long workout_id);
+    fun getEventsOfWorkout(workout_id: Long): Array<WorkoutEvent>
 
     @Query("SELECT * FROM repetition_sample WHERE workout_id = :workout_id")
-    RepetitionSample[] getAllRepetitionSamplesOfWorkout(long workout_id);
+    fun getAllRepetitionSamplesOfWorkout(workout_id: Long): Array<RepetitionSample>
 
     @Query("SELECT * FROM heart_rate_sample WHERE workout_id = :workout_id")
-    HeartRateSample[] getAllHeartRateSamplesOfWorkout(long workout_id);
+    fun getAllHeartRateSamplesOfWorkout(workout_id: Long): Array<HeartRateSample>
 
     @Query("SELECT * FROM workout ORDER BY start DESC")
-    Workout[] getWorkouts();
+    fun getWorkouts(): Array<Workout>
 
-    @Nullable
     @Query("SELECT * FROM workout ORDER BY start DESC LIMIT 1")
-    Workout getLastWorkout();
+    fun getLastWorkout(): Workout?
 
     @Query("SELECT * FROM workout WHERE workout_type_id = :type ORDER BY start DESC LIMIT 1")
-    Workout getLastWorkoutByType(String type);
+    fun getLastWorkoutByType(type: String): Workout?
 
     @Query("SELECT * FROM workout ORDER BY start ASC")
-    Workout[] getAllWorkoutsHistorically();
+    fun getAllWorkoutsHistorically(): Array<Workout>
 
     @Query("SELECT * FROM workout WHERE workout_type_id = :workout_type ORDER BY start ASC ")
-    Workout[] getWorkoutsHistorically(String workout_type);
+    fun getWorkoutsHistorically(workout_type: String?): Array<Workout>
 
     @Query("SELECT * FROM workout WHERE start = :start")
-    Workout getWorkoutByStart(long start);
+    fun getWorkoutByStart(start: Long): Workout?
 
     @Query("SELECT * FROM workout WHERE id = :id")
-    Workout getWorkoutById(long id);
+    fun getWorkoutById(id: Long): Workout?
 
     @Query("SELECT * FROM route_sample")
-    RouteSample[] getSamples();
+    fun getSamples(): Array<RouteSample>
 
     @Insert
-    void insertWorkoutAndSamples(Workout workout, RouteSample[] samples);
+    fun insertWorkoutAndSamples(workout: Workout, samples: Array<RouteSample>)
 
     @Delete
-    void deleteWorkoutAndSamples(Workout workout, RouteSample[] toArray);
+    fun deleteWorkoutAndSamples(workout: Workout, toArray: Array<RouteSample>)
 
     @Insert
-    void insertWorkout(Workout workout);
+    fun insertWorkout(workout: Workout)
 
     @Delete
-    void deleteWorkout(Workout workout);
+    fun deleteWorkout(workout: Workout)
 
     @Update
-    void updateWorkout(Workout workout);
+    fun updateWorkout(workout: Workout)
 
     @Insert
-    void insertSample(RouteSample sample);
+    fun insertSample(sample: RouteSample)
 
     @Insert
-    void insertSample(RepetitionSample sample);
+    fun insertSample(sample: RepetitionSample)
 
     @Insert
-    void insertPause(WorkoutPause pause);
+    fun insertPause(pause: WorkoutPause)
 
     @Delete
-    void deleteSample(RouteSample sample);
+    fun deleteSample(sample: RouteSample)
 
     @Update
-    void updateSamples(RouteSample[] samples);
+    fun updateSamples(samples: Array<RouteSample>)
 
     @Update
-    void updateSample(RouteSample sample);
+    fun updateSample(sample: RouteSample)
 
     @Insert
-    void insertWorkoutEvent(WorkoutEvent event);
+    fun insertWorkoutEvent(event: WorkoutEvent)
 }

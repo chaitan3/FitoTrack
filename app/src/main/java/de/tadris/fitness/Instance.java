@@ -50,7 +50,7 @@ public class Instance {
 
     public static Instance getInstance(Context context) {
         if (context == null) {
-            Log.e("Instance", "no Context Provided");
+            Log.w("Instance", "no Context Provided");
         }
         if (instance == null && context != null) {
             instance = new Instance(context);

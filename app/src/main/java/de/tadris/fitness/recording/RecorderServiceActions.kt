@@ -82,6 +82,9 @@ class RecorderServiceActions(private val service: RecorderService) {
         if (state == RecordingState.IDLE) {
             log(TAG, "Start")
             resume()
+            service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
+                it.copy(start = System.currentTimeMillis())
+            }
         } else if (state.isPause()) {
             resume()
         } else check(state == RecordingState.RUNNING) { "Cannot start or resume recording. state = $state" }
@@ -119,14 +122,18 @@ class RecorderServiceActions(private val service: RecorderService) {
         log(TAG, "Called stop, reason: ${reason.logMessage}")
         pause(isAutomatic = true)
         state = RecordingState.STOPPED
+        service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
+            it.copy(end = System.currentTimeMillis())
+        }
         WorkoutFinalizer(service, service.instance.db.workoutDao(), service.stateHolder.workoutId).finalize()
         service.stopSelf()
     }
 
     fun discard(){
         log(TAG, "Discard called")
-        val workout = service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)
-        service.instance.db.workoutDao().deleteWorkout(workout)
+        service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)?.let {
+            service.instance.db.workoutDao().deleteWorkout(it)
+        }
         service.stopSelf()
     }
 

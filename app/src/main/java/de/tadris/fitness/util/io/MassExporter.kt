@@ -40,7 +40,7 @@ class MassExporter(
     private val zipOut = ZipOutputStream(output)
 
     fun export(){
-        val workouts = workoutDao.workouts
+        val workouts = workoutDao.getWorkouts()
         workouts.forEachIndexed { index, workout ->
             listener?.onProgressUpdate(index * 100 / workouts.size)
             exportWorkout(index, workout)

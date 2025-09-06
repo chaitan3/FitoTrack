@@ -156,14 +156,13 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     private var autoStartMode: AutoStartWorkout.Mode? = null
     private var autoStartCountdownOverlay: View? = null
     private var autoStartDelayDialog: AlertDialogWrapper? = null
-    private val autoStartModeDialog: ChooseAutoStartModeDialog? = null
     private lateinit var movementDetector: MovementDetector
     private lateinit var autoStartWorkout: AutoStartWorkout
     private var askForComment = false
     private var vibratorController: VibratorController? = null
-    private var autoStartVibratorFeedback: AutoStartVibratorFeedback? = null
+    private lateinit var autoStartVibratorFeedback: AutoStartVibratorFeedback
     private var toneGeneratorController: ToneGeneratorController? = null
-    private var autoStartSoundFeedback: AutoStartSoundFeedback? = null
+    private lateinit var autoStartSoundFeedback: AutoStartSoundFeedback
     private var autoStartAnnouncements: AutoStartAnnouncements? = null
     private var ttsController: TTSController? = null
 
@@ -223,28 +222,28 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         // instantiate TTSController in app context to be able to completely play the auto start
         // abort announcement even when this activity has been destroyed already
         ttsController = TTSController(applicationContext, TAG)
-        movementDetector = DefaultMovementDetector(this)
+        movementDetector = DefaultMovementDetector()
         autoStartWorkout = AutoStartWorkout(
             AutoStartWorkout.Config(
                 autoStartDelayMs,
                 autoStartMode
             ), movementDetector
         )
-        movementDetector!!.registerTo(EventBus.getDefault())
-        movementDetector!!.start()
+        movementDetector.registerTo(EventBus.getDefault())
+        movementDetector.start()
         vibratorController = VibratorController(this)
         autoStartVibratorFeedback = AutoStartVibratorFeedback(vibratorController)
+        autoStartVibratorFeedback!!.registerTo(EventBus.getDefault())
         toneGeneratorController = ToneGeneratorController(this, AudioManager.STREAM_NOTIFICATION)
         autoStartSoundFeedback = AutoStartSoundFeedback(toneGeneratorController, instance)
-        autoStartVibratorFeedback!!.registerTo(EventBus.getDefault())
-        autoStartSoundFeedback!!.registerTo(EventBus.getDefault())
+        autoStartSoundFeedback.registerTo(EventBus.getDefault())
         autoStartAnnouncements = AutoStartAnnouncements(this, instance, ttsController)
         autoStartAnnouncements!!.registerTo(EventBus.getDefault())
-        if (!autoStartWorkout!!.registerTo(EventBus.getDefault())) {
+        if (!autoStartWorkout.registerTo(EventBus.getDefault())) {
             Log.e(TAG, "onCreate: Failed to setup auto start helper, not using auto start")
-            startPopupButton!!.visibility = View.GONE
+            startPopupButton.visibility = View.GONE
         } else {
-            show(startPopupButton!!)
+            show(startPopupButton)
         }
 
         updateStartButton(false, R.string.cannotStart, null)

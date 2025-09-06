@@ -21,6 +21,7 @@ package de.tadris.fitness.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -127,12 +128,14 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
             finish();
             overridePendingTransition(R.anim.fade_in, R.anim.stay);
         } else {
-            // Go to Workout List
-            Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
-            listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(listWorkoutActivityIntent);
-            finish();
-            overridePendingTransition(R.anim.fade_in, R.anim.stay);
+
         }*/
+
+        // Go to Workout List
+        Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
+        listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(listWorkoutActivityIntent);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.stay);
     }
 }

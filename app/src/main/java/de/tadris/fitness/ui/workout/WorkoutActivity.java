@@ -93,7 +93,7 @@ public abstract class WorkoutActivity extends InformationActivity {
 
         data = WorkoutData.fromWorkout(this, workout);
 
-        if (workout.getIntervalSetUsedId() != 0) {
+        if (workout.getIntervalSetUsedId() > 0) {
             usedIntervalSet = Instance.getInstance(this).db.intervalDao().getSet(workout.getIntervalSetUsedId());
             intervals = Instance.getInstance(this).db.intervalDao().getAllIntervalsOfSet(usedIntervalSet.id);
         }
