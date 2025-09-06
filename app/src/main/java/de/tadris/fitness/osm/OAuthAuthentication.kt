@@ -100,15 +100,15 @@ class OAuthAuthentication : FitoTrackActivity() {
         super.onResume()
         val token = preferences.getString("accessToken", null)
         if (token != null) {
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
             finishAndReset()
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent?.data == null) {
-            setResult(Activity.RESULT_CANCELED)
+        if (intent.data == null) {
+            setResult(RESULT_CANCELED)
             finishAndReset()
         } else {
             handleIntent(intent)
@@ -122,12 +122,12 @@ class OAuthAuthentication : FitoTrackActivity() {
         if (code != null) {
             handleAuthorizationCode(code, object : Listener {
                 override fun authenticationComplete() {
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                     finish()
                 }
 
                 override fun authenticationFailed() {
-                    setResult(Activity.RESULT_CANCELED)
+                    setResult(RESULT_CANCELED)
                     finish()
                 }
             })
@@ -136,7 +136,7 @@ class OAuthAuthentication : FitoTrackActivity() {
             lifecycleScope.launch {
                 // This sleep is important to guarantee that denying access will navigate back to the ShowGpsWorkoutActivity.
                 delay(1000)
-                setResult(Activity.RESULT_CANCELED)
+                setResult(RESULT_CANCELED)
                 finish()
             }
         }
