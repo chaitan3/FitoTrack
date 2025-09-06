@@ -92,7 +92,7 @@ public class GpxExporter implements IWorkoutExporter {
                     sample.getLongitude(),
                     sample.getElevation(),
                     getDateTime(sample.getTimestamp()),
-                    new TrackPointExtensions(sample.getSpeed(), new GpxTpxExtension(sample.heartRate))
+                    new TrackPointExtensions(sample.getSpeed(), new GpxTpxExtension(0)) // TODO get HR
             ));
         }
         segment.setTrkpt(trkpt);

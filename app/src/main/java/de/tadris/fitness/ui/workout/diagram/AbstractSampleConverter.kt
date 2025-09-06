@@ -16,80 +16,42 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.workout.diagram
 
-package de.tadris.fitness.ui.workout.diagram;
+import android.content.Context
+import androidx.annotation.StringRes
+import com.github.mikephil.charting.charts.CombinedChart
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import de.tadris.fitness.Instance
+import de.tadris.fitness.R
+import de.tadris.fitness.util.charts.formatter.TimeFormatter
+import java.util.concurrent.TimeUnit
 
-import android.content.Context;
+abstract class AbstractSampleConverter(@JvmField protected val context: Context) : SampleConverter {
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+    protected val distanceUnitUtils = Instance.getInstance(context).distanceUnitUtils!!
+    protected val energyUnitUtils = Instance.getInstance(context).energyUnitUtils!!
 
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.formatter.DefaultValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-
-import java.util.concurrent.TimeUnit;
-
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.R;
-import de.tadris.fitness.util.charts.formatter.TimeFormatter;
-import de.tadris.fitness.util.unit.DistanceUnitUtils;
-import de.tadris.fitness.util.unit.EnergyUnitUtils;
-
-public abstract class AbstractSampleConverter implements SampleConverter {
-
-    protected static final String WORKOUT_ID_EXTRA = "de.tadris.fitness.WorkoutActivity.WORKOUT_ID_EXTRA";
-
-    protected final Context context;
-    protected final DistanceUnitUtils distanceUnitUtils;
-    protected final EnergyUnitUtils energyUnitUtils;
-
-    public AbstractSampleConverter(Context context) {
-        this.context = context;
-        this.distanceUnitUtils = Instance.getInstance(context).distanceUnitUtils;
-        this.energyUnitUtils = Instance.getInstance(context).energyUnitUtils;
+    protected fun getString(@StringRes resId: Int): String {
+        return context.getString(resId)
     }
 
-    protected String getString(@StringRes int resId) {
-        return context.getString(resId);
-    }
+    override val xAxisLabel: String
+        get() = context.getString(R.string.workoutTime)
 
-    @Override
-    public String getXAxisLabel(){
-        return context.getString(R.string.workoutTime);
-    }
+    override val xValueFormatter: ValueFormatter
+        get() = TimeFormatter(TimeUnit.MINUTES)
 
-    @Override
-    public ValueFormatter getXValueFormatter() {
-        return new TimeFormatter(TimeUnit.MINUTES);
-    }
+    override val yAxisLabel: String
+        get() = unit
 
-    @Override
-    public String getYAxisLabel(){
-        return getUnit();
-    }
+    override val yValueFormatter: ValueFormatter
+        get() = DefaultValueFormatter(1)
 
-    @Override
-    public ValueFormatter getYValueFormatter() {
-        return new DefaultValueFormatter(1);
-    }
+    override fun afterAdd(chart: CombinedChart) {}
 
-    @Override
-    public void afterAdd(CombinedChart chart) {
-    } // Mostly not needed
+    override val isIntervalSetVisible: Boolean
+        get() = false // Defaults to false
 
-    @Override
-    public boolean isIntervalSetVisible() {
-        return false;
-    } // Defaults to false
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        return obj != null && getClass().equals(obj.getClass());
-    }
 }

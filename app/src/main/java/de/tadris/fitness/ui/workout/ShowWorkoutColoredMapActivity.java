@@ -32,7 +32,7 @@ import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.ui.workout.diagram.ConverterManager;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
 
-public abstract class ShowWorkoutColoredMapActivity extends GpsWorkoutActivity {
+public abstract class ShowWorkoutColoredMapActivity extends MapWorkoutActivity {
 
     protected ConverterManager converterManager;
 
@@ -49,7 +49,7 @@ public abstract class ShowWorkoutColoredMapActivity extends GpsWorkoutActivity {
     @Override
     void initBeforeContent() {
         super.initBeforeContent();
-        converterManager = new ConverterManager(this, getGpsWorkoutData());
+        converterManager = new ConverterManager(this, data);
 
         String coloringMode = Instance.getInstance(this).userPreferences.getTrackStyleMode();
         if (coloringMode.equals(UserPreferences.STYLE_USAGE_ALWAYS) || (isDiagramActivity() && coloringMode.equals(UserPreferences.STYLE_USAGE_DIAGRAM))) {
@@ -114,9 +114,6 @@ public abstract class ShowWorkoutColoredMapActivity extends GpsWorkoutActivity {
         } else if (coloringPropertyMode == COLORING_PROPERTY_CUSTOM) {
             converter = coloringConverter;
         }
-        if (converter != null) {
-            converter.onCreate(getBaseWorkoutData());
-        }
-        workoutLayer.setSampleConverter(workout, converter);
+        workoutLayer.setSampleConverter(data, converter);
     }
 }

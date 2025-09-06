@@ -48,7 +48,7 @@ import de.tadris.fitness.map.WorkoutLayer;
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter;
 import de.tadris.fitness.util.WorkoutCalculator;
 
-public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapSampleSelectionListener {
+public abstract class MapWorkoutActivity extends WorkoutActivity implements MapSampleSelectionListener {
 
     protected MapView mapView;
     protected WorkoutLayer workoutLayer;
@@ -101,7 +101,7 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
 
         if (Instance.getInstance(this).userPreferences.getTrackStyleMode().equals(UserPreferences.STYLE_USAGE_ALWAYS)) {
             // Always show coloring
-            workoutLayer.setSampleConverter(workout, new SpeedConverter(this));
+            workoutLayer.setSampleConverter(data, new SpeedConverter(this));
         }
 
         mapView.addLayer(workoutLayer);
@@ -126,7 +126,7 @@ public abstract class GpsWorkoutActivity extends WorkoutActivity implements MapS
             Paint pBlue = AndroidGraphicFactory.INSTANCE.createPaint();
             pBlue.setColor(Color.BLUE);
             for (WorkoutCalculator.PauseLocation pauseLocation : WorkoutCalculator.getPausesFromWorkout(data)) {
-                float radius = Math.min(10, max(2, (float) Math.sqrt((float) pauseLocation.getPause().getTime() / 1000)));
+                float radius = Math.min(10, max(2, (float) Math.sqrt((float) pauseLocation.getPause().getDuration() / 1000)));
                 mapView.addLayer(new FixedPixelCircle(pauseLocation.getLocation(), radius, pBlue, null));
             }
         }

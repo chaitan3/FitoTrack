@@ -44,16 +44,16 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationSpan;
-import de.tadris.fitness.data.StatsDataTypes;
-import de.tadris.fitness.data.StatsProvider;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
+import de.tadris.fitness.stats.NoDataException;
+import de.tadris.fitness.stats.StatsDataTypes;
+import de.tadris.fitness.stats.StatsProvider;
+import de.tadris.fitness.stats.WorkoutProperty;
 import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.ui.workout.ShowGpsWorkoutActivity;
-import de.tadris.fitness.util.WorkoutProperty;
+import de.tadris.fitness.ui.workout.ShowWorkoutActivity;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.DataSetStyles;
-import de.tadris.fitness.util.exceptions.NoDataException;
 
 public class DetailStatsActivity extends FitoTrackActivity {
 
@@ -158,8 +158,8 @@ public class DetailStatsActivity extends FitoTrackActivity {
             CandleEntry entry = currentCandleDataSet.getEntryForXValue(xPosition, 0);
             StatsDataTypes.DataPoint dataPoint = (StatsDataTypes.DataPoint) entry.getData();
 
-            Intent intent = new Intent(this, dataPoint.workoutType.getRecordingType().showDetailsActivityClass);
-            intent.putExtra(ShowGpsWorkoutActivity.WORKOUT_ID_EXTRA, dataPoint.workoutID);
+            Intent intent = new Intent(this, ShowWorkoutActivity.class);
+            intent.putExtra(ShowWorkoutActivity.WORKOUT_ID_EXTRA, dataPoint.workoutID);
             startActivity(intent);
         }
     }

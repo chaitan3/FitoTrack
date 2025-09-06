@@ -71,6 +71,8 @@ data class Workout(
 
     val averagePaceActive get() = (activeDuration / 1000.0 / 60.0) / (distance / 1000.0) // min/km
 
+    val averageFrequency get() = repetitions / (activeDuration / 1000.0)
+
     // returns a file name string without suffix that can be used for exports
     fun getExportFileName(context: Context?): String {
         return if (safeComment.isNotEmpty()) {

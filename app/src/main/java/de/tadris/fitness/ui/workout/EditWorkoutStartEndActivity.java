@@ -35,10 +35,8 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.map.SimpleColoringStrategy;
 import de.tadris.fitness.map.WorkoutLayer;
-import de.tadris.fitness.recording.gps.WorkoutCutter;
 
 public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
@@ -55,7 +53,7 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        workoutLayer.setColoringStrategy(workout, new SimpleColoringStrategy(getThemePrimaryColor()));
+        workoutLayer.setColoringStrategy(data, new SimpleColoringStrategy(getThemePrimaryColor()));
     }
 
     @Override
@@ -85,7 +83,7 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
         if (item.getItemId() == R.id.actionMoveStartHere) {
             if (selectedSample != null) {
-                if (selectedEndSample != null && selectedSample.relativeTime > selectedEndSample.relativeTime) {
+                if (selectedEndSample != null && selectedSample.getRelativeTime() > selectedEndSample.getRelativeTime()) {
                     // do not allow to place the start sample behind the end marker
 
                 } else {
@@ -96,7 +94,7 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
         if (item.getItemId() == R.id.actionMoveEndHere) {
             if (selectedSample != null){
-                if (selectedStartSample != null && selectedSample.relativeTime < selectedStartSample.relativeTime){
+                if (selectedStartSample != null && selectedSample.getRelativeTime() < selectedStartSample.getRelativeTime()) {
                     // do not allow to place the and market before the start marker(in time)
                 } else {
                     selectedEndSample = selectedSample;
@@ -115,26 +113,27 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
             mapView.getLayerManager().getLayers().remove(newWorkoutLayer);
         }
 
+        List<RouteSample> samples = data.getSamples();
         RouteSample drawStartSample = selectedStartSample != null ? selectedStartSample : samples.get(0);
         RouteSample drawEndSample = selectedEndSample != null ? selectedEndSample : samples.get(samples.size() - 1);
         List<RouteSample> newWorkoutSamples = new ArrayList<RouteSample>();
 
         boolean contained = false;
         for (RouteSample s : samples) {
-            if (!contained && s.id == drawStartSample.id) {
+            if (!contained && s.getId() == drawStartSample.getId()) {
                 contained = true;
             }
             if (contained) {
                 //update relative time here?
                 newWorkoutSamples.add(s);
             }
-            if (s.id == drawEndSample.id) {
+            if (s.getId() == drawEndSample.getId()) {
                 break;
             }
         }
         //Draw new track
         if (selectedStartSample != null || selectedEndSample != null) {
-            workoutLayer.setColoringStrategy(workout, new SimpleColoringStrategy(Color.GRAY));
+            workoutLayer.setColoringStrategy(data, new SimpleColoringStrategy(Color.GRAY));
             newWorkoutLayer = new WorkoutLayer(newWorkoutSamples, new SimpleColoringStrategy(getThemePrimaryColor()), null);
             mapView.addLayer(newWorkoutLayer);
 
@@ -156,9 +155,7 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
         if (item.getItemId() == R.id.actionMoveApply) {
             if (selectedStartSample != null || selectedEndSample != null){
-                WorkoutCutter cutter = new WorkoutCutter(this, new WorkoutData(workout, new ArrayList<>(samples)));
-                cutter.cutWorkout(selectedStartSample,selectedEndSample);
-
+                // TODO do somthing like cutting the workout
 
                 Intent intent=new Intent();
                 setResult(INTENT_RESULT_CODE_WORKOUT_MODIFIED,intent);

@@ -16,53 +16,36 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.workout.diagram
 
-package de.tadris.fitness.ui.workout.diagram;
+import android.content.Context
+import de.tadris.fitness.R
+import de.tadris.fitness.data.BaseSample
+import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.util.unit.UnitUtils
 
-import android.content.Context;
+class FrequencyConverter(context: Context) : AbstractSampleConverter(context) {
 
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.Workout;
-import de.tadris.fitness.util.unit.UnitUtils;
-
-public class FrequencyConverter extends AbstractSampleConverter {
-
-    public FrequencyConverter(Context context) {
-        super(context);
+    override fun getMinValue(data: WorkoutData): Float {
+        return 0f
     }
 
-    @Override
-    public void onCreate(BaseWorkoutData data) {
+    override fun getMaxValue(data: WorkoutData): Float {
+        return data.repetitionSamples.maxOf { it.frequency.toFloat() }
     }
 
-    @Override
-    public float getMinValue(Workout workout) {
-        return 0;
+    override fun getValue(sample: BaseSample) = 0f
+
+    override fun getEntries(data: WorkoutData): List<Pair<BaseSample, Float>> {
+        return data.repetitionSamples.map { it to it.frequency.toFloat() }
     }
 
-    @Override
-    public float getMaxValue(Workout workout) {
-        return (float) ((IndoorWorkout) workout).maxFrequency;
-    }
+    override val name: String
+        get() = getString(R.string.workoutFrequency)
 
-    @Override
-    public float getValue(BaseSample sample) {
-        return (float) ((IndoorSample) sample).frequency;
-    }
+    override val color: Int
+        get() = R.color.diagramFrequency
 
-    @Override
-    public String getName() {
-        return getString(R.string.workoutFrequency);
-    }
-
-    @Override
-    public int getColor() {
-        return R.color.diagramFrequency;
-    }
-
-    @Override
-    public String getUnit() {
-        return UnitUtils.unitHertzShort;
-    }
+    override val unit: String
+        get() = UnitUtils.unitHertzShort
 }

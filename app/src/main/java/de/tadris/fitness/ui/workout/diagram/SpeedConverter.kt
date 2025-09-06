@@ -16,79 +16,48 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.workout.diagram
 
-package de.tadris.fitness.ui.workout.diagram;
+import android.content.Context
+import de.tadris.fitness.R
+import de.tadris.fitness.data.BaseSample
+import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.WorkoutData
 
-import android.content.Context;
+class SpeedConverter(context: Context) : AbstractSampleConverter(context) {
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.Workout;
-
-public class SpeedConverter extends AbstractSampleConverter {
-
-    public SpeedConverter(Context context) {
-        super(context);
+    override fun getValue(sample: BaseSample): Float {
+        return (sample as RouteSample).convert()
     }
 
-    @Override
-    public void onCreate(BaseWorkoutData data) {
+    override val name: String
+        get() = getString(R.string.workoutSpeed)
 
+    override val unit: String
+        get() = distanceUnitUtils.distanceUnitSystem.getSpeedUnit()
+
+    override val isIntervalSetVisible: Boolean
+        get() = true
+
+    override val color: Int
+        get() = R.color.diagramSpeed
+
+    override fun getMinValue(data: WorkoutData): Float {
+        return data.samples.minOf { it.speed }.convert()
     }
 
-    @Override
-    public float getValue(BaseSample sample) {
-        return (float) distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(((RouteSample) sample).speed);
+    override fun getMaxValue(data: WorkoutData): Float {
+        return data.samples.maxOf { it.speed }.convert()
     }
 
-    @Override
-    public String getName() {
-        return getString(R.string.workoutSpeed);
+    override fun getEntries(data: WorkoutData): List<Pair<BaseSample, Float>> {
+        return data.samples.map { it to it.convert() }
     }
 
+    fun RouteSample.convert() = speed.convert()
 
-    @Override
-    public String getUnit() {
-        return distanceUnitUtils.getDistanceUnitSystem().getSpeedUnit();
-    }
+    fun Double.convert() = distanceUnitUtils.distanceUnitSystem
+        .getSpeedFromMeterPerSecond(this).toFloat()
 
-    @Override
-    public boolean isIntervalSetVisible() {
-        return true;
-    }
 
-    @Override
-    public int getColor() {
-        return R.color.diagramSpeed;
-    }
-
-    @Override
-    public float getMinValue(Workout workout) {
-        Stream<RouteSample> samples = Arrays.stream(Instance.getInstance(context).db.workoutDao().getAllSamplesOfWorkout(workout.id));
-        return (float) distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(samples.min(speedComparator).get().speed);
-    }
-
-    @Override
-    public float getMaxValue(Workout workout) {
-        List<RouteSample> samples = Arrays.stream(Instance.getInstance(context).db.workoutDao().getAllSamplesOfWorkout(workout.id)).collect(Collectors.toList());
-        return (float) distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(samples.stream().max(speedComparator).get().speed);
-    }
-
-    public static Comparator<RouteSample> speedComparator = (first, second) -> {
-        if (first.speed > second.speed) {
-            return 1;
-        } else if (first.speed < second.speed) {
-            return -1;
-        } else {
-            return 0;
-        }
-    };
 }

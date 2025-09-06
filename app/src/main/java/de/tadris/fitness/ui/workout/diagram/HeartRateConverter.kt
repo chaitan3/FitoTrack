@@ -16,63 +16,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.workout.diagram
 
-package de.tadris.fitness.ui.workout.diagram;
+import android.content.Context
+import de.tadris.fitness.R
+import de.tadris.fitness.data.BaseSample
+import de.tadris.fitness.data.WorkoutData
 
-import android.content.Context;
-
-import java.util.List;
-
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.Workout;
-
-public class HeartRateConverter extends AbstractSampleConverter {
-
-    float min = Float.POSITIVE_INFINITY;
-
-    public HeartRateConverter(Context context) {
-        super(context);
+class HeartRateConverter(context: Context) : AbstractSampleConverter(context) {
+    override fun getMinValue(data: WorkoutData): Float {
+        return data.heartRateSamples.minOf { it.heartRate.toFloat() }
     }
 
-    @Override
-    public void onCreate(BaseWorkoutData data) {
-        List<RouteSample> samples = data.castToGpsData().samples;
-        for (RouteSample sample : samples) {
-            if (sample.heartRate < this.min) {
-                this.min = sample.heartRate;
-            }
-        }
+    override fun getMaxValue(data: WorkoutData): Float {
+        return data.heartRateSamples.maxOf { it.heartRate.toFloat() }
     }
 
-    @Override
-    public float getValue(BaseSample sample) {
-        return sample.heartRate;
+    override fun getValue(sample: BaseSample) = 0f
+
+    override fun getEntries(data: WorkoutData): List<Pair<BaseSample, Float>> {
+        return data.heartRateSamples.map { it to it.heartRate.toFloat() }
     }
 
-    @Override
-    public String getName() {
-        return getString(R.string.workoutHeartRate);
-    }
+    override val name: String
+        get() = getString(R.string.workoutHeartRate)
 
-    @Override
-    public int getColor() {
-        return R.color.diagramHeartRate;
-    }
+    override val color: Int
+        get() = R.color.diagramHeartRate
 
-    @Override
-    public String getUnit() {
-        return "bpm";
-    }
+    override val unit: String
+        get() = "bpm"
 
-    @Override
-    public float getMinValue(Workout workout) {
-        return this.min;
-    }
-
-    @Override
-    public float getMaxValue(Workout workout) {
-        return workout.maxHeartRate;
-    }
 }

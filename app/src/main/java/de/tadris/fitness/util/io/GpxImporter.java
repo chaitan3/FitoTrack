@@ -29,13 +29,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.util.gpx.Gpx;
 import de.tadris.fitness.util.gpx.Track;
-import de.tadris.fitness.util.gpx.TrackPoint;
-import de.tadris.fitness.util.gpx.TrackPointExtensions;
-import de.tadris.fitness.util.gpx.TrackSegment;
 import de.tadris.fitness.util.io.general.IWorkoutImporter;
 
 public class GpxImporter implements IWorkoutImporter {
@@ -54,7 +50,7 @@ public class GpxImporter implements IWorkoutImporter {
 
         List<WorkoutData> workouts = new ArrayList<>();
         for (Track track : gpx.getTrk()) {
-            workouts.add(getWorkoutDataFromTrack(track));
+            // TODO workouts.add(getWorkoutDataFromTrack(track));
         }
 
         return new WorkoutImportResult(workouts);
@@ -66,7 +62,7 @@ public class GpxImporter implements IWorkoutImporter {
         gpx = mapper.readValue(input, Gpx.class);
     }
 
-    private WorkoutData getWorkoutDataFromTrack(Track track) {
+    /*TODO private WorkoutData getWorkoutDataFromTrack(Track track) {
         TrackSegment firstSegment = track.getTrkseg().get(0);
         TrackPoint firstPoint = firstSegment.getTrkpt().get(0);
 
@@ -135,7 +131,7 @@ public class GpxImporter implements IWorkoutImporter {
             samples.add(sample);
         }
         return samples;
-    }
+    }*/
 
     private static Date parseDate(String str) {
         try {

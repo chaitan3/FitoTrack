@@ -119,10 +119,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ui.workout.ShowWorkoutMapDiagramActivity" />
         <activity
-            android:name=".ui.workout.ShowGpsWorkoutActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.workout.ShowIndoorWorkoutActivity"
+            android:name=".ui.workout.ShowWorkoutActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".osm.OAuthAuthentication"
             android:launchMode="singleTop"

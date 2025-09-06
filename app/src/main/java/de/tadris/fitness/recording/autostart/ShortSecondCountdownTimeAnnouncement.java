@@ -22,6 +22,7 @@ package de.tadris.fitness.recording.autostart;
 import androidx.annotation.NonNull;
 
 import de.tadris.fitness.Instance;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 
 /**
  * This class provides short countdown time announcements, i.e. only the amount of seconds left will
@@ -37,7 +38,7 @@ public class ShortSecondCountdownTimeAnnouncement extends CountdownTimeAnnouncem
     }
 
     @Override
-    public String getSpokenText(@NonNull WorkoutRecorder recorder) {
+    public String getSpokenText(@NonNull AggregatedRecordingValuesEvent values) {
         return String.valueOf(getCountdownS());
     }
 }

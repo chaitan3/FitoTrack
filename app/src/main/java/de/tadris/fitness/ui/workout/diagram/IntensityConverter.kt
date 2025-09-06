@@ -16,52 +16,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.workout.diagram
 
-package de.tadris.fitness.ui.workout.diagram;
+import android.content.Context
+import de.tadris.fitness.R
+import de.tadris.fitness.data.BaseSample
+import de.tadris.fitness.data.WorkoutData
 
-import android.content.Context;
+class IntensityConverter(context: Context) : AbstractSampleConverter(context) {
 
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.Workout;
-
-public class IntensityConverter extends AbstractSampleConverter {
-
-    public IntensityConverter(Context context) {
-        super(context);
+    override fun getMinValue(data: WorkoutData): Float {
+        return data.repetitionSamples.minOf { it.intensity }.toFloat()
     }
 
-    @Override
-    public void onCreate(BaseWorkoutData data) {
+    override fun getMaxValue(data: WorkoutData): Float {
+        return data.repetitionSamples.maxOf { it.intensity }.toFloat()
     }
 
-    @Override
-    public float getMinValue(Workout workout) {
-        return 0;
+    override fun getEntries(data: WorkoutData): List<Pair<BaseSample, Float>> {
+        return data.repetitionSamples.map { it to it.intensity.toFloat() }
     }
 
-    @Override
-    public float getMaxValue(Workout workout) {
-        return (float) ((IndoorWorkout) workout).maxIntensity;
-    }
+    override fun getValue(sample: BaseSample) = 0f
 
-    @Override
-    public float getValue(BaseSample sample) {
-        return (float) ((IndoorSample) sample).intensity;
-    }
+    override val name: String
+        get() = getString(R.string.workoutIntensity)
 
-    @Override
-    public String getName() {
-        return getString(R.string.workoutIntensity);
-    }
+    override val color: Int
+        get() = R.color.diagramIntensity
 
-    @Override
-    public int getColor() {
-        return R.color.diagramIntensity;
-    }
-
-    @Override
-    public String getUnit() {
-        return "";
-    }
+    override val unit: String
+        get() = ""
 }

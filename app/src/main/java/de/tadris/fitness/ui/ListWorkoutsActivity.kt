@@ -54,7 +54,8 @@ import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
 import de.tadris.fitness.ui.statistics.ShortStatsView
 import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.workout.EnterWorkoutActivity
-import de.tadris.fitness.ui.workout.ShowGpsWorkoutActivity
+import de.tadris.fitness.ui.workout.ShowWorkoutActivity
+import de.tadris.fitness.ui.workout.WorkoutActivity
 import de.tadris.fitness.util.DialogUtils
 import de.tadris.fitness.util.Icon
 import de.tadris.fitness.util.PermissionUtils
@@ -284,8 +285,8 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
     }
 
     override fun onItemClick(pos: Int, workout: Workout) {
-        val intent = Intent(this, ShowGpsWorkoutActivity::class.java)
-        intent.putExtra(ShowGpsWorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
+        val intent = Intent(this, ShowWorkoutActivity::class.java)
+        intent.putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
         startActivity(intent)
         lastClickedIndex = pos
     }

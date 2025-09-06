@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
 
 public class WorkoutLayer extends Layer {
@@ -197,20 +197,20 @@ public class WorkoutLayer extends Layer {
         }
     }
 
-    public void setColoringStrategy(Workout workout, ColoringStrategy coloringStrategy) {
+    public void setColoringStrategy(WorkoutData workout, ColoringStrategy coloringStrategy) {
         this.coloringStrategy = coloringStrategy;
         refreshColoringMinMax(workout);
     }
 
-    public void setSampleConverter(Workout workout, @Nullable SampleConverter sampleConverter) {
+    public void setSampleConverter(WorkoutData workout, @Nullable SampleConverter sampleConverter) {
         this.sampleConverter = sampleConverter;
         refreshColoringMinMax(workout);
     }
 
-    private void refreshColoringMinMax(Workout workout) {
+    private void refreshColoringMinMax(WorkoutData data) {
         if (coloringStrategy != null && sampleConverter != null) {
-            coloringStrategy.setMin(sampleConverter.getMinValue(workout));
-            coloringStrategy.setMax(sampleConverter.getMaxValue(workout));
+            coloringStrategy.setMin(sampleConverter.getMinValue(data));
+            coloringStrategy.setMax(sampleConverter.getMaxValue(data));
         }
         requestRedraw();
     }

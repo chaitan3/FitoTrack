@@ -21,7 +21,6 @@ package de.tadris.fitness.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -39,7 +38,6 @@ import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.MapManager;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
-import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 
 public class LauncherActivity extends Activity implements Migration.MigrationListener {
 
@@ -118,7 +116,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
     }
 
     private void start() {
-        WorkoutRecorder recorder = Instance.getInstance(this).recorder;
+        /*TODO WorkoutRecorder recorder = Instance.getInstance(this).recorder;
         if (recorder.getState() == GpsWorkoutRecorder.RecordingState.PAUSED ||
                 recorder.getState() == GpsWorkoutRecorder.RecordingState.RUNNING) {
             // Resume to running Workout
@@ -135,6 +133,6 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
             startActivity(listWorkoutActivityIntent);
             finish();
             overridePendingTransition(R.anim.fade_in, R.anim.stay);
-        }
+        }*/
     }
 }

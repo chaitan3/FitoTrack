@@ -92,7 +92,7 @@ public class ShowWorkoutMapDiagramActivity extends ShowWorkoutColoredMapActivity
         if (sample == null) {
             chart.highlightValue(null);
         } else {
-            float dataIndex = (sample.relativeTime) / 1000f / 60f;
+            float dataIndex = (sample.getRelativeTime()) / 1000f / 60f;
             Highlight h = new Highlight((float) dataIndex, 0, -1);
             h.setDataIndex(0);
             chart.highlightValue(h);

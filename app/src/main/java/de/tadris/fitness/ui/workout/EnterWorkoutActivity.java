@@ -37,6 +37,7 @@ import java.util.Calendar;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
+import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutBuilder;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.ui.dialog.DatePickerFragment;
@@ -55,7 +56,6 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
     TextView typeTextView, dateTextView, timeTextView, durationTextView;
     EditText distanceEditText, commentEditText;
     private DistanceUnitSystem unitSystem;
-    private boolean activityWasCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +91,6 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
                     distanceEditText.setText(str2);
                     int pos = distanceEditText.getText().length();
                     distanceEditText.setSelection(pos);
-                }
-
-                if (activityWasCreated) {
-                    workoutBuilder.setWasEdited();
                 }
             }
         });
@@ -138,7 +134,7 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
         Intent intent = getIntent();
         long workoutId = intent.getLongExtra(WORKOUT_ID_EXTRA, 0);
         if (workoutId != 0) {
-            GpsWorkout workout = Instance.getInstance(this).db.workoutDao().getWorkoutById(workoutId);
+            Workout workout = Instance.getInstance(this).db.workoutDao().getWorkoutById(workoutId);
             if (workout != null) {
                 loadFromWorkout(workout);
             } else {
@@ -148,11 +144,9 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
         }
 
         updateTextViews();
-
-        activityWasCreated = true;
     }
 
-    private void loadFromWorkout(GpsWorkout workout) {
+    private void loadFromWorkout(Workout workout) {
         workoutBuilder = WorkoutBuilder.fromWorkout(this, workout);
         distanceEditText.setText(String.valueOf(
                 UnitUtils.roundDouble(unitSystem.getDistanceFromKilometers(workoutBuilder.getLength() / 1000d), 3)
@@ -180,9 +174,9 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
             Toast.makeText(this, R.string.errorEnterValidDuration, Toast.LENGTH_LONG).show();
             return;
         }
-        GpsWorkout workout = workoutBuilder.saveWorkout(this);
-        final Intent intent = new Intent(this, ShowGpsWorkoutActivity.class);
-        intent.putExtra(ShowGpsWorkoutActivity.WORKOUT_ID_EXTRA, workout.id);
+        Workout workout = workoutBuilder.saveWorkout(this);
+        final Intent intent = new Intent(this, ShowWorkoutActivity.class);
+        intent.putExtra(ShowWorkoutActivity.WORKOUT_ID_EXTRA, workout.getId());
         startActivity(intent);
         finish();
     }
@@ -214,7 +208,6 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
     @Override
     public void onDatePick(int year, int month, int day) {
         workoutBuilder.getStart().set(year, month, day);
-        workoutBuilder.setWasEdited();
         updateTextViews();
         showTimeSelection();
     }
@@ -230,7 +223,6 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
         workoutBuilder.getStart().set(Calendar.HOUR_OF_DAY, hour);
         workoutBuilder.getStart().set(Calendar.MINUTE, minute);
         workoutBuilder.getStart().set(Calendar.SECOND, 0);
-        workoutBuilder.setWasEdited();
         updateTextViews();
         showDurationSelection();
     }
@@ -245,7 +237,6 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
     @Override
     public void onDurationPick(long duration) {
         workoutBuilder.setDuration(duration);
-        workoutBuilder.setWasEdited();
         updateTextViews();
         requestKeyboard(commentEditText);
     }

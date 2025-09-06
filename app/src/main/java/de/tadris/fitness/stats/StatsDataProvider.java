@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.data;
+package de.tadris.fitness.stats;
 
 import android.content.Context;
 
@@ -28,8 +28,8 @@ import java.util.Collections;
 import java.util.List;
 
 import de.tadris.fitness.Instance;
-import de.tadris.fitness.util.WorkoutProperty;
-import de.tadris.fitness.util.exceptions.NoDataException;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutType;
 
 public class StatsDataProvider {
 
@@ -48,7 +48,7 @@ public class StatsDataProvider {
 
     public StatsDataTypes.DataPoint getLastData(WorkoutProperty requestedProperty, List<WorkoutType> workoutTypes) throws NoDataException {
         ArrayList<StatsDataTypes.DataPoint> points = getData(requestedProperty, workoutTypes);
-        if (points.size() == 0)
+        if (points.isEmpty())
             throw new NoDataException();
         return points.get(points.size() - 1);
     }
@@ -61,13 +61,13 @@ public class StatsDataProvider {
         ArrayList<StatsDataTypes.DataPoint> data = new ArrayList<>();
         List<Workout> workouts = Instance.getInstance(context).db.getAllWorkouts();
         for (Workout workout : workouts) {
-            if ((timeSpan == null) || timeSpan.contains(workout.start)) {
+            if ((timeSpan == null) || timeSpan.contains(workout.getStart())) {
                 WorkoutType type = workout.getWorkoutType(context);
                 if (workoutTypes.contains(type)) { // in separate if cause getWorkoutType is sometimes costly
                     if (requestedProperty.getType().canBeApplied(workout)) { // check if property can provide data for workout
                         try {
                             double val = getPropertyValue(requestedProperty, workout);
-                            data.add(new StatsDataTypes.DataPoint(type, workout.id, workout.start, val));
+                            data.add(new StatsDataTypes.DataPoint(type, workout.getId(), workout.getStart(), val));
                         } catch (Exception e) {
                             // This should never happen, cause it is checked by the if clauses above
                             e.printStackTrace();
@@ -86,9 +86,9 @@ public class StatsDataProvider {
             case BASE:
                 return getBasePropertyValue(property, workout);
             case GPS:
-                return getGPSPropertyValue(property, (GpsWorkout) workout);
+                return getGPSPropertyValue(property, workout);
             case INDOOR:
-                return getIndoorPropertyValue(property, (IndoorWorkout) workout);
+                return getIndoorPropertyValue(property, workout);
             default:
                 throw new IllegalArgumentException("Property type unknown");
         }
@@ -99,53 +99,53 @@ public class StatsDataProvider {
             case NUMBER:
                 return 1;
             case START:
-                return workout.start;
+                return workout.getStart();
             case END:
-                return workout.end;
+                return workout.getEnd();
             case DURATION:
-                return workout.duration;
+                return workout.getActiveDuration();
             case PAUSE_DURATION:
-                return workout.pauseDuration;
+                return workout.getPauseDuration();
             case AVG_HEART_RATE:
-                return workout.avgHeartRate;
+                return 0.0; // TODO workout.avgHeartRate;
             case MAX_HEART_RATE:
-                return workout.maxHeartRate;
+                return 0.0; // TODO workout.maxHeartRate;
             case CALORIE:
-                return workout.calorie;
+                return workout.getKcal();
             default:
                 throw new Exception("Property is no BaseProperty");
         }
     }
 
-    private double getGPSPropertyValue(WorkoutProperty property, GpsWorkout workout) throws Exception {
+    private double getGPSPropertyValue(WorkoutProperty property, Workout workout) throws Exception {
         switch (property) {
             case LENGTH:
-                return workout.length;
+                return workout.getDistance();
             case AVG_SPEED:
-                return workout.avgSpeed;
+                return workout.getAverageSpeedActive();
             case TOP_SPEED:
-                return workout.topSpeed;
+                return 0.0; // TODO workout.topSpeed;
             case AVG_PACE:
-                return workout.avgPace;
+                return workout.getAveragePaceActive();
             case ASCENT:
-                return workout.ascent;
+                return 0.0; // TODO workout.ascent;
             case DESCENT:
-                return workout.descent;
+                return 0.0; // TODO workout.descent;
             default:
                 throw new Exception("Property is no GPS Property");
         }
     }
 
-    private double getIndoorPropertyValue(WorkoutProperty property, IndoorWorkout workout) throws Exception {
+    private double getIndoorPropertyValue(WorkoutProperty property, Workout workout) throws Exception {
         switch (property) {
             case AVG_FREQUENCY:
-                return workout.avgFrequency;
+                return workout.getAverageFrequency();
             case MAX_FREQUENCY:
-                return workout.maxFrequency;
+                return 0.0; // TODO workout.maxFrequency;
             case MAX_INTENSITY:
-                return workout.maxIntensity;
+                return 0.0; // TODO workout.maxIntensity;
             case AVG_INTENSITY:
-                return workout.avgIntensity;
+                return 0.0; // TODO workout.avgIntensity;
             default:
                 throw new Exception("Property is no Indoor Property");
         }

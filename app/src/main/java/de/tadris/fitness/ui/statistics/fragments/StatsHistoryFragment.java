@@ -50,20 +50,20 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationSpan;
-import de.tadris.fitness.data.StatsDataProvider;
-import de.tadris.fitness.data.StatsDataTypes;
-import de.tadris.fitness.data.StatsProvider;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.data.preferences.UserPreferences;
+import de.tadris.fitness.stats.NoDataException;
+import de.tadris.fitness.stats.StatsDataProvider;
+import de.tadris.fitness.stats.StatsDataTypes;
+import de.tadris.fitness.stats.StatsProvider;
+import de.tadris.fitness.stats.WorkoutProperty;
 import de.tadris.fitness.ui.FitoTrackActivity;
 import de.tadris.fitness.ui.statistics.DetailStatsActivity;
 import de.tadris.fitness.ui.statistics.TextToggle;
 import de.tadris.fitness.ui.statistics.WorkoutTypeSelection;
-import de.tadris.fitness.util.WorkoutProperty;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.DataSetStyles;
-import de.tadris.fitness.util.exceptions.NoDataException;
 import de.tadris.fitness.util.statistics.ChartSynchronizer;
 import de.tadris.fitness.util.statistics.OnChartGestureMultiListener;
 

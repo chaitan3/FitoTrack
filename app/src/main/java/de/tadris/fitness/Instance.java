@@ -24,12 +24,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
 import de.tadris.fitness.data.AppDatabase;
-import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.util.DataManager;
 import de.tadris.fitness.util.FitoTrackThemes;
@@ -72,7 +67,6 @@ public class Instance {
     public final AutoExportPlanner planner;
     public final WorkoutLogger logger;
     public final ShortcutsUtils shortcuts;
-    public final int 
 
     private Instance(Context context) {
         instance = this;
@@ -93,20 +87,4 @@ public class Instance {
         DataManager.cleanFilesASync(context);
     }
 
-    private GpsWorkoutRecorder restoreRecorder(Context context) {
-        GpsWorkout lastWorkout = db.workoutDao().getLastWorkout();
-        if (lastWorkout != null && lastWorkout.end == -1) {
-            return restoreRecorder(context, lastWorkout);
-        }
-        return new GpsWorkoutRecorder(context, WorkoutTypeManager.getInstance().getWorkoutTypeById(context, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER));
-    }
-
-    private GpsWorkoutRecorder restoreRecorder(Context context, GpsWorkout workout) {
-        List<RouteSample> samples = Arrays.asList(db.workoutDao().getAllSamplesOfWorkout(workout.id));
-        return new GpsWorkoutRecorder(context, workout, samples);
-    }
-
-    public void prepareResume(Context context, GpsWorkout workout) {
-        recorder = restoreRecorder(context, workout);
-    }
 }

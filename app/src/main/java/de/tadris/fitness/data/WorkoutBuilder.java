@@ -24,8 +24,6 @@ import android.content.Context;
 import java.util.Calendar;
 
 import de.tadris.fitness.Instance;
-import de.tadris.fitness.data.preferences.UserMeasurements;
-import de.tadris.fitness.util.calorie.CalorieCalculator;
 
 public class WorkoutBuilder {
 
@@ -34,7 +32,7 @@ public class WorkoutBuilder {
     private Calendar start;
     private long duration;
 
-    private int length;
+    private double length;
 
     private String comment;
 
@@ -51,21 +49,11 @@ public class WorkoutBuilder {
 
     public Workout create(Context context) {
         long pauseDuration = fromExistingWorkout ? existingWorkout.getPauseDuration() : 0L;
-        return new Workout(
-                fromExistingWorkout ? existingWorkout.getId() : start.getTimeInMillis(),
-                start.getTimeInMillis(),
-                start.getTimeInMillis() + duration + pauseDuration,
-                duration,
-                comment,
-                length,
-                new CalorieCalculator(context).calculateCalories(UserMeasurements.from(context), workout),
-                workoutType.id,
-                fromExistingWorkout ? existingWorkout.getIntervalSetUsedId() : 0
-        );
+        return null; // TODO
     }
 
-    public GpsWorkout saveWorkout(Context context) {
-        GpsWorkout workout = create(context);
+    public Workout saveWorkout(Context context) {
+        Workout workout = create(context);
         if (fromExistingWorkout) {
             updateWorkout(context, workout);
         } else {
@@ -74,11 +62,11 @@ public class WorkoutBuilder {
         return workout;
     }
 
-    private void updateWorkout(Context context, GpsWorkout workout) {
+    private void updateWorkout(Context context, Workout workout) {
         Instance.getInstance(context).db.workoutDao().updateWorkout(workout);
     }
 
-    private void insertWorkout(Context context, GpsWorkout workout) {
+    private void insertWorkout(Context context, Workout workout) {
         Instance.getInstance(context).db.workoutDao().insertWorkout(workout);
     }
 
@@ -106,11 +94,11 @@ public class WorkoutBuilder {
         this.duration = duration;
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(double length) {
         this.length = length;
     }
 
@@ -122,24 +110,19 @@ public class WorkoutBuilder {
         this.comment = comment;
     }
 
-    public void setWasEdited() {
-        wasEdited = true;
-    }
-
     public boolean isFromExistingWorkout() {
         return fromExistingWorkout;
     }
 
-    public static WorkoutBuilder fromWorkout(Context context, GpsWorkout workout) {
+    public static WorkoutBuilder fromWorkout(Context context, Workout workout) {
         WorkoutBuilder builder = new WorkoutBuilder(context);
         builder.fromExistingWorkout = true;
         builder.existingWorkout = workout;
-        builder.wasEdited = workout.edited;
         builder.workoutType = workout.getWorkoutType(context);
-        builder.start.setTimeInMillis(workout.start);
-        builder.duration = workout.duration;
-        builder.length = workout.length;
-        builder.comment = workout.comment;
+        builder.start.setTimeInMillis(workout.getStart());
+        builder.duration = workout.getActiveDuration();
+        builder.length = workout.getDistance();
+        builder.comment = workout.getComment();
 
         return builder;
     }

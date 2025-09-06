@@ -26,6 +26,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import androidx.annotation.NonNull;
+
 import de.tadris.fitness.R;
 import de.tadris.fitness.ui.workout.diagram.ConverterManager;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
@@ -53,24 +55,7 @@ public class SampleConverterPickerDialog {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         for (final SampleConverter converter : manager.availableConverters) {
-            CheckBox checkBox = new CheckBox(context);
-            checkBox.setText(converter.getName());
-            checkBox.setChecked(manager.selectedConverters.contains(converter));
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    if (manager.selectedConverters.size() >= MAX_SELECTED) {
-                        checkBox.setChecked(false);
-                    } else {
-                        manager.selectedConverters.add(converter);
-                    }
-                } else {
-                    if (manager.selectedConverters.size() <= MIN_SELECTED) {
-                        checkBox.setChecked(true);
-                    } else {
-                        manager.selectedConverters.remove(converter);
-                    }
-                }
-            });
+            CheckBox checkBox = getCheckBox(converter);
             linearLayout.addView(checkBox);
         }
 
@@ -87,6 +72,29 @@ public class SampleConverterPickerDialog {
         dialog = builderSingle.create();
 
         dialog.show();
+    }
+
+    @NonNull
+    private CheckBox getCheckBox(SampleConverter converter) {
+        CheckBox checkBox = new CheckBox(context);
+        checkBox.setText(converter.getName());
+        checkBox.setChecked(manager.selectedConverters.contains(converter));
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (manager.selectedConverters.size() >= MAX_SELECTED) {
+                    checkBox.setChecked(false);
+                } else {
+                    manager.selectedConverters.add(converter);
+                }
+            } else {
+                if (manager.selectedConverters.size() <= MIN_SELECTED) {
+                    checkBox.setChecked(true);
+                } else {
+                    manager.selectedConverters.remove(converter);
+                }
+            }
+        });
+        return checkBox;
     }
 
     public interface SampleConverterSelectListener {

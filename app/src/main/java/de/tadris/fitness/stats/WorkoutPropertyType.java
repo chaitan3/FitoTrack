@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,23 +17,32 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.data;
+package de.tadris.fitness.stats;
 
-import java.util.List;
+import de.tadris.fitness.data.Workout;
 
-public class WorkoutManager {
-
-    public static void calculateInclination(List<RouteSample> samples) {
-        samples.get(0).tmpInclination = 0;
-
-        // Calculate inclination
-        for (int i = 1; i < samples.size(); i++) {
-            RouteSample sample = samples.get(i);
-            RouteSample lastSample = samples.get(i - 1);
-            double elevationDifference = sample.elevation - lastSample.elevation;
-            double distance = sample.toLatLong().sphericalDistance(lastSample.toLatLong());
-            sample.tmpInclination = (float) (elevationDifference * 100 / distance);
+public enum WorkoutPropertyType {
+    BASE {
+        @Override
+        public boolean canBeApplied(Workout workout) {
+            return true;
         }
-    }
+    }, // Applies to all workouts
+    GPS {
+        @Override
+        public boolean canBeApplied(Workout workout) {
+            return true; // TODO
+        }
+    },
+    INDOOR {
+        @Override
+        public boolean canBeApplied(Workout workout) {
+            return true; // TODO
+        }
+    },
+
+    ;
+
+    public abstract boolean canBeApplied(Workout workout);
 
 }

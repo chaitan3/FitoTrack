@@ -46,7 +46,7 @@ public interface IWorkoutImporter {
     default int importWorkout(Context context, InputStream input) throws IOException {
         WorkoutImportResult importResult = readWorkouts(input);
         for (WorkoutData data : importResult.workouts) {
-            new ImportWorkoutSaver(context, data).saveWorkout();
+            // TODO new ImportWorkoutSaver(context, data).saveWorkout();
         }
         return importResult.workouts.size();
     }

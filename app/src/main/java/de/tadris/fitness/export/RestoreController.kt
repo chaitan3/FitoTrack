@@ -16,192 +16,151 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.export
 
-package de.tadris.fitness.export;
+import android.content.Context
+import android.net.Uri
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import de.tadris.fitness.Instance
+import de.tadris.fitness.R
+import de.tadris.fitness.data.AppDatabase
+import java.io.IOException
+import java.io.InputStream
+import java.util.zip.ZipInputStream
 
-import android.content.Context;
-import android.net.Uri;
+class RestoreController(
+    private val context: Context,
+    private val input: Uri,
+    private val replace: Boolean,
+    private val listener: ImportStatusListener
+) {
+    private var dataContainer: FitoTrackDataContainer? = null
+    private val database: AppDatabase = Instance.getInstance(context).db
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.ZipInputStream;
-
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.AppDatabase;
-import de.tadris.fitness.data.Interval;
-import de.tadris.fitness.data.IntervalSet;
-import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.Workout;
-import de.tadris.fitness.data.WorkoutType;
-
-public class RestoreController {
-
-    private final Context context;
-    private final Uri input;
-    private final ImportStatusListener listener;
-    private final boolean replace;
-    private FitoTrackDataContainer dataContainer;
-    private final AppDatabase database;
-
-    public RestoreController(Context context, Uri input, boolean replace, ImportStatusListener listener) {
-        this.context = context;
-        this.input = input;
-        this.replace = replace;
-        this.listener = listener;
-        this.database = Instance.getInstance(context).db;
+    @Throws(IOException::class, UnsupportedVersionException::class)
+    fun restoreData() {
+        listener.onStatusChanged(0, context.getString(R.string.loadingFile))
+        loadDataFromFile()
+        checkVersion()
+        restoreDatabase()
+        listener.onStatusChanged(100, context.getString(R.string.finished))
     }
 
-    public void restoreData() throws IOException, UnsupportedVersionException {
-        listener.onStatusChanged(0, context.getString(R.string.loadingFile));
-        loadDataFromFile();
-        checkVersion();
-        restoreDatabase();
-        listener.onStatusChanged(100, context.getString(R.string.finished));
-    }
-
-    private void loadDataFromFile() throws IOException {
-        InputStream stream = context.getContentResolver().openInputStream(input);
-        boolean isZIP = stream.read() == 0x50; // Zip Magic number
-        stream.close();
-        stream = context.getContentResolver().openInputStream(input);
-        InputStream decompressedInput;
+    @Throws(IOException::class)
+    private fun loadDataFromFile() {
+        var stream: InputStream = context.contentResolver.openInputStream(input)!!
+        val isZIP = stream.read() == 0x50 // Zip Magic number
+        stream.close()
+        stream = context.contentResolver.openInputStream(input)!!
+        val decompressedInput: InputStream
         if (isZIP) {
-            ZipInputStream zipIn = new ZipInputStream(stream);
-            zipIn.getNextEntry();
-            decompressedInput = zipIn;
+            val zipIn = ZipInputStream(stream)
+            zipIn.getNextEntry()
+            decompressedInput = zipIn
         } else {
-            decompressedInput = stream;
+            decompressedInput = stream
         }
-        XmlMapper xmlMapper = new XmlMapper();
-        xmlMapper.configure(JsonParser.Feature.IGNORE_UNDEFINED, true);
-        dataContainer = xmlMapper.readValue(decompressedInput, FitoTrackDataContainer.class);
-        decompressedInput.close();
-        stream.close();
+        val xmlMapper = XmlMapper()
+        xmlMapper.configure(JsonParser.Feature.IGNORE_UNDEFINED, true)
+        dataContainer = xmlMapper.readValue(
+            decompressedInput,
+            FitoTrackDataContainer::class.java
+        )
+        decompressedInput.close()
+        stream.close()
     }
 
-    private void checkVersion() throws UnsupportedVersionException {
-        if (dataContainer.getVersion() > BackupController.VERSION) {
-            throw new UnsupportedVersionException("Version Code" + dataContainer.getVersion() + " is unsupported!");
+    @Throws(UnsupportedVersionException::class)
+    private fun checkVersion() {
+        if (dataContainer!!.version > BackupController.VERSION) {
+            throw UnsupportedVersionException("Version Code" + dataContainer!!.version + " is unsupported!")
         }
     }
 
-    private void restoreDatabase() {
-        database.runInTransaction(() -> {
+    private fun restoreDatabase() {
+        database.runInTransaction(Runnable {
             if (replace) {
-                resetDatabase();
+                resetDatabase()
             }
-            listener.onStatusChanged(40, context.getString(R.string.workoutRecordingTypeGps));
-            restoreGpsWorkouts();
-            listener.onStatusChanged(50, context.getString(R.string.locationData));
-            restoreGpsSamples();
-            listener.onStatusChanged(65, context.getString(R.string.workoutRecordingTypeIndoor));
-            restoreIndoorWorkouts();
-            listener.onStatusChanged(70, context.getString(R.string.workoutRecordingTypeIndoor));
-            restoreIndoorSamples();
-            listener.onStatusChanged(80, context.getString(R.string.intervalSets));
-            restoreIntervalSets();
-            listener.onStatusChanged(85, context.getString(R.string.customWorkoutTypesTitle));
-            restoreWorkoutTypes();
-            listener.onStatusChanged(90, context.getString(R.string.runningMigrations));
-            runMigrations();
-        });
+            listener.onStatusChanged(40, context.getString(R.string.workoutRecordingTypeGps))
+            restoreGpsWorkouts()
+            listener.onStatusChanged(50, context.getString(R.string.locationData))
+            restoreGpsSamples()
+            listener.onStatusChanged(80, context.getString(R.string.intervalSets))
+            restoreIntervalSets()
+            listener.onStatusChanged(85, context.getString(R.string.customWorkoutTypesTitle))
+            restoreWorkoutTypes()
+        })
     }
 
-    private void resetDatabase() {
-        database.clearAllTables();
+    private fun resetDatabase() {
+        database.clearAllTables()
     }
 
-    private void restoreGpsWorkouts() {
-        if (dataContainer.getWorkouts() != null) {
-            for (Workout workout : dataContainer.getWorkouts()) {
+    private fun restoreGpsWorkouts() {
+        if (dataContainer!!.getWorkouts() != null) {
+            for (workout in dataContainer!!.getWorkouts()) {
                 // Only Import Unknown Workouts on merge
                 if (replace || database.workoutDao().findById(workout.id) == null) {
-                    database.workoutDao().insertWorkout(workout);
+                    database.workoutDao().insertWorkout(workout)
                 }
             }
         }
     }
 
-    private void restoreGpsSamples() {
-        if (dataContainer.getRouteSamples() != null) {
-            for (RouteSample sample : dataContainer.getRouteSamples()) {
+    private fun restoreGpsSamples() {
+        if (dataContainer!!.getRouteSamples() != null) {
+            for (sample in dataContainer!!.getRouteSamples()) {
                 // Only import unknown samples with known workout on merge
                 // Query not necessary on replace because data was cleared
-                if (replace || (database.workoutDao().findById(sample.getWorkoutId()) != null &&
-                        database.workoutDao().findSampleById(sample.getId()) == null)) {
-                    database.workoutDao().insertSample(sample);
+                if (replace || (database.workoutDao().findById(sample.workoutId) != null &&
+                            database.workoutDao().findSampleById(sample.id) == null)
+                ) {
+                    database.workoutDao().insertSample(sample)
                 }
             }
         }
     }
 
-    private void restoreIntervalSets() {
-        if (dataContainer.getIntervalSets() != null) {
-            for (IntervalSetContainer container : dataContainer.getIntervalSets()) {
-                restoreIntervalSet(container);
+    private fun restoreIntervalSets() {
+        if (dataContainer!!.getIntervalSets() != null) {
+            for (container in dataContainer!!.getIntervalSets()) {
+                restoreIntervalSet(container)
             }
         }
     }
 
-    private void restoreIntervalSet(IntervalSetContainer container) {
-        IntervalSet set = container.getSet();
+    private fun restoreIntervalSet(container: IntervalSetContainer) {
+        val set = container.set
         // Only Import unknownInterval Sets
-        if(database.intervalDao().getSet(set.id) == null) {
-            database.intervalDao().insertIntervalSet(set);
+        if (database.intervalDao().getSet(set.id) == null) {
+            database.intervalDao().insertIntervalSet(set)
         }
-        if (container.getIntervals() != null) {
-            for (Interval interval : container.getIntervals()) {
+        if (container.intervals != null) {
+            for (interval in container.intervals) {
                 // Only Import Unknown Intervals
                 if (database.intervalDao().findById(interval.id) == null) {
-                    database.intervalDao().insertInterval(interval);
+                    database.intervalDao().insertInterval(interval)
                 }
             }
         }
     }
 
-    private void restoreWorkoutTypes() {
-        if (dataContainer.getWorkoutTypes() != null) {
-            for (WorkoutType type : dataContainer.getWorkoutTypes()) {
+    private fun restoreWorkoutTypes() {
+        if (dataContainer!!.workoutTypes != null) {
+            for (type in dataContainer!!.workoutTypes) {
                 // Only import unknown workout types
                 if (database.workoutTypeDao().findById(type.id) == null) {
-                    database.workoutTypeDao().insert(type);
+                    database.workoutTypeDao().insert(type)
                 }
             }
         }
     }
 
-    private void runMigrations() {
-        if (dataContainer.getVersion() <= 1) {
-            for (Workout workout : dataContainer.getWorkouts()) {
-                float minHeight = 0f;
-                float maxHeight = 0f;
-                for (RouteSample sample : database.workoutDao().getAllSamplesOfWorkout(workout.id)) {
-                    if (minHeight == 0) {
-                        minHeight = (float) sample.elevationMSL;
-                        maxHeight = (float) sample.elevationMSL;
-                    }
-                    minHeight = Math.min(minHeight, (float) sample.elevationMSL);
-                    maxHeight = Math.max(maxHeight, (float) sample.elevationMSL);
-                }
-                workout.minElevationMSL = minHeight;
-                workout.maxElevationMSL = maxHeight;
-                database.workoutDao().updateWorkout(workout);
-            }
-        }
+    interface ImportStatusListener {
+        fun onStatusChanged(progress: Int, action: String?)
     }
 
-    public interface ImportStatusListener {
-        void onStatusChanged(int progress, String action);
-    }
-
-    static class UnsupportedVersionException extends Exception {
-        UnsupportedVersionException(String message) {
-            super(message);
-        }
-    }
-
+    internal class UnsupportedVersionException(message: String?) : Exception(message)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,32 +17,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.util;
+package de.tadris.fitness.stats;
 
-import de.tadris.fitness.data.Workout;
-
-public enum WorkoutPropertyType {
-    BASE {
-        @Override
-        public boolean canBeApplied(Workout workout) {
-            return true;
-        }
-    }, // Applies to all workouts
-    GPS {
-        @Override
-        public boolean canBeApplied(Workout workout) {
-            return workout instanceof GpsWorkout;
-        }
-    },
-    INDOOR {
-        @Override
-        public boolean canBeApplied(Workout workout) {
-            return workout instanceof IndoorWorkout;
-        }
-    },
-
-    ;
-
-    public abstract boolean canBeApplied(Workout workout);
+/**
+ * This Exception indicates that there is no data for the corresponding WorkoutType
+ */
+public class NoDataException extends Exception {
 
 }

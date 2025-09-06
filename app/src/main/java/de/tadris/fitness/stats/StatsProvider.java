@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.data;
+package de.tadris.fitness.stats;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -47,11 +47,11 @@ import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.aggregation.AggregationSpan;
-import de.tadris.fitness.util.WorkoutProperty;
+import de.tadris.fitness.data.WorkoutType;
+import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.util.charts.DataSetStyles;
 import de.tadris.fitness.util.charts.formatter.DayTimeFormatter;
 import de.tadris.fitness.util.charts.formatter.TimeFormatter;
-import de.tadris.fitness.util.exceptions.NoDataException;
 
 public class StatsProvider {
     Context ctx;

@@ -29,6 +29,15 @@ data class WorkoutData(
     val repetitionSamples: List<RepetitionSample>,
     val heartRateSamples: List<HeartRateSample>,
 ) {
+
+    val hasRepetitions get() = repetitionSamples.isNotEmpty()
+
+    val hasIntensityData get() = repetitionSamples.last().intensity > 0.0
+
+    val hasRouteData get() = samples.isNotEmpty()
+
+    val hasHRData get() = heartRateSamples.isNotEmpty()
+
     companion object {
         @JvmStatic
         fun fromWorkout(context: Context?, workout: Workout): WorkoutData {

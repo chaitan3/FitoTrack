@@ -16,49 +16,41 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.ui.workout.diagram
 
-package de.tadris.fitness.ui.workout.diagram;
+import androidx.annotation.ColorRes
+import com.github.mikephil.charting.charts.CombinedChart
+import com.github.mikephil.charting.formatter.ValueFormatter
+import de.tadris.fitness.data.BaseSample
+import de.tadris.fitness.data.WorkoutData
 
-import androidx.annotation.ColorRes;
+interface SampleConverter {
 
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+    fun getMinValue(data: WorkoutData): Float
 
-import java.util.List;
+    fun getMaxValue(data: WorkoutData): Float
 
-import de.tadris.fitness.data.BaseSample;
-import de.tadris.fitness.data.Workout;
-import de.tadris.fitness.data.WorkoutData;
-import kotlin.Pair;
+    fun getEntries(data: WorkoutData): List<Pair<BaseSample, Float>>
 
-public interface SampleConverter {
+    fun getValue(sample: BaseSample): Float
 
-    float getMinValue(WorkoutData data);
+    val name: String
 
-    float getMaxValue(WorkoutData data);
+    val xAxisLabel: String
 
-    List<Pair<BaseSample, Float>> getEntries(WorkoutData data);
+    val xValueFormatter: ValueFormatter
 
-    float getValue(BaseSample sample);
+    val yAxisLabel: String
 
-    String getName();
+    val yValueFormatter: ValueFormatter
 
-    String getXAxisLabel();
+    val isIntervalSetVisible: Boolean
 
-    ValueFormatter getXValueFormatter();
+    fun afterAdd(chart: CombinedChart)
 
-    String getYAxisLabel();
+    @get:ColorRes
+    val color: Int
 
-    ValueFormatter getYValueFormatter();
-
-    boolean isIntervalSetVisible();
-
-    void afterAdd(CombinedChart chart);
-
-    @ColorRes
-    int getColor();
-
-    String getUnit();
+    val unit: String
 
 }

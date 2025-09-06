@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.util;
+package de.tadris.fitness.stats;
 
 import android.content.Context;
 
@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.StatsProvider;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.formatter.DistanceFormatter;
 import de.tadris.fitness.util.charts.formatter.FractionedDateFormatter;

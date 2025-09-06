@@ -7,19 +7,19 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutData;
 
 public class SectionListModel {
-    private GpsWorkout workout;
-    private List<RouteSample> samples;
+    private WorkoutData data;
     private List<String> units = new ArrayList<>();
     private SectionCriterion criterion = SectionCriterion.DISTANCE;
     private double sectionLength = 1;
     private int selectedUnitID = 1;
     private boolean paceToggle = true;
 
-    public SectionListModel(GpsWorkout workout, List<RouteSample> samples) {
-        this.samples = samples;
-        this.workout = workout;
+    public SectionListModel(WorkoutData data) {
+        this.data = data;
     }
 
     public void setCriterion(SectionCriterion criterion) {
@@ -66,8 +66,8 @@ public class SectionListModel {
         paceToggle = toggle;
     }
 
-    public GpsWorkout getWorkout() {
-        return workout;
+    public Workout getWorkout() {
+        return data.getWorkout();
     }
 
     public void setUnits(List<String> units) {
@@ -86,16 +86,17 @@ public class SectionListModel {
         int best = 0;
         int worst = 0;
 
+        List<RouteSample> samples = data.getSamples();
         for (int i = 1; i < samples.size(); ++i) {
             RouteSample sample = samples.get(i);
             RouteSample previous = samples.get(i - 1);
 
             currentSection.dist += sample.toLatLong().sphericalDistance(previous.toLatLong());
-            currentSection.time += sample.relativeTime - previous.relativeTime;
-            if (sample.elevation < previous.elevation)
-                currentSection.descent += previous.elevation - sample.elevation;
-            if (sample.elevation > previous.elevation)
-                currentSection.ascent += sample.elevation - previous.elevation;
+            currentSection.time += sample.getRelativeTime() - previous.getRelativeTime();
+            if (sample.getElevation() < previous.getElevation())
+                currentSection.descent += previous.getElevation() - sample.getElevation();
+            if (sample.getElevation() > previous.getElevation())
+                currentSection.ascent += sample.getElevation() - previous.getElevation();
 
             double currentCriteriaLength;
             switch (criterion) {

@@ -50,7 +50,8 @@ public class TopSpeed extends AbstractWorkoutInformation {
 
     @Override
     public double getValueFromWorkout(Workout workout) {
-        return distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(workout.topSpeed);
+        return 0;
+        // TODO return distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(workout.topSpeed);
     }
 
     @Override

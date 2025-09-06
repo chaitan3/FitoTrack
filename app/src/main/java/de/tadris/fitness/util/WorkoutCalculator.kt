@@ -18,59 +18,49 @@
  */
 package de.tadris.fitness.util
 
-import de.tadris.fitness.data.BaseSample
-import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.WorkoutEvent
 import de.tadris.fitness.data.WorkoutPause
 import org.mapsforge.core.model.LatLong
 
 object WorkoutCalculator {
-    fun getSetsFromWorkout(data: IndoorWorkoutData): MutableList<Set?> {
-        val workout: IndoorWorkout = data.getWorkout()
-        val samples: MutableList<IndoorSample?> = ArrayList<Any?>(data.getSamples())
-        val result: MutableList<Set?> = ArrayList<Set?>()
 
-        var lastAbsoluteTimeEnd: Long = workout.start
-        var lastRelativeTimeEnd: Long = 0
-        val pauses = getPausesFromWorkout(data.castToBaseWorkoutData())
-        pauses.add(
+    fun getSetsFromWorkout(data: WorkoutData): List<Set> {
+        val workout = data.workout
+        val samples = data.repetitionSamples.toMutableList()
+
+        val result = mutableListOf<Set>()
+
+        var lastAbsoluteTimeEnd = workout.start
+        val pauses = getPausesFromWorkout(data) + listOf(
             PauseLocation(
-                workout.end,
-                workout.duration,
-                0,
-                null
-            )
-        ) // Append a last pause so every set ends with a pause
+                WorkoutPause(-1, -1, workout.end, workout.end, false),
+                LatLong(0.0, 0.0),
+            )  // Append a last pause so every set ends with a pause
+        )
 
         for (pause in pauses) {
             val set = Set(
                 lastAbsoluteTimeEnd,
-                lastRelativeTimeEnd,
-                pause.relativeTimeStart - lastRelativeTimeEnd,
+                pause.pause.startDate - lastAbsoluteTimeEnd,
                 0
             )
 
-            while (samples.size > 0 && samples.get(0).relativeTime < set.relativeTimeStart + set.duration) {
+            while (samples.isNotEmpty() && samples[0].timestamp < set.absoluteTimeStart + set.duration) {
                 set.repetitions += samples.removeAt(0).repetitions
             }
 
             if (set.repetitions > 0) {
                 result.add(set)
             }
-            lastAbsoluteTimeEnd = pause.absoluteTimeStart + pause.duration
-            lastRelativeTimeEnd = pause.relativeTimeStart + pause.duration
+            lastAbsoluteTimeEnd = pause.pause.endDate
         }
 
         return result
     }
 
-    fun calculatePauseDuration(data: BaseWorkoutData): Long {
-        var pauseDuration: Long = 0
-        for (pause in getPausesFromWorkout(data)) {
-            pauseDuration += pause.duration
-        }
-
-        return pauseDuration
+    fun calculatePauseDuration(data: WorkoutData): Long {
+        return data.pauses.sumOf { it.duration }
     }
 
     @JvmStatic
@@ -84,21 +74,13 @@ object WorkoutCalculator {
     /**
      * Returns a list of relative times when intervals were triggered
      */
-    fun getIntervalSetTimesFromWorkout(data: BaseWorkoutData): MutableList<Long?> {
-        val result: MutableList<Long?> = ArrayList<Long?>()
-        val samples: MutableList<BaseSample> = data.getSamples()
-
-        for (sample in samples) {
-            if (sample.intervalTriggered > 0) {
-                result.add(sample.relativeTime)
-            }
-        }
-        return result
+    fun getIntervalSetTimesFromWorkout(data: WorkoutData): List<Long> {
+        return data.events.filter { it.typeId == WorkoutEvent.TYPE_ID_INTERVAL }
+            .map { it.relativeTime }
     }
 
     class Set(
         val absoluteTimeStart: Long,
-        val relativeTimeStart: Long,
         var duration: Long,
         var repetitions: Int
     )

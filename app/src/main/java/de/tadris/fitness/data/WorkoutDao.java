@@ -82,7 +82,7 @@ public interface WorkoutDao {
     void deleteWorkoutAndSamples(Workout workout, RouteSample[] toArray);
 
     @Insert
-    Workout insertWorkout(Workout workout);
+    void insertWorkout(Workout workout);
 
     @Delete
     void deleteWorkout(Workout workout);

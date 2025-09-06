@@ -20,7 +20,6 @@
 package de.tadris.fitness.ui.workout;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
@@ -44,6 +43,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
@@ -51,11 +51,11 @@ import de.tadris.fitness.data.BaseSample;
 import de.tadris.fitness.data.Interval;
 import de.tadris.fitness.data.IntervalSet;
 import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.StatsDataTypes;
 import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutData;
+import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
-import de.tadris.fitness.util.WorkoutCalculator;
+import de.tadris.fitness.util.SampleAggregator;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.marker.DisplayValueMarker;
 import de.tadris.fitness.util.unit.DistanceUnitUtils;
@@ -68,7 +68,6 @@ public abstract class WorkoutActivity extends InformationActivity {
 
     protected Workout workout;
     protected WorkoutData data;
-    private Resources.Theme theme;
     protected final Handler mHandler = new Handler();
     protected IntervalSet usedIntervalSet;
     protected Interval[] intervals;
@@ -104,8 +103,6 @@ public abstract class WorkoutActivity extends InformationActivity {
     void initAfterContent() {
         setupActionBar();
         setTitle(workout.getWorkoutType(this).title);
-
-        theme = getTheme();
     }
 
     protected CombinedChart addDiagram(SampleConverter converter) {
@@ -190,15 +187,15 @@ public abstract class WorkoutActivity extends InformationActivity {
 
         int converterIndex = 0;
         for (SampleConverter converter : converters) {
+            List<Entry> entries = SampleAggregator.INSTANCE.aggregatedSamples(
+                    converter.getEntries(data)
+                            .stream()
+                            .map((pair) -> new Entry(pair.getFirst().getRelativeTime() / 1000f / 60f, pair.getSecond()))
+                            .collect(Collectors.toList()),
+                    NUMBER_OF_SAMPLES_IN_DIAGRAM,
+                    chartViewField
+            );
 
-            converter.onCreate(getBaseWorkoutData());
-
-            List<Entry> entries = new ArrayList<>();
-            for (BaseSample sample : aggregatedSamples(NUMBER_OF_SAMPLES_IN_DIAGRAM, chartViewField)) {
-                // turn data into Entry objects
-                Entry e = new Entry((float) (sample.relativeTime) / 1000f / 60f, converter.getValue(sample), sample);
-                entries.add(e);
-            }
             chart.getXAxis().setValueFormatter(converter.getXValueFormatter());
 
             LineDataSet dataSet = new LineDataSet(entries, converter.getName()); // add entries to dataset
@@ -258,11 +255,11 @@ public abstract class WorkoutActivity extends InformationActivity {
 
     public void updateChartSelection(CombinedChart chart, List<SampleConverter> converters) {
         // Fix Y-Axis scale
-        chart.getAxisLeft().setAxisMaximum(converters.get(0).getMaxValue(workout)*1.05f);
-        chart.getAxisLeft().setAxisMinimum(converters.get(0).getMinValue(workout)*0.95f);
+        chart.getAxisLeft().setAxisMaximum(converters.get(0).getMaxValue(data) * 1.05f);
+        chart.getAxisLeft().setAxisMinimum(converters.get(0).getMinValue(data) * 0.95f);
         if (converters.size() > 1) {
-            chart.getAxisRight().setAxisMaximum(converters.get(1).getMaxValue(workout)*1.05f);
-            chart.getAxisRight().setAxisMinimum(converters.get(1).getMinValue(workout)*0.95f);
+            chart.getAxisRight().setAxisMaximum(converters.get(1).getMaxValue(data) * 1.05f);
+            chart.getAxisRight().setAxisMinimum(converters.get(1).getMinValue(data) * 0.95f);
         }
     }
 

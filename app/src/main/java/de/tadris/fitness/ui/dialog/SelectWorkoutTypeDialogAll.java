@@ -24,10 +24,10 @@ import java.util.Arrays;
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.WorkoutTypeFilter;
 import de.tadris.fitness.data.RecordingType;
-import de.tadris.fitness.data.StatsDataProvider;
 import de.tadris.fitness.data.WorkoutType;
+import de.tadris.fitness.stats.StatsDataProvider;
+import de.tadris.fitness.stats.WorkoutProperty;
 import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.util.WorkoutProperty;
 
 public class SelectWorkoutTypeDialogAll extends SelectWorkoutTypeDialog {
 

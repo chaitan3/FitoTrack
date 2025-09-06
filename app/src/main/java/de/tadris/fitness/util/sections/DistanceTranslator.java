@@ -68,7 +68,7 @@ public class DistanceTranslator {
                 else if (selectedUnit == 2) // s
                     length *= 1000;
                 else if (selectedUnit == 3) // #
-                    length = listModel.getWorkout().duration / length;
+                    length = listModel.getWorkout().getActiveDuration() / length;
                 break;
             case DISTANCE: // For Distance (like) cases, transform to standard "meters"
             case ASCENT:
@@ -79,11 +79,13 @@ public class DistanceTranslator {
                     length = distanceUnitUtils.getDistanceUnitSystem().getMetersFromShortDistance(length);
                 else if (selectedUnit == 2) // #
                     if (criterion == SectionListModel.SectionCriterion.DISTANCE)
-                        length = listModel.getWorkout().length / length; // Transform num sections to simple distance criterion
+                        length = listModel.getWorkout().getDistance() / length; // Transform num sections to simple distance criterion
                     else if (criterion == SectionListModel.SectionCriterion.ASCENT)
-                        length = listModel.getWorkout().ascent / length;
+                        length = 0;
+                        // TODO length = listModel.getWorkout().ascent / length;
                     else if (criterion == SectionListModel.SectionCriterion.DESCENT)
-                        length = listModel.getWorkout().descent / length;
+                        length = 0;
+                // TODO length = listModel.getWorkout().descent / length;
                 break;
         }
         return length;
@@ -99,7 +101,7 @@ public class DistanceTranslator {
                 else if (selectedUnit == 2) // s
                     length /= 1000;
                 else if (selectedUnit == 3) // #
-                    length = listModel.getWorkout().duration / length;
+                    length = listModel.getWorkout().getActiveDuration() / length;
                 break;
             case DISTANCE: // For Distance (like) cases, transform to standard "meters"
             case ASCENT:
@@ -110,11 +112,13 @@ public class DistanceTranslator {
                     length = distanceUnitUtils.getDistanceUnitSystem().getDistanceFromMeters(length);
                 else if (selectedUnit == 2) // #
                     if (criterion == SectionListModel.SectionCriterion.DISTANCE)
-                        length = listModel.getWorkout().length / length; // Transform num sections to simple distance criterion
+                        length = listModel.getWorkout().getDistance() / length; // Transform num sections to simple distance criterion
                     else if (criterion == SectionListModel.SectionCriterion.ASCENT)
-                        length = listModel.getWorkout().ascent / length;
+                        length = 0;
+                        // TODO length = listModel.getWorkout().ascent / length;
                     else if (criterion == SectionListModel.SectionCriterion.DESCENT)
-                        length = listModel.getWorkout().descent / length;
+                        length = 0;
+                // TODO length = listModel.getWorkout().descent / length;
                 break;
         }
         return UnitUtils.roundDouble(length, 2);

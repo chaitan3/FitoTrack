@@ -24,7 +24,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import de.tadris.fitness.Instance
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.indoor.exercise.ExerciseRecognizer
 import de.tadris.fitness.util.WorkoutLogger
@@ -40,6 +39,7 @@ class ExerciseRecognitionComponent : RecorderServiceComponent, SensorEventListen
 
     override fun register(service: RecorderService) {
         init(service)
+        exerciseRecognizer = ExerciseRecognizer.findByType(service.stateHolder.workoutType.id)
         if (exerciseRecognizer != null) {
             WorkoutLogger.log(
                 "RecoderService",
@@ -54,9 +54,8 @@ class ExerciseRecognitionComponent : RecorderServiceComponent, SensorEventListen
         }
     }
 
-    fun init(context: RecorderService) {
+    fun init(context: Context) {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        exerciseRecognizer = ExerciseRecognizer.findByType(context.stateHolder.workoutType.id)
     }
 
     override fun unregister() {

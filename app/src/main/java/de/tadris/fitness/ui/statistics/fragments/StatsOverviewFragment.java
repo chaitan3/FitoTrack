@@ -31,12 +31,12 @@ import com.github.mikephil.charting.data.BarData;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.StatsDataTypes;
-import de.tadris.fitness.data.StatsProvider;
+import de.tadris.fitness.stats.NoDataException;
+import de.tadris.fitness.stats.StatsDataTypes;
+import de.tadris.fitness.stats.StatsProvider;
 import de.tadris.fitness.ui.FitoTrackActivity;
 import de.tadris.fitness.ui.statistics.TimeSpanSelection;
 import de.tadris.fitness.util.charts.ChartStyles;
-import de.tadris.fitness.util.exceptions.NoDataException;
 
 public class StatsOverviewFragment extends StatsFragment {
     StatsProvider statsProvider;

@@ -35,7 +35,6 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.provider.Settings
 import android.text.InputType
 import android.util.Log
@@ -57,7 +56,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.data.Interval
 import de.tadris.fitness.data.IntervalSet
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
@@ -117,7 +115,6 @@ import de.tadris.fitness.util.WorkoutLogger.Companion.log
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.Arrays
 import java.util.concurrent.Semaphore
 import kotlin.math.hypot
 
@@ -142,7 +139,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     protected lateinit var instance: Instance
     protected val infoViews: Array<InfoViewHolder?> = arrayOfNulls(4)
 
-    protected var isResumed: Boolean = false
+    protected var isResumed2: Boolean = false
 
 
     private lateinit var startPopupButton: Button
@@ -362,7 +359,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     }
 
     private fun updateDescription(e: AggregatedRecordingValuesEvent) {
-        if (isResumed) {
+        if (isResumed2) {
             timeView!!.text = instance!!.distanceUnitUtils.getHourMinuteSecondTime(e.activeDuration)
             for (i in 0..3) {
                 updateSlot(e, i)
@@ -621,7 +618,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             }
         }
 
-        isResumed = false
+        isResumed2 = false
     }
 
     override fun onResume() {
@@ -632,7 +629,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             enableLockScreenVisibility()
         }
         invalidateOptionsMenu()
-        isResumed = true
+        isResumed2 = true
         updateDescription(getCurrent())
 
         // start intercepting NFC intents

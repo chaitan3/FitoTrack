@@ -32,11 +32,18 @@ public class ConverterManager {
     public List<SampleConverter> selectedConverters = new ArrayList<>();
 
     public ConverterManager(Context context, WorkoutData data) {
-        availableConverters.add(new SpeedConverter(context));
-        availableConverters.add(new HeightConverter(context));
-        availableConverters.add(new InclinationConverter(context));
-        if (data.workout.hasHeartRateData()) {
+        if (data.getHasRouteData()) {
+            availableConverters.add(new SpeedConverter(context));
+            availableConverters.add(new HeightConverter(context));
+        }
+        if (data.getHasHRData()) {
             availableConverters.add(new HeartRateConverter(context));
+        }
+        if (data.getHasRepetitions()) {
+            availableConverters.add(new FrequencyConverter(context));
+        }
+        if (data.getHasIntensityData()) {
+            availableConverters.add(new IntensityConverter(context));
         }
     }
 

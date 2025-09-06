@@ -1,10 +1,7 @@
 package de.tadris.fitness.util
 
-import de.tadris.fitness.data.BaseSample
-import de.tadris.fitness.data.HeartRateSample
-import de.tadris.fitness.data.RepetitionSample
-import de.tadris.fitness.data.RouteSample
-import de.tadris.fitness.data.StatsDataTypes.TimeSpan
+import com.github.mikephil.charting.data.Entry
+import de.tadris.fitness.stats.StatsDataTypes.TimeSpan
 import java.util.LinkedList
 import kotlin.math.ceil
 import kotlin.math.ln
@@ -12,25 +9,23 @@ import kotlin.math.pow
 
 object SampleAggregator {
 
-    fun <T : BaseSample?> aggregatedSamples(
-        samples: MutableList<T?>,
+    fun aggregatedSamples(
+        samples: List<Entry>,
         maxSampleNumber: Int,
         viewFieldSpan: TimeSpan
-    ): MutableList<T?> {
+    ): List<Entry> {
         var firstViewFieldSampleOriginalIndex = 0
 
-        val aggregatedSamples = LinkedList<T?>()
-        val viewFieldSamples = LinkedList<T?>()
+        val aggregatedSamples = LinkedList<Entry>()
+        val viewFieldSamples = LinkedList<Entry>()
 
         // Generating a list with all samples in the current view field
         for (sample in samples) {
-            if (sample is RouteSample) {
-                if (viewFieldSpan.contains(sample.relativeTime)) {
-                    viewFieldSamples.add(sample)
-                }
-                if (viewFieldSamples.isEmpty()) {
-                    firstViewFieldSampleOriginalIndex++
-                }
+            if (viewFieldSpan.contains(sample.x.toLong())) {
+                viewFieldSamples.add(sample)
+            }
+            if (viewFieldSamples.isEmpty()) {
+                firstViewFieldSampleOriginalIndex++
             }
         }
 
@@ -40,21 +35,24 @@ object SampleAggregator {
         val firstGroupIndexInView = firstViewFieldSampleOriginalIndex / aggregationSize
         var currentGroupIndex = firstGroupIndexInView
         // where there is a list combining GpsSamples and other  BaseSample types
-        val combinedSamples = mutableListOf<T>()
+        val combinedSamples = mutableListOf<Entry>()
 
         val i = viewFieldSamples.listIterator()
         while (i.hasNext()) {
             val originalIndex = i.nextIndex() + firstViewFieldSampleOriginalIndex
             val groupIndex = originalIndex / aggregationSize
             if (groupIndex != currentGroupIndex) {
-                val combinedSample = combine(combinedSamples)
+                val combinedSample = Entry(
+                    (combinedSamples.sumOf { it.x.toDouble() } / combinedSamples.size).toFloat(),
+                    (combinedSamples.sumOf { it.y.toDouble() } / combinedSamples.size).toFloat(),
+                )
                 aggregatedSamples.add(combinedSample)
                 combinedSamples.clear()
 
                 currentGroupIndex++
             }
 
-            combinedSamples.add(i.next()!!)
+            combinedSamples.add(i.next())
         }
 
         // Index of element directly behind the last shown group
@@ -76,43 +74,6 @@ object SampleAggregator {
         }
 
         return aggregatedSamples
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T> combine(samples: List<T>): T {
-        val first = samples.first()!!
-        val size = samples.size
-        when (first) {
-            is RouteSample -> {
-                val routeSamples = samples.map { it as RouteSample }
-                return first.copy(
-                    relativeTime = routeSamples.sumOf { it.relativeTime } / size,
-                    latitude = routeSamples.sumOf { it.latitude } / size,
-                    longitude = routeSamples.sumOf { it.longitude } / size,
-                    elevation = routeSamples.sumOf { it.elevation } / size,
-                    elevationMSL = routeSamples.sumOf { it.elevationMSL } / size,
-                    speed = routeSamples.sumOf { it.speed } / size,
-                    pressure = (routeSamples.sumOf { it.pressure.toDouble() } / size).toFloat(),
-                ) as T
-            }
-            is HeartRateSample -> {
-                val hrSamples = samples.map { it as HeartRateSample }
-                return first.copy(
-                    relativeTime = hrSamples.sumOf { it.relativeTime } / size,
-                    heartRate = hrSamples.sumOf { it.heartRate } / size,
-                ) as T
-            }
-            is RepetitionSample -> {
-                val repetitionSamples = samples.map { it as RepetitionSample }
-                return first.copy(
-                    relativeTime = repetitionSamples.sumOf { it.relativeTime } / size,
-                    repetitions = repetitionSamples.sumOf { it.repetitions } / size,
-                    intensity = repetitionSamples.sumOf { it.intensity } / size,
-                    frequency = repetitionSamples.sumOf { it.frequency } / size,
-                ) as T
-            }
-            else -> throw Exception("Unknown sample type to combine: ${first::class.simpleName}")
-        }
     }
 
 }
