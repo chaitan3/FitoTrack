@@ -38,20 +38,20 @@ interface WorkoutDao {
     @Query("SELECT * FROM route_sample WHERE id = :id")
     fun findSampleById(id: Long): RouteSample?
 
-    @Query("SELECT * FROM route_sample WHERE workout_id = :workout_id")
-    fun getAllSamplesOfWorkout(workout_id: Long): Array<RouteSample>
+    @Query("SELECT * FROM route_sample WHERE workoutId = :workoutId")
+    fun getAllSamplesOfWorkout(workoutId: Long): Array<RouteSample>
 
-    @Query("SELECT * FROM workout_pause WHERE workout_id = :workout_id")
-    fun getAllPausesOfWorkout(workout_id: Long): Array<WorkoutPause>
+    @Query("SELECT * FROM workout_pause WHERE workoutId = :workoutId")
+    fun getAllPausesOfWorkout(workoutId: Long): Array<WorkoutPause>
 
-    @Query("SELECT * FROM workout_event WHERE workout_id = :workout_id")
-    fun getEventsOfWorkout(workout_id: Long): Array<WorkoutEvent>
+    @Query("SELECT * FROM workout_event WHERE workoutId = :workoutId")
+    fun getEventsOfWorkout(workoutId: Long): Array<WorkoutEvent>
 
-    @Query("SELECT * FROM repetition_sample WHERE workout_id = :workout_id")
-    fun getAllRepetitionSamplesOfWorkout(workout_id: Long): Array<RepetitionSample>
+    @Query("SELECT * FROM repetition_sample WHERE workoutId = :workoutId")
+    fun getAllRepetitionSamplesOfWorkout(workoutId: Long): Array<RepetitionSample>
 
-    @Query("SELECT * FROM heart_rate_sample WHERE workout_id = :workout_id")
-    fun getAllHeartRateSamplesOfWorkout(workout_id: Long): Array<HeartRateSample>
+    @Query("SELECT * FROM heart_rate_sample WHERE workoutId = :workoutId")
+    fun getAllHeartRateSamplesOfWorkout(workoutId: Long): Array<HeartRateSample>
 
     @Query("SELECT * FROM workout ORDER BY start DESC")
     fun getWorkouts(): Array<Workout>
@@ -59,14 +59,14 @@ interface WorkoutDao {
     @Query("SELECT * FROM workout ORDER BY start DESC LIMIT 1")
     fun getLastWorkout(): Workout?
 
-    @Query("SELECT * FROM workout WHERE workout_type_id = :type ORDER BY start DESC LIMIT 1")
+    @Query("SELECT * FROM workout WHERE workoutTypeId = :type ORDER BY start DESC LIMIT 1")
     fun getLastWorkoutByType(type: String): Workout?
 
     @Query("SELECT * FROM workout ORDER BY start ASC")
     fun getAllWorkoutsHistorically(): Array<Workout>
 
-    @Query("SELECT * FROM workout WHERE workout_type_id = :workout_type ORDER BY start ASC ")
-    fun getWorkoutsHistorically(workout_type: String?): Array<Workout>
+    @Query("SELECT * FROM workout WHERE workoutTypeId = :workoutType ORDER BY start ASC ")
+    fun getWorkoutsHistorically(workoutType: String?): Array<Workout>
 
     @Query("SELECT * FROM workout WHERE start = :start")
     fun getWorkoutByStart(start: Long): Workout?

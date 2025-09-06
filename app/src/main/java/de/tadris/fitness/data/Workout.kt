@@ -19,7 +19,6 @@
 package de.tadris.fitness.data
 
 import android.content.Context
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -53,9 +52,7 @@ data class Workout(
     val repetitions: Int,
     val energy: Double,
     @JsonProperty(value = "workoutType")
-    @ColumnInfo(name = "workout_type_id")
     val workoutTypeId: String,
-    @ColumnInfo(name = "interval_set_used_id")
     val intervalSetUsedId: Long,
 ) {
 

@@ -19,7 +19,6 @@
 
 package de.tadris.fitness.data;
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -41,14 +40,13 @@ import org.mapsforge.core.model.LatLong
         ForeignKey(
             entity = Workout::class,
             parentColumns = ["id"],
-            childColumns = ["workout_id"],
+            childColumns = ["workoutId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RouteSample(
-    @ColumnInfo(name = "workout_id")
     override val workoutId: Long,
     @PrimaryKey
     override val id: Long,
@@ -57,40 +55,11 @@ data class RouteSample(
     val latitude: Double,
     val longitude: Double,
     val elevation: Double,
-    @ColumnInfo(name = "elevation_msl")
     val elevationMSL: Double,
     val speed: Double,
     val pressure: Float,
 ) : BaseSample {
 
     fun toLatLong() = LatLong(latitude, longitude)
-
-    /**
-     * Adds values from other sample to this one
-     */
-    fun add(sample: RouteSample): RouteSample {
-        return this.copy(
-            speed = speed + sample.speed,
-            elevationMSL = elevationMSL + sample.elevationMSL,
-            elevation = elevation + sample.elevation,
-            relativeTime = relativeTime + sample.relativeTime,
-            latitude = latitude + sample.latitude,
-            longitude = longitude + sample.longitude,
-        )
-    }
-
-    /**
-     * Divides value by a scalar
-     */
-    fun divide(scalar: Int): RouteSample {
-        return this.copy(
-            speed = speed / scalar,
-            elevationMSL = elevationMSL / scalar,
-            elevation = elevation / scalar,
-            relativeTime = relativeTime / scalar,
-            latitude = latitude / scalar,
-            longitude = longitude / scalar
-        )
-    }
 
 }

@@ -447,6 +447,97 @@ public abstract class AppDatabase extends RoomDatabase {
                             database.endTransaction();
                         }
                     }
+                }, new Migration(16, 17) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase db) {
+                        try {
+                            db.beginTransaction();
+
+                            // HANDLE WORKOUT
+
+                            db.execSQL("ALTER TABLE workout RENAME TO workout2;");
+
+                            db.execSQL("CREATE TABLE workout (" +
+                                    "id INTEGER NOT NULL DEFAULT NULL PRIMARY KEY," +
+                                    "uuid TEXT NOT NULL," +
+                                    "start INTEGER NOT NULL," +
+                                    "`end` INTEGER NOT NULL," +
+                                    "activeDuration INTEGER NOT NULL," +
+                                    "comment TEXT DEFAULT NULL," +
+                                    "distance REAL NOT NULL," +
+                                    "repetitions INTEGER NOT NULL," +
+                                    "energy REAL NOT NULL," +
+                                    "workoutTypeId TEXT NOT NULL," +
+                                    "intervalSetUsedId INTEGER NOT NULL);");
+
+                            db.execSQL("INSERT INTO workout (id,uuid,start,`end`,activeDuration,comment,distance,repetitions,energy,workoutTypeId,intervalSetUsedId) \n" +
+                                    "SELECT id,\n" +
+                                    "       lower(hex(randomblob(4)) || '-' ||\n" +
+                                    "             hex(randomblob(2)) || '-' ||\n" +
+                                    "             '4' || substr(hex(randomblob(2)),2) || '-' ||\n" +
+                                    "             substr('89ab',abs(random()) % 4 + 1,1) || substr(hex(randomblob(2)),2) || '-' ||\n" +
+                                    "             hex(randomblob(6))),\n" +
+                                    "       start,`end`,duration,comment,length,0,calorie,workoutType,interval_set_used_id\n" +
+                                    "FROM workout2;\n");
+
+                            db.execSQL("DROP TABLE workout2");
+
+                            // HANDLE ROUTE SAMPLE
+
+                            db.execSQL("CREATE TABLE route_sample (" +
+                                    "id INTEGER NOT NULL PRIMARY KEY," +
+                                    "timestamp INTEGER NOT NULL," +
+                                    "relativeTime INTEGER NOT NULL," +
+                                    "latitude REAL NOT NULL," +
+                                    "longitude REAL NOT NULL," +
+                                    "elevation REAL NOT NULL," +
+                                    "elevationMSL REAL NOT NULL," +
+                                    "speed REAL NOT NULL," +
+                                    "pressure REAL NOT NULL," +
+                                    "workoutId INTEGER NOT NULL," +
+                                    "FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE);");
+
+                            db.execSQL("insert into route_sample (id,timestamp,relativeTime,latitude,longitude,elevation,elevationMSL,speed,pressure,workoutId)\n" +
+                                    "select id,absoluteTime,relativeTime,lat,lon,elevation,elevation_msl,speed,pressure,workout_id from workout_sample;");
+
+                            db.execSQL("drop table workout_sample;");
+
+                            // HANDLE PAUSE
+
+                            db.execSQL("CREATE TABLE workout_pause (" +
+                                    "id INTEGER NOT NULL PRIMARY KEY," +
+                                    "startDate INTEGER NOT NULL," +
+                                    "endDate INTEGER NOT NULL," +
+                                    "userInitiated INTEGER NOT NULL," +
+                                    "workoutId INTEGER NOT NULL," +
+                                    "FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE);");
+
+                            // TODO write migration to actually determine the pauses
+
+                            // HANDLE REPETITION SAMPLES
+
+                            db.execSQL("CREATE TABLE repetition_sample (" +
+                                    "id INTEGER NOT NULL PRIMARY KEY," +
+                                    "timestamp INTEGER NOT NULL," +
+                                    "relativeTime INTEGER NOT NULL," +
+                                    "timestampEnd INTEGER NOT NULL," +
+                                    "repetitionTypeId INTEGER NOT NULL," +
+                                    "repetitions INTEGER NOT NULL," +
+                                    "intensity REAL NOT NULL," +
+                                    "frequency REAL NOT NULL," +
+                                    "workoutId INTEGER NOT NULL," +
+                                    "FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE);");
+
+                            db.execSQL("insert into repetition_sample (id,timestamp,relativeTime,timestampEnd,repetitionTypeId,repetitions,intensity,frequency,workoutId)\n" +
+                                    "select id,absoluteTime,relativeTime,lat,lon,elevation,elevation_msl,speed,pressure,workout_id from workout_sample;");
+
+                            // TODO update repetition type id afterwards
+
+                            db.setTransactionSuccessful();
+                        } finally {
+                            db.endTransaction();
+                        }
+                    }
                 })
                 .allowMainThreadQueries()
                 .build();

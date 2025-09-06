@@ -19,7 +19,6 @@
 
 package de.tadris.fitness.data
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -31,23 +30,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
         ForeignKey(
             entity = Workout::class,
             parentColumns = ["id"],
-            childColumns = ["workout_id"],
+            childColumns = ["workoutId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RepetitionSample(
-    @ColumnInfo(name = "workout_id")
     override val workoutId: Long,
     @PrimaryKey
     override val id: Long,
     override val timestamp: Long,
-    @ColumnInfo("timestamp_end")
     val timestampEnd: Long,
     override val relativeTime: Long,
-    @ColumnInfo(name = "repetition_type_id")
-    val repetitionTypeId: String,
+    val repetitionTypeId: Int,
     val repetitions: Int,
     val intensity: Double,
     val frequency: Double,
@@ -55,10 +51,10 @@ data class RepetitionSample(
 
     companion object {
 
-        const val REPETITION_TYPE_STEP = "step"
-        const val REPETITION_TYPE_JUMP = "jump"
-        const val REPETITION_TYPE_PUSH_UP = "push-up"
-        const val REPETITION_TYPE_PULL_UP = "pull-up"
+        const val REPETITION_TYPE_STEP = 1
+        const val REPETITION_TYPE_JUMP = 2
+        const val REPETITION_TYPE_PUSH_UP = 3
+        const val REPETITION_TYPE_PULL_UP = 4
 
     }
 

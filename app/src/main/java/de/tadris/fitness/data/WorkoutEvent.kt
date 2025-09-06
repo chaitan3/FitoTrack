@@ -19,7 +19,6 @@
 
 package de.tadris.fitness.data
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -31,20 +30,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
         ForeignKey(
             entity = Workout::class,
             parentColumns = ["id"],
-            childColumns = ["workout_id"],
+            childColumns = ["workoutId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class WorkoutEvent(
-    @ColumnInfo(name = "workout_id")
     override val workoutId: Long,
     @PrimaryKey
     override val id: Long,
     override val timestamp: Long,
     override val relativeTime: Long,
-    @ColumnInfo(name = "type_id")
     val typeId: String,
 ) : BaseSample {
 
