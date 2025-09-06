@@ -32,7 +32,33 @@ class RecordingStateHolder {
     var recordingType: RecordingType = RecordingType.GPS
     var workoutId: Long = -1
     var state = RecordingState.IDLE
-    var pausedSince = 0L
+        set(value) {
+            val oldValue = field
+            field = value
+            if (oldValue.isPause() && !value.isPause()) {
+                pauseDuration += timeSinceLastStateChange
+            }
+            if (!oldValue.isPause() && value.isPause()) {
+                activeDuration += timeSinceLastStateChange
+            }
+
+            lastStateChange = System.currentTimeMillis()
+        }
+
+    private var activeDuration = 0L
+    private var pauseDuration = 0L
+    var lastStateChange = 0L
+        private set
+    private val timeSinceLastStateChange get() = System.currentTimeMillis() - lastStateChange
+
+    val relativeTime get() = currentActiveDuration
+    val currentActiveDuration
+        get() = activeDuration +
+                if (state == RecordingState.RUNNING) timeSinceLastStateChange else 0
+
+    val currentPauseDuration
+        get() = pauseDuration +
+                if (state.isPause()) timeSinceLastStateChange else 0
 
     fun init(context: Context){
         recordingType = RecordingType.findById(workoutType.recordingType)

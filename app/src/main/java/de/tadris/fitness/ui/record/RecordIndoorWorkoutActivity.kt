@@ -33,12 +33,10 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
-import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
@@ -72,14 +70,15 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
         } else currentState != RecordingState.IDLE
 
         if (wasAlreadyRunning) {
-            activity = AggregatedRecordingValuesEvent.getCurrent().workoutType
+            workoutType = AggregatedRecordingValuesEvent.getCurrent().workoutType
         } else {
             val workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA)
             if (workoutType is WorkoutType) {
-                activity = workoutType
+                this@RecordIndoorWorkoutActivity.workoutType = workoutType
             } else {
                 val workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA)
-                activity = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
+                this@RecordIndoorWorkoutActivity.workoutType =
+                    WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
             }
         }
 
@@ -278,7 +277,7 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
         val last = AggregatedRecordingValuesEvent.getCurrent()
         repetitionsText.text = last.repetitions.toString()
         exerciseText.text = resources.getQuantityString(
-            activity.repeatingExerciseName, last.repetitions
+            workoutType.repeatingExerciseName, last.repetitions
         )
     }
 

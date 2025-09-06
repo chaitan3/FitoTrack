@@ -168,7 +168,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
     private var voiceFeedbackAvailable = false
     private var finished = false
-    protected lateinit var activity: WorkoutType
+    protected lateinit var workoutType: WorkoutType
 
     /**
      * This ensures that the workout is only started once. Different threads (user input, auto start)
@@ -179,7 +179,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         instance = Instance.getInstance(this)
-        activity = WorkoutTypeManager.getInstance()
+        workoutType = WorkoutTypeManager.getInstance()
             .getWorkoutTypeById(this, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER)
 
         // only use NFC when it's enabled in settings AND supported by the device
@@ -200,7 +200,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     }
 
     protected fun initBeforeContent() {
-        setTheme(instance.themes.getWorkoutTypeTheme(activity))
+        setTheme(instance.themes.getWorkoutTypeTheme(workoutType))
     }
 
     protected fun initAfterContent() {
@@ -211,13 +211,13 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             }
         }
 
-        recordStartButtonsRoot = findViewById<ConstraintLayout>(R.id.recordStartButtonsRoot)
+        recordStartButtonsRoot = findViewById(R.id.recordStartButtonsRoot)
         timeView = findViewById(R.id.recordTime)
         timeView.visibility = View.INVISIBLE
-        hrStatusView = findViewById<ImageView>(R.id.recordHrStatus)
-        startButton = findViewById<Button>(R.id.recordStart)
+        hrStatusView = findViewById(R.id.recordHrStatus)
+        startButton = findViewById(R.id.recordStart)
 
-        startPopupButton = findViewById<Button>(R.id.recordStartPopup)
+        startPopupButton = findViewById(R.id.recordStartPopup)
 
         // instantiate TTSController in app context to be able to completely play the auto start
         // abort announcement even when this activity has been destroyed already
@@ -233,7 +233,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         movementDetector.start()
         vibratorController = VibratorController(this)
         autoStartVibratorFeedback = AutoStartVibratorFeedback(vibratorController)
-        autoStartVibratorFeedback!!.registerTo(EventBus.getDefault())
+        autoStartVibratorFeedback.registerTo(EventBus.getDefault())
         toneGeneratorController = ToneGeneratorController(this, AudioManager.STREAM_NOTIFICATION)
         autoStartSoundFeedback = AutoStartSoundFeedback(toneGeneratorController, instance)
         autoStartSoundFeedback.registerTo(EventBus.getDefault())
@@ -249,32 +249,32 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         updateStartButton(false, R.string.cannotStart, null)
 
         informationDisplay =
-            InformationDisplay(RecordingType.findById(activity!!.recordingType), this)
+            InformationDisplay(RecordingType.findById(workoutType.recordingType), this)
 
         infoViews[0] = InfoViewHolder(
-            0, this, findViewById<TextView?>(R.id.recordInfo1Title), findViewById<TextView?>(
+            0, this, findViewById(R.id.recordInfo1Title), findViewById(
                 R.id.recordInfo1Value
             )
         )
         infoViews[1] = InfoViewHolder(
-            1, this, findViewById<TextView?>(R.id.recordInfo2Title), findViewById<TextView?>(
+            1, this, findViewById(R.id.recordInfo2Title), findViewById(
                 R.id.recordInfo2Value
             )
         )
         infoViews[2] = InfoViewHolder(
-            2, this, findViewById<TextView?>(R.id.recordInfo3Title), findViewById<TextView?>(
+            2, this, findViewById(R.id.recordInfo3Title), findViewById(
                 R.id.recordInfo3Value
             )
         )
         infoViews[3] = InfoViewHolder(
-            3, this, findViewById<TextView?>(R.id.recordInfo4Title), findViewById<TextView?>(
+            3, this, findViewById(R.id.recordInfo4Title), findViewById(
                 R.id.recordInfo4Value
             )
         )
 
-        findViewById<View?>(R.id.autoStartCountdownAbort).setOnClickListener(View.OnClickListener { v: View? ->
+        findViewById<View>(R.id.autoStartCountdownAbort).setOnClickListener { v: View? ->
             onAutoStartCountdownAbortButtonClicked()
-        })
+        }
 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
@@ -359,7 +359,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
     private fun updateDescription(e: AggregatedRecordingValuesEvent) {
         if (isResumed2) {
-            timeView!!.text = instance!!.distanceUnitUtils.getHourMinuteSecondTime(e.activeDuration)
+            timeView!!.text = instance.distanceUnitUtils.getHourMinuteSecondTime(e.activeDuration)
             for (i in 0..3) {
                 updateSlot(e, i)
             }
@@ -383,8 +383,8 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
     protected fun hide(view: View) {
         if (startPopupMenu != null
-            && (view.id == recordStartButtonsRoot!!.id
-                    || view.id == startPopupButton!!.id)
+            && (view.id == recordStartButtonsRoot.id
+                    || view.id == startPopupButton.id)
         ) {
             startPopupMenu!!.dismiss()
         }
@@ -420,9 +420,9 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         listener: View.OnClickListener?
     ) {
         showStartButton()
-        startButton!!.setEnabled(enabled)
-        startButton!!.setText(text)
-        startButton!!.setOnClickListener(listener)
+        startButton.setEnabled(enabled)
+        startButton.setText(text)
+        startButton.setOnClickListener(listener)
     }
 
     protected fun start(reason: StartReason) {
@@ -530,6 +530,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             if (hasServicePermission()) {
                 log(TAG, "Starting service")
                 val locationListener = Intent(applicationContext, RecorderService::class.java)
+                locationListener.putExtra(RecorderService.EXTRA_WORKOUT_TYPE, workoutType.id)
                 NotificationHelper.requestNotificationPermissionIfNecessary(this)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     startForegroundService(locationListener)
@@ -642,10 +643,9 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         }
 
         // update countdown field if necessary
-        if (autoStartWorkout != null
-            && autoStartWorkout!!.state == AutoStartWorkout.State.COUNTDOWN
+        if (autoStartWorkout.state == AutoStartWorkout.State.COUNTDOWN
         ) {
-            onCountdownChange(CountdownChangeEvent(autoStartWorkout!!.countdownMs))
+            onCountdownChange(CountdownChangeEvent(autoStartWorkout.countdownMs))
         }
     }
 
@@ -661,7 +661,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             val itemId = menuItem!!.itemId
             if (itemId == R.id.auto_start) {
                 Log.d(TAG, "Auto start from popup menu selected")
-                val config = autoStartWorkout!!.defaultStartConfig
+                val config = autoStartWorkout.defaultStartConfig
                 beginAutoStart(config.countdownMs, config.mode)
             } else if (itemId == R.id.auto_start_immediately) {
                 start(StartReason.START_BUTTON_IMMEDIATE)
@@ -993,7 +993,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         if (this.currentState == RecordingState.IDLE || isLongClick) {
             SelectWorkoutInformationDialog(
                 this,
-                RecordingType.findById(activity!!.recordingType),
+                RecordingType.findById(workoutType.recordingType),
                 slot,
                 this
             )
@@ -1007,7 +1007,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     }
 
     override fun onSelectWorkoutInformation(slot: Int, information: RecordingInformation) {
-        val mode = RecordingType.findById(activity!!.recordingType).id
+        val mode = RecordingType.findById(workoutType.recordingType).id
         Instance.getInstance(this).userPreferences.setIdOfDisplayedInformation(
             mode,
             slot,

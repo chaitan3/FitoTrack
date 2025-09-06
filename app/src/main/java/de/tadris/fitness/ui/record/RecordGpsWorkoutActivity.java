@@ -102,14 +102,14 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
 
 
         if (wasAlreadyRunning) {
-            activity = AggregatedRecordingValuesEvent.Companion.getCurrent().getWorkoutType();
+            workoutType = AggregatedRecordingValuesEvent.Companion.getCurrent().getWorkoutType();
         } else {
             Serializable workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA);
             if (workoutType instanceof WorkoutType) {
-                activity = (WorkoutType) workoutType;
+                workoutType = (WorkoutType) workoutType;
             } else {
                 String workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA);
-                activity = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId);
+                workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId);
             }
         }
 

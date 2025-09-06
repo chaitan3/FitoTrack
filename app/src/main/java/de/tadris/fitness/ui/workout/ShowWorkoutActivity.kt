@@ -242,7 +242,6 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
             addDiagram(HeightConverter(this), ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_HEIGHT)
 
-            addTitle(getString(R.string.sections))
             addSectionList()
         }
 
@@ -277,7 +276,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
         val sections: MutableList<SectionListModel.Section> = sectionListModel.getSectionList()
         for (section in sections) {
             weights.add(section.getTime(true))
-            val speed = 1 / section.getPace()
+            val speed = 1 / section.pace
             data.add(speed)
         }
 
@@ -309,6 +308,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
     }
 
     private fun addSectionList() {
+        addTitle(getString(R.string.sections))
         val listView = SectionListView(this)
         val listModel = SectionListModel(this.data)
         SectionListPresenter(listView, listModel)

@@ -154,6 +154,8 @@ public class SectionListModel {
             }
         }
 
+        if (sections.isEmpty()) return sections;
+
         sections.get(worst).worst = true;
         sections.get(best).best = true;
 

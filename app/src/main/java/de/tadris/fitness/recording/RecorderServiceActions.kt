@@ -97,7 +97,7 @@ class RecorderServiceActions(private val service: RecorderService) {
                 WorkoutPause(
                     service.stateHolder.workoutId,
                     0L,
-                    service.stateHolder.pausedSince,
+                    service.stateHolder.lastStateChange,
                     System.currentTimeMillis(),
                     state == RecordingState.MANUAL_PAUSE
                 )
@@ -114,7 +114,6 @@ class RecorderServiceActions(private val service: RecorderService) {
             } else {
                 RecordingState.MANUAL_PAUSE
             }
-            service.stateHolder.pausedSince = System.currentTimeMillis()
         }
     }
 

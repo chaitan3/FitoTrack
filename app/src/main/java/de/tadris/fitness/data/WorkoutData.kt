@@ -32,7 +32,7 @@ data class WorkoutData(
 
     val hasRepetitions get() = repetitionSamples.isNotEmpty()
 
-    val hasIntensityData get() = repetitionSamples.last().intensity > 0.0
+    val hasIntensityData get() = hasRepetitions && repetitionSamples.last().intensity > 0.0
 
     val hasRouteData get() = samples.isNotEmpty()
 

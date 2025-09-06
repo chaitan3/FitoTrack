@@ -78,7 +78,7 @@ class GpsSampleComponent : RecorderServiceComponent {
         service.stateHolder.workoutId,
         LocationUtils.getTimeFor(location),
         LocationUtils.getTimeFor(location),
-        -1L,
+        service.stateHolder.relativeTime,
         location.latitude,
         location.longitude,
         location.altitude,

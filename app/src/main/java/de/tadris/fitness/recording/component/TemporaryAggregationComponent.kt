@@ -23,13 +23,11 @@ import android.hardware.SensorManager
 import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
 import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
-import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.event.RouteSampleEvent
 import de.tadris.fitness.util.totalDistance
@@ -47,10 +45,6 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     private var lastSample: RouteSample? = null
 
-    private var activeDuration = 0L
-    private var pauseDuration = 0L
-    private var lastStateChange = 0L // TODO is not updated yet
-
     private var distance = 0.0
     private var elevation = -1.0
     private var ascent = 0.0
@@ -66,16 +60,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     private var currentIntensity = 0.0
     private var repetitions = 0
 
-    private val timeSinceLastStateChange get() = System.currentTimeMillis() - lastStateChange
     private var sampleCount = 0
-
-    private val currentActiveDuration
-        get() = activeDuration +
-                if (service.stateHolder.state == RecordingState.RUNNING) timeSinceLastStateChange else 0
-
-    private val currentPauseDuration
-        get() = pauseDuration +
-                if (service.stateHolder.state.isPause()) timeSinceLastStateChange else 0
 
     private val energy get() = 0.0 // joules // TODO
 
@@ -102,8 +87,8 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
                 service.stateHolder.recordingType,
                 service.stateHolder.workoutType,
                 service.stateHolder.state,
-                currentActiveDuration,
-                currentPauseDuration,
+                service.stateHolder.currentActiveDuration,
+                service.stateHolder.currentPauseDuration,
                 distance,
                 ascent,
                 descent,
@@ -117,18 +102,6 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
                 sampleCount
             )
         )
-    }
-
-    @Subscribe
-    fun onStateChange(e: RecordingStateChangeEvent){
-        if(e.oldState.isPause() && !e.newState.isPause()){
-            pauseDuration += timeSinceLastStateChange
-        }
-        if(!e.oldState.isPause() && e.newState.isPause()){
-            activeDuration += timeSinceLastStateChange
-        }
-
-        lastStateChange = System.currentTimeMillis()
     }
 
     @Subscribe

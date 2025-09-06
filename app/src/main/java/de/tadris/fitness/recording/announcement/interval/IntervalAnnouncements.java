@@ -26,7 +26,6 @@ import java.util.List;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.data.AppDatabase;
 import de.tadris.fitness.data.Interval;
-import de.tadris.fitness.data.WorkoutDao;
 import de.tadris.fitness.data.WorkoutEvent;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.recording.RecorderService;
@@ -81,7 +80,7 @@ public class IntervalAnnouncements {
                 service.stateHolder.getWorkoutId(),
                 System.nanoTime(),
                 System.currentTimeMillis(),
-                AggregatedRecordingValuesEvent.Companion.getCurrent().getActiveDuration(),
+                service.stateHolder.getRelativeTime(),
                 WorkoutEvent.TYPE_ID_INTERVAL
         ));
         speakNextAt += interval.delayMillis;

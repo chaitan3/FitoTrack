@@ -2,7 +2,6 @@ package de.tadris.fitness.recording.component
 
 import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.indoor.exercise.RepetitionRecognizedEvent
@@ -40,7 +39,6 @@ class RepetitionSampleComponent : RecorderServiceComponent {
 
     private fun pushSample(){
         if(repetitionAggregation.isEmpty()) return
-        val info = AggregatedRecordingValuesEvent.getCurrent()
 
         val startTime = repetitionAggregation.minOf { it.timestamp }
         val endTime = repetitionAggregation.maxOf { it.timestamp }
@@ -55,7 +53,7 @@ class RepetitionSampleComponent : RecorderServiceComponent {
             System.nanoTime(),
             startTime,
             endTime,
-            info.activeDuration,
+            service.stateHolder.relativeTime,
             repetitionAggregation.first().type,
             repetitions,
             repetitionAggregation.sumOf { it.intensity } / repetitionAggregation.size,
