@@ -482,6 +482,20 @@ public abstract class AppDatabase extends RoomDatabase {
 
                             db.execSQL("DROP TABLE workout2");
 
+
+                            // HANDLE INDOOR WORKOUT
+                            db.execSQL("INSERT INTO workout (id,uuid,start,`end`,activeDuration,comment,distance,repetitions,energy,workoutTypeId,intervalSetUsedId) \n" +
+                                    "SELECT id,\n" +
+                                    "       lower(hex(randomblob(4)) || '-' ||\n" +
+                                    "             hex(randomblob(2)) || '-' ||\n" +
+                                    "             '4' || substr(hex(randomblob(2)),2) || '-' ||\n" +
+                                    "             substr('89ab',abs(random()) % 4 + 1,1) || substr(hex(randomblob(2)),2) || '-' ||\n" +
+                                    "             hex(randomblob(6))),\n" +
+                                    "       start,`end`,duration,comment,0.0,repetitions,calorie,workoutType,-1\n" +
+                                    "FROM workout2;\n");
+
+                            // TODO recalculate estimated distance from step length
+
                             // HANDLE ROUTE SAMPLE
 
                             db.execSQL("CREATE TABLE route_sample (" +
@@ -529,7 +543,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE);");
 
                             db.execSQL("insert into repetition_sample (id,timestamp,relativeTime,timestampEnd,repetitionTypeId,repetitions,intensity,frequency,workoutId)\n" +
-                                    "select id,absoluteTime,relativeTime,lat,lon,elevation,elevation_msl,speed,pressure,workout_id from workout_sample;");
+                                    "select id,absoluteTime,relativeTime,absoluteEndTime,0,repetitions,intensity,frequency,workout_id from workout_sample;");
 
                             // TODO update repetition type id afterwards
 
