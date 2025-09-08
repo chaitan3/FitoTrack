@@ -1,0 +1,3 @@
+Questo aggiornamento introduce una correzione per un bug che si verificava su alcuni dispositivi, impedendo loro di utilizzare FitoTrack a causa della mancata rilevazione del segnale GPS, anche se il dispositivo riceveva un segnale GPS ottimale.
+
+Se ritieni che il problema non sia stato risolto, apri una segnalazione nel repository del progetto o inviami un'e-mail. Grazie.

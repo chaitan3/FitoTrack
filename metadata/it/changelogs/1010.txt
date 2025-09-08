@@ -1,0 +1,8 @@
+- Visualizzazione dei punti di arresto (pause) sulla mappa a schermo intero
+- Aggiunte icone per l'equitazione e lo sci
+- Migliori prestazioni durante la visualizzazione di allenamenti lunghi
+- Importazione di più allenamenti spostata nella schermata principale
+- Importazione di tutte le tracce da un file GPX
+- Importazione corretta dei tipi di allenamento dai backup
+
+Per un elenco più dettagliato delle modifiche, consultate il repository del progetto su Codeberg.
