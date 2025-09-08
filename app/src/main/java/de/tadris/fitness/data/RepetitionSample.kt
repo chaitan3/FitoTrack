@@ -51,6 +51,7 @@ data class RepetitionSample(
 
     companion object {
 
+        const val REPETITION_TYPE_UNKNOWN = 0
         const val REPETITION_TYPE_STEP = 1
         const val REPETITION_TYPE_JUMP = 2
         const val REPETITION_TYPE_PUSH_UP = 3

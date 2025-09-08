@@ -66,7 +66,7 @@ object WorkoutCalculator {
     @JvmStatic
     fun getPausesFromWorkout(data: WorkoutData) = data.pauses.mapNotNull { pause ->
         data.samples
-            .find { it.timestamp < pause.startDate }
+            .find { it.timestamp > pause.startDate }
             ?.toLatLong()
             ?.let { PauseLocation(pause, it) }
     }

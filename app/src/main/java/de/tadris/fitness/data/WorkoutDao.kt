@@ -110,6 +110,9 @@ interface WorkoutDao {
     @Update
     fun updateSample(sample: RouteSample)
 
+    @Update
+    fun updateRepetitionSample(sample: RepetitionSample)
+
     @Insert
     fun insertWorkoutEvent(event: WorkoutEvent)
 }

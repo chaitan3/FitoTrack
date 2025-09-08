@@ -480,8 +480,6 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "       start,`end`,duration,comment,length,0,calorie,workoutType,interval_set_used_id\n" +
                                     "FROM workout2;\n");
 
-                            db.execSQL("DROP TABLE workout2");
-
 
                             // HANDLE INDOOR WORKOUT
                             db.execSQL("INSERT INTO workout (id,uuid,start,`end`,activeDuration,comment,distance,repetitions,energy,workoutTypeId,intervalSetUsedId) \n" +
@@ -492,7 +490,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "             substr('89ab',abs(random()) % 4 + 1,1) || substr(hex(randomblob(2)),2) || '-' ||\n" +
                                     "             hex(randomblob(6))),\n" +
                                     "       start,`end`,duration,comment,0.0,repetitions,calorie,workoutType,-1\n" +
-                                    "FROM workout2;\n");
+                                    "FROM indoor_workout;\n");
 
                             // TODO recalculate estimated distance from step length
 
@@ -514,8 +512,6 @@ public abstract class AppDatabase extends RoomDatabase {
                             db.execSQL("insert into route_sample (id,timestamp,relativeTime,latitude,longitude,elevation,elevationMSL,speed,pressure,workoutId)\n" +
                                     "select id,absoluteTime,relativeTime,lat,lon,elevation,elevation_msl,speed,pressure,workout_id from workout_sample;");
 
-                            db.execSQL("drop table workout_sample;");
-
                             // HANDLE PAUSE
 
                             db.execSQL("CREATE TABLE workout_pause (" +
@@ -525,8 +521,6 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "userInitiated INTEGER NOT NULL," +
                                     "workoutId INTEGER NOT NULL," +
                                     "FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE);");
-
-                            // TODO write migration to actually determine the pauses
 
                             // HANDLE REPETITION SAMPLES
 
@@ -543,9 +537,45 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE);");
 
                             db.execSQL("insert into repetition_sample (id,timestamp,relativeTime,timestampEnd,repetitionTypeId,repetitions,intensity,frequency,workoutId)\n" +
-                                    "select id,absoluteTime,relativeTime,absoluteEndTime,0,repetitions,intensity,frequency,workout_id from workout_sample;");
+                                    "select id,absoluteTime,relativeTime,absoluteEndTime,0,repetitions,intensity,frequency,workout_id from indoor_sample;");
 
                             // TODO update repetition type id afterwards
+
+                            // HANDLE HR SAMPLES
+
+                            db.execSQL("create table heart_rate_sample (" +
+                                    "id INTEGER not null primary key," +
+                                    "timestamp integer not null," +
+                                    "relativeTime integer not null," +
+                                    "heartRate integer not null," +
+                                    "workoutId integer not null," +
+                                    "FOREIGN key (workoutId) references workout(id) on delete cascade);");
+
+                            db.execSQL("insert into heart_rate_sample(id,timestamp,relativeTime,heartRate,workoutId)\n" +
+                                    "select id,absoluteTime,relativeTime,heart_rate,workout_id from workout_sample where heart_rate > 0;");
+                            db.execSQL("insert into heart_rate_sample(id,timestamp,relativeTime,heartRate,workoutId)\n" +
+                                    "select id,absoluteTime,relativeTime,heart_rate,workout_id from indoor_sample where heart_rate > 0;");
+
+                            // HANDLE WORKOUT EVENT
+
+                            db.execSQL("create table workout_event (" +
+                                    "id integer not null primary key," +
+                                    "timestamp integer not null," +
+                                    "relativeTime integer not null," +
+                                    "typeId text not null," +
+                                    "workoutId integer not null," +
+                                    "FOREIGN key (workoutId) references workout(id) on delete cascade);");
+
+                            db.execSQL("insert into workout_event (id,timestamp,relativeTime,typeId,workoutId)\n" +
+                                    "select id,absoluteTime,relativeTime,'interval',workout_id from workout_sample where interval_triggered > 0");
+                            db.execSQL("insert into workout_event (id,timestamp,relativeTime,typeId,workoutId)\n" +
+                                    "select id,absoluteTime,relativeTime,'interval',workout_id from indoor_sample where interval_triggered > 0");
+
+                            // delete old tables
+                            db.execSQL("DROP TABLE workout2;");
+                            db.execSQL("drop table workout_sample;");
+                            db.execSQL("drop table indoor_workout;");
+                            db.execSQL("drop table indoor_sample;");
 
                             db.setTransactionSuccessful();
                         } finally {
