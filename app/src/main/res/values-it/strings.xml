@@ -33,7 +33,7 @@
     <string name="finished">Concluso</string>
     <string name="loadingFile">Caricamento file</string>
     <string name="chooseBackupFile">Scegli file di backup</string>
-    <string name="importBackupMessage">ATTENZIONE: tutti i dati esistenti nella app saranno cancellati. Se non vuoi perderli, crea prima un backup. Vuoi veramente ripristinare un backup precedente?</string>
+    <string name="importBackupMessage">Crea subito un backup dei dati attuali se desideri conservarli. Vuoi ripristinare il backup precedente adesso?</string>
     <string name="restore">Ripristina</string>
     <string name="backup">Backup</string>
     <string name="setPreferencesTitle">Preferenze</string>
@@ -70,7 +70,7 @@
     <string name="workoutAvgSpeedShort">Vel. media</string>
     <string name="workoutAvgSpeedLong">Velocità media</string>
     <string name="workoutTopSpeed">Velocità massima</string>
-    <string name="workoutBurnedEnergy">Energia consumata</string>
+    <string name="workoutBurnedEnergy">Calorie consumate</string>
     <string name="workoutTotalEnergy">Energia totale</string>
     <string name="workoutEnergyConsumption">Consumo energetico</string>
     <string name="workoutEdited">Questo allenamento è stato modificato.</string>
@@ -255,7 +255,7 @@
     <string name="unitFootSingular">Piede</string>
     <string name="recordingPermissionNotGrantedTitle">Autorizzazioni non concesse</string>
     <string name="recordingStateStopped">Fermato</string>
-    <string name="recordingStatePaused">Pausa</string>
+    <string name="recordingStatePaused">In pausa</string>
     <string name="recordingStateRunning">In esecuzione</string>
     <string name="recordingStateIdle">Inattivo</string>
     <string name="speechConfigNoSpeech">Nessun annuncio</string>
@@ -300,7 +300,7 @@
     <string name="customWorkoutTypesTitle">Tipi di allenamento personalizzati</string>
     <string name="preferenceCategoryVoiceFeedback">Risposta vocale</string>
     <string name="workoutTypeEditMinDistance">Distanza campionata</string>
-    <string name="workoutTypeEditNameError">Inserisci un nome</string>
+    <string name="workoutTypeEditNameError">Per favore inserisci un nome</string>
     <string name="workoutTypeEditName">Nome</string>
     <string name="workoutTypeEditIdErrorUnique">Esiste già un tipo di allenamento che utilizza questo ID</string>
     <string name="workoutTypeEditIdErrorEmpty">Inserisci un ID</string>
@@ -319,9 +319,9 @@
     <string name="unitHeartBeatsPerMinute">bpm</string>
     <string name="preferenceFirstDayOfWeek">Inizio della settimana</string>
     <string name="preferenceUseAverageForCurrentSpeed">Utilizzare la velocità media in un determinato periodo di tempo invece dell\'ultimo record di velocità singolo per il calcolo della velocità corrente.</string>
-    <string name="preferenceCurrentSpeedAverageTimeTitle">Velocità attuale per media</string>
-    <string name="preferenceCurrentSpeedAverageTimeSummary">Sostituisci velocità attuale con la velocità media.</string>
-    <string name="preferenceCurrentSpeedTime">Intervallo di tempo per il calcolo della media</string>
+    <string name="preferenceCurrentSpeedAverageTimeTitle">Velocità media ponderata</string>
+    <string name="preferenceCurrentSpeedAverageTimeSummary">Sostituisci la velocità attuale con una media</string>
+    <string name="preferenceCurrentSpeedTime">Velocità media nell\'arco di tempo</string>
     <string name="preferencesCategoryMap">Mappa</string>
     <string name="edit_interval">Modifica intervallo</string>
     <string name="prefTrackStyleUsageTitle">Usa la colorazione delle tracce automaticamente</string>
@@ -441,9 +441,9 @@
     </plurals>
     <string name="moveEndOfWorkout">Ignora fine</string>
     <string name="moveStartOfWorkout">Ignora l\'inizio</string>
-    <string name="ttsMinuteCountdownAnnouncement"> \u0020<xliff:g example="12 minutes" id="mins">%1$s</xliff:g> fino all\'inizio \u0020</string>
-    <string name="ttsMinuteSecondCountdownAnnouncement"> \u0020<xliff:g example="1 minute" id="mins">%1$s</xliff:g> e <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> fino all\'inizio \u0020</string>
-    <string name="ttsLongSecondCountdownAnnouncement"> \u0020<xliff:g example="5 seconds" id="secs">%1$s</xliff:g> fino all\'inizio \u0020</string>
+    <string name="ttsMinuteCountdownAnnouncement"><xliff:g example="12 minutes" id="mins">%1$s</xliff:g> fino all\'inizio</string>
+    <string name="ttsMinuteSecondCountdownAnnouncement"><xliff:g example="1 minute" id="mins">%1$s</xliff:g> e <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> fino all\'inizio</string>
+    <string name="ttsLongSecondCountdownAnnouncement"><xliff:g example="5 seconds" id="secs">%1$s</xliff:g> fino all\'inizio</string>
     <string name="workoutAvgDurationLong">Durata media</string>
     <string name="workoutPauseDurationSum">Durata totale delle pause</string>
     <string name="workoutDurationPrecisionToSeconds">Precisione della durata al secondo</string>
@@ -542,4 +542,6 @@
     <string name="noSensorAvailable">Nessun sensore disponibile</string>
     <string name="askForComment">Chiedi un commento</string>
     <string name="askForCommentSummary">Chiedi di inserire un commento quando la registrazione termina</string>
+    <string name="removeOAuthToken">Rimuovi l\'accesso OAuth</string>
+    <string name="removedOAuthToken">Autorizzazione OAuth rimossa</string>
 </resources>
