@@ -543,4 +543,6 @@
     <string name="askForComment">Ptát se na komentář</string>
     <string name="removeOAuthToken">Odstranit token OAuth</string>
     <string name="removedOAuthToken">Token OAuth odstraněn</string>
+    <string name="saveChangesQuestion">Uložit změny?</string>
+    <string name="saveChangesQuestionMessage">Opravdu chcete uložit změny?</string>
 </resources>
