@@ -552,4 +552,6 @@
     <string name="askForCommentSummary">Poproś o wpisanie komentarza podczas zatrzymywania nagrywania</string>
     <string name="removeOAuthToken">Usuń OAuth Token</string>
     <string name="removedOAuthToken">Usunięto OAuth Token</string>
+    <string name="saveChangesQuestion">Czy zapisać zmiany?</string>
+    <string name="saveChangesQuestionMessage">Czy na pewno chcesz zapisać zmiany?</string>
 </resources>
