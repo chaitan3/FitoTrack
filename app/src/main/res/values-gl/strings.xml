@@ -533,4 +533,6 @@
     <string name="askForCommentSummary">Pedir que escribas un comentario ao finalizar a gravación</string>
     <string name="removeOAuthToken">Eliminar Token OAuth</string>
     <string name="removedOAuthToken">Eliminouse o Token OAuth</string>
+    <string name="saveChangesQuestion">Gardar os cambios?</string>
+    <string name="saveChangesQuestionMessage">Tes certeza de querer cambiar os cambios?</string>
 </resources>
