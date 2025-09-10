@@ -546,4 +546,6 @@
     <string name="askForComment">Nach Kommentar fragen</string>
     <string name="removedOAuthToken">OAuth-Token entfernt</string>
     <string name="removeOAuthToken">OAuth-Token entfernen</string>
+    <string name="saveChangesQuestionMessage">Möchtest du die Änderungen wirklich speichern?</string>
+    <string name="saveChangesQuestion">Änderungen speichern?</string>
 </resources>
