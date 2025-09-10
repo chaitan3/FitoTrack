@@ -212,9 +212,7 @@
     <string name="workoutTypeSkateboarding">Gördeszkázás</string>
     <string name="preferencesBackupTitle">Adatbázis</string>
     <string name="preferencesRecordingSummary">Az edzés rögzítésének kezelése</string>
-    <string name="workoutStatsHelpText">Ez a képernyő történelmi statisztikákat jelenít meg az edzésekről. A használatához először meg kell határoznia az edzés típusát arra rákattintva. Ezután állítsa be azokat az információkat, amelyeket tudni szeretne, valamint az időtartamot.
-\n
-\nPéldául a „Hét” időtartamként való választásakor az egyes hetek összes edzése egyetlen adatpontba lesz egyesítve az egyes hetek átlagának vagy összegének kiszámításakor.</string>
+    <string name="workoutStatsHelpText">Ez a képernyő történelmi statisztikákat jelenít meg az edzésekről. A használatához először meg kell határoznia az edzés típusát arra rákattintva. Ezután állítsa be azokat az információkat, amelyeket tudni szeretne, valamint az időtartamot.\n\nPéldául a „Hét” időtartamként való választásakor az egyes hetek összes edzése egyetlen adatpontba lesz egyesítve az egyes hetek átlagának vagy összegének kiszámításakor.</string>
     <string name="pref_energy_unit">Energia mértékegysége</string>
     <string name="calendarWeekYear">Naptári hét vagy év</string>
     <string name="hintManageIntervalSets">Adjon hozzá egy intervallumsorozatot az edzésekben történő használathoz.</string>
@@ -314,9 +312,9 @@
     <string name="pref_auto_start_mode_title">Automatikus indítás módja</string>
     <string name="intervalAutoStartModeTraining">Automatikusan indított edzés módja</string>
     <string name="manageAutoStartModeSummary">Az automatikus edzésindítás módjának megváltoztatása</string>
-    <string name="ttsMinuteSecondCountdownAnnouncement"> \u0020<xliff:g example="1 minute" id="mins">%1$s</xliff:g> és <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> a kezdésig \u0020</string>
-    <string name="ttsMinuteCountdownAnnouncement"> \u0020<xliff:g example="12 minutes" id="mins">%1$s</xliff:g> a kezdésig \u0020</string>
-    <string name="ttsLongSecondCountdownAnnouncement"> \u0020<xliff:g example="5 seconds" id="secs">%1$s</xliff:g> a kezdésig \u0020</string>
+    <string name="ttsMinuteSecondCountdownAnnouncement"><xliff:g example="1 minute" id="mins">%1$s</xliff:g> és <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> a kezdésig</string>
+    <string name="ttsMinuteCountdownAnnouncement"><xliff:g example="12 minutes" id="mins">%1$s</xliff:g> a kezdésig</string>
+    <string name="ttsLongSecondCountdownAnnouncement"><xliff:g example="5 seconds" id="secs">%1$s</xliff:g> a kezdésig</string>
     <plurals name="minutes">
         <item quantity="one"><xliff:g example="1" id="mins">%1$d</xliff:g> perc</item>
         <item quantity="other"><xliff:g example="5" id="mins">%1$d</xliff:g> perc</item>
@@ -437,8 +435,7 @@
     <string name="recordingActivityPermissionMessage">A FitoTrack alkalmazásnak szüksége van a fizikai tevékenysége követésének engedélyére a beltéri edzések rögzítéséhez.</string>
     <string name="invalidNumberFormat">Érvénytelen számformátum.</string>
     <string name="fileNotFound">A fájl nem található</string>
-    <string name="offline_local_map_file_with_local_render_theme">Kapcsolat nélküli
-\nHelyi térképfájl helyileg megjelenített témával</string>
+    <string name="offline_local_map_file_with_local_render_theme">Kapcsolat nélküli\nHelyi térképfájl helyileg megjelenített témával</string>
     <string name="rainbow_warrior">Szivárványharcos</string>
     <string name="metric_unit_system">Metrikus</string>
     <string name="imperial_unit_system">Birodalmi</string>
@@ -456,10 +453,8 @@
     <string name="showWorkoutZoomControlsTitle">Nagyítás és pásztázás</string>
     <string name="kcal_unit">kcal</string>
     <string name="joule_unit">Joule</string>
-    <string name="mapnik_default_osm_mapstyle">Mapnik
-\nAlapértelmezett OSM térképstílus</string>
-    <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitárius
-\nLetisztult térkép, de nem mindig érhető el</string>
+    <string name="mapnik_default_osm_mapstyle">Mapnik\nAlapértelmezett OSM térképstílus</string>
+    <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitárius\nLetisztult térkép, de nem mindig érhető el</string>
     <string name="always_track_style">Mindig</string>
     <string name="in_the_diagram_screen_track_style">A diagram képernyőn</string>
     <string name="never_track_style">Soha</string>
@@ -534,6 +529,8 @@
     <string name="workoutDurationPrecisionToSeconds">Időtartam pontossága másodpercekre</string>
     <string name="askForCommentSummary">Megjegyzés megadásának kérése a rögzítés leállításakor</string>
     <string name="askForComment">Megjegyzés kérése</string>
-    <string name="removeOAuthToken">OAuth Token eltávolítása</string>
-    <string name="removedOAuthToken">OAuth Token eltávolítva</string>
+    <string name="removeOAuthToken">OAuth-token eltávolítása</string>
+    <string name="removedOAuthToken">OAuth-token eltávolítva</string>
+    <string name="saveChangesQuestion">Menti a változtatásokat?</string>
+    <string name="saveChangesQuestionMessage">Valóban el szeretné menteni a változtatásokat?</string>
 </resources>
