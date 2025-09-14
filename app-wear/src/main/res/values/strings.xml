@@ -57,7 +57,8 @@
     <string name="speed_preview">%d.%d kmh</string>
     <string name="speed_main">speed: %d.%d kmh</string>
     <string name="speed_main_whole">speed: %d kmh</string>
-    <string name="heart_rate_main">heart rate: %d-%d bpm</string>
+    <string name="heart_rate_preview">%s-%s bpm</string>
+    <string name="heart_rate_main">heart rate: %d-%d</string>
     <string name="dash">-</string>
     <string name="record_location_off">location is switched off</string>
     <string name="record_field_placeholder">--</string>
@@ -79,9 +80,9 @@
     <string name="gain">gain</string>
     <string name="loss">loss</string>
 
-    <string name="alert_cooldown_start">Track cooldown?</string>
-    <string name="alert_cooldown_yes">yes</string>
-    <string name="alert_cooldown_no">nah</string>
+    <string name="dialog_cooldown">Track cooldown?</string>
+    <string name="dialog_cooldown_yes">yes</string>
+    <string name="dialog_cooldown_no">nah</string>
     <string name="alert_delete_message">Delete workout?</string>
     <string name="alert_delete_positive">Delete</string>
     <string name="alert_delete_negative">Cancel</string>
@@ -95,9 +96,9 @@
     <string name="settings_screen">Screen</string>
     <string name="settings_screen_on">keep on</string>
     <string name="settings_screen_off">auto off</string>
+    <string name="settings_auto_pause">Auto pause</string>
     <string name="settings_screen_map">Map screen</string>
-    <string name="settings_screen_current">Current screen</string>
-    <string name="settings_screen_total">Totals screen</string>
+    <string name="settings_screen_default">Default screen</string>
     <string name="settings_screen_speed">Speed screen</string>
     <string name="settings_screen_ele">Elevation screen</string>
     <string name="settings_screen_heart_rate">Heart rate screen</string>
@@ -132,6 +133,13 @@
     <string name="notification_active">active</string>
 
     <!-- Units -->
+    <string name="field_km">%s km</string>
+    <string name="field_m">%s m</string>
+    <string name="field_bpm">%s bpm</string>
+    <string name="field_kmh">%s kmh</string>
+    <string name="field_avg_kmh">%s &#216;kmh</string>
+
+
     <string name="avg_symbol">&#216;</string>
     <string name="km">km</string>
     <string name="m">m</string>

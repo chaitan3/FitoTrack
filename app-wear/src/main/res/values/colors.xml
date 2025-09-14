@@ -22,7 +22,7 @@
     <color name="colorPrimaryDark">#EF6C00</color>
 
     <color name="textWhite">#FFF</color>
-    <color name="textInactive">#777</color>
+    <color name="textInactive">#AAA</color>
     <color name="stateFailed">#F44336</color>
 
     <color name="bg_list_item">#151515</color>

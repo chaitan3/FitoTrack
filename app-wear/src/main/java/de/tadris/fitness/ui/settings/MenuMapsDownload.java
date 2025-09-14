@@ -47,7 +47,7 @@ public class MenuMapsDownload extends MenuScreen{
         loading.value.setVisibility(View.GONE);
         list.addView(loading);
 
-        Main.runInBackground(()->{
+        Main.runInBackgroundJAVA(()->{
             List<MapStore.Dir> dirs = MenuMaps.mapStore.getRemoteDirs(path);
             List<MapStore.File> files = MenuMaps.mapStore.getRemoteFiles(path);
             runOnUiThread(()->{
@@ -83,8 +83,8 @@ public class MenuMapsDownload extends MenuScreen{
         loading.setVisibility(View.GONE);
     }
     private void onItemClicked(MapStore.File file){
-        MapDownload.file = file;
-        startActivity(new Intent(this, MapDownload.class));
+        MapDownloadActivity.file = file;
+        startActivity(new Intent(this, MapDownloadActivity.class));
         finishAndRemoveTask();
     }
 }

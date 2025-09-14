@@ -62,7 +62,7 @@ public class MenuMaps extends MenuScreen{
         loading.value.setVisibility(View.GONE);
         list.addView(loading);
 
-        Main.runInBackground(()->{
+        Main.runInBackgroundJAVA(()->{
             files = MapStore.getLocalMaps(this);
             runOnUiThread(()->showMaps(files));
         });
@@ -70,7 +70,7 @@ public class MenuMaps extends MenuScreen{
     @Override public void onDestroy(){
         super.onDestroy();
         if(mapStore != null){
-            Main.runInBackground(()->{
+            Main.runInBackgroundJAVA(()->{
                 mapStore.close();
                 mapStore = null;
             });
@@ -98,7 +98,7 @@ public class MenuMaps extends MenuScreen{
         }
     }
     private void deleteMap(MenuItem item, MapStore.File file){
-        Main.runInBackground(()->{
+        Main.runInBackgroundJAVA(()->{
             if(mapStore.deleteLocalMap(this, file)){
                 if(MapStore.getLocalMaps(this).isEmpty()){
                     SettingsStore.storeMapSource(this, false);
@@ -129,7 +129,7 @@ public class MenuMaps extends MenuScreen{
     public static void setMapSourceValue(MenuItem mapSource){
         mapSource.value.setText(SettingsStore.getMapSource(mapSource.getContext()) ? R.string.local : R.string.online);
     }
-    private void onUpdateClick(){Main.runInBackground(this::checkForUpdates);}
+    private void onUpdateClick(){Main.runInBackgroundJAVA(this::checkForUpdates);}
     private void checkForUpdates(){
         if(files == null){
             toast(R.string.no_updates);
@@ -144,8 +144,8 @@ public class MenuMaps extends MenuScreen{
                         continue;
                     }
                     hasUpdates = true;
-                    MapDownload.file = file;
-                    startActivity(new Intent(this, MapDownload.class));
+                    MapDownloadActivity.file = file;
+                    startActivity(new Intent(this, MapDownloadActivity.class));
                 }
             }catch(Exception e){
                 toast(R.string.failed);

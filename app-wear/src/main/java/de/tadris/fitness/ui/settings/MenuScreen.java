@@ -46,16 +46,16 @@ public class MenuScreen extends Activity{
 
         scrollView = findViewById(R.id.scrollView);
         if(Main.isScreenRound){
-            label.setPadding(Main.vw10, Main.vw10, Main.vw10, 0);
-            list.setPadding(0, 0, 0, Main.vh25);
+            label.setPadding(Main.old_vw10, Main.old_vw10, Main.old_vw10, 0);
+            list.setPadding(0, 0, 0, Main.old_vh25);
             list.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
                 @Override public void onGlobalLayout(){
                     list.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     if(itemHeight == 0 && list.getChildCount() > 1){
                         itemHeight = list.getChildAt(1).getHeight();
-                        bottom_quarter = Main.vh75 - itemHeight;
+                        bottom_quarter = Main.old_vh75 - itemHeight;
                         below_screen = Main.heightPixels - itemHeight;
-                        scalePerPixel = 0.2f / Main.vh25;
+                        scalePerPixel = 0.2f / Main.old_vh25;
                     }
                     scaleItems(0);
                 }
@@ -79,7 +79,7 @@ public class MenuScreen extends Activity{
             if(top < 0){
                 //the item is above the screen
                 scale = 0.8f;
-            }else if(top < Main.vh25){
+            }else if(top < Main.old_vh25){
                 //the item is in the top quarter
                 scale = 0.8f + (scalePerPixel * top);
             }else if(top > below_screen){

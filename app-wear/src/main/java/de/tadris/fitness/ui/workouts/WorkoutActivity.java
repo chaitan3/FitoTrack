@@ -108,20 +108,20 @@ public class WorkoutActivity extends Activity{
 
         ((ImageView)findViewById(R.id.icon)).setImageResource(workoutData.getWorkoutTypeIcon());
         TextView duration = findViewById(R.id.duration);
-        if(workoutData.pauseTotal == 0){
-            duration.setText(Util.prettyDurationShort(workoutData.durationTotal));
+        if(workoutData.pauseTotal.getValue() == 0){
+            duration.setText(Util.prettyDurationShort(workoutData.durationTotal.getValue()));
         }else{
             findViewById(R.id.duration_desc).setVisibility(View.VISIBLE);
-            String duration_val = Util.prettyDurationShort(workoutData.durationTotal) + " + "
-                    + Util.prettyDurationShort(workoutData.pauseTotal) + " = "
-                    + Util.prettyDurationShort(workoutData.durationTotal + workoutData.pauseTotal);
+            String duration_val = Util.prettyDurationShort(workoutData.durationTotal.getValue()) + " + "
+                    + Util.prettyDurationShort(workoutData.pauseTotal.getValue()) + " = "
+                    + Util.prettyDurationShort(workoutData.durationTotal.getValue() + workoutData.pauseTotal.getValue());
             duration.setText(duration_val);
         }
         if(!workoutData.isWorkoutTypeGps()){
             findViewById(R.id.gps).setVisibility(View.GONE);
         }else{
             gps = findViewById(R.id.gps);
-            set(findViewById(R.id.distance), Type.DISTANCE_KM, workoutData.distanceTotal);
+            set(findViewById(R.id.distance), Type.DISTANCE_KM, workoutData.distanceTotal.getIntValue());
 
             map_button = findViewById(R.id.map_button);
             map_button.setOnClickListener(v->{
@@ -132,12 +132,12 @@ public class WorkoutActivity extends Activity{
                     showMap = true;
                 }else{
                     showMap = true;
-                    Main.runInBackground(()->WorkoutDataStore.readLocations(this, workoutData));
+                    Main.runInBackgroundJAVA(()->WorkoutDataStore.readLocations(this, workoutData));
                 }
             });
 
-            String speed_val = getText(R.string.avg) + " " + getValue(Type.SPEED_KMH, workoutData.speedAvg)
-                    + " | " + getText(R.string.max) + " " + get(Type.SPEED_KMH, workoutData.speedMax);
+            String speed_val = getText(R.string.avg) + " " + getValue(Type.SPEED_KMH, workoutData.speedAvg.getDoubleValue())
+                    + " | " + getText(R.string.max) + " " + get(Type.SPEED_KMH, workoutData.speedMax.getDoubleValue());
             ((TextView)findViewById(R.id.speed)).setText(speed_val);
 
             speed_button = findViewById(R.id.speed_button);
@@ -149,23 +149,23 @@ public class WorkoutActivity extends Activity{
                     showSpeedChart = true;
                 }else{
                     showSpeedChart = true;
-                    Main.runInBackground(()->WorkoutDataStore.readLocations(this, workoutData));
+                    Main.runInBackgroundJAVA(()->WorkoutDataStore.readLocations(this, workoutData));
                 }
             });
 
-            if(workoutData.elevationGainTotal < 10 && workoutData.elevationLossTotal < 10){
+            if(workoutData.elevationGainTotal.getIntValue() < 10 && workoutData.elevationLossTotal.getIntValue() < 10){
                 findViewById(R.id.elevation_wrapper).setVisibility(View.GONE);
             }else{
                 elevation_wrapper = findViewById(R.id.elevation_wrapper);
-                if(workoutData.elevationGainTotal > 10 && workoutData.elevationLossTotal > 10){
-                    String elevation_val = getText(R.string.gain) + " " + getValue(Type.ELEVATION, workoutData.elevationGainTotal)
-                            + " | " + getText(R.string.loss) + " " + get(Type.ELEVATION, workoutData.elevationLossTotal);
+                if(workoutData.elevationGainTotal.getIntValue() > 10 && workoutData.elevationLossTotal.getIntValue() > 10){
+                    String elevation_val = getText(R.string.gain) + " " + getValue(Type.ELEVATION, workoutData.elevationGainTotal.getIntValue())
+                            + " | " + getText(R.string.loss) + " " + get(Type.ELEVATION, workoutData.elevationLossTotal.getIntValue());
                     ((TextView)findViewById(R.id.elevation)).setText(elevation_val);
-                }else if(workoutData.elevationGainTotal > 10){
-                    String elevation_val = getText(R.string.gain) + " " + get(Type.ELEVATION, workoutData.elevationGainTotal);
+                }else if(workoutData.elevationGainTotal.getIntValue() > 10){
+                    String elevation_val = getText(R.string.gain) + " " + get(Type.ELEVATION, workoutData.elevationGainTotal.getIntValue());
                     ((TextView)findViewById(R.id.elevation)).setText(elevation_val);
-                }else if(workoutData.elevationLossTotal > 10){
-                    String elevation_val = getText(R.string.loss) + " " + get(Type.ELEVATION, workoutData.elevationLossTotal);
+                }else if(workoutData.elevationLossTotal.getIntValue() > 10){
+                    String elevation_val = getText(R.string.loss) + " " + get(Type.ELEVATION, workoutData.elevationLossTotal.getIntValue());
                     ((TextView)findViewById(R.id.elevation)).setText(elevation_val);
                 }
 
@@ -179,35 +179,35 @@ public class WorkoutActivity extends Activity{
                         showElevationChart = true;
                     }else{
                         showElevationChart = true;
-                        Main.runInBackground(()->WorkoutDataStore.readLocations(this, workoutData));
+                        Main.runInBackgroundJAVA(()->WorkoutDataStore.readLocations(this, workoutData));
                     }
                 });
             }
         }
 
-        if(workoutData.heartRateAvg == 0){
+        if(workoutData.heartRateAvg.getIntValue() == 0){
             findViewById(R.id.heartRate_wrapper).setVisibility(View.GONE);
         }else{
             heartRate_wrapper = findViewById(R.id.heartRate_wrapper);
-            String temp = getText(R.string.avg) + " " + getValue(Type.HEART_RATE_BPM, workoutData.heartRateAvg)
-                    + " | " + getText(R.string.max) + " " + get(Type.HEART_RATE_BPM, workoutData.heartRateMax);
+            String temp = getText(R.string.avg) + " " + getValue(Type.HEART_RATE_BPM, workoutData.heartRateAvg.getIntValue())
+                    + " | " + getText(R.string.max) + " " + get(Type.HEART_RATE_BPM, workoutData.heartRateMax.getIntValue());
             ((TextView)findViewById(R.id.heartRate)).setText(temp);
 
             heartRate_button = findViewById(R.id.heartRate_button);
             heartRate_button.setOnClickListener(v->{
                 heartRate_button.setText(R.string.loading);
                 if(workoutData.heartRateSamples.isEmpty()){
-                    Main.runInBackground(()->WorkoutDataStore.readHeartRates(this, workoutData));
+                    Main.runInBackgroundJAVA(()->WorkoutDataStore.readHeartRates(this, workoutData));
                 }else{
                     showHeartRateChart(workoutData);
                 }
             });
         }
 
-        if(workoutData.caloriesTotal < 10){
+        if(workoutData.caloriesTotal.getIntValue() < 10){
             findViewById(R.id.calories_wrapper).setVisibility(View.GONE);
         }else{
-            set(findViewById(R.id.calories), Type.CALORIES, workoutData.caloriesTotal);
+            set(findViewById(R.id.calories), Type.CALORIES, workoutData.caloriesTotal.getIntValue());
         }
         findViewById(R.id.delete).setOnClickListener(v->onDeleteClick(workoutData.id));
 
@@ -255,8 +255,8 @@ public class WorkoutActivity extends Activity{
         if(!workoutData.isWorkoutTypeGps() || workoutData.locationSamples.isEmpty()) return;
         try{
             mapView = new MapView(this);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80, Main.vh80);
-            layoutParams.setMargins(Main.vw10, 10, Main.vw10, 0);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80px, Main.vh80px);
+            layoutParams.setMargins(Main.old_vw10, 10, Main.old_vw10, 0);
             mapView.setLayoutParams(layoutParams);
 
             AndroidGraphicFactory.createInstance(getApplicationContext());
@@ -328,7 +328,7 @@ public class WorkoutActivity extends Activity{
             BoundingBox bounds = (new BoundingBox(latLongs)).extendMeters(50);
             mapView.setCenter(bounds.getCenterPoint());
             mapView.setZoomLevel(LatLongUtils.zoomForBounds(
-                    new Dimension(Main.vw80, Main.vh80)
+                    new Dimension(Main.vw80px, Main.vh80px)
                     ,bounds
                     ,mapView.getModel().displayModel.getTileSize()
             ));
@@ -343,8 +343,8 @@ public class WorkoutActivity extends Activity{
         if(workoutData.locationSamples.isEmpty()) return;
 
         LineChart chartSpeed = new LineChart(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80, Main.vh50);
-        layoutParams.setMargins(Main.vw10, 10, 0, 0);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80px, Main.old_vh50);
+        layoutParams.setMargins(Main.old_vw10, 10, 0, 0);
         chartSpeed.setLayoutParams(layoutParams);
 
         chartSpeed.getDescription().setEnabled(false);
@@ -352,7 +352,7 @@ public class WorkoutActivity extends Activity{
         chartSpeed.setTouchEnabled(false);
 
         //The chart has a width of Main.vw80, more entries won't show
-        int skipFrames = workoutData.locationSamples.size() / Main.vw80;
+        int skipFrames = workoutData.locationSamples.size() / Main.vw80px;
         if(skipFrames < 5) skipFrames = 5;
         long firstDuration = -1;
         float minSpeed = 100;
@@ -386,7 +386,7 @@ public class WorkoutActivity extends Activity{
         timeAxis.setValueFormatter(Util.timeAxisValueFormatter);
         timeAxis.setLabelCount(4, true);
         timeAxis.setAxisMinimum(firstDuration);
-        timeAxis.setAxisMaximum(workoutData.durationTotal);
+        timeAxis.setAxisMaximum(workoutData.durationTotal.getValue());
 
         YAxis speedAxis = chartSpeed.getAxisLeft();
         speedAxis.setTextColor(getColor(R.color.textWhite));
@@ -402,8 +402,8 @@ public class WorkoutActivity extends Activity{
         if(workoutData.locationSamples.isEmpty()) return;
 
         LineChart elevationChart = new LineChart(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80, Main.vh50);
-        layoutParams.setMargins(Main.vw10, 10, 0, 0);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80px, Main.old_vh50);
+        layoutParams.setMargins(Main.old_vw10, 10, 0, 0);
         elevationChart.setLayoutParams(layoutParams);
 
         elevationChart.getDescription().setEnabled(false);
@@ -411,7 +411,7 @@ public class WorkoutActivity extends Activity{
         elevationChart.setTouchEnabled(false);
 
         //The chart has a width of Main.vw80, more entries won't show
-        int skipFrames = workoutData.locationSamples.size() / Main.vw80;
+        int skipFrames = workoutData.locationSamples.size() / Main.vw80px;
         if(skipFrames < 5) skipFrames = 5;
         long firstDuration = -1;
         float minElevation = 10000;
@@ -446,7 +446,7 @@ public class WorkoutActivity extends Activity{
         timeAxis.setValueFormatter(Util.timeAxisValueFormatter);
         timeAxis.setLabelCount(4, true);
         timeAxis.setAxisMinimum(firstDuration);
-        timeAxis.setAxisMaximum(workoutData.durationTotal);
+        timeAxis.setAxisMaximum(workoutData.durationTotal.getValue());
 
         YAxis elevationAxis = elevationChart.getAxisLeft();
         elevationAxis.setTextColor(getColor(R.color.textWhite));
@@ -463,8 +463,8 @@ public class WorkoutActivity extends Activity{
         if(workoutData.heartRateSamples.isEmpty()) return;
 
         LineChart chartHeartRate = new LineChart(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80, Main.vh50);
-        layoutParams.setMargins(Main.vw10, 10, 0, 0);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Main.vw80px, Main.old_vh50);
+        layoutParams.setMargins(Main.old_vw10, 10, 0, 0);
         chartHeartRate.setLayoutParams(layoutParams);
 
         chartHeartRate.getDescription().setEnabled(false);
@@ -472,7 +472,7 @@ public class WorkoutActivity extends Activity{
         chartHeartRate.setTouchEnabled(false);
 
         //The chart has a width of Main.vw80, more entries won't show
-        int skipFrames = workoutData.heartRateSamples.size() / Main.vw80;
+        int skipFrames = workoutData.heartRateSamples.size() / Main.vw80px;
         if(skipFrames < 5) skipFrames = 5;
 
         long firstDuration = 0;
@@ -482,10 +482,10 @@ public class WorkoutActivity extends Activity{
             long duration = timeToDuration(workoutData, heartRateSample.time);
             if(duration == 0) continue;
             if(firstDuration == 0) firstDuration = duration;
-            values.add(new Entry(duration, heartRateSample.heartRate));
+            values.add(new Entry((float) duration, (float) heartRateSample.heartRate));
         }
         HeartRateSample heartRateSample = workoutData.heartRateSamples.get(workoutData.heartRateSamples.size()-1);
-        values.add(new Entry(heartRateSample.time - workoutData.id, heartRateSample.heartRate));
+        values.add(new Entry((float) (heartRateSample.time - workoutData.id), (float) heartRateSample.heartRate));
 
         LineDataSet lineDataSet = new LineDataSet(values, "Heart rate");
         lineDataSet.setColor(getColor(R.color.colorPrimary));
@@ -499,7 +499,7 @@ public class WorkoutActivity extends Activity{
         timeAxis.setValueFormatter(Util.timeAxisValueFormatter);
         timeAxis.setLabelCount(4, true);
         timeAxis.setAxisMinimum(firstDuration);
-        timeAxis.setAxisMaximum(workoutData.durationTotal);
+        timeAxis.setAxisMaximum(workoutData.durationTotal.getValue());
 
         chartHeartRate.getAxisLeft().setTextColor(getColor(R.color.textWhite));
         chartHeartRate.getAxisRight().setEnabled(false);
@@ -528,7 +528,7 @@ public class WorkoutActivity extends Activity{
         builder.setTitle(" ");//This makes sure the dialog shows properly for a round screen
         builder.setMessage(R.string.alert_delete_message);
         builder.setPositiveButton(R.string.alert_delete_positive, (d, w)->{
-            Main.runInBackground(()->WorkoutDataStore.deleteWorkout(this, workoutDataId));
+            Main.runInBackgroundJAVA(()->WorkoutDataStore.deleteWorkout(this, workoutDataId));
             finish();
         });
         builder.setNegativeButton(R.string.alert_delete_negative, (d, w)->finish());

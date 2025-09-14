@@ -46,10 +46,10 @@ public class WorkoutsActivity extends Activity{
         setContentView(R.layout.workouts);
         list = findViewById(R.id.list);
         scrollView = findViewById(R.id.scrollView);
-        ((LinearLayout.LayoutParams) list.getLayoutParams()).bottomMargin += Main.vh25;
-        findViewById(R.id.label).setMinimumHeight(Main.vh25);
+        ((LinearLayout.LayoutParams) list.getLayoutParams()).bottomMargin += Main.old_vh25;
+        findViewById(R.id.label).setMinimumHeight(Main.old_vh25);
         if(!WorkoutDataStore.workouts.isEmpty()) loadItems();
-        Main.runInBackground(()->WorkoutDataStore.readWorkouts(this));
+        Main.runInBackgroundJAVA(()->WorkoutDataStore.readWorkouts(this));
     }
     @Override
     public void onResume(){
@@ -82,9 +82,9 @@ public class WorkoutsActivity extends Activity{
                         list.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         if(itemHeight == 0 && list.getChildCount() > 0){
                             itemHeight = list.getChildAt(0).getHeight();
-                            bottom_quarter = Main.vh75 - itemHeight;
+                            bottom_quarter = Main.old_vh75 - itemHeight;
                             below_screen = Main.heightPixels - itemHeight;
-                            scalePerPixel = 0.2f / Main.vh25;
+                            scalePerPixel = 0.2f / Main.old_vh25;
                         }
                         scaleItems(0);
                     }
@@ -106,12 +106,12 @@ public class WorkoutsActivity extends Activity{
         for(int i = 0; i < list.getChildCount(); i++){
             View view = list.getChildAt(i);
 
-            top = Main.vh25 + (view.getY() - scrollY);//add vh25 which is the height of the label
+            top = Main.old_vh25 + (view.getY() - scrollY);//add vh25 which is the height of the label
             scale = 1.0f;
             if(top < 0){
                 //the item is above the screen
                 scale = 0.8f;
-            }else if(top < Main.vh25){
+            }else if(top < Main.old_vh25){
                 //the item is in the top quarter
                 scale = 0.8f + (scalePerPixel * top);
             }else if(top > below_screen){

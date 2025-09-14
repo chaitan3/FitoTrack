@@ -27,7 +27,7 @@
     <Button
         android:id="@+id/workouts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/main_workouts_text"
@@ -41,7 +41,7 @@
     <Button
         android:id="@+id/record"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/main_record_text"
@@ -55,7 +55,7 @@
     <Button
         android:id="@+id/settings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/main_settings_text"

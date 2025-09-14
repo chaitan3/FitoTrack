@@ -37,70 +37,55 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.Starting" >
-        <meta-data
-            android:name="com.google.android.wearable.standalone"
-            android:value="true" />
-        <activity
-            android:name=".ui.Main"
-            android:taskAffinity=".Main"
-            android:exported="true"
-            android:theme="@style/Theme.App.Starting" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.workouts.WorkoutsActivity"
-            android:taskAffinity=".Main"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.workouts.WorkoutActivity"
-            android:taskAffinity=".Main"
-            android:noHistory="true"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.record.RecordActivity"
-            android:taskAffinity=".Main"
-            android:launchMode="singleTop"
-            android:theme="@style/WearNoBack" />
-        <activity
-            android:name=".ui.record.TypeSelectActivity"
-            android:taskAffinity=".RecordActivity"
-            android:noHistory="true"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.record.TargetActivity"
-            android:taskAffinity=".RecordActivity"
-            android:noHistory="true"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.record.SettingsActivity"
-            android:taskAffinity=".Main"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.settings.MenuSettings"
-            android:taskAffinity=".Main"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.settings.MenuMaps"
-            android:taskAffinity=".MenuSettings"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.settings.MenuMapsDownload"
-            android:taskAffinity=".MenuSettings"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.settings.MapDownload"
-            android:taskAffinity=".MenuSettings"
-            android:theme="@style/AppTheme" />
-        <service
-            android:name=".util.CommsBT"
-            android:exported="false" />
-        <service
-            android:name=".ui.record.RecordService"
-            android:foregroundServiceType="location"
-            android:exported="false" />
-    </application>
+	    android:theme="@android:style/Theme.DeviceDefault" >
+	<meta-data
+		android:name="com.google.android.wearable.standalone"
+		android:value="true" />
+	<activity
+		android:name=".ui.Main"
+		android:taskAffinity=".Main"
+		android:exported="true" >
+		<intent-filter>
+			<action android:name="android.intent.action.MAIN" />
+			<category android:name="android.intent.category.LAUNCHER" />
+		</intent-filter>
+	</activity>
+	<activity
+		android:name=".ui.workouts.WorkoutsActivity"
+		android:taskAffinity=".Main"
+		android:theme="@style/AppTheme" />
+	<activity
+		android:name=".ui.workouts.WorkoutActivity"
+		android:taskAffinity=".Main"
+		android:noHistory="true"
+		android:theme="@style/AppTheme" />
+	<activity
+		android:name=".ui.record.RecordActivity"
+		android:taskAffinity=".Main"
+		android:launchMode="singleTop"
+		android:theme="@style/WearNoBack" />
+    <activity
+    android:name=".ui.settings.MenuSettings"
+		android:taskAffinity=".Main"
+		android:theme="@style/AppTheme" />
+	<activity
+		android:name=".ui.settings.MenuMaps"
+		android:taskAffinity=".MenuSettings"
+		android:theme="@style/AppTheme" />
+	<activity
+		android:name=".ui.settings.MenuMapsDownload"
+		android:taskAffinity=".MenuSettings"
+		android:theme="@style/AppTheme" />
+	<activity
+		android:name=".ui.settings.MapDownloadActivity"
+		android:taskAffinity=".MenuSettings"
+		android:theme="@style/AppTheme" />
+	<service
+		android:name=".util.CommsBT"
+		android:exported="false" />
+	<service
+		android:name=".ui.record.RecordService"
+		android:foregroundServiceType="location"
+		android:exported="false" />
+</application>
 </manifest>
