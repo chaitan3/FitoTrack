@@ -56,7 +56,8 @@ import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
 import de.tadris.fitness.R
 import de.tadris.fitness.data.SettingsStore
-import de.tadris.fitness.data.SettingsStore.WorkoutSettings
+import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
+import de.tadris.fitness.data.WorkoutCapabilities
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.WorkoutData.SpeedCachePoint
 import de.tadris.fitness.data.WorkoutDataStore
@@ -93,7 +94,7 @@ class RecordActivity : ComponentActivity() {
 	lateinit var workoutData: WorkoutData
 	var exerciseState by mutableStateOf(ExerciseState.Companion.PREPARING)
 
-	lateinit var workoutSettings: WorkoutSettings
+	lateinit var workoutTypeSettings: WorkoutTypeSettings
 
 	var bootTime = 0L
 	var durationJob: Job? = null
@@ -122,10 +123,30 @@ class RecordActivity : ComponentActivity() {
 		val healthServicesClient = getClient(this)
 		exerciseClient = healthServicesClient.exerciseClient
 		exerciseClient.setUpdateCallback(exerciseUpdateCallback)
+		if(WorkoutCapabilities.capabilities == null) WorkoutCapabilities.init(exerciseClient)
 
-		workoutData = WorkoutData(exerciseClient)
+		workoutData = WorkoutData()
+		if(intent.hasExtra("resumeId")) {
+			val resumeId = intent.getLongExtra("resumeId", 0)
+			WorkoutDataStore.workouts.find{ it.id == resumeId }?.let {
+				workoutData = it
+				workoutData.calories = workoutData.caloriesTotal
+				workoutData.distance = workoutData.distanceTotal
+				workoutData.duration = workoutData.durationTotal
+				workoutData.elevationGain = workoutData.elevationGainTotal
+				workoutData.elevationLoss = workoutData.elevationLossTotal
+				checkpointTime = workoutData.checkpoints.lastOrNull()?.time ?: 0
+				checkpointDuration = workoutData.checkpoints.lastOrNull()?.duration ?: 0
+				runInBackground {
+					if(workoutData.locationSamples.isEmpty())
+						WorkoutDataStore.readLocations(context = this, workoutData)
+					if(workoutData.heartRateSamples.isEmpty())
+						WorkoutDataStore.readHeartRates(context = this, workoutData, onDone = {})
+				}
+			}
+		}
 		workoutData.workoutType = SettingsStore.getLastWorkoutType(this)
-		workoutSettings = WorkoutSettings(this, workoutData.workoutType)
+		workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(this, workoutData.workoutType)
 
 		checkPermissions()
 		prepareExercise()
@@ -145,7 +166,7 @@ class RecordActivity : ComponentActivity() {
 					.isProviderEnabled(LocationManager.GPS_PROVIDER)
 			){
 				locationStatus = SensorStatus.DISABLED
-				toast(R.string.record_location_off)
+				toast(R.string.location_off)
 			}
 		} catch(e: Exception) { logE("RecordActivity.checkPermissions: " + e.message) }
 
@@ -163,11 +184,17 @@ class RecordActivity : ComponentActivity() {
 		)
 	}
 	fun startExercise() {
-		workoutData.id = System.currentTimeMillis()
+		if(workoutData.legs.isNotEmpty()){
+			workoutData.id = System.currentTimeMillis()-1
+			workoutData = workoutData.legs[0]
+		}
+
+		exerciseClient.setUpdateCallback(exerciseUpdateCallback)
 		targetAchieved.value = TargetAchieved.NOT
 		val configBuilder = ExerciseConfig.Builder(workoutData.exerciseType)
-		val autoPause = workoutData.isWorkoutTypeAutoPause && workoutSettings.autoPause.value
-		workoutSettings.autoPause.value = autoPause
+		workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(this, workoutData.workoutType)
+		val autoPause = workoutData.isWorkoutTypeAutoPause && workoutTypeSettings.autoPause.value
+		workoutTypeSettings.autoPause.value = autoPause
 		configBuilder.setIsAutoPauseAndResumeEnabled(autoPause)
 
 		//https://developer.android.com/reference/androidx/health/services/client/data/DataType
@@ -194,17 +221,15 @@ class RecordActivity : ComponentActivity() {
 			return
 		}
 
-		configBuilder.setDataTypes(dataTypes)
-		val exerciseClient = exerciseClient
-		exerciseClient.let {
-			Futures.addCallback(
-				exerciseClient.startExerciseAsync(configBuilder.build()),
-				startCallback,
-				Dispatchers.IO.asExecutor()
-			)
-		}
 		startDurationJob()
 		setScreenOnFlag()
+
+		configBuilder.setDataTypes(dataTypes)
+		Futures.addCallback(
+			exerciseClient.startExerciseAsync(configBuilder.build()),
+			startCallback,
+			Dispatchers.IO.asExecutor()
+		)
 
 		currentWorkoutTypeIcon = workoutData.workoutTypeIcon
 		startForegroundService(Intent(this, RecordService::class.java))
@@ -217,12 +242,51 @@ class RecordActivity : ComponentActivity() {
 		speedCache.clear()
 	}
 	fun endExercise() {
+		val endTimestamp = System.currentTimeMillis()
 		exerciseClient.clearUpdateCallbackAsync(exerciseUpdateCallback)
 		stopService(Intent(this, RecordService::class.java))
 		durationJob?.cancel()
-		WorkoutDataStore.storeWorkout(this, workoutData)
+		WorkoutDataStore.storeWorkout(this, workoutData) {
+			runOnUiThread { toast(R.string.error_workout_write) }
+		}
+		workoutData.endTime = endTimestamp
+		workoutData.rootWorkout?.let { rootWorkout ->
+			if(workoutData.nextLeg == null) {
+				rootWorkout.endTime = endTimestamp
+				rootWorkout.durationTotal = System.currentTimeMillis() - rootWorkout.id
+				rootWorkout.distanceTotal = rootWorkout.legs.sumOf { it.distanceTotal }
+				rootWorkout.speedAvg = rootWorkout.distanceTotal * 1000.0 / rootWorkout.durationTotal
+				rootWorkout.speedMax = rootWorkout.legs.maxOf { it.speedMax }
+				rootWorkout.heartRateAvg = rootWorkout.legs.sumOf { it.heartRateAvg } / rootWorkout.legs.size
+				rootWorkout.heartRateMax = rootWorkout.legs.maxOf { it.heartRateMax }
+				rootWorkout.caloriesTotal = rootWorkout.legs.sumOf { it.caloriesTotal }
+				WorkoutDataStore.storeWorkout(this, rootWorkout){
+					runOnUiThread { toast(R.string.error_workout_write) }
+				}
+			} else {
+				Futures.addCallback(
+					exerciseClient.endExerciseAsync(),
+					restartCallback,
+					Dispatchers.IO.asExecutor()
+				)
+				speedCache.clear()
+				checkpointTime = 0L
+				checkpointDuration = 0L
+			}
+		}
 		runInBackground {
 			SettingsStore.storeLastWorkoutType(this, workoutData.workoutType)
+		}
+	}
+	val restartCallback = object : FutureCallback<Void?> {
+		override fun onSuccess(result: Void?) {
+			runInBackground {
+				delay(2000)
+				prepareExercise()
+			}
+		}
+		override fun onFailure(throwable: Throwable) {
+			logE("RecordActivity.restartCallback: $throwable")
 		}
 	}
 	fun showSummary() {
@@ -233,10 +297,22 @@ class RecordActivity : ComponentActivity() {
 	val isAutoEnding: Boolean
 		get() = exerciseState.isEnding && exerciseState !== ExerciseState.Companion.ENDING
 
-	fun timeToDuration(time: Long): Long = time - checkpointTime + checkpointDuration
+	fun timeToDuration(time: Long): Long? {
+		if(time > checkpointTime) return time - checkpointTime + checkpointDuration
+		if(workoutData.checkpoints.isEmpty()) return null
+		var checkpoint = workoutData.checkpoints[0]
+		for(i in 1..<workoutData.checkpoints.size) {
+			if(workoutData.checkpoints[i].time > time) {
+				if(workoutData.checkpoints[i].duration == checkpoint.duration) { return null }//during a break, don't show
+				else { break }
+			}
+			checkpoint = workoutData.checkpoints[i]
+		}
+		return time - checkpoint.time + checkpoint.duration
+	}
 
 	fun setScreenOnFlag() {
-		if(workoutSettings.screenOn.value) {
+		if(workoutTypeSettings.screenOn.value) {
 			window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 		} else {
 			window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -253,19 +329,17 @@ class RecordActivity : ComponentActivity() {
 				}
 				val currentTime = System.currentTimeMillis()
 				if(exerciseState.isPaused){
-					workoutData.pause =
-						currentTime - checkpointTime + workoutData.pauseTotal.longValue
-					delay(1000 - (workoutData.pauseTotal.longValue % 1000))
+					workoutData.pause = currentTime - checkpointTime + workoutData.pauseTotal
+					delay(1000 - (workoutData.pauseTotal % 1000))
 					continue
 				}else{
-					workoutData.durationTotal.longValue =
-						currentTime - checkpointTime + checkpointDuration
+					workoutData.durationTotal = currentTime - checkpointTime + checkpointDuration
 					if(workoutData.primaryTargetType == WorkoutData.TargetType.DURATION &&
 						workoutData.primaryTargetValue > 0
 					) {
-						updateTargetProgress((workoutData.durationTotal.longValue / 600 / workoutData.primaryTargetValue).toInt())
+						updateTargetProgress((workoutData.durationTotal / 600 / workoutData.primaryTargetValue).toInt())
 					}
-					delay(1000 - (workoutData.durationTotal.longValue % 1000))
+					delay(1000 - (workoutData.durationTotal % 1000))
 				}
 			}
 		}
@@ -295,12 +369,19 @@ class RecordActivity : ComponentActivity() {
 					val checkpointTimePrev = checkpointTime
 					val checkpointDurationPrev = checkpointDuration
 					checkpointTime = activeDurationCheckpoint.time.toEpochMilli()
-					checkpointDuration = activeDurationCheckpoint.activeDuration.toMillis()
+					checkpointDuration = activeDurationCheckpoint.activeDuration.toMillis() +
+							workoutData.duration
 					workoutData.addCheckpoint(checkpointTime, checkpointDuration)
 					if(checkpointDurationPrev == checkpointDuration && checkpointDuration > 0) {
 						//resumed after a pause
-						workoutData.pauseTotal.longValue =
-							System.currentTimeMillis() - checkpointTimePrev + workoutData.pauseTotal.longValue
+						workoutData.pauseTotal =
+							System.currentTimeMillis() - checkpointTimePrev + workoutData.pauseTotal
+					}
+					if(workoutData.id == 0L) workoutData.id = checkpointTime
+					if(workoutData.endTime > 0L) {
+						workoutData.pauseTotal += checkpointTime - workoutData.endTime
+						workoutData.pause = workoutData.pauseTotal
+						workoutData.endTime = 0L
 					}
 				}
 			}
@@ -333,33 +414,36 @@ class RecordActivity : ComponentActivity() {
 			for(dataPoint in dataPointContainer.statisticalDataPoints) {
 				when(dataPoint.dataType) {
 					DataType.Companion.HEART_RATE_BPM_STATS -> {
-						workoutData.heartRateAvg.intValue = (dataPoint.average as Double).toInt()
-						workoutData.heartRateMax.intValue = (dataPoint.max as Double).toInt()
+						workoutData.heartRateAvg = (dataPoint.average as Double).toInt()
+						workoutData.heartRateMax = (dataPoint.max as Double).toInt()
 					}
 					DataType.Companion.SPEED_STATS ->
-						workoutData.speedAvg.doubleValue = dataPoint.average as Double
+						workoutData.speedAvg = dataPoint.average as Double
 					else -> logD("Unknown StatisticalDataPoint: " + dataPoint.dataType + " dataPoint: $dataPoint")
 				}
 			}
 			for(dataPoint in dataPointContainer.cumulativeDataPoints) {
 				when(dataPoint.dataType) {
 					DataType.Companion.CALORIES_TOTAL -> {
-						workoutData.caloriesTotal.intValue = (dataPoint.total as Double).toInt()
+						workoutData.caloriesTotal = (dataPoint.total as Double).toInt() +
+								workoutData.calories
 					}
 					DataType.Companion.DISTANCE_TOTAL -> {
 						val distance = (dataPoint.total as Double).toInt()
-						workoutData.distanceTotal.intValue = distance
-						updateLastSpeed(distance)
+						workoutData.distanceTotal = distance + workoutData.distance
+						updateLastSpeed()
 						if(workoutData.primaryTargetType == WorkoutData.TargetType.DISTANCE &&
 							workoutData.primaryTargetValue > 0
 						) {
-							updateTargetProgress((distance/10/workoutData.primaryTargetValue))
+							updateTargetProgress((workoutData.distanceTotal/10/workoutData.primaryTargetValue))
 						}
 					}
 					DataType.Companion.ELEVATION_GAIN_TOTAL ->
-						workoutData.elevationGainTotal.intValue = (dataPoint.total as Double).toInt()
+						workoutData.elevationGainTotal = (dataPoint.total as Double).toInt() +
+								workoutData.elevationGain
 					DataType.Companion.ELEVATION_LOSS_TOTAL ->
-						workoutData.elevationLossTotal.intValue = (dataPoint.total as Double).toInt()
+						workoutData.elevationLossTotal = (dataPoint.total as Double).toInt() +
+								workoutData.elevationLoss
 					else ->
 						logD("Unknown CumulativeDataPoint: " + dataPoint.dataType + " dataPoint: $dataPoint")
 				}
@@ -381,11 +465,11 @@ class RecordActivity : ComponentActivity() {
 		}
 	}
 
-	fun updateLastSpeed(distance: Int) {
-		if(lastLocationTime == 0L || distance == 0) return
-		speedCache.add(SpeedCachePoint(lastLocationTime, distance))
+	fun updateLastSpeed() {
+		if(lastLocationTime == 0L || workoutData.distanceTotal == 0) return
+		speedCache.add(SpeedCachePoint(lastLocationTime, workoutData.distanceTotal))
 		if(speedCache.size < 10) return  //wait for the speed cache to fill up a bit
-		var distanceDiff = (distance - speedCache[0].distance).toDouble() //meters
+		var distanceDiff = (workoutData.distanceTotal - speedCache[0].distance).toDouble() //meters
 		val timeDiff = (lastLocationTime - speedCache[0].timestamp).toDouble() //milliseconds
 		if(distanceDiff < 4 || timeDiff < 1) {
 			lastSpeed = 0.0
@@ -393,11 +477,10 @@ class RecordActivity : ComponentActivity() {
 		}
 		lastSpeed = (distanceDiff * 1000) / timeDiff //meters/second
 
-		if(lastSpeed > workoutData.speedMax.doubleValue)
-			workoutData.speedMax.doubleValue = lastSpeed
+		if(lastSpeed > workoutData.speedMax) workoutData.speedMax = lastSpeed
 		while(speedCache.size > 30 && distanceDiff > 200.0) {
 			speedCache.removeAt(0)
-			distanceDiff = (distance - speedCache[0].distance).toDouble()
+			distanceDiff = (workoutData.distanceTotal - speedCache[0].distance).toDouble()
 		}
 	}
 	fun updateTargetProgress(value: Int) {
@@ -408,7 +491,7 @@ class RecordActivity : ComponentActivity() {
 		} else if(targetAchieved.value == TargetAchieved.HALF && value >= 100) {
 			targetAchieved.value = TargetAchieved.FULL
 			vibrator.vibrate(vePattern)
-			if(workoutData.targetAutoPause.value) pauseExercise()
+			if(workoutData.targetAutoPause) pauseExercise()
 		}
 	}
 	val startCallback = object : FutureCallback<Void?> {

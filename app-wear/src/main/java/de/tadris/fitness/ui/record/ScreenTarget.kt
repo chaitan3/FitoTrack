@@ -57,11 +57,11 @@ import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
+import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDistance
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
-import org.json.JSONObject
 
 @Composable
 fun ScreenTarget(
@@ -88,15 +88,15 @@ fun ScreenTarget(
 			if(workoutData.primaryTargetType == TargetType.DURATION) {
 				Field(
 					modifier = Modifier.weight(1f),
-					value = workoutData.durationTotal.longValue.prettyDurationShort(),
+					value = workoutData.durationTotal.prettyDurationShort(),
 					isActive = !isPaused
 				)
 			} else if(workoutData.secondaryTargetType != TargetType.DISTANCE){
 				Field(
 					modifier = Modifier.weight(1f),
-					value = workoutData.distanceTotal.intValue.prettyDistance(),
+					value = workoutData.distanceTotal.prettyDistance(),
 					unitText =
-						if(workoutData.distanceTotal.intValue >= 1000) R.string.field_km
+						if(workoutData.distanceTotal >= 1000) R.string.field_km
 						else R.string.field_m,
 					isActive = !isPaused
 				)
@@ -120,8 +120,8 @@ fun ScreenTarget(
 					.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
 					.border(1.dp, ColorWhite),
 				target =
-					if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue * .1
-					else workoutData.secondaryTargetValue * .1,
+					if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue / 36.0
+					else workoutData.secondaryTargetValue / 36.0,
 				value = speed,
 				text = stringResource(R.string.field_kmh, speed.prettySpeed()),
 				isPaused
@@ -131,10 +131,10 @@ fun ScreenTarget(
 					.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
 					.border(1.dp, ColorWhite),
 				target =
-					if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue * .1
-					else workoutData.secondaryTargetValue * .1,
-				value = workoutData.speedAvg.doubleValue,
-				text = stringResource(R.string.field_avg_kmh, workoutData.speedAvg.doubleValue.prettySpeed()),
+					if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue / 36.0
+					else workoutData.secondaryTargetValue / 36.0,
+				value = workoutData.speedAvg,
+				text = stringResource(R.string.field_avg_kmh, workoutData.speedAvg.prettySpeed()),
 				isPaused
 			)
 		}
@@ -205,7 +205,7 @@ fun ScreenTarget(
 				.border(1.dp, ColorProgressBg)
 			){
 				val shouldBeAt = workoutData.secondaryTargetValue * 1000.0 * fullTargetProgress()
-				val diff = (workoutData.distanceTotal.intValue - shouldBeAt).toInt()
+				val diff = (workoutData.distanceTotal - shouldBeAt).toInt()
 				Canvas(Modifier.fillMaxSize()){
 					val width = size.width
 					var widthShould = width * fullTargetProgress()
@@ -245,7 +245,7 @@ fun ScreenTarget(
 				.border(1.dp, ColorProgressBg)
 			){
 				val shouldBeAt = workoutData.secondaryTargetValue * 60000 * fullTargetProgress()
-				val diff = workoutData.durationTotal.longValue - shouldBeAt
+				val diff = workoutData.durationTotal - shouldBeAt
 				Canvas(Modifier.fillMaxSize()){
 					val width = size.width
 					var widthShould = width * fullTargetProgress()
@@ -282,9 +282,9 @@ fun ScreenTarget(
 			Field(
 				modifier = Modifier.weight(1f)
 					.padding(horizontal = if(Main.isScreenRound) Main.vw25 else 5.dp),
-				value = workoutData.distanceTotal.intValue.prettyDistance(),
+				value = workoutData.distanceTotal.prettyDistance(),
 				unitText =
-					if(workoutData.distanceTotal.intValue >= 1000) R.string.field_km
+					if(workoutData.distanceTotal >= 1000) R.string.field_km
 					else R.string.field_m,
 				isActive = !isPaused
 			)
@@ -292,7 +292,7 @@ fun ScreenTarget(
 			Field(
 				modifier = Modifier.weight(1f)
 					.padding(horizontal = if(Main.isScreenRound) Main.vw25 else 5.dp),
-				value = workoutData.durationTotal.longValue.prettyDurationShort(),
+				value = workoutData.durationTotal.prettyDurationShort(),
 				isActive = !isPaused
 			)
 		}
@@ -312,6 +312,7 @@ fun TargetBarSpeed(
 		Canvas(Modifier.fillMaxSize()){
 			val width = size.width/2
 			var widthDiff = (width*(value - target)/target).toFloat()
+			logD("value $value target $target width $width widthDiff $widthDiff")
 			if(widthDiff > width) widthDiff = width
 			if(widthDiff < -width) widthDiff = -width
 			drawRect(
@@ -335,10 +336,10 @@ fun TargetBarSpeed(
 @Composable
 fun PreviewScreenTarget(){
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
-	workoutData.pauseTotal.longValue = 100000
-	workoutData.durationTotal.longValue = 40000
-	workoutData.distanceTotal.intValue = 700
+	val workoutData = WorkoutData()
+	workoutData.pauseTotal = 100000
+	workoutData.durationTotal = 40000
+	workoutData.distanceTotal = 700
 	workoutData.primaryTargetType = TargetType.DISTANCE
 	workoutData.primaryTargetValue = 1
 	workoutData.secondaryTargetType = TargetType.HEART_RATE

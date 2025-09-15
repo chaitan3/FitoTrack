@@ -26,11 +26,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,7 +46,6 @@ import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDurationShort
-import kotlin.collections.plus
 
 @Composable
 fun Cooldown(
@@ -61,7 +57,7 @@ fun Cooldown(
 	val heartRateData = remember { mutableStateListOf<ChartData>() }
 	LaunchedEffect(heartRate) { heartRateData.add(ChartData(duration, value = heartRate)) }
 
-	Column(modifier = modifier.fillMaxSize().padding(top = 20.dp)){
+	Column(modifier.fillMaxSize().padding(top = 20.dp)){
 		Row(
 			modifier = Modifier.fillMaxWidth().weight(1f).padding(
 				horizontal = if(Main.isScreenRound) Main.vw12 else 0.dp
@@ -80,7 +76,7 @@ fun Cooldown(
 		}
 		Box(
 			modifier = Modifier.weight(3f).padding(
-				start = if(Main.isScreenRound) 2.dp else 0.dp,
+				start = if(Main.isScreenRound) Main.vw5 else 0.dp,
 				end = if(Main.isScreenRound) Main.vw12 else 0.dp
 			)
 		){ Chart(data = heartRateData, yMinInit = 50.0, yMaxInit = 100.0) }

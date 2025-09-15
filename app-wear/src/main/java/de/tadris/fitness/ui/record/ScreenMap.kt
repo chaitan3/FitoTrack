@@ -23,7 +23,6 @@ import android.hardware.input.InputManager
 import android.view.InputDevice
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,11 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,41 +63,32 @@ import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.curvedText
 import androidx.wear.tooling.preview.devices.WearDevices
 import de.tadris.fitness.R
-import de.tadris.fitness.data.MapStore
 import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.ui.ColorBlack
-import de.tadris.fitness.ui.ColorFOT
 import de.tadris.fitness.ui.ColorInactive
 import de.tadris.fitness.ui.ColorLocationCircle
 import de.tadris.fitness.ui.ColorWhite
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
+import de.tadris.fitness.ui.getMapPathLine
+import de.tadris.fitness.ui.getTileLayerLocal
+import de.tadris.fitness.ui.getTileLayerOnline
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.util.logD
-import de.tadris.fitness.util.logE
-import de.tadris.fitness.util.toast
-import org.json.JSONObject
 import org.mapsforge.core.graphics.Style
 import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.Dimension
 import org.mapsforge.core.model.LatLong
 import org.mapsforge.core.util.LatLongUtils
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
-import org.mapsforge.map.android.util.AndroidUtil
 import org.mapsforge.map.android.view.MapView
-import org.mapsforge.map.datastore.MultiMapDataStore
 import org.mapsforge.map.layer.download.TileDownloadLayer
-import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik
 import org.mapsforge.map.layer.overlay.FixedPixelCircle
-import org.mapsforge.map.layer.overlay.Polyline
-import org.mapsforge.map.reader.MapFile
-import org.mapsforge.map.rendertheme.internal.MapsforgeThemes
 import org.mapsforge.map.scalebar.DefaultMapScaleBar
 import org.mapsforge.map.scalebar.MapScaleBar
 import org.mapsforge.map.view.InputListener
-
+//TODO fix when shown from the beginning, a wrong line is shown
 enum class MapCenter {NOT, POSITION, ROUTE, FINISH}
 const val zoomLevelMin: Byte = 10
 const val zoomLevelMax: Byte = 18
@@ -119,7 +109,7 @@ fun ScreenMap(
 	var mapView by remember { mutableStateOf(MapView(context)) }
 	val latLongs = remember { mutableListOf<LatLong>() }
 	val locationMarker = remember { locationMarker(initLatLong) }
-	val pathline = remember { pathline() }
+	val pathLine = remember { getMapPathLine() }
 	val hasRotary = remember { hasRotary(context) }
 	var mapLoaded by remember { mutableStateOf(false) }
 	var tileLayerOnline: TileDownloadLayer? = null
@@ -127,7 +117,7 @@ fun ScreenMap(
 	var scrollTime = 0L
 	fun centerLatLongs(latLongs: List<LatLong>) {
 		val box = (BoundingBox(latLongs)).extendMeters(50)
-		mapView.setCenter(box.getCenterPoint())
+		mapView.setCenter(box.centerPoint)
 		val calcZoomLevel = LatLongUtils.zoomForBounds(
 			Dimension(Main.vw80px, Main.vh80px),
 			box,
@@ -167,14 +157,14 @@ fun ScreenMap(
 			workoutData.locationSamples.forEachIndexed { index, sample ->
 				if(index == 0 || index % 5 == 0){
 					latLongs.add(sample.toLatLong())
-					pathline.addPoint(sample.toLatLong())
+					pathLine.addPoint(sample.toLatLong())
 				}
 			}
 			if(latLongs.isNotEmpty()) centerMap()
 		}else if(latLongs.isEmpty() || workoutData.locationSamples.size % 5 == 0) {
 			workoutData.locationSamples.lastOrNull()?.let {
 				latLongs.add(it.toLatLong())
-				pathline.addPoint(it.toLatLong())
+				pathLine.addPoint(it.toLatLong())
 			}
 			if(latLongs.isNotEmpty()) centerMap()
 		}
@@ -199,119 +189,68 @@ fun ScreenMap(
 		}
 	} }
 	if(latLongs.isNotEmpty()) {
-		BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-			val width = with(LocalDensity.current) { maxWidth.toPx() }.toInt()
-			val height = with(LocalDensity.current) { maxHeight.toPx() }.toInt()
-			AndroidView(
-				factory = { context ->
-					mapView = MapView(context).apply {
-						AndroidGraphicFactory.createInstance(context)
-						isClickable = true
-						if(SettingsStore.getMapSource(context)) {
-							val tileCache = AndroidUtil.createTileCache(
-								context,
-								"local",
-								model.displayModel.tileSize,
-								width,
-								height,
-								model.frameBufferModel.overdrawFactor
-							)
-							val multiMap =
-								MultiMapDataStore(MultiMapDataStore.DataPolicy.RETURN_ALL)
-							MapStore.getLocalMaps(context).forEach {
-								logD("loading: " + it.name)
-								try {
-									multiMap.addMapDataStore(
-										MapFile(it.getLocalFile(context)),
-										false,
-										false
-									)
-								} catch(_: Exception) {
-									logE("addMapDataStore failed for map: " + it.name)
-									context.toast(context.getString(R.string.corrupt_map, it.name))
-								}
-							}
-							val tileLayerLocal = AndroidUtil.createTileRendererLayer(
-								tileCache,
-								model.mapViewPosition,
-								multiMap,
-								MapsforgeThemes.OSMARENDER
-							)
-							layerManager.layers.add(tileLayerLocal)
-						} else {
-							val tileCache = AndroidUtil.createTileCache(
-								context,
-								"online",
-								model.displayModel.tileSize,
-								width,
-								height,
-								model.frameBufferModel.overdrawFactor
-							)
-							val tileSource = OpenStreetMapMapnik.INSTANCE
-							tileSource.userAgent = "de.tadris.fitness.wearos"
-							tileLayerOnline = TileDownloadLayer(
-								tileCache,
-								model.mapViewPosition,
-								tileSource,
-								AndroidGraphicFactory.INSTANCE
-							)
-							layerManager.layers.add(tileLayerOnline)
-							tileLayerOnline.onResume()
-						}
-						val scaleBar = DefaultMapScaleBar(
-							model.mapViewPosition,
-							model.mapViewDimension,
-							AndroidGraphicFactory.INSTANCE,
-							model.displayModel
-						)
-						scaleBar.setScaleBarPosition(MapScaleBar.ScaleBarPosition.BOTTOM_CENTER)
-						scaleBar.setScaleBarMode(DefaultMapScaleBar.ScaleBarMode.SINGLE)
-						setMapScaleBar(scaleBar)
+		AndroidView(
+			modifier = Modifier.fillMaxSize().onRotaryScrollEvent {
+				if(scrollTime < it.uptimeMillis - 200) scrollDiff = 0f
+				scrollTime = it.uptimeMillis
+				scrollDiff += it.verticalScrollPixels
+				if(scrollDiff > 300) {
+					zoomIn()
+					scrollDiff = 0f
+				} else if(scrollDiff < -300) {
+					zoomOut()
+					scrollDiff = 0f
+				}
+				true
+			},
+			factory = { context ->
+				mapView = MapView(context).apply {
+					AndroidGraphicFactory.createInstance(context)
+					isClickable = true
 
-						setZoomLevelMin(zoomLevelMin)
-						setZoomLevelMax(zoomLevelMax)
-						setZoomLevel(zoomLevel.value)
-						setBuiltInZoomControls(false)
-
-						isFocusable = true
-						isFocusableInTouchMode = true
-
-						layerManager.layers.add(pathline)
-						layerManager.layers.add(locationMarker)
-						addInputListener(mapInputListener)
-
-						post {
-							requestFocus()
-							centerMap()
-							//this is not ideal, but there is no way to store the actual viewpoint
-							if(mapCenter.value == MapCenter.NOT) mapView.setCenter(latLongs.last())
-							mapLoaded = true
-						}
+					if(SettingsStore.getMapSource(context)) {
+						layerManager.layers.add(getTileLayerLocal(context, model))
+					} else {
+						tileLayerOnline = getTileLayerOnline(context, model)
+						layerManager.layers.add(tileLayerOnline)
+						tileLayerOnline.onResume()
 					}
-					mapView
-				},
-				modifier = Modifier
-					.onRotaryScrollEvent {
-						if(scrollTime < it.uptimeMillis - 200) scrollDiff = 0f
-						scrollTime = it.uptimeMillis
-						scrollDiff += it.verticalScrollPixels
-						if(scrollDiff > 300) {
-							zoomIn()
-							scrollDiff = 0f
-						} else if(scrollDiff < -300) {
-							zoomOut()
-							scrollDiff = 0f
-						}
-						true
+					val scaleBar = DefaultMapScaleBar(
+						model.mapViewPosition,
+						model.mapViewDimension,
+						AndroidGraphicFactory.INSTANCE,
+						model.displayModel
+					)
+					scaleBar.setScaleBarPosition(MapScaleBar.ScaleBarPosition.BOTTOM_CENTER)
+					scaleBar.scaleBarMode = DefaultMapScaleBar.ScaleBarMode.SINGLE
+					mapScaleBar = scaleBar
+
+					setZoomLevelMin(zoomLevelMin)
+					setZoomLevelMax(zoomLevelMax)
+					setZoomLevel(zoomLevel.value)
+					setBuiltInZoomControls(false)
+
+					isFocusable = true
+					isFocusableInTouchMode = true
+
+					layerManager.layers.add(pathLine)
+					layerManager.layers.add(locationMarker)
+					addInputListener(mapInputListener)
+
+					post {
+						requestFocus()
+						centerMap()
+						//this is not ideal, but there is no way to store the actual viewpoint
+						if(mapCenter.value == MapCenter.NOT) mapView.setCenter(latLongs.last())
+						mapLoaded = true
 					}
-			)
-		}
+				}
+				mapView
+			}
+		)
 	}
 	if(Main.isScreenRound){
-		CurvedLayout(
-			modifier = Modifier.fillMaxSize(),
-			anchor = 35f
-		) {
+		CurvedLayout(modifier = Modifier.fillMaxSize(), anchor = 35f) {
 			curvedText(
 				text = context.getString(R.string.osm_copyright),
 				color = ColorBlack,
@@ -340,9 +279,7 @@ fun ScreenMap(
 			}
 		) {
 			Icon(
-				modifier = Modifier
-					.size(48.dp)
-					.padding(4.dp),
+				modifier = Modifier.size(48.dp).padding(4.dp),
 				imageVector = ImageVector.vectorResource(
 					when(mapCenter.value){
 						MapCenter.POSITION -> R.drawable.ic_map_center_pos
@@ -351,16 +288,15 @@ fun ScreenMap(
 						else -> R.drawable.ic_map_center_not
 					}
 				),
+				tint = Color.Unspecified,
 				contentDescription = "map center type"
 			)
 		}
 	}
 	if(!hasRotary){
-		Column(
-			modifier = Modifier.fillMaxHeight().padding(horizontal = 5.dp, vertical =
+		Column(Modifier.fillMaxHeight().padding(horizontal = 5.dp, vertical =
 				if(Main.isScreenRound) Main.vh25 else 0.dp
-		)
-		) {
+		)) {
 			IconButton(
 				onClick = ::zoomOut,
 				modifier = Modifier.weight(1f)
@@ -387,18 +323,14 @@ fun ScreenMap(
 	}
 	if(!mapLoaded){
 		Box(
-			modifier = Modifier
-				.fillMaxSize()
-				.background(colorScheme.background),
+			modifier = Modifier.fillMaxSize().background(colorScheme.background),
 			contentAlignment = Alignment.Center
-		){ Text(text = stringResource(R.string.record_map_waiting)) }
+		){ Text(text = stringResource(R.string.map_waiting)) }
 	}
 	Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
 		IconButton(onClick = goBack) {
 			Icon(
-				modifier = Modifier
-					.size(48.dp)
-					.padding(top = 15.dp)
+				modifier = Modifier.size(48.dp).padding(top = 15.dp)
 					.then(if(!hasOtherScreens) Modifier.rotate(-90f) else Modifier),
 				imageVector = ImageVector.vectorResource(R.drawable.ic_map_up),
 				contentDescription = "go back"
@@ -417,13 +349,7 @@ fun locationMarker(initLatLong: LatLong): FixedPixelCircle{
 	paintFill.color = ColorLocationCircle.toArgb()
 	return FixedPixelCircle(initLatLong, 4f, paintFill, paintStroke)
 }
-fun pathline(): Polyline {
-	val paintStroke = AndroidGraphicFactory.INSTANCE.createPaint()
-	paintStroke.setStyle(Style.STROKE)
-	paintStroke.strokeWidth = 10f
-	paintStroke.color = ColorFOT.toArgb()
-	return Polyline(paintStroke, AndroidGraphicFactory.INSTANCE)
-}
+
 fun hasRotary(context: Context): Boolean {
 	val inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
 	return inputManager.inputDeviceIds.any {
@@ -434,9 +360,9 @@ fun hasRotary(context: Context): Boolean {
 
 @Preview(device = WearDevices.SMALL_ROUND)
 @Composable
-fun PreviewScreenMapCompose() {
+fun PreviewScreenMap() {
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
+	val workoutData = WorkoutData()
 	AppScaffold { FOTTheme {
 		ScreenMap(
 			workoutData,

@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
@@ -48,14 +49,12 @@ import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.ui.ColorFOT
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
-import org.json.JSONObject
 
 @Composable
-fun Settings(
+fun RecordSettings(
 	modifier: Modifier,
 	showTarget: Boolean,
 	workoutData: WorkoutData,
-	workoutSettings: SettingsStore.WorkoutSettings,
 	hasLocation: Boolean,
 	hasHeartRate: Boolean,
 	onTargetClicked: () -> Unit
@@ -66,6 +65,7 @@ fun Settings(
 		first = ScalingLazyColumnDefaults.ItemType.MultiButton
 	)
 	val transformationSpec = rememberTransformationSpec()
+	val workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(context, workoutData.workoutType)
 	ScreenScaffold(
 		modifier = modifier,
 		scrollState = columnState,
@@ -79,7 +79,7 @@ fun Settings(
 					onClick = onTargetClicked
 				) {
 					Column{
-						Text(text = stringResource(R.string.record_target))
+						Text(text = stringResource(R.string.target))
 						Text(
 							text = targetSubLabel(
 								targetType = workoutData.primaryTargetType,
@@ -91,47 +91,6 @@ fun Settings(
 					}
 				}
 			} }
-			item {
-				OutlinedButton(
-					modifier = Modifier.fillMaxWidth(),
-					transformation = SurfaceTransformation(transformationSpec),
-					onClick = { workoutSettings.toggleScreenOn(context, workoutData.workoutType) }
-				) {
-					Column{
-						Text(text = stringResource(R.string.settings_screen))
-						Text(
-							text = stringResource(id =
-								if(workoutSettings.screenOn.value) R.string.settings_screen_on else R.string.settings_screen_off
-							),
-							color = ColorFOT
-						)
-					}
-				}
-			}
-			if(workoutData.isWorkoutTypeAutoPause) {
-				item {
-					OutlinedButton(
-						modifier = Modifier.fillMaxWidth(),
-						transformation = SurfaceTransformation(transformationSpec),
-						onClick = {
-							workoutSettings.toggleAutoPause(
-								context,
-								workoutData.workoutType
-							)
-						}
-					) {
-						Column {
-							Text(text = stringResource(R.string.settings_auto_pause))
-							Text(
-								text = stringResource(id =
-									if(workoutSettings.autoPause.value) R.string.on else R.string.off
-								),
-								color = ColorFOT
-							)
-						}
-					}
-				}
-			}
 			if(workoutData.isWorkoutTypeGps && MapStore.getLocalMaps(context).isNotEmpty()) {
 				item {
 					var mapSource by remember { mutableStateOf(getMapSource(context)) }
@@ -153,8 +112,55 @@ fun Settings(
 					}
 				}
 			}
-			workoutSettings.screens.forEach{
-				if(!workoutData.isWorkoutTypeGps && it.needsLocation) return@forEach
+			item {
+				Text(
+					text = stringResource(
+						R.string.settings_title,
+						stringResource(WorkoutData.getWorkoutTypeName(workoutData.workoutType))
+					),
+					color = ColorFOT,
+					textAlign = TextAlign.Center
+				)
+			}
+			item {
+				OutlinedButton(
+					modifier = Modifier.fillMaxWidth(),
+					transformation = SurfaceTransformation(transformationSpec),
+					onClick = { workoutTypeSettings.toggleScreenOn(context) }
+				) {
+					Column{
+						Text(text = stringResource(R.string.screen))
+						Text(
+							text = stringResource(id =
+								if(workoutTypeSettings.screenOn.value) R.string.screen_keep_on else R.string.screen_auto_off
+							),
+							color = ColorFOT
+						)
+					}
+				}
+			}
+			if(workoutData.isWorkoutTypeAutoPause) {
+				item {
+					OutlinedButton(
+						modifier = Modifier.fillMaxWidth(),
+						transformation = SurfaceTransformation(transformationSpec),
+						onClick = { workoutTypeSettings.toggleAutoPause(context) }
+					) {
+						Column {
+							Text(text = stringResource(R.string.auto_pause))
+							Text(
+								text = stringResource(id =
+									if(workoutTypeSettings.autoPause.value) R.string.on else R.string.off
+								),
+								color = ColorFOT
+							)
+						}
+					}
+				}
+			}
+			workoutTypeSettings.screens.forEach{
+				if((!workoutData.isWorkoutTypeGps && it.needsLocation) ||
+					it.isTarget || it.isMultisport) return@forEach
 				val unavailable = (it.needsLocation && !hasLocation) ||
 						(it.needsHeartRate && !hasHeartRate)
 				item {
@@ -184,19 +190,15 @@ fun Settings(
 
 @Preview(device = WearDevices.SMALL_ROUND)
 @Composable
-fun PreviewSettings(){
+fun PreviewRecordSettings(){
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
-	val workoutSettings = SettingsStore.WorkoutSettings(
-		LocalContext.current,
-		WorkoutData.WorkoutType.WALK
-	)
+	val workoutData = WorkoutData()
+	workoutData.workoutType = WorkoutData.WorkoutType.SWIM_OUTDOOR
 	FOTTheme {
-		Settings(
+		RecordSettings(
 			Modifier,
 			showTarget = true,
 			workoutData,
-			workoutSettings,
 			hasLocation = true,
 			hasHeartRate = true,
 			onTargetClicked = {}

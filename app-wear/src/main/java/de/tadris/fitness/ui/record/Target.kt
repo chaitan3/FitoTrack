@@ -41,7 +41,6 @@ import de.tadris.fitness.ui.ColorFOT
 import de.tadris.fitness.ui.ColorWhite
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
-import org.json.JSONObject
 
 @Composable
 fun Target(
@@ -87,7 +86,7 @@ fun Target(
 	) {
 		TargetItem(
 			modifier = Modifier.weight(1f),
-			label = R.string.record_target,
+			label = R.string.target,
 			subLabel = targetSubLabel(
 				targetType = workoutData.primaryTargetType,
 				targetValue = workoutData.primaryTargetValue,
@@ -97,10 +96,10 @@ fun Target(
 		)
 		TargetItem(
 			modifier = Modifier.weight(1f),
-			enabled = workoutData.primaryTargetType != null,
-			label = R.string.record_target_auto_pause,
-			subLabel = stringResource(id = if(workoutData.targetAutoPause.value) R.string.on else R.string.off),
-			onClicked = { workoutData.targetAutoPause.value = !workoutData.targetAutoPause.value }
+			enabled = workoutData.primaryTargetType in setOf(TargetType.DURATION, TargetType.DISTANCE),
+			label = R.string.target_auto_pause,
+			subLabel = stringResource(id = if(workoutData.targetAutoPause) R.string.on else R.string.off),
+			onClicked = { workoutData.targetAutoPause = !workoutData.targetAutoPause }
 		)
 		TargetItem(
 			modifier = Modifier.weight(1f),
@@ -146,7 +145,7 @@ fun targetSubLabel(targetType: TargetType?, targetValue: Int, targetValueHigh: I
 @Composable
 fun PreviewTarget(){
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
+	val workoutData = WorkoutData()
 	workoutData.primaryTargetType = TargetType.DURATION
 	workoutData.primaryTargetValue = 125
 	FOTTheme {

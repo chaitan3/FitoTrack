@@ -48,7 +48,11 @@ import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
 
 @Composable
-fun TypeSelect(modifier: Modifier, onItemClick: (WorkoutData.WorkoutType) -> Unit){
+fun TypeSelect(
+	modifier: Modifier,
+	onItemClick: (WorkoutData.WorkoutType) -> Unit,
+	noMultisport: Boolean
+){
 	val columnState = rememberTransformingLazyColumnState()
 	val contentPadding = rememberResponsiveColumnPadding()
 	val transformationSpec = rememberTransformationSpec()
@@ -58,7 +62,8 @@ fun TypeSelect(modifier: Modifier, onItemClick: (WorkoutData.WorkoutType) -> Uni
 		contentPadding = contentPadding
 	) { contentPadding ->
 		TransformingLazyColumn(state = columnState, contentPadding = contentPadding) {
-			WorkoutData.WorkoutType.entries.forEach { workoutType->
+			WorkoutData.WorkoutType.entries.forEach { workoutType ->
+				if(workoutType == WorkoutData.WorkoutType.MULTISPORT && noMultisport) return@forEach
 				item {
 					Type(
 						transformation = SurfaceTransformation(transformationSpec),
@@ -97,5 +102,5 @@ fun Type(
 @Composable
 fun PreviewTypeSelect(){
 	Main.GetScreenSpecs()
-	AppScaffold { FOTTheme { TypeSelect(Modifier){} } }
+	AppScaffold { FOTTheme { TypeSelect(Modifier, onItemClick = {}, noMultisport = false) } }
 }

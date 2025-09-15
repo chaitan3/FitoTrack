@@ -55,7 +55,7 @@ class RecordService : Service() {
 			notificationManager.createNotificationChannel(
 				NotificationChannel(
 					NOTIFICATION_CHANNEL_ID,
-					getString(R.string.notification_active),
+					getString(R.string.active),
 					NotificationManager.IMPORTANCE_HIGH
 				)
 			)
@@ -76,7 +76,7 @@ class RecordService : Service() {
 			PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
 		)
 		val ongoingActivityStatus = Status.Builder()
-			.addTemplate(getString(R.string.notification_active))
+			.addTemplate(getString(R.string.active))
 			.build()
 		val notification: NotificationCompat.Builder = NotificationCompat.Builder(
 			baseContext,

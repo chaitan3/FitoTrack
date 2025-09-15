@@ -18,6 +18,7 @@
  */
 package de.tadris.fitness.ui
 
+import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,9 +36,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -55,10 +58,26 @@ import androidx.wear.compose.material3.MaterialTheme.colorScheme
 import androidx.wear.compose.material3.ProgressIndicatorDefaults
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TextButton
+import de.tadris.fitness.R
+import de.tadris.fitness.data.MapStore
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.util.Util.prettyDuration
+import de.tadris.fitness.util.logD
+import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.pretty
+import de.tadris.fitness.util.prettyDuration
 import de.tadris.fitness.util.prettySpeed
+import de.tadris.fitness.util.toast
+import org.mapsforge.core.graphics.Style
+import org.mapsforge.map.android.graphics.AndroidGraphicFactory
+import org.mapsforge.map.android.util.AndroidUtil
+import org.mapsforge.map.datastore.MultiMapDataStore
+import org.mapsforge.map.layer.download.TileDownloadLayer
+import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik
+import org.mapsforge.map.layer.overlay.Polyline
+import org.mapsforge.map.layer.renderer.TileRendererLayer
+import org.mapsforge.map.model.Model
+import org.mapsforge.map.reader.MapFile
+import org.mapsforge.map.rendertheme.internal.MapsforgeThemes
 import kotlin.math.floor
 
 @Composable
@@ -105,7 +124,7 @@ fun TargetProgress(
 			indicatorColor = if(targetAchieved.value == TargetAchieved.FULL) ColorProgressDone else ColorFOT,
 			trackColor = if(targetAchieved.value == TargetAchieved.FULL) ColorProgressDoneDark else ColorTransparent,
 		),
-		strokeWidth = 2.dp
+		strokeWidth = 3.dp
 	)
 }
 
@@ -138,10 +157,12 @@ fun Chart(
 	val textMeasurer = rememberTextMeasurer()
 	val dashPathEffect = remember { PathEffect.dashPathEffect(floatArrayOf(25f, 5f)) }
 
-	val yMin = remember(data.size) { minOf(
-		data.minOfOrNull { it.value } ?: yMinInit,
-		yMinInit, target1 ?: yMinInit, target2 ?: yMinInit
-	) }
+	val yMin = remember(data.size) {
+		minOf(
+			data.minOfOrNull { it.value } ?: yMinInit,
+			yMinInit, target1 ?: yMinInit, target2 ?: yMinInit
+		)
+	}
 	val yMax = remember(data.size) { maxOf(
 		data.maxOfOrNull { it.value } ?: yMaxInit,
 		yMaxInit, target1 ?: yMaxInit, target2 ?: yMaxInit
@@ -174,9 +195,9 @@ fun Chart(
 		}
 		val yLabelCount = floor(height / (labelHeight+3f)).toInt()-1
 		val yLabelStep = height/yLabelCount
-		val yDiff: Double = yMax - yMin
-		val yDiffStep: Double = yDiff/yLabelCount
-		val yPixelPerDiff: Float = if(yDiff == 0.0) 0f else (height / yDiff).toFloat()
+		val yDiff = yMax - yMin
+		val yDiffStep = yDiff/yLabelCount
+		val yPixelPerDiff = if(yDiff == 0.0) 0f else (height / yDiff).toFloat()
 		drawYAxisLabelAndLine(yMax, top)
 		for(i in 1..yLabelCount-1){
 			drawYAxisLabelAndLine(yMax-yDiffStep*i, top + yLabelStep*i)
@@ -185,7 +206,7 @@ fun Chart(
 
 		fun drawXAxisLabelAndLine(duration: Long, xPosition: Float) {
 			val textLayoutResult = textMeasurer.measure(
-				text = prettyDuration(duration),
+				text = duration.prettyDuration(),
 				style = TextStyle(color = ColorWhite, fontSize = 12.sp)
 			)
 			drawText(
@@ -263,7 +284,8 @@ fun measureWidth(textMeasurer: TextMeasurer, text: String): Float =
 
 @Composable
 fun ConfirmDialog(
-	text: Int,
+	text: Int? = null,
+	textString: String? = null,
 	confirmText: Int,
 	dismissText: Int,
 	onConfirm: () -> Unit,
@@ -276,8 +298,9 @@ fun ConfirmDialog(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.Center
 	){
-		Text(text = stringResource(text))
-		Row(modifier = Modifier.fillMaxWidth()){
+		if(text != null) Text(text = stringResource(text))
+		if(textString != null) Text(text = textString)
+		Row(Modifier.fillMaxWidth()){
 			TextButton(
 				modifier = Modifier.weight(1f),
 				onClick = onDismiss
@@ -298,4 +321,61 @@ fun ConfirmDialog(
 			}
 		}
 	}
+}
+
+fun getTileLayerOnline(context: Context, model: Model): TileDownloadLayer {
+	val tileCache = AndroidUtil.createTileCache(
+		context,
+		"online",
+		model.displayModel.tileSize,
+		Main.widthPixels,
+		Main.heightPixels,
+		model.frameBufferModel.overdrawFactor
+	)
+	val tileSource = OpenStreetMapMapnik.INSTANCE
+	tileSource.userAgent = "de.tadris.fitness.wearos"
+	val tileLayerOnline = TileDownloadLayer(
+		tileCache,
+		model.mapViewPosition,
+		tileSource,
+		AndroidGraphicFactory.INSTANCE
+	)
+	return tileLayerOnline
+}
+fun getTileLayerLocal(context: Context, model: Model): TileRendererLayer {
+	val tileCache = AndroidUtil.createTileCache(
+		context,
+		"local",
+		model.displayModel.tileSize,
+		Main.widthPixels,
+		Main.heightPixels,
+		model.frameBufferModel.overdrawFactor
+	)
+	val multiMap = MultiMapDataStore(MultiMapDataStore.DataPolicy.RETURN_ALL)
+	MapStore.getLocalMaps(context).forEach {
+		logD("loading: " + it.name)
+		try {
+			multiMap.addMapDataStore(
+				MapFile(it.getLocalFile(context)),
+				false,
+				false
+			)
+		} catch(_: Exception) {
+			logE("addMapDataStore failed for map: " + it.name)
+			context.toast(context.getString(R.string.corrupt_map, it.name))
+		}
+	}
+	return AndroidUtil.createTileRendererLayer(
+		tileCache,
+		model.mapViewPosition,
+		multiMap,
+		MapsforgeThemes.OSMARENDER
+	)
+}
+fun getMapPathLine(color: Color = ColorFOT): Polyline{
+	val paintStroke = AndroidGraphicFactory.INSTANCE.createPaint()
+	paintStroke.setStyle(Style.STROKE)
+	paintStroke.strokeWidth = 10f
+	paintStroke.color = color.toArgb()
+	return Polyline(paintStroke, AndroidGraphicFactory.INSTANCE)
 }

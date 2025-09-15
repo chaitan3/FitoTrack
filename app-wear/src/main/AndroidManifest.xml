@@ -52,34 +52,20 @@
 	</activity>
 	<activity
 		android:name=".ui.workouts.WorkoutsActivity"
-		android:taskAffinity=".Main"
-		android:theme="@style/AppTheme" />
+		android:taskAffinity=".Main" />
 	<activity
 		android:name=".ui.workouts.WorkoutActivity"
 		android:taskAffinity=".Main"
-		android:noHistory="true"
-		android:theme="@style/AppTheme" />
+		android:excludeFromRecents="true"
+		android:noHistory="true"/>
 	<activity
 		android:name=".ui.record.RecordActivity"
 		android:taskAffinity=".Main"
 		android:launchMode="singleTop"
-		android:theme="@style/WearNoBack" />
-    <activity
-    android:name=".ui.settings.MenuSettings"
-		android:taskAffinity=".Main"
-		android:theme="@style/AppTheme" />
+		android:theme="@style/ThemeNoBack" />
 	<activity
-		android:name=".ui.settings.MenuMaps"
-		android:taskAffinity=".MenuSettings"
-		android:theme="@style/AppTheme" />
-	<activity
-		android:name=".ui.settings.MenuMapsDownload"
-		android:taskAffinity=".MenuSettings"
-		android:theme="@style/AppTheme" />
-	<activity
-		android:name=".ui.settings.MapDownloadActivity"
-		android:taskAffinity=".MenuSettings"
-		android:theme="@style/AppTheme" />
+		android:name=".ui.settings.SettingsActivity"
+		android:taskAffinity=".Main" />
 	<service
 		android:name=".util.CommsBT"
 		android:exported="false" />

@@ -17,4 +17,5 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':app', ':app-wear'
+include ':app'
+include ':app-wear'

@@ -31,18 +31,15 @@ object SettingsStore {
 	fun storeSetting(context: Context, name: String, type: WorkoutType?, value: Boolean) =
 		getEditor(context, type).putBoolean(name, value).apply()
 
-	@JvmStatic
     fun getBTEnabled(context: Context): Boolean =
 		getSharedPreferences(context, null)
 			.getBoolean("BTEnabled", false)
-	@JvmStatic
     fun storeBTEnabled(context: Context, value: Boolean) =
 		getEditor(context, null).putBoolean("BTEnabled", value).apply()
-	@JvmStatic
+
     fun getMapSource(context: Context): Boolean =
 		getSharedPreferences(context, null)
 			.getBoolean("MapSource", false)
-	@JvmStatic
     fun storeMapSource(context: Context, value: Boolean) =
 		getEditor(context, null).putBoolean("MapSource", value).apply()
 
@@ -55,10 +52,12 @@ object SettingsStore {
 		return workoutType
 	}
 
-	fun storeLastWorkoutType(context: Context, workoutType: WorkoutType)  =
+	fun storeLastWorkoutType(context: Context, workoutType: WorkoutType) {
+		if(workoutType == WorkoutType.MULTISPORT) return
 		getEditor(context, null)
 			.putInt("lastWorkoutType", workoutType.ordinal)
 			.apply()
+	}
 
 	private fun getEditor(context: Context, workoutType: WorkoutType?): SharedPreferences.Editor =
 		getSharedPreferences(context, workoutType).edit()
@@ -70,71 +69,76 @@ object SettingsStore {
 			Context.MODE_PRIVATE
 		)
 
-	class WorkoutSettings(context: Context, workoutType: WorkoutType) {
+	var workoutTypeSettings: WorkoutTypeSettings? = null
+	fun getWorkoutTypeSettings(context: Context, workoutType: WorkoutType): WorkoutTypeSettings {
+		workoutTypeSettings?.let{ if(it.workoutType == workoutType) return it }
+		return WorkoutTypeSettings(context, workoutType)
+	}
+	class WorkoutTypeSettings(context: Context, val workoutType: WorkoutType) {
 		data class Screen(
 			var name: Int,
 			var navRoute: String,
 			var enabled: MutableState<Boolean> = mutableStateOf(false),
-			val needsLocation: Boolean,
-			val needsHeartRate: Boolean
+			val needsLocation: Boolean = false,
+			val needsHeartRate: Boolean = false,
+			val isTarget: Boolean = false,
+			val isMultisport: Boolean = false
 		){
 			fun toggle(context: Context, workoutType: WorkoutType) {
-				this.enabled.value = !this.enabled.value
+				enabled.value = !enabled.value
 				storeSetting(
 					context = context,
 					name = navRoute,
 					type = workoutType,
-					value = this.enabled.value
+					value = enabled.value
 				)
 			}
 		}
 		val screens = listOf(
 			Screen(
-				name = R.string.settings_screen_map,
+				name = R.string.screen_map,
 				navRoute = "ScreenMap",
 				enabled = mutableStateOf(true),
-				needsLocation = true,
-				needsHeartRate = false
+				needsLocation = true
 			),
 			Screen(
-				name = R.string.settings_screen_default,
+				name = R.string.screen_default,
 				navRoute = "ScreenDefault",
-				enabled = mutableStateOf(true),
-				needsLocation = false,
-				needsHeartRate = false
+				enabled = mutableStateOf(true)
 			),
 			Screen(
-				name = R.string.settings_screen_target,
+				name = R.string.screen_target,
 				navRoute = "ScreenTarget",
-				needsLocation = false,
-				needsHeartRate = false
+				isTarget = true
 			),
 			Screen(
-				name = R.string.settings_screen_ele,
+				name = R.string.screen_multiport,
+				navRoute = "ScreenMultisport",
+				isMultisport = true
+			),
+			Screen(
+				name = R.string.screen_elevation,
 				navRoute = "ScreenElevation",
-				needsLocation = true,
-				needsHeartRate = false
+				needsLocation = true
 			),
 			Screen(
-				name = R.string.settings_screen_heart_rate,
+				name = R.string.screen_heart_rate,
 				navRoute = "ScreenHeartRate",
-				needsLocation = false,
 				needsHeartRate = true
 			),
 			Screen(
-				name = R.string.settings_screen_speed,
+				name = R.string.screen_speed,
 				navRoute = "ScreenSpeed",
-				needsLocation = true,
-				needsHeartRate = false
+				needsLocation = true
 			)
 		)
 		val screenOn: MutableState<Boolean> = mutableStateOf(false)
-		fun toggleScreenOn(context: Context, workoutType: WorkoutType) {
+		fun toggleScreenOn(context: Context) {
 			screenOn.value = !screenOn.value
 			storeSetting(context, "screenOn", workoutType, screenOn.value)
 		}
 		val autoPause: MutableState<Boolean> = mutableStateOf(false)
-		fun toggleAutoPause(context: Context, workoutType: WorkoutType) {
+		fun toggleAutoPause(context: Context) {
 			autoPause.value = !autoPause.value
 			storeSetting(context, "autoPause", workoutType, autoPause.value)
 		}
@@ -146,9 +150,10 @@ object SettingsStore {
 			screens.forEach {
 				it.enabled.value = sp.getBoolean(
 					it.navRoute,
-					it.navRoute in setOf("ScreenDefault", "ScreenMap")
+					it.enabled.value
 				)
 			}
+			workoutTypeSettings = this
 		}
 	}
 }

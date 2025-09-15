@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
@@ -52,57 +53,35 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import de.tadris.fitness.R
 import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.ui.record.RecordActivity
-import de.tadris.fitness.ui.settings.MenuSettings
+import de.tadris.fitness.ui.settings.SettingsActivity
 import de.tadris.fitness.ui.workouts.WorkoutsActivity
 import de.tadris.fitness.util.CommsBT
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import de.tadris.fitness.util.toast
+import kotlinx.coroutines.launch
 
 class Main : ComponentActivity() {
 	companion object {
-		const val LOG_TAG: String = "FitoTrack"
-		private var executorService: ExecutorService? = null
-		@JvmField
 		var hasBTPermission = false
-		@JvmField
 		var isScreenRound = false
-		@JvmField
 		var heightPixels: Int = 0
 		var widthPixels: Int = 0
-		@JvmField
-		var old_vh25: Int = 0
-		@JvmField
-		var old_vh50: Int = 0
-		@JvmField
-		var old_vh75: Int = 0
-		@JvmField
 		var vh80px: Int = 0
-		@JvmField
-		var old_vw10: Int = 0
-		@JvmField
 		var vw80px: Int = 0
-		var dp10: Int = 0
-		@JvmField
-		var menuItemHeight: Int = 0
-		@JvmStatic
 		val bTPermission: String
 			get() = if(Build.VERSION.SDK_INT >= 31) Manifest.permission.BLUETOOTH_CONNECT else Manifest.permission.BLUETOOTH
 
-		@JvmStatic
-		fun runInBackgroundJAVA(runnable: Runnable?) {
-			if(executorService == null) executorService = Executors.newCachedThreadPool()
-			executorService?.execute(runnable)
-		}
-
 		var screenHeight = 0.dp
 		var vh5 = 0.dp
+		var vh10 = 0.dp
 		var vh25 = 0.dp
+		var vh50 = 0.dp
 		var vh80 = 0.dp
 		var screenWidth = 0.dp
 		var vw5 = 0.dp
 		var vw7 = 0.dp
 		var vw10 = 0.dp
 		var vw12 = 0.dp
+		var vw17 = 0.dp
 		var vw25 = 0.dp
 		var vw80 = 0.dp
 		@Composable
@@ -110,13 +89,16 @@ class Main : ComponentActivity() {
 			isScreenRound = LocalConfiguration.current.isScreenRound
 			screenHeight = LocalConfiguration.current.screenHeightDp.dp
 			vh5 = screenHeight / 20
+			vh10 = screenHeight / 10
 			vh25 = screenHeight / 4
+			vh50 = screenHeight / 2
 			vh80 = (LocalConfiguration.current.screenHeightDp * 0.8).dp
 			screenWidth = LocalConfiguration.current.screenWidthDp.dp
 			vw5 = screenWidth / 20
 			vw7 = screenWidth / 14
 			vw10 = screenWidth / 10
 			vw12 = screenWidth / 8
+			vw17 = screenWidth / 6
 			vw25 = screenWidth / 4
 			vw80 = (LocalConfiguration.current.screenWidthDp * 0.8).dp
 		}
@@ -128,29 +110,21 @@ class Main : ComponentActivity() {
 		val displayMetrics = resources.displayMetrics
 		heightPixels = displayMetrics.heightPixels
 		widthPixels = displayMetrics.widthPixels
-		old_vh25 = (heightPixels * .25).toInt()
-		old_vh50 = (heightPixels * .5).toInt()
-		old_vh75 = heightPixels - old_vh25
 		vh80px = (heightPixels * .8).toInt()
-		old_vw10 = (widthPixels * .1).toInt()
 		vw80px = (widthPixels * .8).toInt()
-		dp10 = resources.getDimension(R.dimen._10dp).toInt()
-		menuItemHeight = resources.getDimension(R.dimen.menuItemHeight).toInt()
 
 		setTheme(android.R.style.Theme_DeviceDefault)
 		setContent { FOTTheme { MainView(
 			onWorkoutsClick = { startActivity(Intent(this, WorkoutsActivity::class.java)) },
 			onRecordClick = { startActivity(Intent(this, RecordActivity::class.java)) },
-			onSettingsClick = { startActivity(Intent(this, MenuSettings::class.java)) }
+			onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) }
 		) } }
-
+		lifecycleScope.launch { CommsBT.error.collect { toast(it) } }
 	}
 	override fun onResume() {
 		super.onResume()
 		if(hasBTPermission && SettingsStore.getBTEnabled(this)) {
-			runOnUiThread {
-				startService(Intent(this, CommsBT::class.java))
-			}
+			startService(Intent(this, CommsBT::class.java))
 		}
 	}
 	override fun onDestroy() {
@@ -167,7 +141,7 @@ fun MainView(
 ) {
 	Main.GetScreenSpecs()
 	AppScaffold {
-		Column(modifier = Modifier.fillMaxSize().padding(
+		Column(Modifier.fillMaxSize().padding(
 			start = Main.vw12,
 			end = Main.vw12,
 			top = 20.dp,
@@ -183,7 +157,7 @@ fun MainView(
 						imageVector = ImageVector.vectorResource(R.drawable.ic_list),
 						contentDescription = "workouts icon"
 					)
-					Text(stringResource(R.string.main_workouts_text))
+					Text(stringResource(R.string.workouts))
 				}
 			}
 			TextButton(
@@ -197,7 +171,7 @@ fun MainView(
 						contentDescription = "record icon"
 					)
 					BasicText(
-						text = stringResource(R.string.main_record_text),
+						text = stringResource(R.string.record),
 						color = { ColorWhite },
 						maxLines = 1,
 						autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 24.sp)
@@ -214,7 +188,7 @@ fun MainView(
 						imageVector = ImageVector.vectorResource(R.drawable.ic_edit),
 						contentDescription = "settings icon"
 					)
-					Text(stringResource(R.string.main_settings_text))
+					Text(stringResource(R.string.settings))
 				}
 			}
 		}
@@ -222,8 +196,7 @@ fun MainView(
 }
 @Preview(device = WearDevices.LARGE_ROUND)
 @Composable
-fun PreviewMainView(
-){
+fun PreviewMainView(){
 	Main.isScreenRound = true
 	FOTTheme { MainView(
 		onWorkoutsClick = {},

@@ -50,14 +50,13 @@ import de.tadris.fitness.ui.secsToKeep
 import de.tadris.fitness.util.isSeconds
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDurationShort
-import org.json.JSONObject
 
 @Composable
 fun ScreenHeartRate(
 	modifier: Modifier,
 	workoutData: WorkoutData,
 	heartRate: Double,
-	timeToDuration: (Long) -> Long,
+	timeToDuration: (Long) -> Long?,
 	targetProgress: MutableFloatState,
 	targetAchieved: MutableState<TargetAchieved>,
 	isPaused: Boolean
@@ -66,35 +65,32 @@ fun ScreenHeartRate(
 	LaunchedEffect(workoutData.heartRateSamples.isNotEmpty()) {
 		if(heartRateData.isEmpty() && workoutData.heartRateSamples.isNotEmpty()){
 			val heartRateSamples = workoutData.heartRateSamples
-			val secsToKeep = secsToKeep(workoutData.durationTotal.longValue)
-			val tempList = ArrayList<ChartData>(maxOf(a = 10, b =
-				if(heartRateSamples.size > 1000) heartRateSamples.size / secsToKeep
-				else heartRateSamples.size
-			))
-			heartRateSamples.forEach {
-				if(it.heartRate < 30) return@forEach
-				val duration = timeToDuration(it.time)
-				if(!duration.isSeconds(secsToKeep)) return@forEach
-				tempList.add(ChartData(duration, it.heartRate))
-			}
+			val secsToKeep = secsToKeep(workoutData.durationTotal)
+			val tempList = heartRateSamples
+				.filter { it.heartRate > 30 }
+				.mapNotNull {
+					val duration = timeToDuration(it.time)
+					if(duration?.isSeconds(secsToKeep) != true) null
+					else ChartData(duration, it.heartRate)
+				}
 			heartRateData.addAll(tempList)
 		}
 	}
 	LaunchedEffect(heartRate) {
 		if(heartRateData.size > 1000){
 			val tempList = heartRateData.toMutableList()
-			val secsToKeep = secsToKeep(workoutData.durationTotal.longValue)
+			val secsToKeep = secsToKeep(workoutData.durationTotal)
 			tempList.removeIf { !it.duration.isSeconds(secsToKeep) }
 			heartRateData.retainAll(tempList)
 		}
 		if(heartRate > 30){
 			heartRateData.add(ChartData(
-				duration = workoutData.durationTotal.longValue,
+				duration = workoutData.durationTotal,
 				value = heartRate
 			))
 		}
 	}
-	Column(modifier = modifier.fillMaxSize().padding(top = 20.dp, bottom =
+	Column(modifier.fillMaxSize().padding(top = 20.dp, bottom =
 			if(Main.isScreenRound) 5.dp else 0.dp
 	)) {
 		Field(
@@ -126,7 +122,7 @@ fun ScreenHeartRate(
 		}
 		Field(
 			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
-			value = workoutData.durationTotal.longValue.prettyDurationShort(),
+			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
 	}
@@ -137,8 +133,8 @@ fun ScreenHeartRate(
 @Composable
 fun PreviewScreenHeartRate() {
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
-	workoutData.durationTotal.longValue = 1500000
+	val workoutData = WorkoutData()
+	workoutData.durationTotal = 1500000
 	AppScaffold { FOTTheme {
 		ScreenHeartRate(
 			Modifier,

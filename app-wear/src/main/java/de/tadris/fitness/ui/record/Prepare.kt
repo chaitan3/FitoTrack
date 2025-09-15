@@ -48,7 +48,6 @@ import de.tadris.fitness.ui.ColorWhite
 import de.tadris.fitness.ui.record.RecordActivity.SensorStatus
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
-import org.json.JSONObject
 
 @Composable
 fun Prepare(
@@ -61,14 +60,15 @@ fun Prepare(
 	heartRateStatus: SensorStatus,
 	onSettingsClick: () -> Unit
 ){
-	Column(modifier = modifier.fillMaxSize().padding(top = if(Main.isScreenRound) Main.vw10 else 0.dp)) {
+	Column(modifier.fillMaxSize().padding(top = if(Main.isScreenRound) Main.vw10 else 0.dp)) {
 		Row(
 			modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = Main.vw12),
 			verticalAlignment = Alignment.CenterVertically
 		){
 			IconButton(
 				modifier = Modifier.weight(1f),
-				onClick = onWorkoutTypeClick
+				onClick = onWorkoutTypeClick,
+				enabled = workoutData.id == 0L
 			) {
 				Icon(
 					imageVector = ImageVector.vectorResource(workoutData.workoutTypeIcon),
@@ -77,14 +77,11 @@ fun Prepare(
 			}
 			IconButton(
 				modifier = Modifier.weight(1f),
-				onClick = onTargetClick
+				onClick = onSettingsClick
 			) {
 				Icon(
-					imageVector = ImageVector.vectorResource(id =
-						if(workoutData.primaryTargetType == null) R.drawable.ic_flag_unset
-						else R.drawable.ic_flag
-					),
-					contentDescription = "target",
+					imageVector = ImageVector.vectorResource(R.drawable.ic_edit),
+					contentDescription = "settings",
 				)
 			}
 		}
@@ -93,7 +90,7 @@ fun Prepare(
 			onClick = onStartClick
 		) {
 			BasicText(
-				text = stringResource(R.string.record_start),
+				text = stringResource(R.string.start),
 				color = { ColorWhite },
 				autoSize = TextAutoSize.StepBased(minFontSize = 10.sp),
 				style = TextStyle.Default.copy(textAlign = TextAlign.Center)
@@ -128,11 +125,14 @@ fun Prepare(
 		}
 		IconButton(
 			modifier = Modifier.fillMaxWidth().weight(1f).padding(4.dp),
-			onClick = onSettingsClick
+			onClick = onTargetClick
 		) {
 			Icon(
-				imageVector = ImageVector.vectorResource(R.drawable.ic_edit),
-				contentDescription = "settings",
+				imageVector = ImageVector.vectorResource(id =
+					if(workoutData.primaryTargetType == null) R.drawable.ic_flag_unset
+					else R.drawable.ic_flag
+				),
+				contentDescription = "target",
 			)
 		}
 	}
@@ -142,7 +142,7 @@ fun Prepare(
 @Composable
 fun PreviewPrepare(){
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
+	val workoutData = WorkoutData()
 	workoutData.workoutType = WorkoutData.WorkoutType.WINDSURFING
 	AppScaffold { FOTTheme {
 		Prepare(

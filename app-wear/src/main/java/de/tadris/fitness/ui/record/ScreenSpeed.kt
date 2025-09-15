@@ -50,14 +50,13 @@ import de.tadris.fitness.ui.secsToKeep
 import de.tadris.fitness.util.isSeconds
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
-import org.json.JSONObject
 
 @Composable
 fun ScreenSpeed(
 	modifier: Modifier,
 	workoutData: WorkoutData,
 	speed: Double,
-	timeToDuration: (Long) -> Long,
+	timeToDuration: (Long) -> Long?,
 	targetProgress: MutableFloatState,
 	targetAchieved: MutableState<TargetAchieved>,
 	isPaused: Boolean
@@ -66,39 +65,37 @@ fun ScreenSpeed(
 	LaunchedEffect(workoutData.locationSamples.isNotEmpty()) {
 		if(speedData.isEmpty() && workoutData.locationSamples.isNotEmpty()){
 			val locationSamples = workoutData.locationSamples
-			val secsToKeep = secsToKeep(workoutData.durationTotal.longValue)
-			val tempList = ArrayList<ChartData>(maxOf(a = 10, b =
-				if(locationSamples.size > 1000) locationSamples.size / secsToKeep
-				else locationSamples.size
-			))
-			locationSamples.forEach {
-				if(it.speed == 0.0) return@forEach
-				val duration = timeToDuration(it.time)
-				if(!duration.isSeconds(secsToKeep)) return@forEach
-				tempList.add(ChartData(duration, it.speed))
-			}
+			val secsToKeep = secsToKeep(workoutData.durationTotal)
+			val tempList = locationSamples
+				.filter { it.speed > 0 }
+				.mapNotNull {
+					val duration = timeToDuration(it.time)
+					if(duration?.isSeconds(secsToKeep) != true) null
+					else ChartData(duration, it.speed)
+				}
 			speedData.addAll(tempList)
 		}
 	}
 	LaunchedEffect(speed) {
 		if(speedData.size > 1000){
 			val tempList = speedData.toMutableList()
-			val secsToKeep = secsToKeep(workoutData.durationTotal.longValue)
+			val secsToKeep = secsToKeep(workoutData.durationTotal)
 			tempList.removeIf { !it.duration.isSeconds(secsToKeep) }
 			speedData.retainAll(tempList)
 		}
 		if(speed > 0){
 			speedData.add(ChartData(
-				duration = workoutData.durationTotal.longValue,
+				duration = workoutData.durationTotal,
 				value = speed
 			))
 		}
 	}
-	Column(modifier = modifier.fillMaxSize().padding(top = 20.dp)) {
+	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		Field(
 			modifier = Modifier.fillMaxWidth().weight(1f),
 			value = speed.prettySpeed(),
-			unitText = R.string.field_kmh
+			unitText = R.string.field_kmh,
+			isActive = !isPaused
 		)
 		Box(
 			modifier = Modifier.fillMaxWidth().weight(3f).padding(
@@ -106,13 +103,16 @@ fun ScreenSpeed(
 				end = if(Main.isScreenRound) Main.vw12 else 0.dp
 			)
 		){
-			val target1 =
-				if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue.toDouble() / 36
-				else if(workoutData.secondaryTargetType == TargetType.SPEED) workoutData.secondaryTargetValue.toDouble() / 36
-				else null
 			Chart(
 				data = speedData,
-				target1,
+				target1 =
+					if(workoutData.primaryTargetType == TargetType.SPEED)
+						workoutData.primaryTargetValue.toDouble() / 36
+					else null,
+				target2 =
+					if(workoutData.secondaryTargetType == TargetType.SPEED)
+						workoutData.secondaryTargetValue.toDouble() / 36
+					else null,
 				yMinInit = 0.0,
 				yMaxInit = 1.11,
 				isSpeed = true
@@ -120,7 +120,7 @@ fun ScreenSpeed(
 		}
 		Field(
 			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
-			value = workoutData.durationTotal.longValue.prettyDurationShort(),
+			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
 	}
@@ -131,7 +131,7 @@ fun ScreenSpeed(
 @Composable
 fun PreviewScreenSpeed() {
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
+	val workoutData = WorkoutData()
 	val speedData = mutableListOf<ChartData>()
 	speedData.add(ChartData(0, 2.2))
 	speedData.add(ChartData(10000, 2.2))

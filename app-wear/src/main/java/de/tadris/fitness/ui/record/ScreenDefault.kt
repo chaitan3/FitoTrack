@@ -47,7 +47,6 @@ import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDistance
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
-import org.json.JSONObject
 
 @Composable
 fun ScreenDefault(
@@ -59,7 +58,7 @@ fun ScreenDefault(
 	targetAchieved: MutableState<TargetAchieved>,
 	isPaused: Boolean
 ) {
-	Column(modifier = modifier.fillMaxSize().padding(top = 20.dp)) {
+	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		if(workoutData.isWorkoutTypeGps) {
 			Field(
 				modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
@@ -74,15 +73,15 @@ fun ScreenDefault(
 		) {
 			Field(
 				modifier = Modifier.weight(1f).padding(start = Main.vw5),
-				value = workoutData.durationTotal.longValue.prettyDurationShort(),
+				value = workoutData.durationTotal.prettyDurationShort(),
 				isActive = !isPaused
 			)
 			if(workoutData.isWorkoutTypeGps) {
 				Field(
 					modifier = Modifier.weight(1f),
-					value = workoutData.distanceTotal.intValue.prettyDistance(),
+					value = workoutData.distanceTotal.prettyDistance(),
 					unitText =
-						if(workoutData.distanceTotal.intValue >= 1000) R.string.field_km
+						if(workoutData.distanceTotal >= 1000) R.string.field_km
 						else R.string.field_m,
 					isActive = !isPaused
 				)
@@ -103,10 +102,10 @@ fun ScreenDefault(
 @Composable
 fun PreviewScreenDefault(){
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
-	workoutData.pauseTotal.longValue = 100000
-	workoutData.durationTotal.longValue = 200000
-	workoutData.distanceTotal.intValue = 1100
+	val workoutData = WorkoutData()
+	workoutData.pauseTotal = 100000
+	workoutData.durationTotal = 200000
+	workoutData.distanceTotal = 1100
 	AppScaffold { FOTTheme { ScreenDefault(
 		Modifier,
 		workoutData,

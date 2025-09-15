@@ -31,10 +31,11 @@ import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import de.tadris.fitness.R
-import de.tadris.fitness.data.SettingsStore.WorkoutSettings
+import de.tadris.fitness.data.SettingsStore
+import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
+import de.tadris.fitness.data.WorkoutData.WorkoutType
 import de.tadris.fitness.ui.ConfirmDialog
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.util.logD
 
 enum class SwipeDirection {LEFT, RIGHT, UP, DOWN}
 @Composable
@@ -42,10 +43,10 @@ fun RecordView(recordActivity: RecordActivity) {
 	val navController = rememberSwipeDismissableNavController()
 	val showCooldownDialog = remember { mutableStateOf(false) }
 	fun navFirstScreen(){
-		if(recordActivity.workoutSettings.screens[1].enabled.value){
+		if(recordActivity.workoutTypeSettings.screens[1].enabled.value){
 			navController.navigate("ScreenDefault")
 		}else{
-			recordActivity.workoutSettings.screens.firstOrNull{ it.isAvailable(recordActivity) }?.let{
+			recordActivity.workoutTypeSettings.screens.firstOrNull{ it.isAvailable(recordActivity) }?.let{
 				navController.navigate(it.navRoute)
 			}
 		}
@@ -64,24 +65,26 @@ fun RecordView(recordActivity: RecordActivity) {
 					"ScreenStop" -> {}//don't do anything
 					"Prepare" -> recordActivity.finish()
 					"Cooldown" -> recordActivity.showSummary()
-					"TargetEntryPrimary" -> {
-						recordActivity.workoutData.primaryTargetType = null
+					"TargetEntry/{primary}/{leg}" -> {
+						val primary = navController.currentBackStackEntry?.arguments?.getString("primary") == "true"
+						if(primary) recordActivity.workoutData.primaryTargetType = null
+						else recordActivity.workoutData.secondaryTargetType = null
 						navController.popBackStack()
 					}
-					"TargetEntrySecondary" -> {
-						recordActivity.workoutData.secondaryTargetType = null
-						navController.popBackStack()
-					}
-					"Settings" -> {
+					"RecordSettings" -> {
 						recordActivity.setScreenOnFlag()
 						navController.popBackStack()
+					}
+					"ScreenMultisport" -> {
+						if(recordActivity.workoutData.endTime == 0L)
+							navController.popBackStack("ScreenStop", inclusive = false)
 					}
 					else -> navController.popBackStack()
 				}
 			}
 			SwipeDirection.DOWN -> {
 				var routeFound = false
-				for(screenSettings in recordActivity.workoutSettings.screens){
+				for(screenSettings in recordActivity.workoutTypeSettings.screens){
 					if(routeFound && screenSettings.isAvailable(recordActivity)){
 						navController.navigate(screenSettings.navRoute)
 						return
@@ -91,7 +94,7 @@ fun RecordView(recordActivity: RecordActivity) {
 			}
 			SwipeDirection.UP -> {
 				var routeFound = false
-				for(screenSettings in recordActivity.workoutSettings.screens.asReversed()){
+				for(screenSettings in recordActivity.workoutTypeSettings.screens.asReversed()){
 					if(routeFound && screenSettings.isAvailable(recordActivity)){
 						navController.navigate(screenSettings.navRoute)
 						return
@@ -136,12 +139,12 @@ fun RecordView(recordActivity: RecordActivity) {
 				Prepare(
 					modifier = modifierWithSwipe,
 					workoutData = recordActivity.workoutData,
-					onWorkoutTypeClick = { navController.navigate("TypeSelect") },
+					onWorkoutTypeClick = { navController.navigate("TypeSelect/-1/false") },
 					onTargetClick = {
 						if(recordActivity.workoutData.primaryTargetType == null) {
-							navController.navigate("Target")//add Target to the backstack
-							navController.navigate("TargetTypeSelectPrimary")
-						} else navController.navigate("Target")
+							navController.navigate("Target/-1")//add Target to the backstack
+							navController.navigate("TargetTypeSelect/true/-1")
+						} else navController.navigate("Target/-1")
 					},
 					onStartClick = {
 						recordActivity.startExercise()
@@ -150,98 +153,135 @@ fun RecordView(recordActivity: RecordActivity) {
 					},
 					locationStatus = recordActivity.locationStatus,
 					heartRateStatus = recordActivity.heartRateStatus,
-					onSettingsClick = { navController.navigate("Settings") }
+					onSettingsClick = {
+						if(recordActivity.workoutData.workoutType == WorkoutType.MULTISPORT)
+							navController.navigate("Multisport")
+						else navController.navigate("RecordSettings/-1")
+					}
 				)
 			}
-			composable("TypeSelect") {
+			composable("TypeSelect/{leg}/{noMultisport}") {
+				val leg = it.arguments?.getString("leg")?.toIntOrNull() ?: -1
 				val context = LocalContext.current
-				TypeSelect (modifier = modifierWithSwipe){
-					recordActivity.workoutData.workoutType = it
-					recordActivity.workoutSettings = WorkoutSettings(context, it)
-					navController.popBackStack()
-				}
+				TypeSelect (
+					modifier = modifierWithSwipe,
+					onItemClick = { workoutType ->
+						if(leg >= 0) recordActivity.workoutData.legs[leg].workoutType = workoutType
+						else{
+							recordActivity.workoutData.workoutType = workoutType
+							recordActivity.workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(context, workoutType)
+						}
+						navController.popBackStack()
+						if(workoutType == WorkoutType.MULTISPORT)
+							navController.navigate("Multisport")
+					},
+					noMultisport = it.arguments?.getString("noMultisport") == "true"
+				)
 			}
-			composable("Target") {
+			composable("Target/{leg}") {
+				val leg = it.arguments?.getString("leg")?.toIntOrNull() ?: -1
+				val workoutData =
+					if(leg >= 0) recordActivity.workoutData.legs[leg]
+					else recordActivity.workoutData
 				Target(
 					modifier = modifierWithSwipe,
-					workoutData = recordActivity.workoutData,
-					onPrimaryClicked = { navController.navigate("TargetTypeSelectPrimary") },
-					onSecondaryClicked = { navController.navigate("TargetTypeSelectSecondary") }
+					workoutData = workoutData,
+					onPrimaryClicked = { navController.navigate("TargetTypeSelect/true/$leg") },
+					onSecondaryClicked = { navController.navigate("TargetTypeSelect/false/$leg") }
 				)
 			}
-			composable("TargetTypeSelectPrimary") {
+			composable("TargetTypeSelect/{primary}/{leg}") {
+				val primary = it.arguments?.getString("primary") == "true"
+				val leg = it.arguments?.getString("leg")?.toIntOrNull() ?: -1
+				val workoutData =
+					if(leg >= 0) recordActivity.workoutData.legs[leg]
+					else recordActivity.workoutData
 				TargetTypeSelect(
 					modifier = modifierWithSwipe,
-					targetType = recordActivity.workoutData.primaryTargetType,
+					targetType =
+						if(primary) workoutData.primaryTargetType
+						else workoutData.secondaryTargetType,
 					disabledTargetType = null,
 					onTargetSelected = { targetType ->
-						recordActivity.workoutData.primaryTargetType = targetType
-						recordActivity.targetProgress.floatValue = 0.0F
+						if(primary) {
+							workoutData.primaryTargetType = targetType
+							recordActivity.targetProgress.floatValue = 0.0F
+						} else {
+							workoutData.secondaryTargetType = targetType
+						}
 						navController.popBackStack()
-						if(targetType != null) navController.navigate("TargetEntryPrimary")
+						if(targetType != null)
+							navController.navigate("TargetEntry/$primary/$leg")
 					}
 				)
 			}
-			composable("TargetTypeSelectSecondary") {
-				TargetTypeSelect(
-					modifier = modifierWithSwipe,
-					targetType = recordActivity.workoutData.secondaryTargetType,
-					disabledTargetType = recordActivity.workoutData.primaryTargetType,
-					onTargetSelected = { targetType ->
-						recordActivity.workoutData.secondaryTargetType = targetType
-						navController.popBackStack()
-						navController.navigate("TargetEntrySecondary")
-					}
-				)
-			}
-			composable("TargetEntryPrimary") {
+			composable("TargetEntry/{primary}/{leg}") {
+				val primary = it.arguments?.getString("primary") == "true"
+				val leg = it.arguments?.getString("leg")?.toIntOrNull() ?: -1
+				val workoutData =
+					if(leg >= 0) recordActivity.workoutData.legs[leg]
+					else recordActivity.workoutData
 				TargetEntry(
 					modifier = modifierWithSwipe,
-					targetType = recordActivity.workoutData.primaryTargetType,
+					targetType =
+						if(primary) workoutData.primaryTargetType
+						else workoutData.secondaryTargetType,
 					onBack = {
-						recordActivity.workoutData.primaryTargetType = null
+						if(primary) workoutData.primaryTargetType = null
+						else workoutData.secondaryTargetType = null
 						navController.popBackStack()
 					},
 					onDone = { value: Int, valueMax: Int ->
 						if(value+valueMax == 0) {
-							recordActivity.workoutData.primaryTargetType = null
+							if(primary) workoutData.primaryTargetType = null
+							else workoutData.secondaryTargetType = null
 						} else {
-							recordActivity.workoutData.primaryTargetValue = value
-							recordActivity.workoutData.primaryTargetValueHigh = valueMax
+							if(primary) {
+								workoutData.primaryTargetValue = value
+								workoutData.primaryTargetValueHigh = valueMax
+							} else {
+								workoutData.secondaryTargetValue = value
+								workoutData.secondaryTargetValueHigh = valueMax
+							}
 						}
-						recordActivity.targetAchieved.value = TargetAchieved.NOT
+						if(primary) recordActivity.targetAchieved.value = TargetAchieved.NOT
 						navController.popBackStack()
 					}
 				)
 			}
-			composable("TargetEntrySecondary") {
-				TargetEntry(
+			composable("Multisport") {
+				Multisport(
 					modifier = modifierWithSwipe,
-					targetType = recordActivity.workoutData.secondaryTargetType,
-					onBack = {
-						recordActivity.workoutData.secondaryTargetType = null
-						navController.popBackStack()
-					},
-					onDone = { value: Int, valueMax: Int ->
-						if(value+valueMax == 0) {
-							recordActivity.workoutData.secondaryTargetType = null
-						} else {
-							recordActivity.workoutData.secondaryTargetValue = value
-							recordActivity.workoutData.secondaryTargetValueHigh = valueMax
+					workoutData = recordActivity.workoutData,
+					navController
+				)
+			}
+			composable("MultisportTransition") {
+				MultisportTransition(
+					modifier = modifierWithSwipe,
+					rootWorkoutData = recordActivity.workoutData.rootWorkout ?: recordActivity.workoutData,
+					onNextLegClick = {
+						recordActivity.workoutData.nextLeg?.let { nextLeg ->
+							recordActivity.workoutData = nextLeg
+							recordActivity.startExercise()
+							navController.navigate("ScreenStop")
+							navFirstScreen()
 						}
-						navController.popBackStack()
 					}
 				)
 			}
-			composable("Settings") {
-				Settings(
+			composable("RecordSettings/{leg}") {
+				val leg = it.arguments?.getString("leg")?.toIntOrNull() ?: -1
+				val workoutData =
+					if(leg >= 0) recordActivity.workoutData.legs[leg]
+					else recordActivity.workoutData
+				RecordSettings(
 					modifier = modifierWithSwipe,
 					showTarget = navController.previousBackStackEntry?.destination?.route != "Prepare",
-					workoutData = recordActivity.workoutData,
-					workoutSettings = recordActivity.workoutSettings,
+					workoutData,
 					hasLocation = !recordActivity.locationStatus.isDisabled,
 					hasHeartRate = !recordActivity.heartRateStatus.isDisabled,
-					onTargetClicked = { navController.navigate("Target") }
+					onTargetClicked = { navController.navigate("Target/$leg") }
 				)
 			}
 			composable("ScreenStop") {
@@ -257,15 +297,18 @@ fun RecordView(recordActivity: RecordActivity) {
 					onPauseResumeClick = recordActivity::pauseResumeClicked,
 					onEndClick = {
 						recordActivity.endExercise()
-						if(recordActivity.heartRateStatus.isDisabled)
-							recordActivity.showSummary()
-						else showCooldownDialog.value = true
+						if(recordActivity.workoutData.nextLeg != null) {
+							navController.navigate("MultisportTransition")
+						} else {
+							if(recordActivity.heartRateStatus.isDisabled) recordActivity.showSummary()
+							else showCooldownDialog.value = true
+						}
 					},
-					onSettingsClick = { navController.navigate("Settings") }
+					onSettingsClick = { navController.navigate("RecordSettings/-1") }
 				)
 			}
 			composable("ScreenMap") {
-				val hasOtherScreens = recordActivity.workoutSettings.screens.count {
+				val hasOtherScreens = recordActivity.workoutTypeSettings.screens.count {
 					it.isAvailable(recordActivity)
 				} > 1
 				ScreenMap(
@@ -306,6 +349,13 @@ fun RecordView(recordActivity: RecordActivity) {
 					targetProgress = recordActivity.targetProgress,
 					targetAchieved = recordActivity.targetAchieved,
 					isPaused = recordActivity.exerciseState.isPaused
+				)
+			}
+			composable("ScreenMultisport") {
+				MultisportTransition(
+					modifier = modifierWithSwipe,
+					rootWorkoutData = recordActivity.workoutData.rootWorkout ?: recordActivity.workoutData,
+					onNextLegClick = {}
 				)
 			}
 			composable("ScreenElevation") {
@@ -366,7 +416,11 @@ fun RecordView(recordActivity: RecordActivity) {
 	}
 }
 
-fun WorkoutSettings.Screen.isAvailable(recordActivity: RecordActivity): Boolean =
-	this.enabled.value &&
-			(!this.needsLocation || !recordActivity.locationStatus.isDisabled) &&
-			(!this.needsHeartRate || !recordActivity.heartRateStatus.isDisabled)
+fun WorkoutTypeSettings.Screen.isAvailable(recordActivity: RecordActivity): Boolean =
+	if(isMultisport && recordActivity.workoutData.rootWorkout != null) true
+	else if(isTarget && recordActivity.workoutData.primaryTargetType != null) true
+	else if(needsLocation &&
+		(recordActivity.locationStatus.isDisabled || !recordActivity.workoutData.isWorkoutTypeGps)
+	) false
+	else if(needsHeartRate && recordActivity.heartRateStatus.isDisabled) false
+	else enabled.value

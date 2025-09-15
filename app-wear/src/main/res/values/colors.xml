@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
   ~
   ~ This file is part of FitoTrack
@@ -18,21 +19,6 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#FB8C00</color>
-    <color name="colorPrimaryDark">#EF6C00</color>
-
-    <color name="textWhite">#FFF</color>
-    <color name="textInactive">#AAA</color>
-    <color name="stateFailed">#F44336</color>
-
-    <color name="bg_list_item">#151515</color>
-
-    <color name="ic_border">#8000</color>
-    <color name="locationCircleFill">#2a7fff</color>
-    <color name="progressDone">#4CAF50</color>
-    <color name="progressDoneDark">#244D26</color>
-    <color name="bg_progressBar">#444</color>
-    <color name="progressBarAhead">#080</color>
-    <color name="progressBarBehind">#C00</color>
-
+    <color name="ic_fill">#fff</color>
+    <color name="ic_stroke">#8000</color>
 </resources>

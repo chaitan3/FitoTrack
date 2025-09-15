@@ -62,3 +62,22 @@ fun Double.prettySpeed(): String =
 	else String.format(Locale.ENGLISH, "%.1f", this*3.6)
 fun Double.pretty(): String = String.format(Locale.ENGLISH, "%.0f", this)
 fun Long.isSeconds(seconds: Int) = this >= seconds * 1000L
+fun Long.prettySize(): String {
+	val gb: Long = 1073741824
+	val mb: Long = 1048576
+	val kb: Long = 1024
+	if(this > gb * 3) {
+		val gbs = toDouble() / gb
+		return String.format(Locale.getDefault(), "%.1f GB", gbs)
+	} else if(this > gb) {
+		val gbs = toDouble() / gb
+		return String.format(Locale.getDefault(), "%.2f GB", gbs)
+	} else if(this > mb) {
+		val mbs = toDouble() / mb
+		return String.format(Locale.getDefault(), "%.0f MB", mbs)
+	} else if(this > kb) {
+		val kbs = toDouble() / kb
+		return String.format(Locale.getDefault(), "%.0f KB", kbs)
+	}
+	return toString() + " B"
+}

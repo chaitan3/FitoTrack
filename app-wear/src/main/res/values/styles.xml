@@ -18,37 +18,7 @@
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
-        <item name="windowSplashScreenBackground">@android:color/black</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
-        <item name="postSplashScreenTheme">@style/AppTheme</item>
-    </style>
-    <style name="AppTheme" parent="Theme.Material3.Dark">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorSecondary">@color/progressDone</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorOnSecondary">@android:color/white</item>
-        <item name="android:background">@android:color/background_dark</item>
-        <item name="android:colorBackground">@android:color/background_dark</item>
-        <item name="android:textColorPrimary">@color/textWhite</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-    </style>
-    <style name="WearNoBack" parent="AppTheme">
+    <style name="ThemeNoBack" parent="@android:style/Theme.DeviceDefault">
         <item name="android:windowSwipeToDismiss" tools:ignore="WearBackNavigation">false</item>
-    </style>
-    <style name="AlertDialog" parent="AppTheme">
-        <item name="android:gravity">center</item>
-        <item name="android:layout_marginTop">5dp</item>
-    </style>
-    <style name="progressStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">#0000</item>
-        <item name="indicatorColor">@color/colorPrimary</item>
-        <item name="trackColor">#0000</item>
-        <item name="trackThickness">1dp</item>
-        <item name="indicatorInset">0dp</item>
-        <item name="indicatorTrackGapSize">1dp</item>
     </style>
 </resources>

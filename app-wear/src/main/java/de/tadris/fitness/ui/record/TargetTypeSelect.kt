@@ -46,7 +46,7 @@ fun TargetTypeSelect(
 	disabledTargetType: TargetType?,
 	onTargetSelected: (TargetType?) -> Unit
 ){
-	Column(modifier = modifier.fillMaxSize().padding(
+	Column(modifier.fillMaxSize().padding(
 		top = 25.dp,
 		bottom = if(Main.isScreenRound) Main.vh5 else 0.dp
 	)) {

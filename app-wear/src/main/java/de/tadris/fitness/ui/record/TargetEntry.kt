@@ -40,7 +40,6 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.ui.FOTTheme
-import de.tadris.fitness.util.logD
 
 @Composable
 fun TargetEntry(
@@ -111,7 +110,7 @@ fun TargetEntry(
 		}
 	}
 
-	Column(modifier = modifier.fillMaxSize().padding(top = 24.dp)){
+	Column(modifier.fillMaxSize().padding(top = 24.dp)){
 		Text(
 			modifier = Modifier.fillMaxWidth(),
 			text = when(targetType){
@@ -127,13 +126,13 @@ fun TargetEntry(
 			},
 			textAlign = TextAlign.Center
 		)
-		Row(modifier = Modifier.fillMaxWidth().weight(3f)){
+		Row(Modifier.fillMaxWidth().weight(3f)){
 			TextButton(
 				modifier = Modifier.fillMaxHeight().weight(1f),
 				onClick = ::backPressed
 			){ Text(text = stringResource(R.string.b_back)) }
-			Column(modifier = Modifier.weight(3f)){
-				Row(modifier = Modifier.weight(1f)){
+			Column(Modifier.weight(3f)){
+				Row(Modifier.weight(1f)){
 					for(i in 1..3){
 						TextButton(
 							modifier = Modifier.weight(1f),
@@ -141,7 +140,7 @@ fun TargetEntry(
 						){ Text(i.toString()) }
 					}
 				}
-				Row(modifier = Modifier.weight(1f)){
+				Row(Modifier.weight(1f)){
 					for(i in 4..6){
 						TextButton(
 							modifier = Modifier.weight(1f),
@@ -149,7 +148,7 @@ fun TargetEntry(
 						){ Text(i.toString()) }
 					}
 				}
-				Row(modifier = Modifier.weight(1f)){
+				Row(Modifier.weight(1f)){
 					for(i in 7..9){
 						TextButton(
 							modifier = Modifier.weight(1f),

@@ -18,16 +18,17 @@
  */
 package de.tadris.fitness.data
 
+import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import de.tadris.fitness.R
-import de.tadris.fitness.ui.settings.MapDownloadActivity
 import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.runInBackground
+import de.tadris.fitness.util.toast
 import de.tadris.fitness.util.tryIgnore
 import kotlinx.coroutines.delay
 import org.apache.commons.net.ftp.FTPClient
@@ -41,7 +42,6 @@ class MapStore {
 		const val USERNAME = "anonymous"
 		const val PASSWORD = "de.tadris.fitness.wearos"
 		const val ROOT_PATH = "pub/.3/download.mapsforge.org/maps/v5/"
-		@JvmStatic
 		fun getLocalMaps(context: Context): List<File> {
 			val localMaps = mutableListOf<File>()
 			try {
@@ -66,21 +66,20 @@ class MapStore {
 			}
 			return localMaps
 		}
+		fun deleteLocalMap(context: Context, file: File): Boolean {
+			logD("MapStore.deleteLocalMap: " + file.name)
+			val fileLocal = file.getLocalFile(context)
+			if(!fileLocal.exists()) {
+				logD("MapStore.deleteLocalMap file does not exist")
+				return false
+			}
+			return fileLocal.delete()
+		}
 	}
 	var ftpClient: FTPClient? = null
 	fun close() {
 		tryIgnore { ftpClient?.disconnect() }
 		ftpClient = null
-	}
-
-	fun deleteLocalMap(context: Context, file: File): Boolean {
-		logD("MapStore.deleteLocalMap: " + file.name)
-		val fileLocal = file.getLocalFile(context)
-		if(!fileLocal.exists()) {
-			logD("MapStore.deleteLocalMap file does not exist")
-			return false
-		}
-		return fileLocal.delete()
 	}
 
 	fun getRemoteDirs(path: String): List<Dir> {
@@ -95,7 +94,6 @@ class MapStore {
 		}
 		return dirs
 	}
-
 	fun getRemoteFiles(path: String): List<File> {
 		val files = mutableListOf<File>()
 		try {
@@ -118,17 +116,23 @@ class MapStore {
 		}
 		return files
 	}
-
-	fun getRemoteFile(mapDownload: MapDownloadActivity, fileRemote: File) {
+	fun getRemoteFile(
+		context: Context,
+		fileRemote: File,
+		onError: (Int) -> Unit,
+		onProgress: (Long) -> Unit,
+		onDone: () -> Unit
+	) {
 		logD("MapStore.getRemoteFile: " + fileRemote.path)
 		val fileLocal = java.io.File(fileRemote.toLocal())
 		if(fileLocal.exists() && (fileLocal.lastModified() > fileRemote.lastModified || !fileLocal.delete())) {
-			mapDownload.onError(R.string.error_maps_file_exists)
+			onError(R.string.error_maps_file_exists)
 			return
 		}
+		cancelDownload = false
 		try {
 			val connectivityManager =
-				mapDownload.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+				context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 			connectivityManager.requestNetwork(
 				NetworkRequest.Builder()
 					.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -137,14 +141,13 @@ class MapStore {
 					override fun onAvailable(network: Network) {
 						super.onAvailable(network)
 						logD("MapStore.getRemoteFile WIFI is available")
-						runInBackground { getRemoteFileDownload(mapDownload, fileRemote) }
+						runInBackground { getRemoteFileDownload(context, fileRemote, onError, onProgress, onDone) }
 					}
-
 					override fun onUnavailable() {
 						super.onUnavailable()
 						logD("MapStore.getRemoteFile WIFI is not available")
-						mapDownload.onWarning(R.string.fail_no_fast)
-						runInBackground { getRemoteFileDownload(mapDownload, fileRemote) }
+						context.toast(R.string.fail_no_fast)
+						runInBackground { getRemoteFileDownload(context, fileRemote, onError, onProgress, onDone) }
 					}
 				},
 				2000
@@ -152,18 +155,25 @@ class MapStore {
 		} catch(e: Exception) {
 			logD("MapStore.getRemoteFile: $e")
 			logD("MapStore.getRemoteFile: " + e.message)
-			mapDownload.onWarning(R.string.fail_fast)
-			runInBackground { getRemoteFileDownload(mapDownload, fileRemote) }
+			context.toast(R.string.fail_fast)
+			runInBackground { getRemoteFileDownload(context, fileRemote, onError, onProgress, onDone) }
 		}
 	}
 
-	suspend fun getRemoteFileDownload(mapDownload: MapDownloadActivity, fileRemote: File) {
+	var cancelDownload = false
+	suspend fun getRemoteFileDownload(
+		context: Context,
+		fileRemote: File,
+		onError: (Int) -> Unit,
+		onProgress: (Long) -> Unit,
+		onDone: () -> Unit
+	) {
 		try {
 			val inputStream = fTPClient?.retrieveFileStream(ROOT_PATH + fileRemote.path)
-			val fileOutputStream = mapDownload.openFileOutput(fileRemote.toLocal(), Context.MODE_PRIVATE)
+			val fileOutputStream = context.openFileOutput(fileRemote.toLocal(), Context.MODE_PRIVATE)
 			var bytesDone: Long = 0
 			var lastReadTime = System.currentTimeMillis()
-			while(System.currentTimeMillis() - lastReadTime < 3000) {
+			while(!cancelDownload && System.currentTimeMillis() - lastReadTime < 3000) {
 				if(inputStream!!.available() == 0) {
 					delay(100)
 					continue
@@ -171,15 +181,15 @@ class MapStore {
 				val buffer = ByteArray(1048576) //1MB
 				val numBytes = inputStream.read(buffer)
 				if(numBytes < 0) {
-					mapDownload.onError(R.string.error_maps_download)
+					onError(R.string.error_maps_download)
 					return
 				}
 				fileOutputStream.write(buffer, 0, numBytes)
 				bytesDone += numBytes.toLong()
 
-				mapDownload.onProgress(bytesDone)
+				onProgress(bytesDone)
 				if(inputStream.available() == 0 && bytesDone >= fileRemote.size) {
-					mapDownload.onDone()
+					onDone()
 					return
 				}
 				lastReadTime = System.currentTimeMillis()
@@ -189,7 +199,8 @@ class MapStore {
 			logE("MapStore.getRemoteFile: $e")
 			logE("MapStore.getRemoteFile: " + e.message)
 		}
-		mapDownload.onError(R.string.error_maps_download)
+		logD("exit")
+		onError(R.string.error_maps_download)
 	}
 
 	fun checkHasUpdate(file: File): Boolean {
@@ -210,35 +221,29 @@ class MapStore {
 			return ftpClient
 		}
 
-	class Dir(@JvmField val name: String, dir: String?) {
-		@JvmField
-        val path: String = dir + name
-	}
+	class Dir(val name: String, dir: String) { val path: String = "$dir/$name" }
 
 	class File {
-		@JvmField
         var name: String
-		@JvmField
         val path: String
-		@JvmField
         val size: Long
 		val lastModified: Long
 
 		constructor(path: String, size: Long, lastModified: Long) {
-			this.path = path.replace("_".toRegex(), "/")
+			this.path = path.replace("_", "/")
 			name = this.path
 			val index = this.path.lastIndexOf("/")
 			if(index > 0) name = path.substring(index + 1)
 			this.size = size
 			this.lastModified = lastModified
 		}
-		constructor(name: String, dir: String?, size: Long, lastModified: Long) {
+		constructor(name: String, dir: String, size: Long, lastModified: Long) {
 			this.name = name
-			path = dir + name
+			path = "$dir/$name"
 			this.size = size
 			this.lastModified = lastModified
 		}
-		fun toLocal(): String = path.replace("/".toRegex(), "_")
+		fun toLocal(): String = path.replace("/", "_")
 		fun getLocalFile(context: Context): java.io.File =
 			java.io.File(context.filesDir, toLocal())
 	}

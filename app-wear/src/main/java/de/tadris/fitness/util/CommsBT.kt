@@ -29,12 +29,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
-import android.widget.Toast
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutDataStore
 import de.tadris.fitness.data.WorkoutDataStore.getFullWorkout
 import de.tadris.fitness.data.WorkoutDataStore.readWorkouts
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -45,9 +45,8 @@ import java.util.Base64
 import java.util.UUID
 import java.util.zip.GZIPOutputStream
 
-val FITOTRACK_UUID: UUID = UUID.fromString("6f34da3f-188a-4c8c-989c-2baacf8ea6e1")
+val FITOTRACK_UUID: UUID = UUID.fromString("44fb140d-74e8-4334-8df0-aa717f873db3")
 const val COMMS_VERSION = 2
-
 class CommsBT : Service() {
 	var disconnect = true
 	var bluetoothAdapter: BluetoothAdapter? = null
@@ -55,6 +54,11 @@ class CommsBT : Service() {
 	var bluetoothSocket: BluetoothSocket? = null
 	var commsBTConnect: CommsBTConnect? = null
 	var commsBTConnected: CommsBTConnected? = null
+	companion object {
+		val error = MutableSharedFlow<Int>()
+		suspend fun onError(message: Int) = error.emit(message)
+	}
+
 	val responseQueue = JSONArray()
 	override fun onBind(intent: Intent?): IBinder? { return null }
 	override fun onCreate() {
@@ -80,7 +84,7 @@ class CommsBT : Service() {
 		}
 	}
 
-	fun gotRequest(request: String) {
+	suspend fun gotRequest(request: String) {
 		logD("CommsBT.gotRequest: $request")
 		try {
 			val requestMessage = JSONObject(request)
@@ -93,10 +97,10 @@ class CommsBT : Service() {
 			}
 		} catch(e: Exception) {
 			logE("CommsBT.gotRequest: " + e.message)
-			toast(R.string.error_bt_request)//TODO replace all toast in here with something else, can't toast from BG thread
+			onError(R.string.error_bt_request)
 		}
 	}
-	fun sendResponseSync() {
+	suspend fun sendResponseSync() {
 		try {
 			val response = JSONObject()
 			response.put("version", COMMS_VERSION)
@@ -108,10 +112,10 @@ class CommsBT : Service() {
 			responseQueue.put(response)
 		} catch(e: Exception) {
 			logE("CommsBT.sendResponse JSONObject: " + e.message)
-			Toast.makeText(this, R.string.error_bt_response, Toast.LENGTH_SHORT).show()
+			onError(R.string.error_bt_response)
 		}
 	}
-	fun sendResponseGetWorkout(id: Long) {
+	suspend fun sendResponseGetWorkout(id: Long) {
 		try {
 			val response = JSONObject()
 			response.put("version", COMMS_VERSION)
@@ -144,7 +148,7 @@ class CommsBT : Service() {
 			responseQueue.put(response)
 		} catch(e: Exception) {
 			logE("CommsBT.sendResponse JSONObject : " + e.message)
-			toast(R.string.error_bt_response)
+			onError(R.string.error_bt_response)
 		}
 	}
 
@@ -202,19 +206,23 @@ class CommsBT : Service() {
 					FITOTRACK_UUID
 				)
 			} catch(e: Exception) {
+				logD("CommsBTConnect: " + e.message)
 				if(!disconnect) logE("CommsBTConnect: " + e.message)
 			}
 		}
 
 		override fun run() {
 			try {
+				logD("CommsBTConnect.run 1 $disconnect")
 				bluetoothSocket = bluetoothServerSocket?.accept()
+				logD("CommsBTConnect.run 2 $disconnect")
 				if (!disconnect) {
 					logD("CommsBTConnect.run accepted")
 					commsBTConnected = CommsBTConnected()
 					commsBTConnected?.start()
 				}
 			} catch (e: Exception) {
+				logD("CommsBTConnect.run Exception: " + e.message)
 				if (!disconnect) logE("CommsBTConnect.run Exception: " + e.message)
 			}
 		}
@@ -252,7 +260,7 @@ class CommsBT : Service() {
 			}
 		}
 
-		fun sendNextResponse(): Boolean {
+		suspend fun sendNextResponse(): Boolean {
 			try {
 				val response = responseQueue.get(0) as JSONObject
 				responseQueue.remove(0)
@@ -260,7 +268,7 @@ class CommsBT : Service() {
 				outputStream!!.write(response.toString().toByteArray())
 			} catch(e: Exception) {
 				logE("CommsBTConnected.sendNextResponse: " + e.message)
-				toast(R.string.error_bt_response)//TODO replace all toast from CommsBT with onError
+				onError(R.string.error_bt_response)
 				return false
 			}
 			return true
@@ -280,7 +288,7 @@ class CommsBT : Service() {
 					val numBytes = inputStream?.read(buffer) ?: 0
 					if(numBytes < 0) {
 						logE("CommsBTConnected.read read error, request: $request")
-						toast(R.string.error_bt_request)
+						onError(R.string.error_bt_request)
 						return
 					}
 					val temp = String(buffer)
@@ -295,13 +303,12 @@ class CommsBT : Service() {
 			} catch(e: Exception) {
 				logE("CommsBTConnected.read: " + e.message)
 			}
-			baseContext.toast(R.string.error_bt_request)
+			onError(R.string.error_bt_request)
 		}
 
 		fun isValidJSON(json: String): Boolean {
 			if(!json.endsWith("}")) return false
-			try { JSONObject(json) }
-			catch(_: JSONException) { return false }
+			try { JSONObject(json) } catch(_: JSONException) { return false }
 			return true
 		}
 	}

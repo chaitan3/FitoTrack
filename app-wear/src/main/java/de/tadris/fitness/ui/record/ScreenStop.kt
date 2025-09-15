@@ -49,7 +49,6 @@ import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDistance
 import de.tadris.fitness.util.prettyDurationShort
-import org.json.JSONObject
 
 @Composable
 fun ScreenStop(
@@ -63,7 +62,7 @@ fun ScreenStop(
 	onEndClick: () -> Unit,
 	onSettingsClick: () -> Unit
 ){
-	Column(modifier = modifier.fillMaxSize().padding(top = 20.dp)) {
+	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		Row(
 			modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = Main.vw25),
 			verticalAlignment = Alignment.CenterVertically
@@ -71,9 +70,9 @@ fun ScreenStop(
 			if(workoutData.isWorkoutTypeGps) {
 				Field(
 					modifier = Modifier.weight(1f),
-					value = workoutData.distanceTotal.intValue.prettyDistance(),
+					value = workoutData.distanceTotal.prettyDistance(),
 					unitText =
-						if(workoutData.distanceTotal.intValue >= 1000) R.string.field_km
+						if(workoutData.distanceTotal >= 1000) R.string.field_km
 						else R.string.field_m,
 					isActive = !isPaused
 				)
@@ -96,7 +95,7 @@ fun ScreenStop(
 			)
 			Field(
 				modifier = Modifier.weight(1f),
-				value = workoutData.durationTotal.longValue.prettyDurationShort(),
+				value = workoutData.durationTotal.prettyDurationShort(),
 				isActive = !isPaused
 			)
 		}
@@ -121,7 +120,10 @@ fun ScreenStop(
 				onClick = onEndClick
 			) {
 				Icon(
-					imageVector = ImageVector.vectorResource(R.drawable.ic_stop),
+					imageVector = ImageVector.vectorResource( id =
+						if(workoutData.nextLeg == null) R.drawable.ic_stop
+						else R.drawable.ic_next
+					),
 					contentDescription = "stop",
 				)
 			}
@@ -147,10 +149,10 @@ fun ScreenStop(
 @Composable
 fun PreviewScreenStop(){
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
-	workoutData.pauseTotal.longValue = 100000
-	workoutData.durationTotal.longValue = 200000
-	workoutData.distanceTotal.intValue = 500
+	val workoutData = WorkoutData()
+	workoutData.pauseTotal = 100000
+	workoutData.durationTotal = 200000
+	workoutData.distanceTotal = 500
 	AppScaffold { FOTTheme { ScreenStop(
 		Modifier,
 		workoutData,

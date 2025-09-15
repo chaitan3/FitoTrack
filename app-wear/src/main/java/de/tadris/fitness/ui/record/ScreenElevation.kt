@@ -28,10 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,16 +52,16 @@ import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
 import de.tadris.fitness.ui.secsToKeep
 import de.tadris.fitness.util.isSeconds
+import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDurationShort
-import org.json.JSONObject
 
 @Composable
 fun ScreenElevation(
 	modifier: Modifier,
 	workoutData: WorkoutData,
 	elevation: Double,
-	timeToDuration: (Long) -> Long,
+	timeToDuration: (Long) -> Long?,
 	targetProgress: MutableFloatState,
 	targetAchieved: MutableState<TargetAchieved>,
 	isPaused: Boolean
@@ -67,35 +70,35 @@ fun ScreenElevation(
 	LaunchedEffect(workoutData.locationSamples.isNotEmpty()) {
 		if(elevationData.isEmpty() && workoutData.locationSamples.isNotEmpty()){
 			val locationSamples = workoutData.locationSamples
-			val secsToKeep = secsToKeep(workoutData.durationTotal.longValue)
-			val tempList = ArrayList<ChartData>(maxOf(a = 10, b =
-				if(locationSamples.size > 1000) locationSamples.size / secsToKeep
-				else locationSamples.size
-			))
-			locationSamples.forEach {
-				if(it.ele == 0.0) return@forEach
-				val duration = timeToDuration(it.time)
-				if(!duration.isSeconds(secsToKeep)) return@forEach
-				tempList.add(ChartData(duration, it.ele))
-			}
+			val secsToKeep = secsToKeep(workoutData.durationTotal)
+			val tempList = locationSamples
+				.filter { it.ele != 0.0 }
+				.mapNotNull {
+					val duration = timeToDuration(it.time)
+					if(duration?.isSeconds(secsToKeep) != true) null
+					else ChartData(duration, it.ele)
+				}
 			elevationData.addAll(tempList)
 		}
 	}
+	var firstElevation by remember { mutableDoubleStateOf(0.0) }
 	LaunchedEffect(elevation) {
 		if(elevationData.size > 1000){
 			val tempList = elevationData.toMutableList()
-			val secsToKeep = secsToKeep(workoutData.durationTotal.longValue)
+			val secsToKeep = secsToKeep(workoutData.durationTotal)
 			tempList.removeIf { !it.duration.isSeconds(secsToKeep) }
 			elevationData.retainAll(tempList)
 		}
 		if(elevation != 0.0){
 			elevationData.add(ChartData(
-				duration = workoutData.durationTotal.longValue,
+				duration = workoutData.durationTotal,
 				value = elevation
 			))
+			if(firstElevation == 0.0) firstElevation = elevation
 		}
 	}
-	Column(modifier = modifier.fillMaxSize().padding(top = 20.dp)) {
+
+	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		Field(
 			modifier = Modifier.weight(1f),
 			value = elevation.pretty(),
@@ -103,13 +106,13 @@ fun ScreenElevation(
 		)
 		Box(
 			modifier = Modifier.fillMaxWidth().weight(3f).padding(
-				start = if(Main.isScreenRound) Main.vw5 else 0.dp,
+				start = if(Main.isScreenRound) Main.vw7 else 0.dp,
 				end = if(Main.isScreenRound) Main.vw5 else 0.dp
 			)
 		){ Chart(
 			data = elevationData,
-			yMinInit = elevation,
-			yMaxInit = elevation
+			yMinInit = firstElevation-5,
+			yMaxInit = firstElevation+5
 		) }
 		Row(
 			modifier = Modifier.weight(1f).padding(
@@ -117,14 +120,14 @@ fun ScreenElevation(
 			),
 			verticalAlignment = Alignment.CenterVertically
 		) {
-			val showGain = workoutData.elevationGainTotal.intValue >= 10 || workoutData.elevationLossTotal.intValue < 10
-			val showLoss = workoutData.elevationLossTotal.intValue >= 10 || workoutData.elevationGainTotal.intValue < 10
+			val showGain = workoutData.elevationGainTotal >= 10 || workoutData.elevationLossTotal < 10
+			val showLoss = workoutData.elevationLossTotal >= 10 || workoutData.elevationGainTotal < 10
 			if(showGain) {
 				Field(
 					modifier = Modifier.weight(1f).padding(horizontal =
 						if(!showLoss) Main.vw12 else 0.dp
 					),
-					value = workoutData.elevationGainTotal.intValue.toString(),
+					value = workoutData.elevationGainTotal.toString(),
 					unitText = R.string.field_m,
 					unitIcon = R.drawable.ic_uphill
 				)
@@ -134,7 +137,7 @@ fun ScreenElevation(
 					modifier = Modifier.weight(1f).padding(horizontal =
 						if(!showGain) Main.vw12 else 0.dp
 					),
-					value = workoutData.elevationLossTotal.intValue.toString(),
+					value = workoutData.elevationLossTotal.toString(),
 					unitText = R.string.field_m,
 					unitIcon = R.drawable.ic_downhill
 				)
@@ -142,7 +145,7 @@ fun ScreenElevation(
 		}
 		Field(
 			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
-			value = workoutData.durationTotal.longValue.prettyDurationShort(),
+			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
 	}
@@ -153,9 +156,9 @@ fun ScreenElevation(
 @Composable
 fun PreviewScreenElevation() {
 	Main.GetScreenSpecs()
-	val workoutData = WorkoutData(JSONObject())
-	workoutData.elevationLossTotal.intValue = 10
-	workoutData.elevationGainTotal.intValue = 10
+	val workoutData = WorkoutData()
+	workoutData.elevationLossTotal = 10
+	workoutData.elevationGainTotal = 10
 	val elevationData = mutableListOf<ChartData>()
 	elevationData.add(ChartData(0, 150.0))
 	elevationData.add(ChartData(10000, 151.0))
@@ -164,7 +167,7 @@ fun PreviewScreenElevation() {
 		ScreenElevation(
 			Modifier,
 			workoutData,
-			elevation = 50.0,
+			elevation = 150.0,
 			timeToDuration = { it },
 			targetProgress = remember { mutableFloatStateOf(0.9F) },
 			targetAchieved = remember { mutableStateOf(TargetAchieved.NOT) },
