@@ -515,4 +515,6 @@
     <string name="httpUrl">URL</string>
     <string name="exportIntervalTitle">Intervall för säkerhetskopiering</string>
     <string name="autoExportBackupSummary">Exportera säkerhetskopior automatisk</string>
+    <string name="saveChangesQuestionMessage">Vill du verkligen spara ändringarna?</string>
+    <string name="saveChangesQuestion">Spara ändringar?</string>
 </resources>
