@@ -57,6 +57,8 @@ fun RecordSettings(
 	workoutData: WorkoutData,
 	hasLocation: Boolean,
 	hasHeartRate: Boolean,
+	speakEnabled: Int,
+	toggleSpeak: () -> Unit,
 	onTargetClicked: () -> Unit
 ){
 	val context = LocalContext.current
@@ -91,6 +93,27 @@ fun RecordSettings(
 					}
 				}
 			} }
+			item {
+				OutlinedButton(
+					modifier = Modifier.fillMaxWidth(),
+					transformation = SurfaceTransformation(transformationSpec),
+					onClick = toggleSpeak
+				) {
+					Column {
+						Text(text = stringResource(R.string.speak))
+						Text(
+							text = stringResource(id =
+								when(speakEnabled) {
+									1 -> R.string.on
+									0 -> R.string.off
+									else -> R.string.unavailable
+								}
+							),
+							color = ColorFOT
+						)
+					}
+				}
+			}
 			if(workoutData.isWorkoutTypeGps && MapStore.getLocalMaps(context).isNotEmpty()) {
 				item {
 					var mapSource by remember { mutableStateOf(getMapSource(context)) }
@@ -201,6 +224,8 @@ fun PreviewRecordSettings(){
 			workoutData,
 			hasLocation = true,
 			hasHeartRate = true,
+			speakEnabled = 1,
+			toggleSpeak = {},
 			onTargetClicked = {}
 		)
 	}

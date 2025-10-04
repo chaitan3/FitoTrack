@@ -116,11 +116,17 @@ object WorkoutDataStore {
 		return null
 	}
 
-	fun readHeartRates(context: Context, workoutData: WorkoutData, onDone: () -> Unit) { //Thread: BG
+	fun readHeartRates(//Thread: BG
+		context: Context,
+		workoutData: WorkoutData,
+		onDone: () -> Unit = {},
+		filter: Boolean = false
+	) {
 		try {
 			val heartRates = readHeartRates(context, workoutData.id)
 			if(heartRates == null) return
-			workoutData.heartRatesFromJson(heartRates)
+			workoutData.heartRatesFromJson(heartRates, filter)
+			workoutData.legs.forEach { readHeartRates(context, workoutData = it, onDone, filter) }
 			onDone()
 		} catch(e: Exception) { logW("WorkoutDataStore.readHeartRates: " + e.message) }
 	}

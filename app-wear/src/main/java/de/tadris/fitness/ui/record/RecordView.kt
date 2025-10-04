@@ -36,6 +36,8 @@ import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
 import de.tadris.fitness.data.WorkoutData.WorkoutType
 import de.tadris.fitness.ui.ConfirmDialog
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
+import de.tadris.fitness.util.logD
+import org.mapsforge.core.model.LatLong
 
 enum class SwipeDirection {LEFT, RIGHT, UP, DOWN}
 @Composable
@@ -55,6 +57,7 @@ fun RecordView(recordActivity: RecordActivity) {
 	var swipeDirection: SwipeDirection = SwipeDirection.LEFT
 	fun onSwipe(swipeDirection: SwipeDirection){
 		val route = navController.currentBackStackEntry?.destination?.route
+		//logD("onSwipe $route $swipeDirection")
 		when(swipeDirection){
 			SwipeDirection.LEFT -> if(route == "ScreenStop") navFirstScreen()
 			SwipeDirection.RIGHT -> {
@@ -71,7 +74,7 @@ fun RecordView(recordActivity: RecordActivity) {
 						else recordActivity.workoutData.secondaryTargetType = null
 						navController.popBackStack()
 					}
-					"RecordSettings" -> {
+					"RecordSettings/{leg}" -> {
 						recordActivity.setScreenOnFlag()
 						navController.popBackStack()
 					}
@@ -128,8 +131,9 @@ fun RecordView(recordActivity: RecordActivity) {
 				)
 			}
 		//Because ScreenMap is really heavy, this cannot be remembered there
-		val mapZoomLevel = remember { mutableStateOf<Byte>(15) }
 		val mapCenter = remember { mutableStateOf(MapCenter.POSITION) }
+		val mapZoomLevel = remember { mutableStateOf<Byte>(15) }
+		val mapPosition = remember { mutableStateOf<LatLong?>(null) }
 		SwipeDismissableNavHost(
 			userSwipeEnabled = false,
 			navController = navController,
@@ -152,6 +156,7 @@ fun RecordView(recordActivity: RecordActivity) {
 						navFirstScreen()
 					},
 					locationStatus = recordActivity.locationStatus,
+					locationAccuracy = recordActivity.locationAccuracy,
 					heartRateStatus = recordActivity.heartRateStatus,
 					onSettingsClick = {
 						if(recordActivity.workoutData.workoutType == WorkoutType.MULTISPORT)
@@ -170,6 +175,7 @@ fun RecordView(recordActivity: RecordActivity) {
 						else{
 							recordActivity.workoutData.workoutType = workoutType
 							recordActivity.workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(context, workoutType)
+							recordActivity.setScreenOnFlag()
 						}
 						navController.popBackStack()
 						if(workoutType == WorkoutType.MULTISPORT)
@@ -262,6 +268,7 @@ fun RecordView(recordActivity: RecordActivity) {
 					rootWorkoutData = recordActivity.workoutData.rootWorkout ?: recordActivity.workoutData,
 					onNextLegClick = {
 						recordActivity.workoutData.nextLeg?.let { nextLeg ->
+							logD("switching to next leg")
 							recordActivity.workoutData = nextLeg
 							recordActivity.startExercise()
 							navController.navigate("ScreenStop")
@@ -281,6 +288,8 @@ fun RecordView(recordActivity: RecordActivity) {
 					workoutData,
 					hasLocation = !recordActivity.locationStatus.isDisabled,
 					hasHeartRate = !recordActivity.heartRateStatus.isDisabled,
+					speakEnabled = recordActivity.speakEnabled,
+					toggleSpeak =  recordActivity::toggleSpeak,
 					onTargetClicked = { navController.navigate("Target/$leg") }
 				)
 			}
@@ -317,8 +326,9 @@ fun RecordView(recordActivity: RecordActivity) {
 					targetAchieved = recordActivity.targetAchieved,
 					isPaused = recordActivity.exerciseState.isPaused,
 					hasOtherScreens,
-					zoomLevel = mapZoomLevel,
 					mapCenter,
+					mapZoomLevel,
+					mapPosition,
 					goBack = {
 						if(hasOtherScreens) onSwipe(SwipeDirection.DOWN)
 						else onSwipe(SwipeDirection.RIGHT)
@@ -417,7 +427,7 @@ fun RecordView(recordActivity: RecordActivity) {
 }
 
 fun WorkoutTypeSettings.Screen.isAvailable(recordActivity: RecordActivity): Boolean =
-	if(isMultisport && recordActivity.workoutData.rootWorkout != null) true
+	if(isMultisport && recordActivity.workoutData.rootWorkout?.workoutType == WorkoutType.MULTISPORT) true
 	else if(isTarget && recordActivity.workoutData.primaryTargetType != null) true
 	else if(needsLocation &&
 		(recordActivity.locationStatus.isDisabled || !recordActivity.workoutData.isWorkoutTypeGps)

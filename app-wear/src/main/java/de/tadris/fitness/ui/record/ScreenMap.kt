@@ -36,6 +36,7 @@ import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -76,6 +77,7 @@ import de.tadris.fitness.ui.getMapPathLine
 import de.tadris.fitness.ui.getTileLayerLocal
 import de.tadris.fitness.ui.getTileLayerOnline
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
+import de.tadris.fitness.util.isSeconds
 import org.mapsforge.core.graphics.Style
 import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.Dimension
@@ -88,7 +90,7 @@ import org.mapsforge.map.layer.overlay.FixedPixelCircle
 import org.mapsforge.map.scalebar.DefaultMapScaleBar
 import org.mapsforge.map.scalebar.MapScaleBar
 import org.mapsforge.map.view.InputListener
-//TODO fix when shown from the beginning, a wrong line is shown
+
 enum class MapCenter {NOT, POSITION, ROUTE, FINISH}
 const val zoomLevelMin: Byte = 10
 const val zoomLevelMax: Byte = 18
@@ -99,15 +101,16 @@ fun ScreenMap(
 	targetAchieved: MutableState<TargetAchieved>,
 	isPaused: Boolean,
 	hasOtherScreens: Boolean,
-	zoomLevel: MutableState<Byte>,
 	mapCenter: MutableState<MapCenter>,
+	mapZoomLevel: MutableState<Byte>,
+	mapPosition: MutableState<LatLong?>,
 	goBack: () -> Unit
 ){
 	val context = LocalContext.current
 	val initLatLong = workoutData.locationSamples.lastOrNull()?.toLatLong()
 		?: LatLong(0.0, 0.0)
 	var mapView by remember { mutableStateOf(MapView(context)) }
-	val latLongs = remember { mutableListOf<LatLong>() }
+	val latLongs = remember { mutableStateListOf<LatLong>() }
 	val locationMarker = remember { locationMarker(initLatLong) }
 	val pathLine = remember { getMapPathLine() }
 	val hasRotary = remember { hasRotary(context) }
@@ -123,10 +126,10 @@ fun ScreenMap(
 			box,
 			mapView.model.displayModel.tileSize
 		)
-		zoomLevel.value = if(calcZoomLevel < zoomLevelMin) zoomLevelMin
+		mapZoomLevel.value = if(calcZoomLevel < zoomLevelMin) zoomLevelMin
 			else if(calcZoomLevel > zoomLevelMax) zoomLevelMax
 			else calcZoomLevel
-		mapView.setZoomLevel(zoomLevel.value)
+		mapView.setZoomLevel(mapZoomLevel.value)
 	}
 	fun centerMap(){
 		val lastLatLong = latLongs.last()
@@ -139,27 +142,28 @@ fun ScreenMap(
 		}
 	}
 	fun zoomIn(){
-		if(zoomLevel.value >= zoomLevelMax) return
-		zoomLevel.value++
-		mapView.setZoomLevel(zoomLevel.value)
+		if(mapZoomLevel.value >= zoomLevelMax) return
+		mapZoomLevel.value++
+		mapView.setZoomLevel(mapZoomLevel.value)
 		if(mapCenter.value in setOf(MapCenter.ROUTE, MapCenter.FINISH))
 			mapCenter.value = MapCenter.NOT
 	}
 	fun zoomOut(){
-		if(zoomLevel.value <= zoomLevelMin) return
-		zoomLevel.value--
-		mapView.setZoomLevel(zoomLevel.value)
+		if(mapZoomLevel.value <= zoomLevelMin) return
+		mapZoomLevel.value--
+		mapView.setZoomLevel(mapZoomLevel.value)
 		if(mapCenter.value in setOf(MapCenter.ROUTE, MapCenter.FINISH))
 			mapCenter.value = MapCenter.NOT
 	}
 	LaunchedEffect(workoutData.locationSamples.size) {
 		if(latLongs.isEmpty() && workoutData.locationSamples.size >= 5){
-			workoutData.locationSamples.forEachIndexed { index, sample ->
-				if(index == 0 || index % 5 == 0){
-					latLongs.add(sample.toLatLong())
-					pathLine.addPoint(sample.toLatLong())
+			workoutData.locationSamples
+				.filter { it.time.isSeconds(5) }
+				.map { it.toLatLong() }
+				.let {
+					latLongs.addAll(it)
+					pathLine.addPoints(it)
 				}
-			}
 			if(latLongs.isNotEmpty()) centerMap()
 		}else if(latLongs.isEmpty() || workoutData.locationSamples.size % 5 == 0) {
 			workoutData.locationSamples.lastOrNull()?.let {
@@ -174,6 +178,7 @@ fun ScreenMap(
 	}
 	DisposableEffect(Unit) {
 		onDispose {
+			mapPosition.value = mapView.model.mapViewPosition.center
 			tileLayerOnline?.onPause()
 			mapView.destroyAll()
 			AndroidGraphicFactory.clearResourceMemoryCache()
@@ -190,19 +195,21 @@ fun ScreenMap(
 	} }
 	if(latLongs.isNotEmpty()) {
 		AndroidView(
-			modifier = Modifier.fillMaxSize().onRotaryScrollEvent {
-				if(scrollTime < it.uptimeMillis - 200) scrollDiff = 0f
-				scrollTime = it.uptimeMillis
-				scrollDiff += it.verticalScrollPixels
-				if(scrollDiff > 300) {
-					zoomIn()
-					scrollDiff = 0f
-				} else if(scrollDiff < -300) {
-					zoomOut()
-					scrollDiff = 0f
-				}
-				true
-			},
+			modifier = Modifier
+				.fillMaxSize()
+				.onRotaryScrollEvent {
+					if(scrollTime < it.uptimeMillis - 200) scrollDiff = 0f
+					scrollTime = it.uptimeMillis
+					scrollDiff += it.verticalScrollPixels
+					if(scrollDiff > 200) {
+						zoomIn()
+						scrollDiff = 0f
+					} else if(scrollDiff < -200) {
+						zoomOut()
+						scrollDiff = 0f
+					}
+					true
+				},
 			factory = { context ->
 				mapView = MapView(context).apply {
 					AndroidGraphicFactory.createInstance(context)
@@ -227,7 +234,7 @@ fun ScreenMap(
 
 					setZoomLevelMin(zoomLevelMin)
 					setZoomLevelMax(zoomLevelMax)
-					setZoomLevel(zoomLevel.value)
+					setZoomLevel(mapZoomLevel.value)
 					setBuiltInZoomControls(false)
 
 					isFocusable = true
@@ -239,9 +246,8 @@ fun ScreenMap(
 
 					post {
 						requestFocus()
+						mapPosition.value?.let { da -> mapView.setCenter(da) }
 						centerMap()
-						//this is not ideal, but there is no way to store the actual viewpoint
-						if(mapCenter.value == MapCenter.NOT) mapView.setCenter(latLongs.last())
 						mapLoaded = true
 					}
 				}
@@ -279,7 +285,9 @@ fun ScreenMap(
 			}
 		) {
 			Icon(
-				modifier = Modifier.size(48.dp).padding(4.dp),
+				modifier = Modifier
+					.size(48.dp)
+					.padding(4.dp),
 				imageVector = ImageVector.vectorResource(
 					when(mapCenter.value){
 						MapCenter.POSITION -> R.drawable.ic_map_center_pos
@@ -294,17 +302,22 @@ fun ScreenMap(
 		}
 	}
 	if(!hasRotary){
-		Column(Modifier.fillMaxHeight().padding(horizontal = 5.dp, vertical =
-				if(Main.isScreenRound) Main.vh25 else 0.dp
-		)) {
+		Column(Modifier
+			.fillMaxHeight()
+			.padding(
+				horizontal = 5.dp, vertical =
+					if(Main.isScreenRound) Main.vh25 else 0.dp
+			)) {
 			IconButton(
 				onClick = ::zoomOut,
 				modifier = Modifier.weight(1f)
 			) {
 				Icon(
-					modifier = Modifier.size(48.dp).padding(4.dp),
+					modifier = Modifier
+						.size(48.dp)
+						.padding(4.dp),
 					imageVector = ImageVector.vectorResource(R.drawable.ic_zoom_out),
-					tint = if(zoomLevel.value > zoomLevelMin) ColorWhite else ColorInactive,
+					tint = if(mapZoomLevel.value > zoomLevelMin) ColorWhite else ColorInactive,
 					contentDescription = "zoom out"
 				)
 			}
@@ -313,9 +326,11 @@ fun ScreenMap(
 				modifier = Modifier.weight(1f)
 			) {
 				Icon(
-					modifier = Modifier.size(48.dp).padding(4.dp),
+					modifier = Modifier
+						.size(48.dp)
+						.padding(4.dp),
 					imageVector = ImageVector.vectorResource(R.drawable.ic_zoom_in),
-					tint = if(zoomLevel.value < zoomLevelMax) ColorWhite else ColorInactive,
+					tint = if(mapZoomLevel.value < zoomLevelMax) ColorWhite else ColorInactive,
 					contentDescription = "zoom in"
 				)
 			}
@@ -323,14 +338,18 @@ fun ScreenMap(
 	}
 	if(!mapLoaded){
 		Box(
-			modifier = Modifier.fillMaxSize().background(colorScheme.background),
+			modifier = Modifier
+				.fillMaxSize()
+				.background(colorScheme.background),
 			contentAlignment = Alignment.Center
 		){ Text(text = stringResource(R.string.map_waiting)) }
 	}
 	Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
 		IconButton(onClick = goBack) {
 			Icon(
-				modifier = Modifier.size(48.dp).padding(top = 15.dp)
+				modifier = Modifier
+					.size(48.dp)
+					.padding(top = 15.dp)
 					.then(if(!hasOtherScreens) Modifier.rotate(-90f) else Modifier),
 				imageVector = ImageVector.vectorResource(R.drawable.ic_map_up),
 				contentDescription = "go back"
@@ -370,8 +389,9 @@ fun PreviewScreenMap() {
 			targetAchieved = remember { mutableStateOf(TargetAchieved.NOT) },
 			isPaused = false,
 			hasOtherScreens = true,
-			zoomLevel = remember { mutableStateOf(15) },
 			mapCenter = remember { mutableStateOf(MapCenter.NOT) },
+			mapZoomLevel = remember { mutableStateOf(15) },
+			mapPosition = remember { mutableStateOf(null) },
 			goBack = {}
 		)
 	} }

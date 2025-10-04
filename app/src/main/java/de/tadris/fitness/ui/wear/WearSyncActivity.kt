@@ -51,7 +51,7 @@ class WearSyncActivity : FitoTrackActivity() {
 		lifecycleScope.launch {
 			CommsBT.status.collect { status ->
 				if(CommsBT.status.value == CommsBT.Status.CONNECTED) {
-					runOnUiThread {
+					CoroutineScope(Dispatchers.Main).launch {
 						fragmentManager?.beginTransaction()
 							?.replace(R.id.wearSync, WearSyncWorkoutsList())
 							?.commit()

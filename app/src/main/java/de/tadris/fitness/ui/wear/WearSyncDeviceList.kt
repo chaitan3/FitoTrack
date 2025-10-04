@@ -42,20 +42,11 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("MissingPermission") //Permissions are handled in WearSyncActivity.onCreate
 class WearSyncDeviceList : Fragment() {
-	lateinit var activity: Activity
 	lateinit var title: TextView
 	lateinit var known: LinearLayout
 	lateinit var list: LinearLayout
 	lateinit var icon: ImageView
 	lateinit var iconDrawable: AnimatedVectorDrawable
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		try {
-			activity = context as Activity
-		} catch(e: ClassCastException) {
-			Log.e(LOG_TAG, "WearSyncDeviceList.onAttach exception: " + e.message)
-		}
-	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -127,7 +118,7 @@ class WearSyncDeviceList : Fragment() {
 			onBTError(R.string.wear_error_no_devices)
 			return
 		}
-		activity.runOnUiThread {
+		CoroutineScope(Dispatchers.Main).launch {
 			list.let { layout ->
 				layout.removeAllViews()
 				bluetoothDevices.forEach{ bluetoothDevice -> deviceFound(layout, bluetoothDevice) }
@@ -137,12 +128,12 @@ class WearSyncDeviceList : Fragment() {
 	}
 
 	fun deviceFound(layout: LinearLayout, bluetoothDevice: BluetoothDevice) {
-		val device = TextView(activity, null, 0, R.style.wearDeviceStyle)
+		val device = TextView(context, null, 0, R.style.wearDeviceStyle)
 		device.text = bluetoothDevice.getName()
 		layout.addView(device)
 		device.setOnClickListener { CommsBT.connectDevice(bluetoothDevice) }
 		device.setOnLongClickListener { view ->
-			AlertDialog.Builder(activity)
+			AlertDialog.Builder(context)
 				.setMessage(R.string.wear_sync_del)
 				.setPositiveButton(R.string.delete) { _, _ ->
 					view.visibility = View.GONE
@@ -156,7 +147,7 @@ class WearSyncDeviceList : Fragment() {
 	}
 
 	fun onBTError(message: Int) {
-		activity.runOnUiThread {
+		CoroutineScope(Dispatchers.Main).launch {
 			Log.d(LOG_TAG, "onBTError: " + getString(message))
 			title.setText(message)
 			showList()

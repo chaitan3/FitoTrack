@@ -97,6 +97,7 @@
 
     <!-- Settings.Maps UI -->
     <string name="maps">Maps</string>
+    <string name="speak">Voice notifications</string>
     <string name="map_source">Map source</string>
     <string name="download">Download</string>
     <string name="updates">Check for updates</string>
@@ -112,6 +113,10 @@
 
     <string name="fail_no_fast">No Wifi available</string>
     <string name="fail_fast">Requesting fast connection failed</string>
+
+    <!-- Speak -->
+    <string name="speak_target_half">half way there</string>
+    <string name="speak_target_full">target achieved</string>
 
     <!-- Notifications -->
     <string name="active">active</string>
@@ -156,5 +161,6 @@
     <string name="error_bt_response">Problem with response from phone</string>
     <string name="error_maps_download">Failed to download map</string>
     <string name="error_maps_file_exists">Map already available</string>
+    <string name="error_speak_unavailable">Speak is unavailable</string>
 
 </resources>

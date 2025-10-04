@@ -185,7 +185,7 @@ class WearSyncWorkoutsList : Fragment() {
 				onBTError(R.string.wear_error_tech)
 				return
 			}
-			activity.runOnUiThread { wearSyncWorkoutInProgress?.setProcessing() }
+			CoroutineScope(Dispatchers.Main).launch { wearSyncWorkoutInProgress?.setProcessing() }
 			val watchWorkout = response.getJSONObject("workout")
 			workoutId = watchWorkout.getLong("id")
 			if(checkWorkoutExists(workoutId)) {
@@ -210,7 +210,7 @@ class WearSyncWorkoutsList : Fragment() {
 			Log.e(LOG_TAG, "getWorkoutResponse exception: $e")
 			Log.e(LOG_TAG, "getWorkoutResponse exception: " + e.message)
 			if(workoutId > 0) {
-				activity.runOnUiThread { wearSyncWorkoutInProgress?.setFail() }
+				CoroutineScope(Dispatchers.Main).launch { wearSyncWorkoutInProgress?.setFail() }
 				sync()
 			} else {
 				onBTError(R.string.wear_error_tech)
@@ -221,13 +221,13 @@ class WearSyncWorkoutsList : Fragment() {
 	fun onBTError(message: Int) {
 		try {
 			Log.d(LOG_TAG, "onBTError: " + getString(message))
-			activity.runOnUiThread { title.setText(message) }
+			CoroutineScope(Dispatchers.Main).launch { title.setText(message) }
 		}catch(_: Exception) {}
 	}
 	val onBTTimeout = Runnable { onBTError(R.string.wear_error_tech) }
 
 	fun doneNext() {
-		activity.runOnUiThread {
+		CoroutineScope(Dispatchers.Main).launch {
 			wearSyncWorkoutInProgress?.setDone()
 			CoroutineScope(Dispatchers.Default).launch { sync() }
 		}

@@ -128,6 +128,7 @@ fun Workout(
 	var showElevationChart by remember { mutableStateOf<Boolean?>(null) }
 	var showHeartRateChart by remember { mutableStateOf<Boolean?>(null) }
 	var delWorkout by remember { mutableStateOf(false) }
+	var resume = false
 	fun Long.timeToDuration(): Long? {
 		if(workoutData == null || workoutData.checkpoints.isEmpty()) return null
 		var checkpoint = workoutData.checkpoints[0]
@@ -142,8 +143,10 @@ fun Workout(
 	}
 	DisposableEffect(Unit) {
 		onDispose {
-			workoutData?.locationSamples?.clear()
-			workoutData?.heartRateSamples?.clear()
+			if(!resume) {
+				workoutData?.locationSamples?.clear()
+				workoutData?.heartRateSamples?.clear()
+			}
 		}
 	}
 
@@ -171,7 +174,10 @@ fun Workout(
 				item {
 					TextButton(
 						modifier = Modifier.fillMaxWidth(),
-						onClick = { onResumeClick(workoutData.id) }
+						onClick = {
+							resume = true
+							onResumeClick(workoutData.id)
+						}
 					) {
 						Text(text = stringResource(R.string.resume))
 					}
@@ -359,9 +365,13 @@ fun Workout(
 					) { Text(text = stringResource(R.string.show_chart)) }
 				}
 				false -> {
-					runInBackground { WorkoutDataStore.readHeartRates(context, workoutData){
-						showHeartRateChart = true
-					} }
+					runInBackground {
+						WorkoutDataStore.readHeartRates(
+							context,
+							workoutData,
+							onDone = { showHeartRateChart = true }
+						)
+					}
 					item { Text(text = stringResource(R.string.loading)) }
 				}
 				true -> {

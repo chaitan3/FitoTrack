@@ -54,6 +54,9 @@ import de.tadris.fitness.ui.settings.SettingsActivity.DownloadState
 import de.tadris.fitness.util.CommsBT
 import de.tadris.fitness.util.runInBackground
 import de.tadris.fitness.util.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SettingsActivity : ComponentActivity() {
 	var btEnabled = mutableStateOf<Boolean?>(null)
@@ -101,11 +104,11 @@ class SettingsActivity : ComponentActivity() {
 		ActivityResultContracts.RequestPermission()){ if(it) btEnabled.value = true }
 
 	fun onMapClick(downloadFile: MapStore.File){
-		runOnUiThread {
+		CoroutineScope(Dispatchers.Main).launch {
 			window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 			downloadState.value = DownloadState.Downloading
 			mapStore.getRemoteFile(
-				context = this,
+				context = this@SettingsActivity,
 				fileRemote = downloadFile,
 				onError = ::onDownloadError,
 				onProgress = ::onDownloadProgress,
@@ -114,10 +117,10 @@ class SettingsActivity : ComponentActivity() {
 		}
 	}
 	fun onDownloadProgress(bytesDone: Long) {
-		runOnUiThread { downloadBytesDone.longValue = bytesDone }
+		CoroutineScope(Dispatchers.Main).launch { downloadBytesDone.longValue = bytesDone }
 	}
 	fun onDownloadDone() {
-		runOnUiThread {
+		CoroutineScope(Dispatchers.Main).launch {
 			downloadState.value = DownloadState.Done
 			window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 		}
@@ -125,7 +128,7 @@ class SettingsActivity : ComponentActivity() {
 	}
 	fun onDownloadError(error: Int) {
 		downloadState.value = DownloadState.Failed
-		runOnUiThread {
+		CoroutineScope(Dispatchers.Main).launch {
 			toast(error)
 			window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 		}

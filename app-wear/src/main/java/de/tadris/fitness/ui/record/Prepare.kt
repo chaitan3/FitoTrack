@@ -45,9 +45,9 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.ui.ColorWhite
-import de.tadris.fitness.ui.record.RecordActivity.SensorStatus
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
+import de.tadris.fitness.ui.record.RecordActivity.SensorStatus
 
 @Composable
 fun Prepare(
@@ -57,6 +57,7 @@ fun Prepare(
 	onTargetClick: () -> Unit,
 	onStartClick: () -> Unit,
 	locationStatus: SensorStatus,
+	locationAccuracy: Double,
 	heartRateStatus: SensorStatus,
 	onSettingsClick: () -> Unit
 ){
@@ -103,7 +104,10 @@ fun Prepare(
 			Icon(
 				modifier = Modifier.weight(1f),
 				imageVector = ImageVector.vectorResource(id =
-					if(locationStatus == SensorStatus.AVAILABLE) R.drawable.ic_gps_fixed
+					if(locationAccuracy < 10) R.drawable.ic_gps_fixed
+					else if(locationAccuracy < 15) R.drawable.ic_gps_75
+					else if(locationAccuracy < 20) R.drawable.ic_gps_50
+					else if(locationAccuracy < 50) R.drawable.ic_gps_25
 					else R.drawable.ic_gps_no_fix
 				),
 				tint =
@@ -148,7 +152,8 @@ fun PreviewPrepare(){
 		Prepare(
 			Modifier,
 			workoutData = workoutData,
-			locationStatus = SensorStatus.DISABLED,
+			locationStatus = SensorStatus.UNAVAILABLE,
+			locationAccuracy = 15.014235235234,
 			heartRateStatus = SensorStatus.AVAILABLE,
 			onWorkoutTypeClick = {},
 			onTargetClick = {},
