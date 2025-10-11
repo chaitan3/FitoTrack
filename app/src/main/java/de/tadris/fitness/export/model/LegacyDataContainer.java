@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.export;
+package de.tadris.fitness.export.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -31,7 +31,7 @@ import de.tadris.fitness.data.WorkoutType;
 
 @JacksonXmlRootElement(localName = "fito-track")
 @JsonIgnoreProperties(ignoreUnknown = true)
-class FitoTrackDataContainer {
+public class LegacyDataContainer {
 
     private int version;
     private List<Workout> workouts = new ArrayList<>();
@@ -39,7 +39,7 @@ class FitoTrackDataContainer {
     private List<IntervalSetContainer> intervalSets = new ArrayList<>();
     private List<WorkoutType> workoutTypes = new ArrayList<>();
 
-    public FitoTrackDataContainer() {
+    public LegacyDataContainer() {
     }
 
     public int getVersion() {

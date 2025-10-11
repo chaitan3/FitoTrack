@@ -34,7 +34,7 @@ import java.io.File;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.export.RestoreController;
+import de.tadris.fitness.export.LegacyBackupReader;
 import de.tadris.fitness.ui.ShareFileActivity;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
 import de.tadris.fitness.util.DataManager;
@@ -220,7 +220,7 @@ public class BackupSettingsFragment extends FitoTrackSettingFragment {
         dialogController.show();
         new Thread(() -> {
             try {
-                RestoreController restoreController = new RestoreController(requireContext(), uri, replace,
+                LegacyBackupReader restoreController = new LegacyBackupReader(requireContext(), uri, replace,
                         (progress, action) -> mHandler.post(() -> dialogController.setProgress(progress, action)));
                 restoreController.restoreData();
 

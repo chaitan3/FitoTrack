@@ -19,12 +19,9 @@
 package de.tadris.fitness.util.autoexport.source
 
 import android.content.Context
-import de.tadris.fitness.export.BackupController
-import de.tadris.fitness.export.BackupController.ExportStatusListener
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.autoexport.source.ExportSource.ExportedFile
 import java.io.File
-import java.io.IOException
 
 class BackupExportSource(private val includeTimestamp: Boolean) : ExportSource {
 
@@ -41,7 +38,7 @@ class BackupExportSource(private val includeTimestamp: Boolean) : ExportSource {
     @Throws(Exception::class)
     fun provideFile(context: Context?, listener: ExportStatusListener?): File {
         val file = DataManager.createSharableFile(context, fileName)
-        val backupController = BackupController(context, file, listener)
+        val backupController = LegacyBackupReader(context, file, listener)
         backupController.exportData()
         return file
     }

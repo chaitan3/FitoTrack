@@ -25,18 +25,24 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.AppDatabase
+import de.tadris.fitness.export.model.IntervalSetContainer
+import de.tadris.fitness.export.model.LegacyDataContainer
 import java.io.IOException
 import java.io.InputStream
 import java.util.zip.ZipInputStream
 
-class RestoreController(
+class LegacyBackupReader(
     private val context: Context,
     private val input: Uri,
     private val replace: Boolean,
     private val listener: ImportStatusListener
 ) {
-    private var dataContainer: FitoTrackDataContainer? = null
+    private var dataContainer: LegacyDataContainer? = null
     private val database: AppDatabase = Instance.getInstance(context).db
+
+    companion object {
+        const val VERSION: Int = 3
+    }
 
     @Throws(IOException::class, UnsupportedVersionException::class)
     fun restoreData() {
@@ -65,7 +71,7 @@ class RestoreController(
         xmlMapper.configure(JsonParser.Feature.IGNORE_UNDEFINED, true)
         dataContainer = xmlMapper.readValue(
             decompressedInput,
-            FitoTrackDataContainer::class.java
+            LegacyDataContainer::class.java
         )
         decompressedInput.close()
         stream.close()
@@ -73,13 +79,13 @@ class RestoreController(
 
     @Throws(UnsupportedVersionException::class)
     private fun checkVersion() {
-        if (dataContainer!!.version > BackupController.VERSION) {
+        if (dataContainer!!.version > VERSION) {
             throw UnsupportedVersionException("Version Code" + dataContainer!!.version + " is unsupported!")
         }
     }
 
     private fun restoreDatabase() {
-        database.runInTransaction(Runnable {
+        database.runInTransaction {
             if (replace) {
                 resetDatabase()
             }
@@ -91,7 +97,7 @@ class RestoreController(
             restoreIntervalSets()
             listener.onStatusChanged(85, context.getString(R.string.customWorkoutTypesTitle))
             restoreWorkoutTypes()
-        })
+        }
     }
 
     private fun resetDatabase() {
