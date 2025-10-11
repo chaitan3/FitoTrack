@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.BaseSample;
+import de.tadris.fitness.data.CalculatedValues;
 import de.tadris.fitness.data.Interval;
 import de.tadris.fitness.data.IntervalSet;
 import de.tadris.fitness.data.RouteSample;
@@ -68,6 +69,7 @@ public abstract class WorkoutActivity extends InformationActivity {
 
     protected Workout workout;
     protected WorkoutData data;
+    protected CalculatedValues calculatedValues;
     protected final Handler mHandler = new Handler();
     protected IntervalSet usedIntervalSet;
     protected Interval[] intervals;
@@ -92,6 +94,7 @@ public abstract class WorkoutActivity extends InformationActivity {
         }
 
         data = WorkoutData.fromWorkout(this, workout);
+        calculatedValues = new CalculatedValues(data);
 
         if (workout.getIntervalSetUsedId() > 0) {
             usedIntervalSet = Instance.getInstance(this).db.intervalDao().getSet(workout.getIntervalSetUsedId());

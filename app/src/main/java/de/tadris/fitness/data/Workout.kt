@@ -62,9 +62,9 @@ data class Workout(
 
     val pauseDuration get() = totalDuration - activeDuration // ms
 
-    val averageSpeedActive get() = distance / activeDuration // m/s
+    val averageSpeedActive get() = distance / (activeDuration / 1000.0) // m/s
 
-    val averageSpeedTotal get() = distance / totalDuration // m/s
+    val averageSpeedTotal get() = distance / (totalDuration / 1000.0) // m/s
 
     val averagePaceActive get() = (activeDuration / 1000.0 / 60.0) / (distance / 1000.0) // min/km
 

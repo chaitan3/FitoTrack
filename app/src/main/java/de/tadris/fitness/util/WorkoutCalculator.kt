@@ -59,24 +59,12 @@ object WorkoutCalculator {
         return result
     }
 
-    fun calculatePauseDuration(data: WorkoutData): Long {
-        return data.pauses.sumOf { it.duration }
-    }
-
     @JvmStatic
     fun getPausesFromWorkout(data: WorkoutData) = data.pauses.mapNotNull { pause ->
         data.samples
             .find { it.timestamp > pause.startDate }
             ?.toLatLong()
             ?.let { PauseLocation(pause, it) }
-    }
-
-    /**
-     * Returns a list of relative times when intervals were triggered
-     */
-    fun getIntervalSetTimesFromWorkout(data: WorkoutData): List<Long> {
-        return data.events.filter { it.typeId == WorkoutEvent.TYPE_ID_INTERVAL }
-            .map { it.relativeTime }
     }
 
     class Set(

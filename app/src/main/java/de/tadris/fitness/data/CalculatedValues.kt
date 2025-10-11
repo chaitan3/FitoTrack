@@ -26,30 +26,52 @@ class CalculatedValues(private val data: WorkoutData) {
 
     companion object {
         const val ASCENT_FLOATING_CONSTANT = 1.0 // meter
-        const val ROUNDED_ELEVATION_WINDOW = 7
+        const val ROUNDED_ELEVATION_WINDOW = 5
     }
+
+    val topSpeed by lazy { data.samples.maxOf { it.speed } }
+    val minElevationMSL by lazy { data.samples.minOf { it.elevationMSL } }
+    val maxElevationMSL by lazy { data.samples.maxOf { it.elevationMSL } }
+    val maxFrequency by lazy { data.repetitionSamples.maxOf { it.frequency } }
+    val ascentDescent by lazy { getAscentAndDescent() }
+    val ascent by lazy { ascentDescent.first }
+    val descent by lazy { ascentDescent.second }
+
+    val maxHeartRate by lazy { data.heartRateSamples.maxOfOrNull { it.heartRate } }
+    val averageHeartRate by lazy { if(data.hasHRData) data.heartRateSamples.averageBy { it.heartRate.toDouble() } else null }
+
+    val averageIntensity by lazy { if(data.hasRepetitions) data.repetitionSamples.averageBy { it.intensity } else 0.0 }
+    val maxIntensity by lazy { if(data.hasRepetitions) data.repetitionSamples.maxOf { it.intensity } else 0.0 }
 
     fun getAscentAndDescent(): Pair<Double, Double> {
         val elevationValues = getRoundedElevationsMSL()
         var ascent = 0.0
         var descent = 0.0
+
         if (elevationValues.isNotEmpty()) {
             var floatingThreshold = elevationValues.first()
-            elevationValues.forEach { elevation ->
+
+            for (elevation in elevationValues) {
                 val upperLimit = floatingThreshold + ASCENT_FLOATING_CONSTANT
                 val lowerLimit = floatingThreshold - ASCENT_FLOATING_CONSTANT
 
-                if(elevation > upperLimit){
-                    ascent += elevation - upperLimit
-                    floatingThreshold = upperLimit
-                }else if(elevation < lowerLimit){
-                    descent += lowerLimit - elevation
-                    floatingThreshold = lowerLimit
+                when {
+                    elevation > upperLimit -> {
+                        // add the amount beyond the band and slide the band up
+                        ascent += elevation - upperLimit
+                        floatingThreshold = elevation - ASCENT_FLOATING_CONSTANT
+                    }
+                    elevation < lowerLimit -> {
+                        // add the amount beyond the band and slide the band down
+                        descent += lowerLimit - elevation
+                        floatingThreshold = elevation + ASCENT_FLOATING_CONSTANT
+                    }
                 }
             }
         }
         return ascent to descent
     }
+
 
     fun getRoundedElevationsMSL(): List<Double> {
         return List(data.samples.size) { index ->

@@ -37,6 +37,8 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
+import de.tadris.fitness.data.WorkoutTypeManager
+import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.osm.OAuthAuthentication.Companion.getAccessToken
 import de.tadris.fitness.osm.OsmTraceUploader
@@ -67,10 +69,12 @@ import de.tadris.fitness.util.unit.UnitUtils
 import de.westnordost.osmapi.traces.GpsTraceDetails
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
-    var sets: List<WorkoutCalculator.Set>? = null
-    var commentView: TextView? = null
+
+    private lateinit var sets: List<WorkoutCalculator.Set>
+    private lateinit var commentView: TextView
 
     private val oauthActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -97,7 +101,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
         initAfterContent()
 
         commentView = addText("", true)
-        commentView!!.setOnClickListener(View.OnClickListener { v: View? -> openEditCommentDialog() })
+        commentView.setOnClickListener { _: View? -> openEditCommentDialog() }
         updateCommentText()
         sets = getSetsFromWorkout(data)
 
@@ -133,15 +137,17 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
             addKeyValue(
                 getString(R.string.workoutRepetitions), workout.repetitions.toString(), getString(
                     R.string.workoutSets
-                ), sets!!.size.toString()
+                ), sets.size.toString()
             )
-            if (workout.distance > 0.0) {
-                // TODO
-                /*int estimatedDistance = (int) Math.round(workout.estimateDistance(UserMeasurements.from(this)));
-            double estimatedSpeed = workout.estimateSpeed(UserMeasurements.from(this));
-            addKeyValue(getString(R.string.approxSymbol) + getString(R.string.workoutDistance), distanceUnitUtils.getDistance(estimatedDistance),
-                    getString(R.string.approxSymbol) + getString(R.string.workoutSpeed), distanceUnitUtils.getSpeed(estimatedSpeed));*/
-            }
+            if (workout.workoutTypeId == WorkoutTypeManager.WORKOUT_TYPE_ID_TREADMILL) {
+                val distancePerStep = UserMeasurements.from(this).stepLength
+                val estimatedDistance = (distancePerStep * workout.repetitions).roundToInt()
+                val estimatedSpeed = estimatedDistance / (workout.activeDuration / 1000.0)
+
+                addKeyValue(
+                    getString(R.string.approxSymbol) + getString(R.string.workoutDistance), distanceUnitUtils.getDistance(estimatedDistance),
+                    getString(R.string.approxSymbol) + getString(R.string.workoutSpeed), distanceUnitUtils.getSpeed(estimatedSpeed));
+                }
         }
 
         if (data.hasRouteData) {
@@ -166,8 +172,8 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
             addKeyValue(
                 getString(R.string.workoutTopSpeed),
-                distanceUnitUtils.getSpeed(0.0)
-            ) // TODO
+                distanceUnitUtils.getSpeed(calculatedValues.topSpeed)
+            )
 
             addDiagram(SpeedConverter(this), ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_SPEED)
 
@@ -186,17 +192,17 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
             if (!data.repetitionSamples.isEmpty()) {
                 addKeyValue(
                     getString(R.string.workoutAvgFrequencyShort),
-                    UnitUtils.round(0.0, 2) + " " + UnitUtils.unitHertzShort,  // TODO
+                    UnitUtils.round(workout.averageFrequency, 2) + " " + UnitUtils.unitHertzShort,
                     getString(R.string.workoutMaxFrequency),
-                    UnitUtils.round(0.0, 2) + " " + UnitUtils.unitHertzShort
-                ) // TODO
+                    UnitUtils.round(calculatedValues.maxFrequency, 2) + " " + UnitUtils.unitHertzShort
+                )
 
                 addDiagram(FrequencyConverter(this))
             } else {
                 addKeyValue(
                     getString(R.string.workoutAvgFrequencyShort),
-                    UnitUtils.round(0.0, 2) + " " + UnitUtils.unitHertzShort
-                ) // TODO
+                    UnitUtils.round(workout.averageFrequency, 2) + " " + UnitUtils.unitHertzShort
+                )
             }
         }
 
@@ -204,10 +210,10 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
             addTitle(getString(R.string.workoutHeartRate))
             addKeyValue(
                 getString(R.string.workoutAvgHeartRate),
-                0.toString() + " " + getString(R.string.unitHeartBeatsPerMinute),  // TODO
+                calculatedValues.averageHeartRate?.roundToInt().toString() + " " + getString(R.string.unitHeartBeatsPerMinute),
                 getString(R.string.workoutMaxHeartRate),
-                0.toString() + " " + getString(R.string.unitHeartBeatsPerMinute)
-            ) // TODO
+                calculatedValues.maxHeartRate.toString() + " " + getString(R.string.unitHeartBeatsPerMinute)
+            )
 
             addDiagram(
                 HeartRateConverter(this),
@@ -228,17 +234,17 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
             addKeyValue(
                 getString(R.string.workoutMinHeight),
-                distanceUnitUtils.getElevation(Math.round(0f)),  // TODO
+                distanceUnitUtils.getElevation(calculatedValues.minElevationMSL.roundToInt()),
                 getString(R.string.workoutMaxHeight),
-                distanceUnitUtils.getElevation(Math.round(0f))
-            ) // TODO
+                distanceUnitUtils.getElevation(calculatedValues.maxElevationMSL.roundToInt())
+            )
 
             addKeyValue(
                 getString(R.string.workoutAscent),
-                distanceUnitUtils.getElevation(Math.round(0f)),  // TODO
+                distanceUnitUtils.getElevation(calculatedValues.ascent.roundToInt()),
                 getString(R.string.workoutDescent),
-                distanceUnitUtils.getElevation(Math.round(0f))
-            ) // TODO
+                distanceUnitUtils.getElevation(calculatedValues.descent.roundToInt())
+            )
 
             addDiagram(HeightConverter(this), ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_HEIGHT)
 
@@ -250,9 +256,9 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
                 addTitle(getString(R.string.workoutIntensity))
 
                 addKeyValue(
-                    getString(R.string.workoutAvgIntensityShort), UnitUtils.round(0.0, 2),  // TODO
-                    getString(R.string.workoutMaxIntensity), UnitUtils.round(0.0, 2)
-                ) // TODO
+                    getString(R.string.workoutAvgIntensityShort), UnitUtils.round(calculatedValues.averageIntensity, 2),
+                    getString(R.string.workoutMaxIntensity), UnitUtils.round(calculatedValues.maxIntensity, 2)
+                )
 
                 addDiagram(IntensityConverter(this))
             }
@@ -597,6 +603,6 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
     }
 
     override fun initRoot() {
-        root = findViewById<ViewGroup?>(R.id.showWorkoutRoot)
+        root = findViewById(R.id.showWorkoutRoot)
     }
 }
