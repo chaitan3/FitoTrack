@@ -1,4 +1,4 @@
-package de.tadris.fitness.util.statistics;
+package de.tadris.fitness.ui.statistics;
 
 import android.view.MotionEvent;
 

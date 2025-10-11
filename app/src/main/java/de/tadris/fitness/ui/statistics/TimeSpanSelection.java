@@ -46,7 +46,6 @@ import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationSpan;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.util.ThemeUtils;
-import de.tadris.fitness.util.statistics.DateFormatter;
 
 public class TimeSpanSelection extends LinearLayout {
     private final Spinner aggregationSpanSpinner;

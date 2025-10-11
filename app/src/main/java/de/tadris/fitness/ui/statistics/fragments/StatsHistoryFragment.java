@@ -64,8 +64,8 @@ import de.tadris.fitness.ui.statistics.TextToggle;
 import de.tadris.fitness.ui.statistics.WorkoutTypeSelection;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.DataSetStyles;
-import de.tadris.fitness.util.statistics.ChartSynchronizer;
-import de.tadris.fitness.util.statistics.OnChartGestureMultiListener;
+import de.tadris.fitness.ui.statistics.ChartSynchronizer;
+import de.tadris.fitness.ui.statistics.OnChartGestureMultiListener;
 
 public class StatsHistoryFragment extends StatsFragment {
     FitoTrackActivity activity;
