@@ -106,10 +106,6 @@ public class StatsDataProvider {
                 return workout.getActiveDuration();
             case PAUSE_DURATION:
                 return workout.getPauseDuration();
-            case AVG_HEART_RATE:
-                return 0.0; // TODO workout.avgHeartRate;
-            case MAX_HEART_RATE:
-                return 0.0; // TODO workout.maxHeartRate;
             case CALORIE:
                 return workout.getKcal();
             default:
@@ -123,14 +119,8 @@ public class StatsDataProvider {
                 return workout.getDistance();
             case AVG_SPEED:
                 return workout.getAverageSpeedActive();
-            case TOP_SPEED:
-                return 0.0; // TODO workout.topSpeed;
             case AVG_PACE:
                 return workout.getAveragePaceActive();
-            case ASCENT:
-                return 0.0; // TODO workout.ascent;
-            case DESCENT:
-                return 0.0; // TODO workout.descent;
             default:
                 throw new Exception("Property is no GPS Property");
         }
@@ -140,12 +130,6 @@ public class StatsDataProvider {
         switch (property) {
             case AVG_FREQUENCY:
                 return workout.getAverageFrequency();
-            case MAX_FREQUENCY:
-                return 0.0; // TODO workout.maxFrequency;
-            case MAX_INTENSITY:
-                return 0.0; // TODO workout.maxIntensity;
-            case AVG_INTENSITY:
-                return 0.0; // TODO workout.avgIntensity;
             default:
                 throw new Exception("Property is no Indoor Property");
         }

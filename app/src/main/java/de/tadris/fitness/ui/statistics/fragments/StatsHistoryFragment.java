@@ -174,7 +174,6 @@ public class StatsHistoryFragment extends StatsFragment {
             ChartStyles.animateChart(combinedChart);
             ChartStyles.fixViewPortOffsets(combinedChart, 120);
             ChartStyles.defaultLineChart(combinedChart, activity);
-            statsProvider.setAxisLimits(combinedChart.getXAxis(), WorkoutProperty.TOP_SPEED);
             OnChartGestureMultiListener multiListener = new OnChartGestureMultiListener(new ArrayList<>());
             multiListener.listeners.add(synchronizer.addChart(combinedChart));
             multiListener.listeners.add(new OnChartGestureListener() {

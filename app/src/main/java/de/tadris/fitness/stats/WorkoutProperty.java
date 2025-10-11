@@ -45,23 +45,15 @@ public enum WorkoutProperty {
     END(2, WorkoutPropertyType.BASE, R.string.workoutEndTime),
     DURATION(3, WorkoutPropertyType.BASE, R.string.workoutDuration),
     PAUSE_DURATION(4, WorkoutPropertyType.BASE, R.string.workoutPauseDuration),
-    AVG_HEART_RATE(5, WorkoutPropertyType.BASE, R.string.workoutAvgHeartRate),
-    MAX_HEART_RATE(6, WorkoutPropertyType.BASE, R.string.workoutMaxHeartRate),
     CALORIE(7, WorkoutPropertyType.BASE, R.string.workoutBurnedEnergy),
 
     // GPS Workout
     LENGTH(8, WorkoutPropertyType.GPS, R.string.workoutDistance),
     AVG_SPEED(9, WorkoutPropertyType.GPS, R.string.workoutAvgSpeedShort),
-    TOP_SPEED(10, WorkoutPropertyType.GPS, R.string.workoutTopSpeed),
     AVG_PACE(11, WorkoutPropertyType.GPS, R.string.workoutPace),
-    ASCENT(12, WorkoutPropertyType.GPS, R.string.workoutAscent),
-    DESCENT(13, WorkoutPropertyType.GPS, R.string.workoutDescent),
 
     // Indoor Workout
-    AVG_FREQUENCY(14, WorkoutPropertyType.INDOOR, R.string.workoutFrequency),
-    MAX_FREQUENCY(15, WorkoutPropertyType.INDOOR, R.string.workoutMaxFrequency),
-    MAX_INTENSITY(16, WorkoutPropertyType.INDOOR, R.string.workoutIntensity),
-    AVG_INTENSITY(17, WorkoutPropertyType.INDOOR, R.string.workoutMaxIntensity);
+    AVG_FREQUENCY(14, WorkoutPropertyType.INDOOR, R.string.workoutFrequency);
 
     private final int id;
 
@@ -95,7 +87,7 @@ public enum WorkoutProperty {
         throw new IllegalArgumentException("Cannot find WorkoutProperty with id " + id);
     }
 
-    private static final List<WorkoutProperty> summable = Arrays.asList(NUMBER, DURATION, PAUSE_DURATION, CALORIE, LENGTH, ASCENT, DESCENT);
+    private static final List<WorkoutProperty> summable = Arrays.asList(NUMBER, DURATION, PAUSE_DURATION, CALORIE, LENGTH);
 
     public boolean summable() {
         return summable.contains(this);
@@ -135,23 +127,11 @@ public enum WorkoutProperty {
                 return StatsProvider.getCorrectTimeFormatter(TimeUnit.MINUTES, (long) value);
 
             case AVG_SPEED:
-            case TOP_SPEED:
-                return new SpeedFormatter(Instance.getInstance(ctx).distanceUnitUtils);
-
-            case ASCENT:
-            case DESCENT:
             case LENGTH:
                 return new DistanceFormatter(Instance.getInstance(ctx).distanceUnitUtils, (int)value);
 
             case CALORIE:
-            case AVG_INTENSITY:
-            case MAX_INTENSITY:
-
-            case MAX_FREQUENCY:
             case AVG_FREQUENCY:
-
-            case AVG_HEART_RATE:
-            case MAX_HEART_RATE:
             default:
                 return new DefaultValueFormatter(2);
         }
@@ -169,11 +149,6 @@ public enum WorkoutProperty {
                 return Instance.getInstance(ctx).distanceUnitUtils.getPaceUnit();
 
             case AVG_SPEED:
-            case TOP_SPEED:
-                return Instance.getInstance(ctx).distanceUnitUtils.getDistanceUnitSystem().getSpeedUnit();
-
-            case ASCENT:
-            case DESCENT:
             case LENGTH:
                 if(value / Instance.getInstance(ctx).distanceUnitUtils.getDistanceUnitSystem().getMetersFromLongDistance(1) > 1)
                     return Instance.getInstance(ctx).distanceUnitUtils.getDistanceUnitSystem().getLongDistanceUnit();
@@ -182,14 +157,7 @@ public enum WorkoutProperty {
 
             case NUMBER:
             case CALORIE:
-            case AVG_INTENSITY:
-            case MAX_INTENSITY:
-
-            case MAX_FREQUENCY:
             case AVG_FREQUENCY:
-
-            case AVG_HEART_RATE:
-            case MAX_HEART_RATE:
             default:
                 return "";
         }
