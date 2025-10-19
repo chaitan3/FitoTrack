@@ -50,12 +50,12 @@ class WorkoutData {
 
 	enum class TargetType { DISTANCE, DURATION, SPEED, HEART_RATE }
 	var primaryTargetType: TargetType? = null
-	var primaryTargetValue = 0
-	var primaryTargetValueHigh = 0
+	var primaryTargetValue: Number = 0
+	var primaryTargetValueHigh: Number = 0
 	var targetAutoPause by mutableStateOf(false)
 	var secondaryTargetType: TargetType? = null
-	var secondaryTargetValue = 0
-	var secondaryTargetValueHigh = 0
+	var secondaryTargetValue: Number = 0
+	var secondaryTargetValueHigh: Number = 0
 
 	enum class WorkoutType {
 		CLIMB, CYCLE, HIKE, RUN, SNOWBOARDING, SNOWSHOEING, SWIM_OUTDOOR, WALK, WINDSURFING,
@@ -130,13 +130,13 @@ class WorkoutData {
 		}
 		tryIgnore {
 			primaryTargetType = TargetType.valueOf(workoutDataJson.optString("primaryTargetType"))
-			primaryTargetValue = workoutDataJson.optInt("primaryTargetValue", 0)
-			primaryTargetValueHigh = workoutDataJson.optInt("primaryTargetValueHigh", 0)
+			primaryTargetValue = convertTargetValue(workoutDataJson.optInt("primaryTargetValue", 0), primaryTargetType)
+			primaryTargetValueHigh = convertTargetValue(workoutDataJson.optInt("primaryTargetValueHigh", 0), primaryTargetType)
 		}
 		tryIgnore {
 			secondaryTargetType = TargetType.valueOf(workoutDataJson.optString("secondaryTargetType"))
-			secondaryTargetValue = workoutDataJson.optInt("secondaryTargetValue", 0)
-			secondaryTargetValueHigh = workoutDataJson.optInt("secondaryTargetValueHigh", 0)
+			secondaryTargetValue = convertTargetValue(workoutDataJson.optInt("primaryTargetValue", 0), secondaryTargetType)
+			secondaryTargetValueHigh = convertTargetValue(workoutDataJson.optInt("secondaryTargetValueHigh", 0), secondaryTargetType)
 		}
 		rootWorkoutId = workoutDataJson.optLong("rootWorkoutId")
 		if(rootWorkoutId == 0L) rootWorkoutId = null
@@ -258,13 +258,13 @@ class WorkoutData {
 		workoutDataJson.put("checkpoints", checkpointsJson)
 		if(primaryTargetType != null){
 			workoutDataJson.put("primaryTargetType", primaryTargetType.toString())
-			workoutDataJson.put("primaryTargetValue", primaryTargetValue)
-			workoutDataJson.put("primaryTargetValueHigh", primaryTargetValueHigh)
+			workoutDataJson.put("primaryTargetValue", convertTargetValue(primaryTargetValue, primaryTargetType))
+			workoutDataJson.put("primaryTargetValueHigh", convertTargetValue(primaryTargetValueHigh, primaryTargetType))
 		}
 		if(secondaryTargetType != null){
 			workoutDataJson.put("secondaryTargetType", secondaryTargetType.toString())
-			workoutDataJson.put("secondaryTargetValue", secondaryTargetValue)
-			workoutDataJson.put("secondaryTargetValueHigh", secondaryTargetValueHigh)
+			workoutDataJson.put("secondaryTargetValue", convertTargetValue(secondaryTargetValue, secondaryTargetType))
+			workoutDataJson.put("secondaryTargetValueHigh", convertTargetValue(secondaryTargetValueHigh, secondaryTargetType))
 		}
 		if(rootWorkoutId != null) workoutDataJson.put("rootWorkoutId", rootWorkoutId)
 		else if(rootWorkout != null) workoutDataJson.put("rootWorkoutId", rootWorkout?.id)
@@ -328,5 +328,19 @@ class WorkoutData {
 			}
         fun getWorkoutTypeFromInt(workoutTypeInt: Int): WorkoutType? =
 			WorkoutType.entries[workoutTypeInt]
+		fun convertTargetValue(value: Int, targetType: TargetType?): Number =
+			when(targetType) {
+				TargetType.DISTANCE -> value * 1000
+				TargetType.DURATION -> value * 60000L
+				TargetType.SPEED -> value / 36.0
+				else -> value
+			}
+		fun convertTargetValue(value: Number, targetType: TargetType?): Int =
+			when(targetType) {
+				TargetType.DISTANCE -> (value.toInt() / 1000)
+				TargetType.DURATION -> (value.toLong() / 60000L).toInt()
+				TargetType.SPEED -> (value.toDouble() * 36.0).toInt()
+				else -> value.toInt()
+			}
 	}
 }

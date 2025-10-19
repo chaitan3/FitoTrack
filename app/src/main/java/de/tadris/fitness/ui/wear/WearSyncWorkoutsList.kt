@@ -157,7 +157,7 @@ class WearSyncWorkoutsList : Fragment() {
 		list.addView(wearSyncWorkout)
 	}
 
-	fun checkWorkoutExists(workoutId: Long): Boolean =
+	fun checkWorkoutExists(workoutId: Long): Boolean =//TODO also check duration, this shows if exercise was resumed on watch after sync
 		dB.gpsWorkoutDao().getWorkoutById(workoutId) != null ||
 		dB.indoorWorkoutDao().getWorkoutById(workoutId) != null
 

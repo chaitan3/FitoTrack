@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.OutlinedButton
 import androidx.wear.compose.material3.ScreenScaffold
@@ -181,29 +182,27 @@ fun RecordSettings(
 					}
 				}
 			}
-			workoutTypeSettings.screens.forEach{
+			items(workoutTypeSettings.screens){
 				if((!workoutData.isWorkoutTypeGps && it.needsLocation) ||
-					it.isTarget || it.isMultisport) return@forEach
+					it.isTarget || it.isMultisport) return@items
 				val unavailable = (it.needsLocation && !hasLocation) ||
 						(it.needsHeartRate && !hasHeartRate)
-				item {
-					OutlinedButton(
-						modifier = Modifier.fillMaxWidth(),
-						transformation = SurfaceTransformation(transformationSpec),
-						enabled = !unavailable,
-						onClick = { it.toggle(context, workoutData.workoutType) }
-					) {
-						Column{
-							Text(text = stringResource(it.name))
-							Text(
-								text = stringResource(id =
-									if(unavailable) R.string.unavailable
-									else if(it.enabled.value) R.string.on
-									else R.string.off
-								),
-								color = ColorFOT
-							)
-						}
+				OutlinedButton(
+					modifier = Modifier.fillMaxWidth(),
+					transformation = SurfaceTransformation(transformationSpec),
+					enabled = !unavailable,
+					onClick = { it.toggle(context, workoutData.workoutType) }
+				) {
+					Column{
+						Text(text = stringResource(it.name))
+						Text(
+							text = stringResource(id =
+								if(unavailable) R.string.unavailable
+								else if(it.enabled.value) R.string.on
+								else R.string.off
+							),
+							color = ColorFOT
+						)
 					}
 				}
 			}

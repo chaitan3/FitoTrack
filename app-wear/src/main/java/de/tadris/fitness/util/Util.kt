@@ -37,7 +37,7 @@ fun Context.toast(message: Int) =
 	Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 fun Context.toast(message: String) =
 	Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-fun Activity.toastFromBG(message: Int) = CoroutineScope(Dispatchers.Main).launch { toast(message) }
+fun Context.toastFromBG(message: Int) = CoroutineScope(Dispatchers.Main).launch { toast(message) }
 
 fun tryIgnore(block: () -> Unit) = try { block() } catch(_: Exception) {}
 

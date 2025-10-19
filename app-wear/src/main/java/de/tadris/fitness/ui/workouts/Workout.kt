@@ -22,6 +22,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -53,6 +55,7 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadd
 import de.tadris.fitness.R
 import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.WorkoutData.TargetType
 import de.tadris.fitness.data.WorkoutData.WorkoutType
 import de.tadris.fitness.data.WorkoutDataStore
 import de.tadris.fitness.ui.Chart
@@ -63,15 +66,18 @@ import de.tadris.fitness.ui.ColorProgressDone
 import de.tadris.fitness.ui.ConfirmDialog
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
+import de.tadris.fitness.ui.FullscreenMapActivity
 import de.tadris.fitness.ui.getMapPathLine
 import de.tadris.fitness.ui.getTileLayerLocal
 import de.tadris.fitness.ui.getTileLayerOnline
 import de.tadris.fitness.ui.record.MultisportTransition
 import de.tadris.fitness.ui.record.RecordActivity
+import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.prettyDistance
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
 import de.tadris.fitness.util.runInBackground
+import de.tadris.fitness.util.toast
 import de.tadris.fitness.util.toastFromBG
 import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.Dimension
@@ -83,7 +89,12 @@ class WorkoutActivity : ComponentActivity() {
 	public override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		val workoutData = WorkoutDataStore.workouts.firstOrNull()
-		if(workoutData?.workoutType == WorkoutType.MULTISPORT){
+		if(workoutData == null) {
+			toast(R.string.failed)
+			finishAndRemoveTask()
+			return
+		}
+		if(workoutData.workoutType == WorkoutType.MULTISPORT){
 			setContent {
 				FOTTheme {
 					MultisportTransition(rootWorkoutData = workoutData)
@@ -93,18 +104,24 @@ class WorkoutActivity : ComponentActivity() {
 			setContent {
 				FOTTheme {
 					Workout(
-						id = workoutData?.id ?: 0,
+						workoutData,
 						onDelWorkout = { id ->
 							WorkoutDataStore.deleteWorkout(this, id) {
 								toastFromBG(R.string.error_workout_delete)
 							}
 							finishAndRemoveTask()
 						},
-						onResumeClick = { id ->
+						onResumeClick = { resumeId ->
 							finishAndRemoveTask()
 							startActivity(
 								Intent(this, RecordActivity::class.java)
-									.putExtra("resumeId", id)
+									.putExtra("resumeId", resumeId)
+							)
+						},
+						onFullscreenMap = {
+							startActivity(
+								Intent(this, FullscreenMapActivity::class.java)
+									.putExtra("workoutId", workoutData.id)
 							)
 						}
 					)
@@ -116,13 +133,13 @@ class WorkoutActivity : ComponentActivity() {
 
 @Composable
 fun Workout(
-	id: Long?,
+	workoutData: WorkoutData,
 	onDelWorkout: (Long) -> Unit,
-	onResumeClick: (Long) -> Unit
+	onResumeClick: (Long) -> Unit,
+	onFullscreenMap: () -> Unit
 ){
 	val context = LocalContext.current
 	val columnState = rememberTransformingLazyColumnState()
-	val workoutData = WorkoutDataStore.workouts.firstOrNull{ it.id == id }
 	var showMap by remember { mutableStateOf<Boolean?>(null) }
 	var showSpeedChart by remember { mutableStateOf<Boolean?>(null) }
 	var showElevationChart by remember { mutableStateOf<Boolean?>(null) }
@@ -130,7 +147,7 @@ fun Workout(
 	var delWorkout by remember { mutableStateOf(false) }
 	var resume = false
 	fun Long.timeToDuration(): Long? {
-		if(workoutData == null || workoutData.checkpoints.isEmpty()) return null
+		if(workoutData.checkpoints.isEmpty()) return null
 		var checkpoint = workoutData.checkpoints[0]
 		for(i in 1..<workoutData.checkpoints.size) {
 			if(workoutData.checkpoints[i].time > this) {
@@ -144,8 +161,8 @@ fun Workout(
 	DisposableEffect(Unit) {
 		onDispose {
 			if(!resume) {
-				workoutData?.locationSamples?.clear()
-				workoutData?.heartRateSamples?.clear()
+				workoutData.locationSamples.clear()
+				workoutData.heartRateSamples.clear()
 			}
 		}
 	}
@@ -157,10 +174,6 @@ fun Workout(
 	) { contentPadding ->
 		TransformingLazyColumn(state = columnState, contentPadding = contentPadding) {
 			item { Text(text = stringResource(R.string.summary), fontSize = 22.sp) }
-			if(workoutData == null) {
-				item { Text(text = stringResource(R.string.failed)) }
-				return@TransformingLazyColumn
-			}
 			item {
 				Icon(
 					modifier = Modifier.size(40.dp),
@@ -224,13 +237,15 @@ fun Workout(
 						item { Text(text = stringResource(R.string.loading)) }
 					}
 					true -> item {
-						WorkoutMap(locationSamplesSet =
-							if(workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
-							else workoutData.legs
-								.filter { it.locationSamples.size > 10 }
-								.map { it.locationSamples }
-								.toSet()
-						)
+						Box(modifier = Modifier.clickable { onFullscreenMap() }) {
+							WorkoutMap(locationSamplesSet =
+								if (workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
+								else workoutData.legs
+									.filter { it.locationSamples.size > 10 }
+									.map { it.locationSamples }
+									.toSet()
+							)
+						}
 					}
 				}
 				item { Text(text = stringResource(R.string.speed), color = ColorFOT) }
@@ -255,14 +270,14 @@ fun Workout(
 						item { Text(text = stringResource(R.string.loading)) }
 					}
 					true -> {
-						if(workoutData.primaryTargetType == WorkoutData.TargetType.SPEED) {
+						if(workoutData.primaryTargetType == TargetType.SPEED) {
 							item { Text(text = stringResource(R.string.target_kmh,
-								(workoutData.primaryTargetValue.toDouble() / 36).prettySpeed()
+								workoutData.primaryTargetValue.toDouble().prettySpeed()
 							)) }
 						}
-						if(workoutData.secondaryTargetType == WorkoutData.TargetType.SPEED) {
+						if(workoutData.secondaryTargetType == TargetType.SPEED) {
 							item { Text(text = stringResource(R.string.target_kmh,
-								(workoutData.secondaryTargetValue.toDouble() / 36).prettySpeed()
+								workoutData.secondaryTargetValue.toDouble().prettySpeed()
 							)) }
 						}
 						item {
@@ -282,12 +297,12 @@ fun Workout(
 								Chart(
 									data = chartData,
 									target1 =
-										if(workoutData.primaryTargetType == WorkoutData.TargetType.SPEED)
-											workoutData.primaryTargetValue.toDouble() / 36
+										if(workoutData.primaryTargetType == TargetType.SPEED)
+											workoutData.primaryTargetValue.toDouble()
 										else null,
 									target2 =
-										if(workoutData.secondaryTargetType == WorkoutData.TargetType.SPEED)
-											workoutData.secondaryTargetValue.toDouble() / 36
+										if(workoutData.secondaryTargetType == TargetType.SPEED)
+											workoutData.secondaryTargetValue.toDouble()
 										else null,
 									yMinInit = 0.0,
 									yMaxInit = 1.11,
@@ -386,11 +401,11 @@ fun Workout(
 						}
 					var target1: Double? = null
 					var target2: Double? = null
-					if(workoutData.primaryTargetType == WorkoutData.TargetType.HEART_RATE){
+					if(workoutData.primaryTargetType == TargetType.HEART_RATE){
 						target1 = workoutData.primaryTargetValue.toDouble()
 						target2 = workoutData.primaryTargetValueHigh.toDouble()
 					}
-					if(workoutData.secondaryTargetType == WorkoutData.TargetType.HEART_RATE){
+					if(workoutData.secondaryTargetType == TargetType.HEART_RATE){
 						target1 = workoutData.secondaryTargetValue.toDouble()
 						target2 = workoutData.secondaryTargetValueHigh.toDouble()
 					}
@@ -430,12 +445,12 @@ fun Workout(
 			}
 		}
 	}
-	if(delWorkout){
+	if(delWorkout) {
 		ConfirmDialog(
 			text = R.string.delete_workout,
 			confirmText = R.string.delete,
 			dismissText = R.string.cancel,
-			onConfirm = { workoutData?.let { onDelWorkout(it.id) } },
+			onConfirm = { onDelWorkout(workoutData.id) },
 			onDismiss = { delWorkout = false }
 		)
 	}
@@ -446,10 +461,10 @@ fun WorkoutMap(locationSamplesSet: Set<List<WorkoutData.LocationSample>>){
 	AndroidView(
 		modifier = Modifier.size(Main.vw80, Main.vh80),
 		factory = { context ->
-			val mapView = MapView(context).apply {
+			MapView(context).apply {
 				clipToOutline = true
 				AndroidGraphicFactory.createInstance(context)
-				isClickable = true
+				isClickable = false
 				if(SettingsStore.getMapSource(context)) {
 					layerManager.layers.add(getTileLayerLocal(context, model))
 				} else {
@@ -457,36 +472,44 @@ fun WorkoutMap(locationSamplesSet: Set<List<WorkoutData.LocationSample>>){
 					layerManager.layers.add(tileLayerOnline)
 					tileLayerOnline.onResume()
 				}
-				isClickable = false
 				mapScaleBar = null
 				setBuiltInZoomControls(false)
 
-				var box: BoundingBox? = null
-				locationSamplesSet.forEachIndexed { legIndex, locationSamples ->
-					val latLongs = locationSamples.map { it.toLatLong() }
-					val pathLine = when(legIndex){
-						0 -> getMapPathLine()
-						1 -> getMapPathLine(ColorLocationCircle)
-						2 -> getMapPathLine(ColorProgressDone)
-						else -> getMapPathLine()
+				try {
+					var box: BoundingBox? = null
+					locationSamplesSet.forEachIndexed { legIndex, locationSamples ->
+						val latLongs = locationSamples.map { it.toLatLong() }
+						val pathLine = when(legIndex) {
+							0 -> getMapPathLine()
+							1 -> getMapPathLine(ColorLocationCircle)
+							2 -> getMapPathLine(ColorProgressDone)
+							else -> getMapPathLine()
+						}
+						latLongs.forEach { pathLine.addPoint(it) }
+						layerManager.layers.add(pathLine)
+						box = if(box == null) BoundingBox(latLongs)
+						else box.extendBoundingBox(BoundingBox(latLongs))
 					}
-					latLongs.forEach { pathLine.addPoint(it) }
-					layerManager.layers.add(pathLine)
-					box = if(box == null) BoundingBox(latLongs)
-					else box.extendBoundingBox(BoundingBox(latLongs))
-				}
 
-				box?.let {
-					box.extendMeters(50)
-					setCenter(box.centerPoint)
-					setZoomLevel(LatLongUtils.zoomForBounds(
-						Dimension(Main.vw80px, Main.vh80px),
-						box,
-						model.displayModel.tileSize
-					))
+					box?.let {
+						box.extendMeters(50)
+						setCenter(box.centerPoint)
+						setZoomLevel(
+							LatLongUtils.zoomForBounds(
+								Dimension(Main.vw80px, Main.vh80px),
+								box,
+								model.displayModel.tileSize
+							).coerceIn(
+								minimumValue = 2,
+								maximumValue = 18
+							)
+						)
+					}
+				}catch (e: Exception){
+					logE("WorkoutMap: ${e.message}\n$e")
+					context.toast(R.string.failed)
 				}
 			}
-			mapView
 		}
 	)
 }
@@ -501,10 +524,10 @@ fun PreviewWorkout() {
 	workoutData.durationTotal = 200000
 	workoutData.distanceTotal = 1100
 	workoutData.workoutType = WorkoutType.CYCLE
-	WorkoutDataStore.workouts.add(workoutData)
 	AppScaffold { FOTTheme { Workout(
-		id = 0,
+		workoutData,
 		onDelWorkout = {},
-		onResumeClick = {}
+		onResumeClick = {},
+		onFullscreenMap = {}
 	)} }
 }

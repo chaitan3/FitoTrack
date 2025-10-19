@@ -117,6 +117,8 @@
     <!-- Speak -->
     <string name="speak_target_half">half way there</string>
     <string name="speak_target_full">target achieved</string>
+    <string name="speak_target_below">below target, speed up</string>
+    <string name="speak_target_above">above target, slow down</string>
 
     <!-- Notifications -->
     <string name="active">active</string>

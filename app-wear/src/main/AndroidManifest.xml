@@ -57,7 +57,13 @@
 		android:name=".ui.workouts.WorkoutActivity"
 		android:taskAffinity=".Main"
 		android:excludeFromRecents="true"
-		android:noHistory="true"/>
+		android:noHistory="true" />
+	<activity
+		android:name=".ui.FullscreenMapActivity"
+		android:taskAffinity=".Main"
+		android:excludeFromRecents="true"
+		android:noHistory="true"
+		android:theme="@style/ThemeNoBack" />
 	<activity
 		android:name=".ui.record.RecordActivity"
 		android:taskAffinity=".Main"

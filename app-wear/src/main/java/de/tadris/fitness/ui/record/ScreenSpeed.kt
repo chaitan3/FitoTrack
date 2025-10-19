@@ -107,11 +107,11 @@ fun ScreenSpeed(
 				data = speedData,
 				target1 =
 					if(workoutData.primaryTargetType == TargetType.SPEED)
-						workoutData.primaryTargetValue.toDouble() / 36
+						workoutData.primaryTargetValue.toDouble()
 					else null,
 				target2 =
 					if(workoutData.secondaryTargetType == TargetType.SPEED)
-						workoutData.secondaryTargetValue.toDouble() / 36
+						workoutData.secondaryTargetValue.toDouble()
 					else null,
 				yMinInit = 0.0,
 				yMaxInit = 1.11,

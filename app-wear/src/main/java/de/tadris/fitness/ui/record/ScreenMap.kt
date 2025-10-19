@@ -126,9 +126,7 @@ fun ScreenMap(
 			box,
 			mapView.model.displayModel.tileSize
 		)
-		mapZoomLevel.value = if(calcZoomLevel < zoomLevelMin) zoomLevelMin
-			else if(calcZoomLevel > zoomLevelMax) zoomLevelMax
-			else calcZoomLevel
+		mapZoomLevel.value = calcZoomLevel.coerceIn(zoomLevelMin, zoomLevelMax)
 		mapView.setZoomLevel(mapZoomLevel.value)
 	}
 	fun centerMap(){
@@ -180,8 +178,6 @@ fun ScreenMap(
 		onDispose {
 			mapPosition.value = mapView.model.mapViewPosition.center
 			tileLayerOnline?.onPause()
-			mapView.destroyAll()
-			AndroidGraphicFactory.clearResourceMemoryCache()
 		}
 	}
 	val mapInputListener = remember { object: InputListener {

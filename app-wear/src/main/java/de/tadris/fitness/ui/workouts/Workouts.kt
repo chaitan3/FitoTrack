@@ -68,8 +68,10 @@ import de.tadris.fitness.ui.ColorFOT
 import de.tadris.fitness.ui.ColorWhite
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
+import de.tadris.fitness.ui.FullscreenMapActivity
 import de.tadris.fitness.ui.record.RecordActivity
 import de.tadris.fitness.util.runInBackground
+import de.tadris.fitness.util.toast
 import de.tadris.fitness.util.toastFromBG
 
 class WorkoutsActivity : ComponentActivity() {
@@ -87,6 +89,12 @@ class WorkoutsActivity : ComponentActivity() {
 					Intent(this, RecordActivity::class.java)
 						.putExtra("resumeId", id)
 				)
+			},
+			onFullscreenMap = { id ->
+				startActivity(
+					Intent(this, FullscreenMapActivity::class.java)
+						.putExtra("workoutId", id)
+				)
 			}
 		) } }
 	}
@@ -95,8 +103,10 @@ class WorkoutsActivity : ComponentActivity() {
 @Composable
 fun Workouts(
 	onDelWorkout: (Long) -> Unit,
-	onResumeClick: (Long) -> Unit
+	onResumeClick: (Long) -> Unit,
+	onFullscreenMap: (Long) -> Unit
 ){
+	val context = LocalContext.current
 	val navController = rememberSwipeDismissableNavController()
 	AppScaffold {
 		SwipeDismissableNavHost(
@@ -107,13 +117,21 @@ fun Workouts(
 				navController.navigate("Workout/$id")
 			} }
 			composable("Workout/{id}") {
+				val workoutId = it.arguments?.getString("id")?.toLongOrNull()
+				val workoutData = WorkoutDataStore.workouts.firstOrNull { workout -> workout.id == workoutId }
+				if(workoutData == null) {
+					context.toast(R.string.failed)
+					navController.popBackStack()
+					return@composable
+				}
 				Workout(
-					id = it.arguments?.getString("id")?.toLongOrNull(),
+					workoutData,
 					onDelWorkout = { id ->
 						onDelWorkout(id)
 						navController.popBackStack()
 					},
-					onResumeClick
+					onResumeClick,
+					onFullscreenMap = { onFullscreenMap(workoutData.id) }
 				)
 			}
 		}

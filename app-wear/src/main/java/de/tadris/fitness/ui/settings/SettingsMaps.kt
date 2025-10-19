@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.OutlinedButton
 import androidx.wear.compose.material3.ScreenScaffold
@@ -89,20 +90,18 @@ fun SettingsMaps(
 						onClick = onUpdatesClick
 					) { Text(text = stringResource(R.string.updates)) }
 				}
-				localMaps.forEach {
-					item {
-						OutlinedButton(
-							modifier = Modifier.fillMaxWidth(),
-							transformation = SurfaceTransformation(transformationSpec),
-							onClick = { delMapFile = it }
-						) {
-							Column {
-								Text(text = it.name)
-								Text(
-									text = it.size.prettySize(),
-									color = ColorFOT
-								)
-							}
+				items(localMaps) {
+					OutlinedButton(
+						modifier = Modifier.fillMaxWidth(),
+						transformation = SurfaceTransformation(transformationSpec),
+						onClick = { delMapFile = it }
+					) {
+						Column {
+							Text(text = it.name)
+							Text(
+								text = it.size.prettySize(),
+								color = ColorFOT
+							)
 						}
 					}
 				}

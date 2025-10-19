@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.itemsIndexed
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.Icon
@@ -54,22 +55,20 @@ fun Multisport(
 					color = ColorFOT
 				)
 			}
-			workoutData.legs.forEachIndexed { index, leg ->
-				item {
-					MultisportLeg(
-						index,
-						workoutData = leg,
-						onTypeClick = { navController.navigate("TypeSelect/$index/true") },
-						onSettingsClick = { navController.navigate("RecordSettings/$index") },
-						onDelClick = { workoutData.legs.removeAt(index) },
-						onPrimaryTargetClick = {
-							navController.navigate("TargetTypeSelect/true/$index")
-						},
-						onSecondaryTargetClick = {
-							navController.navigate("TargetTypeSelect/false/$index")
-						}
-					)
-				}
+			itemsIndexed(workoutData.legs) { index, leg ->
+				MultisportLeg(
+					index,
+					workoutData = leg,
+					onTypeClick = { navController.navigate("TypeSelect/$index/true") },
+					onSettingsClick = { navController.navigate("RecordSettings/$index") },
+					onDelClick = { workoutData.legs.removeAt(index) },
+					onPrimaryTargetClick = {
+						navController.navigate("TargetTypeSelect/true/$index")
+					},
+					onSecondaryTargetClick = {
+						navController.navigate("TargetTypeSelect/false/$index")
+					}
+				)
 			}
 			item {
 				TextButton(

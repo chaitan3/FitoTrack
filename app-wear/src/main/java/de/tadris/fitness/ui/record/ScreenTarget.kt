@@ -57,7 +57,6 @@ import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDistance
 import de.tadris.fitness.util.prettyDurationShort
@@ -111,106 +110,64 @@ fun ScreenTarget(
 				)
 			}
 		}
+		if(workoutData.primaryTargetType == TargetType.HEART_RATE){
+			TargetBarHeartRate(
+				Modifier.weight(.8f),
+				heartRate,
+				workoutData.primaryTargetValue.toInt(),
+				workoutData.primaryTargetValueHigh.toInt()
+			)
+		}
 
 		if(workoutData.primaryTargetType == TargetType.SPEED ||
 			workoutData.secondaryTargetType == TargetType.SPEED
 		){
+			val target = if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue.toDouble()
+						else workoutData.secondaryTargetValue.toDouble()
 			TargetBarSpeed(
 				Modifier.weight(.8f)
 					.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
 					.border(1.dp, ColorWhite),
-				target =
-					if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue / 36.0
-					else workoutData.secondaryTargetValue / 36.0,
+				target,
 				value = speed,
 				text = stringResource(R.string.field_kmh, speed.prettySpeed()),
 				isPaused
 			)
-			TargetBarSpeed(
-				Modifier.weight(.8f)
-					.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
-					.border(1.dp, ColorWhite),
-				target =
-					if(workoutData.primaryTargetType == TargetType.SPEED) workoutData.primaryTargetValue / 36.0
-					else workoutData.secondaryTargetValue / 36.0,
-				value = workoutData.speedAvg,
-				text = stringResource(R.string.field_avg_kmh, workoutData.speedAvg.prettySpeed()),
-				isPaused
-			)
-		}
-		if(workoutData.primaryTargetType == TargetType.HEART_RATE ||
-			workoutData.secondaryTargetType == TargetType.HEART_RATE){
-			Box(Modifier.weight(.8f)
-				.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
-				.border(1.dp, ColorProgressBg)
-			){
-				val targetLower =
-					if(workoutData.primaryTargetType == TargetType.HEART_RATE) workoutData.primaryTargetValue
-					else workoutData.secondaryTargetValue
-				val targetHigher =
-					if(workoutData.primaryTargetType == TargetType.HEART_RATE) workoutData.primaryTargetValueHigh
-					else workoutData.secondaryTargetValueHigh
-
-				val noLowerBand = targetLower < 30
-				val band = targetHigher - targetLower
-				val outerBand = band/2
-				Canvas(Modifier.fillMaxSize()){
-					val w25 = size.width/4
-					drawRect(
-						color = ColorProgressBg,
-						topLeft = Offset(if(noLowerBand) 0f else w25, 0f),
-						size = size.copy(if(noLowerBand) w25*3 else w25*2)
-					)
-					if(heartRate != null){
-						if(heartRate < targetLower) {
-							var width = (targetLower - heartRate).toFloat() / outerBand * w25
-							if(width > w25) width = w25
-							drawRect(
-								color = ColorProgressBehind,
-								topLeft = Offset(w25 - width, 0f),
-								size = size.copy(width)
-							)
-						}else if(heartRate > targetHigher){
-							var width = (heartRate - targetHigher).toFloat() / outerBand * w25
-							if(width > w25) width = w25
-							drawRect(
-								color = ColorProgressBehind,
-								topLeft = Offset(w25*3, 0f),
-								size = size.copy(width)
-							)
-						}else{
-							val x = ((heartRate - targetLower).toFloat() / band) * w25 * (if(noLowerBand) 3 else 2)
-							drawLine(
-								color = ColorWhite,
-								start = Offset(if(noLowerBand) x else w25+x, 0f),
-								end = Offset(if(noLowerBand) x else w25+x, size.height),
-								strokeWidth = 2.dp.toPx()
-							)
-						}
-					}
-				}
-				BasicText(
-					modifier = Modifier.fillMaxSize().padding(4.dp),
-					text = stringResource(R.string.field_bpm, heartRate?.pretty() ?: ""),
-					style = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-					color = { ColorWhite },
-					maxLines = 1,
-					autoSize = TextAutoSize.StepBased(minFontSize = 8.sp)
+			if(workoutData.primaryTargetType != TargetType.HEART_RATE) {
+				TargetBarSpeed(
+					Modifier.weight(.8f)
+						.padding(horizontal = if (Main.isScreenRound) Main.vw7 else 5.dp)
+						.border(1.dp, ColorWhite),
+					target,
+					value = workoutData.speedAvg,
+					text = stringResource(
+						R.string.field_avg_kmh,
+						workoutData.speedAvg.prettySpeed()
+					),
+					isPaused
 				)
 			}
+		}
+		if(workoutData.secondaryTargetType == TargetType.HEART_RATE){
+			TargetBarHeartRate(
+				Modifier.weight(.8f),
+				heartRate,
+				workoutData.secondaryTargetValue.toInt(),
+				workoutData.secondaryTargetValueHigh.toInt()
+			)
 		}
 		if(workoutData.secondaryTargetType == TargetType.DISTANCE){
 			Box(Modifier.weight(.8f)
 				.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
 				.border(1.dp, ColorProgressBg)
 			){
-				val shouldBeAt = workoutData.secondaryTargetValue * 1000.0 * fullTargetProgress()
+				val shouldBeAt = workoutData.secondaryTargetValue.toInt() * fullTargetProgress()
 				val diff = (workoutData.distanceTotal - shouldBeAt).toInt()
 				Canvas(Modifier.fillMaxSize()){
 					val width = size.width
 					var widthShould = width * fullTargetProgress()
 					if(widthShould > width) widthShould = width
-					var widthDiff = width * (diff / (workoutData.secondaryTargetValue * 1000f))
+					var widthDiff = width * (diff / workoutData.secondaryTargetValue.toFloat())
 					if(widthDiff+widthShould > width) widthDiff = width-widthShould
 					drawRect(
 						color = ColorProgressBg,
@@ -218,7 +175,7 @@ fun ScreenTarget(
 					)
 					drawRect(
 						color =
-							if(shouldBeAt == 0.0) ColorProgressBg
+							if(shouldBeAt == 0f) ColorProgressBg
 							else if(widthDiff < 0) ColorProgressBehind
 							else ColorProgressAhead,
 						topLeft = Offset(widthShould, 0f),
@@ -238,19 +195,18 @@ fun ScreenTarget(
 					autoSize = TextAutoSize.StepBased(minFontSize = 8.sp)
 				)
 			}
-		}
-		if(workoutData.secondaryTargetType == TargetType.DURATION){
+		} else if(workoutData.secondaryTargetType == TargetType.DURATION){
 			Box(Modifier.weight(.8f)
 				.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
 				.border(1.dp, ColorProgressBg)
 			){
-				val shouldBeAt = workoutData.secondaryTargetValue * 60000 * fullTargetProgress()
+				val shouldBeAt = workoutData.secondaryTargetValue.toFloat() * fullTargetProgress()
 				val diff = workoutData.durationTotal - shouldBeAt
 				Canvas(Modifier.fillMaxSize()){
 					val width = size.width
 					var widthShould = width * fullTargetProgress()
 					if(widthShould > width) widthShould = width
-					var widthDiff = width * (diff / (workoutData.secondaryTargetValue * 60000))
+					var widthDiff = width * (diff / workoutData.secondaryTargetValue.toFloat())
 					if(widthDiff+widthShould > width) widthDiff = width-widthShould
 					drawRect(
 						color = ColorProgressBg,
@@ -301,6 +257,66 @@ fun ScreenTarget(
 }
 
 @Composable
+fun TargetBarHeartRate(
+	modifier: Modifier,
+	heartRate: Double?,
+	targetLower: Int,
+	targetHigher: Int
+){
+	Box(modifier
+		.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
+		.border(1.dp, ColorProgressBg)
+	){
+
+		val noLowerBand = targetLower < 30
+		val band = targetHigher - targetLower
+		val outerBand = band/2
+		Canvas(Modifier.fillMaxSize()){
+			val w25 = size.width/4
+			drawRect(
+				color = ColorProgressBg,
+				topLeft = Offset(if(noLowerBand) 0f else w25, 0f),
+				size = size.copy(if(noLowerBand) w25*3 else w25*2)
+			)
+			if(heartRate != null){
+				if(heartRate < targetLower) {
+					var width = (targetLower - heartRate).toFloat() / outerBand * w25
+					if(width > w25) width = w25
+					drawRect(
+						color = ColorProgressBehind,
+						topLeft = Offset(w25 - width, 0f),
+						size = size.copy(width)
+					)
+				}else if(heartRate > targetHigher){
+					var width = (heartRate - targetHigher).toFloat() / outerBand * w25
+					if(width > w25) width = w25
+					drawRect(
+						color = ColorProgressBehind,
+						topLeft = Offset(w25*3, 0f),
+						size = size.copy(width)
+					)
+				}else{
+					val x = ((heartRate - targetLower).toFloat() / band) * w25 * (if(noLowerBand) 3 else 2)
+					drawLine(
+						color = ColorWhite,
+						start = Offset(if(noLowerBand) x else w25+x, 0f),
+						end = Offset(if(noLowerBand) x else w25+x, size.height),
+						strokeWidth = 2.dp.toPx()
+					)
+				}
+			}
+		}
+		BasicText(
+			modifier = Modifier.fillMaxSize().padding(4.dp),
+			text = stringResource(R.string.field_bpm, heartRate?.pretty() ?: ""),
+			style = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+			color = { ColorWhite },
+			maxLines = 1,
+			autoSize = TextAutoSize.StepBased(minFontSize = 8.sp)
+		)
+	}
+}
+@Composable
 fun TargetBarSpeed(
 	modifier: Modifier,
 	target: Double,
@@ -312,7 +328,7 @@ fun TargetBarSpeed(
 		Canvas(Modifier.fillMaxSize()){
 			val width = size.width/2
 			var widthDiff = (width*(value - target)/target).toFloat()
-			logD("value $value target $target width $width widthDiff $widthDiff")
+			//logD("value $value target $target width $width widthDiff $widthDiff")
 			if(widthDiff > width) widthDiff = width
 			if(widthDiff < -width) widthDiff = -width
 			drawRect(

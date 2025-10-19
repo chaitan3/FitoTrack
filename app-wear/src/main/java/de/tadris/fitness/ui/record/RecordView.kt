@@ -33,6 +33,7 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import de.tadris.fitness.R
 import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
+import de.tadris.fitness.data.WorkoutData.Companion.convertTargetValue
 import de.tadris.fitness.data.WorkoutData.WorkoutType
 import de.tadris.fitness.ui.ConfirmDialog
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
@@ -73,6 +74,7 @@ fun RecordView(recordActivity: RecordActivity) {
 						if(primary) recordActivity.workoutData.primaryTargetType = null
 						else recordActivity.workoutData.secondaryTargetType = null
 						navController.popBackStack()
+						recordActivity.targetCheckJob?.cancel()
 					}
 					"RecordSettings/{leg}" -> {
 						recordActivity.setScreenOnFlag()
@@ -216,6 +218,7 @@ fun RecordView(recordActivity: RecordActivity) {
 							workoutData.secondaryTargetType = targetType
 						}
 						navController.popBackStack()
+						recordActivity.setTargetCheck()
 						if(targetType != null)
 							navController.navigate("TargetEntry/$primary/$leg")
 					}
@@ -236,6 +239,7 @@ fun RecordView(recordActivity: RecordActivity) {
 						if(primary) workoutData.primaryTargetType = null
 						else workoutData.secondaryTargetType = null
 						navController.popBackStack()
+						recordActivity.setTargetCheck()
 					},
 					onDone = { value: Int, valueMax: Int ->
 						if(value+valueMax == 0) {
@@ -243,15 +247,16 @@ fun RecordView(recordActivity: RecordActivity) {
 							else workoutData.secondaryTargetType = null
 						} else {
 							if(primary) {
-								workoutData.primaryTargetValue = value
-								workoutData.primaryTargetValueHigh = valueMax
+								workoutData.primaryTargetValue = convertTargetValue(value, workoutData.primaryTargetType)
+								workoutData.primaryTargetValueHigh = convertTargetValue(valueMax, workoutData.primaryTargetType)
 							} else {
-								workoutData.secondaryTargetValue = value
-								workoutData.secondaryTargetValueHigh = valueMax
+								workoutData.secondaryTargetValue = convertTargetValue(value, workoutData.secondaryTargetType)
+								workoutData.secondaryTargetValueHigh = convertTargetValue(valueMax, workoutData.secondaryTargetType)
 							}
 						}
 						if(primary) recordActivity.targetAchieved.value = TargetAchieved.NOT
 						navController.popBackStack()
+						recordActivity.setTargetCheck()
 					}
 				)
 			}

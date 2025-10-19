@@ -116,23 +116,29 @@ fun Target(
 }
 
 @Composable
-fun targetSubLabel(targetType: TargetType?, targetValue: Int, targetValueHigh: Int): String =
+fun targetSubLabel(targetType: TargetType?, targetValue: Number, targetValueHigh: Number): String =
 	when(targetType){
 		TargetType.DISTANCE -> stringResource(
 			R.string.distance_main,
-			targetValue
+			targetValue.toInt() / 1000
 		)
-		TargetType.DURATION -> stringResource(
-			R.string.duration_main,
-			targetValue / 60,
-			(targetValue % 60)/10,
-			targetValue % 10
-		)
-		TargetType.SPEED -> stringResource(
-			R.string.speed_main,
-			Math.floorDiv(targetValue, 10),
-			targetValue % 10
-		)
+		TargetType.DURATION -> {
+			val targetValueMinutes = targetValue.toLong() / 60000L
+			stringResource(
+				R.string.duration_main,
+				targetValueMinutes / 60,
+				(targetValueMinutes % 60)/10,
+				targetValueMinutes % 10
+			)
+		}
+		TargetType.SPEED -> {
+			val targetValueKMH = (targetValue.toDouble() * 36).toInt()
+			stringResource(
+				R.string.speed_main,
+				Math.floorDiv(targetValueKMH, 10),
+				targetValueKMH % 10
+			)
+		}
 		TargetType.HEART_RATE -> stringResource(
 			R.string.heart_rate_main,
 			targetValue,

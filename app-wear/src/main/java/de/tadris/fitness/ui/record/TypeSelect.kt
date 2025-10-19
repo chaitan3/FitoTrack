@@ -31,6 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.Icon
@@ -62,15 +63,13 @@ fun TypeSelect(
 		contentPadding = contentPadding
 	) { contentPadding ->
 		TransformingLazyColumn(state = columnState, contentPadding = contentPadding) {
-			WorkoutData.WorkoutType.entries.forEach { workoutType ->
-				if(workoutType == WorkoutData.WorkoutType.MULTISPORT && noMultisport) return@forEach
-				item {
-					Type(
-						transformation = SurfaceTransformation(transformationSpec),
-						workoutType,
-						onItemClick
-					)
-				}
+			items(WorkoutData.WorkoutType.entries) { workoutType ->
+			if(workoutType == WorkoutData.WorkoutType.MULTISPORT && noMultisport) return@items
+				Type(
+					transformation = SurfaceTransformation(transformationSpec),
+					workoutType,
+					onItemClick
+				)
 			}
 		}
 	}

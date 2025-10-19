@@ -22,6 +22,9 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
@@ -29,6 +32,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,7 +53,10 @@ import androidx.health.services.client.data.DataTypeAvailability
 import androidx.health.services.client.data.DeltaDataType
 import androidx.health.services.client.data.ExerciseConfig
 import androidx.health.services.client.data.ExerciseLapSummary
-import androidx.health.services.client.data.ExerciseState
+import androidx.health.services.client.data.ExerciseState.Companion.ACTIVE
+import androidx.health.services.client.data.ExerciseState.Companion.ENDED
+import androidx.health.services.client.data.ExerciseState.Companion.ENDING
+import androidx.health.services.client.data.ExerciseState.Companion.PREPARING
 import androidx.health.services.client.data.ExerciseUpdate
 import androidx.health.services.client.data.LocationAccuracy
 import androidx.health.services.client.data.LocationData
@@ -61,6 +68,7 @@ import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
 import de.tadris.fitness.data.WorkoutCapabilities
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.WorkoutData.TargetType
 import de.tadris.fitness.data.WorkoutData.SpeedCachePoint
 import de.tadris.fitness.data.WorkoutDataStore
 import de.tadris.fitness.ui.FOTTheme
@@ -96,12 +104,16 @@ class RecordActivity : ComponentActivity() {
 	val targetAchieved = mutableStateOf(TargetAchieved.NOT)
 	val targetProgress = mutableFloatStateOf(0.0F)
 	lateinit var workoutData: WorkoutData
-	var exerciseState by mutableStateOf(ExerciseState.Companion.PREPARING)
+	var exerciseState by mutableStateOf(PREPARING)
 
 	lateinit var workoutTypeSettings: WorkoutTypeSettings
 
 	var bootTime = 0L
 	var durationJob: Job? = null
+	var targetCheckJob: Job? = null
+	var targetCheckType: TargetType? = null
+	var targetCheckValue: Number = 0
+	var targetCheckValueHigh: Number = 0
 	var checkpointTime = 0L
 	var checkpointDuration = 0L
 	var cooldownDurationJob: Job? = null
@@ -109,10 +121,16 @@ class RecordActivity : ComponentActivity() {
 
 	lateinit var exerciseClient: ExerciseClient
 	lateinit var vibrator: Vibrator
-	val vePattern: VibrationEffect =
-		VibrationEffect.createWaveform(longArrayOf(300, 500, 300, 500, 300, 500), -1)
+	val veTargetBelow: VibrationEffect =
+		VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 500), -1)
+	val veTargetHalf: VibrationEffect =
+		VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 800), -1)
+	val veTargetFull: VibrationEffect =
+		VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 500, 300, 800), -1)
 	var speakEnabled by mutableIntStateOf(0)
 	var textToSpeech: TextToSpeech? = null
+	lateinit var audioManager: AudioManager
+	lateinit var audioFocusRequest: AudioFocusRequest
 
 	public override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -155,14 +173,7 @@ class RecordActivity : ComponentActivity() {
 		workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(this, workoutData.workoutType)
 		setScreenOnFlag()
 		speakEnabled = SettingsStore.getSpeakEnabled(this)
-		if(speakEnabled == 1) {
-			textToSpeech = TextToSpeech(this) { status ->
-				if(status != TextToSpeech.SUCCESS) {
-					speakEnabled = -1
-					SettingsStore.storeSpeakEnabled(this, -1)
-				}
-			}
-		}
+		if(speakEnabled == 1) initTextToSpeech()
 
 		checkPermissions()
 		prepareExercise()
@@ -170,6 +181,7 @@ class RecordActivity : ComponentActivity() {
 	public override fun onDestroy() {
 		super.onDestroy()
 		durationJob?.cancel()
+		targetCheckJob?.cancel()
 		cooldownDurationJob?.cancel()
 		if(!exerciseState.isEnding && !exerciseState.isEnded)
 			exerciseClient.endExerciseAsync()
@@ -205,6 +217,7 @@ class RecordActivity : ComponentActivity() {
 			workoutData.id = System.currentTimeMillis()-1
 			workoutData = workoutData.legs[0]
 		}
+		setTargetCheck()
 
 		exerciseClient.setUpdateCallback(exerciseUpdateCallback)
 		targetAchieved.value = TargetAchieved.NOT
@@ -264,6 +277,7 @@ class RecordActivity : ComponentActivity() {
 		exerciseClient.clearUpdateCallbackAsync(exerciseUpdateCallback)
 		stopService(Intent(this, RecordService::class.java))
 		durationJob?.cancel()
+		targetCheckJob?.cancel()
 		WorkoutDataStore.storeWorkout(this, workoutData) {
 			toastFromBG(R.string.error_workout_write)
 		}
@@ -313,7 +327,7 @@ class RecordActivity : ComponentActivity() {
 		finishAndRemoveTask()
 	}
 	val isAutoEnding: Boolean
-		get() = exerciseState.isEnding && exerciseState !== ExerciseState.Companion.ENDING
+		get() = exerciseState.isEnding && exerciseState !== ENDING
 
 	fun timeToDuration(time: Long): Long? {
 		if(time > checkpointTime) return time - checkpointTime + checkpointDuration
@@ -352,10 +366,14 @@ class RecordActivity : ComponentActivity() {
 					continue
 				}else{
 					workoutData.durationTotal = currentTime - checkpointTime + checkpointDuration
-					if(workoutData.primaryTargetType == WorkoutData.TargetType.DURATION &&
-						workoutData.primaryTargetValue > 0
-					) {
-						updateTargetProgress((workoutData.durationTotal / 600 / workoutData.primaryTargetValue).toInt())
+					if(workoutData.primaryTargetType == TargetType.DURATION) {
+						updateTargetProgress(workoutData.durationTotal.toFloat()/workoutData.primaryTargetValue.toLong())
+					} else if (targetCheckType == TargetType.DURATION && workoutData.durationTotal > 60000) {
+						if(workoutData.durationTotal <= targetCheckValue.toLong() * targetProgress.floatValue) {
+							targetCheckJob?.cancel()
+						} else if(targetCheckJob?.isActive != true) {
+							setTargetCheckJob()
+						}
 					}
 					delay(1000 - (workoutData.durationTotal % 1000))
 				}
@@ -379,7 +397,7 @@ class RecordActivity : ComponentActivity() {
 					return
 				}
 			}
-			if(exerciseState == ExerciseState.Companion.ENDED) return
+			if(exerciseState == ENDED) return
 
 			val activeDurationCheckpoint = update.activeDurationCheckpoint
 			if(activeDurationCheckpoint != null) {
@@ -413,7 +431,18 @@ class RecordActivity : ComponentActivity() {
 						)
 						heartRate = sample.heartRate
 						//logD("Got heartRate update: $exerciseState $heartRate " + exerciseState.isPaused)
-						if(!exerciseState.isPaused) workoutData.heartRateSamples.add(sample)
+						if(exerciseState == ACTIVE){
+							workoutData.heartRateSamples.add(sample)
+							if(targetCheckType == TargetType.HEART_RATE && workoutData.durationTotal > 60000){
+								if(heartRate >= targetCheckValue.toDouble() &&
+									heartRate <= targetCheckValueHigh.toDouble()
+								) {
+									targetCheckJob?.cancel()
+								} else if(targetCheckJob?.isActive != true) {
+									setTargetCheckJob()
+								}
+							}
+						}
 					}
 					DataType.Companion.LOCATION -> {
 						val sample = WorkoutData.LocationSample()
@@ -422,12 +451,12 @@ class RecordActivity : ComponentActivity() {
 						sample.lon = (dataPoint.value as LocationData).longitude
 						sample.ele = lastElevation
 
-						//logD("Got location update: " + sample.toLatLong() + dataPoint.accuracy + dataPoint.metadata)
+						//logD("Got location update: $exerciseState " + sample.toLatLong() + dataPoint.accuracy + dataPoint.metadata)
 						if(locationStatus == SensorStatus.UNAVAILABLE){
 							locationAccuracy = (dataPoint.accuracy as LocationAccuracy).horizontalPositionErrorMeters
 							if(locationAccuracy < 10) locationStatus = SensorStatus.AVAILABLE
 						}
-						if(!exerciseState.isPaused) {
+						if(exerciseState == ACTIVE) {
 							workoutData.locationSamples.add(sample)
 							lastLocationTime = sample.time
 							sample.speed = lastSpeed
@@ -459,10 +488,15 @@ class RecordActivity : ComponentActivity() {
 						val distance = (dataPoint.total as Double).toInt()
 						workoutData.distanceTotal = distance + workoutData.distance
 						updateLastSpeed()
-						if(workoutData.primaryTargetType == WorkoutData.TargetType.DISTANCE &&
-							workoutData.primaryTargetValue > 0
-						) {
-							updateTargetProgress((workoutData.distanceTotal/10/workoutData.primaryTargetValue))
+						if(workoutData.primaryTargetType == TargetType.DISTANCE) {
+							updateTargetProgress(workoutData.distanceTotal.toFloat()/workoutData.primaryTargetValue.toInt())
+						}
+						if(targetCheckType == TargetType.DISTANCE && workoutData.durationTotal > 60000){
+							if(workoutData.distanceTotal >= targetCheckValue.toInt() * targetProgress.floatValue) {
+								targetCheckJob?.cancel()
+							} else if(targetCheckJob?.isActive != true) {
+								setTargetCheckJob()
+							}
 						}
 					}
 					DataType.Companion.ELEVATION_GAIN_TOTAL ->
@@ -487,34 +521,82 @@ class RecordActivity : ComponentActivity() {
 	}
 
 	fun updateLastSpeed() {
-		if(lastLocationTime == 0L || workoutData.distanceTotal == 0) return
+		if (lastLocationTime == 0L || workoutData.distanceTotal == 0) return
 		speedCache.add(SpeedCachePoint(lastLocationTime, workoutData.distanceTotal))
-		if(speedCache.size < 10) return  //wait for the speed cache to fill up a bit
+		if (speedCache.size < 10) return  //wait for the speed cache to fill up a bit
 		var distanceDiff = (workoutData.distanceTotal - speedCache[0].distance).toDouble() //meters
 		val timeDiff = (lastLocationTime - speedCache[0].timestamp).toDouble() //milliseconds
-		if(distanceDiff < 4 || timeDiff < 1) {
+		if (distanceDiff < 4 || timeDiff < 1) {
 			lastSpeed = 0.0
 			return
 		}
 		lastSpeed = (distanceDiff * 1000) / timeDiff //meters/second
 
-		if(lastSpeed > workoutData.speedMax) workoutData.speedMax = lastSpeed
-		while(speedCache.size > 30 && distanceDiff > 200.0) {
+		if (lastSpeed > workoutData.speedMax) workoutData.speedMax = lastSpeed
+		while (speedCache.size > 30 && distanceDiff > 200.0) {
 			speedCache.removeAt(0)
 			distanceDiff = (workoutData.distanceTotal - speedCache[0].distance).toDouble()
 		}
+		if(targetCheckType != TargetType.SPEED || workoutData.durationTotal < 60000) return
+		if(lastSpeed >= targetCheckValue.toDouble()) {
+			targetCheckJob?.cancel()
+		} else if(targetCheckJob?.isActive != true) {
+			setTargetCheckJob()
+		}
 	}
-	fun updateTargetProgress(value: Int) {
-		targetProgress.floatValue = if(value >= 100) (value.toFloat() - 100) / 100 else value.toFloat() / 100
-		if(targetAchieved.value == TargetAchieved.NOT && value >= 50) {
+	fun setTargetCheckJob() {
+		targetCheckJob = CoroutineScope(Dispatchers.Main).launch {
+			delay(5000)
+			var delay = 30000L
+			while(isActive){
+				vibrator.vibrate(veTargetBelow)
+				if(targetCheckType == TargetType.HEART_RATE && heartRate > targetCheckValueHigh.toInt()) {
+					speak(R.string.speak_target_above)
+				} else {
+					speak(R.string.speak_target_below)
+				}
+				delay(delay)
+				delay *= 2
+			}
+		}
+	}
+
+	fun setTargetCheck() {
+		targetCheckJob?.cancel()
+		targetCheckType = null
+		if(workoutData.primaryTargetType == TargetType.SPEED) {
+			targetCheckType = TargetType.SPEED
+			targetCheckValue = workoutData.primaryTargetValue
+		} else if(workoutData.primaryTargetType == TargetType.HEART_RATE) {
+			targetCheckType = TargetType.HEART_RATE
+			targetCheckValue = workoutData.primaryTargetValue
+			targetCheckValueHigh = workoutData.primaryTargetValueHigh
+		} else if(workoutData.secondaryTargetType == TargetType.SPEED) {
+			targetCheckType = TargetType.SPEED
+			targetCheckValue = workoutData.secondaryTargetValue
+		} else if(workoutData.secondaryTargetType == TargetType.HEART_RATE) {
+			targetCheckType = TargetType.HEART_RATE
+			targetCheckValue = workoutData.secondaryTargetValue
+			targetCheckValueHigh = workoutData.secondaryTargetValueHigh
+		} else if(workoutData.secondaryTargetType == TargetType.DURATION) {
+			targetCheckType = TargetType.DURATION
+			targetCheckValue = workoutData.secondaryTargetValue
+		} else if(workoutData.secondaryTargetType == TargetType.DISTANCE) {
+			targetCheckType = TargetType.DISTANCE
+			targetCheckValue = workoutData.secondaryTargetValue
+		}
+	}
+	fun updateTargetProgress(value: Float) {
+		targetProgress.floatValue = value.coerceIn(0f, 1f)
+		if(targetAchieved.value == TargetAchieved.NOT && value >= 0.5) {
 			targetAchieved.value = TargetAchieved.HALF
-			vibrator.vibrate(vePattern)
-			if(speakEnabled == 1) speak(R.string.speak_target_half)
-		} else if(targetAchieved.value == TargetAchieved.HALF && value >= 100) {
+			vibrator.vibrate(veTargetHalf)
+			speak(R.string.speak_target_half)
+		} else if(targetAchieved.value == TargetAchieved.HALF && value >= 1) {
 			targetAchieved.value = TargetAchieved.FULL
-			vibrator.vibrate(vePattern)
+			vibrator.vibrate(veTargetFull)
 			if(workoutData.targetAutoPause) pauseExercise()
-			if(speakEnabled == 1) speak(R.string.speak_target_full)
+			speak(R.string.speak_target_full)
 		}
 	}
 	val startCallback = object : FutureCallback<Void?> {
@@ -532,24 +614,52 @@ class RecordActivity : ComponentActivity() {
 		if(speakEnabled == 1) {
 			speakEnabled = 0
 			SettingsStore.storeSpeakEnabled(this, speakEnabled)
+			textToSpeech?.stop()
 			textToSpeech?.shutdown()
+			textToSpeech = null
 		} else {
-			textToSpeech = TextToSpeech(this) { status ->
-				if(status == TextToSpeech.SUCCESS) {
-					speakEnabled = 1
-				} else {
-					speakEnabled = -1
-					toast(R.string.error_speak_unavailable)
-				}
-				SettingsStore.storeSpeakEnabled(this, speakEnabled)
-			}
+			speakEnabled = 1
+			SettingsStore.storeSpeakEnabled(this, speakEnabled)
+			initTextToSpeech()
 		}
 	}
+	fun initTextToSpeech(){
+		textToSpeech = TextToSpeech(this) { status ->
+			if(status == TextToSpeech.SUCCESS) {
+				textToSpeech?.setOnUtteranceProgressListener(object: UtteranceProgressListener() {
+					override fun onStart(utteranceId: String?) {}
+					override fun onError(utteranceId: String?) {
+						audioManager.abandonAudioFocusRequest(audioFocusRequest)
+					}
+					override fun onDone(utteranceId: String?) {
+						audioManager.abandonAudioFocusRequest(audioFocusRequest)
+					}
+				})
+			} else {
+				speakEnabled = -1
+				SettingsStore.storeSpeakEnabled(this, -1)
+			}
+		}
+		audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+		audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+			.setAudioAttributes(
+				AudioAttributes.Builder()
+					.setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+					.setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+					.build()
+			)
+			.build()
+	}
 	fun speak(text: Int){
+		logD("speak: ${getString(text)}")
+		if(speakEnabled < 1) return
+        audioManager.requestAudioFocus(audioFocusRequest)
 		textToSpeech?.speak(
 			getString(text),
 			TextToSpeech.QUEUE_FLUSH,
-			null, null)
+			Bundle(),
+			this.hashCode().toString() + System.currentTimeMillis()
+		)
 	}
 
 	fun startCooldown(){
