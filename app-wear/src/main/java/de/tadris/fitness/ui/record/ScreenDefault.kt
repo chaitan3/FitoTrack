@@ -59,20 +59,22 @@ fun ScreenDefault(
 ) {
 	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		Row(
-			modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = Main.vw17),
+			modifier = Modifier.fillMaxWidth().weight(1f)
+				.padding(top = Main.vh5, start = Main.vw10, end = Main.vw7),
 			verticalAlignment = Alignment.CenterVertically
 		) {
 			if(workoutData.isWorkoutTypeGps){
 				Field(
-					modifier = Modifier.weight(0.8f),
+					modifier = Modifier.weight(1f),
 					value = speed.prettySpeed(),
 					unitIcon = R.drawable.kmh,
+					unitIconWeight = 1.5f,
 					isActive = !isPaused
 				)
 			}
 			if(heartRate != null){
 				Field(
-					modifier = Modifier.weight(1.2f),
+					modifier = Modifier.weight(1.1f),
 					value = heartRate.pretty(),
 					unitText = R.string.field_bpm
 				)
@@ -119,10 +121,13 @@ fun PreviewScreenDefault(){
 	AppScaffold { FOTTheme { ScreenDefault(
 		Modifier,
 		workoutData,
-		speed = 20.55454654654,
-		heartRate = 60.0,
+		speed = 6.6,
+		heartRate = 160.0,
 		targetProgress = remember { mutableFloatStateOf(0.9F) },
 		targetAchieved = remember { mutableStateOf(TargetAchieved.NOT) },
 		isPaused = false
 	) } }
 }
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun PreviewScreenDefaultLarge(){ PreviewScreenDefault() }

@@ -86,6 +86,7 @@ fun Field(
 	value: String,
 	unitText: Int? = null,
 	unitIcon: Int? = null,
+	unitIconWeight: Float = 1f,
 	isActive: Boolean = true
 ){
 	Row(
@@ -104,7 +105,7 @@ fun Field(
 		)
 		if(unitIcon != null) {
 			Icon(
-				modifier = Modifier.weight(1F),
+				modifier = Modifier.weight(unitIconWeight),
 				imageVector = ImageVector.vectorResource(unitIcon),
 				contentDescription = "unit icon"
 			)
@@ -169,7 +170,7 @@ fun Chart(
 	) }
 
 	val labelHeight = remember { measureHeight(textMeasurer, "00:00") }
-	val xLabelWidth = remember { measureWidth(textMeasurer, "00:00") }
+	val xLabelWidth = remember { measureWidth(textMeasurer, "0:00:00") }
 	val top = remember { labelHeight/2 }
 
 	Canvas(Modifier.fillMaxSize()){
@@ -222,7 +223,7 @@ fun Chart(
 			)
 		}
 		val width = size.width - left - xLabelWidth/2
-		val xLabelCount = maxOf(floor(width / (xLabelWidth+3f)).toInt()-1, 1)
+		val xLabelCount = maxOf(floor(width / (xLabelWidth+10f)).toInt(), 1)
 		val xLabelStep: Float = width/xLabelCount
 		val xMin = if(data.isEmpty()) 0L else data.minOf { it.duration }
 		val xMax =

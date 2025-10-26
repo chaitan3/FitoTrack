@@ -19,6 +19,7 @@
 package de.tadris.fitness.data
 
 import android.content.Context
+import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.logW
 import de.tadris.fitness.util.runInBackground
@@ -179,26 +180,18 @@ object WorkoutDataStore {
 		if(workoutData.locationSamples.isEmpty()) return
 		val locationSamples = ArrayList(workoutData.locationSamples)
 		workoutData.locationSamples.clear()
-		val filename = idToLocationFilename(workoutData.id)
-		val newLocations = locationSamples.toList().joinToString(separator = ",") {
+		val name = idToLocationFilename(workoutData.id)
+		var str = locationSamples.toList().joinToString(prefix = "[", postfix = "]", separator = ",") {
 			it.toJson().toString()
 		}
 		try{
-			val file = context.getFileStreamPath(filename)
-			val finalJsonString =
-				if(file.exists() && file.length() > 2) {
-					val existingContent =
-						context.openFileInput(filename).bufferedReader().use { it.readText() }
-					val insertionPoint = existingContent.lastIndexOf(']')
-					if(insertionPoint != -1 && newLocations.isNotEmpty()) {
-						if(newLocations.isNotEmpty()) {
-							val newContent = StringBuilder(existingContent.substring(0, insertionPoint))
-							if(existingContent.length > 2) newContent.append(',')
-							newContent.append(newLocations).append(']').toString()
-						} else existingContent
-					} else newLocations
-				} else newLocations
-			write(context, filename, finalJsonString, onError)
+			val file = context.getFileStreamPath(name)
+			if(file.exists() && file.length() > 2) {
+				var existingSamples = context.openFileInput(name).bufferedReader().use { it.readText() }
+				existingSamples = existingSamples.trim('[', ']')
+				if(existingSamples.length > 2) str = "[$existingSamples,${str.substring(1)}"
+			}
+			write(context, name, str, onError)
 		}catch(e: Exception){
 			logE("WorkoutDataStore.flushLocations: ${e.message}")
 			onError()
@@ -213,26 +206,18 @@ object WorkoutDataStore {
 		if(workoutData.heartRateSamples.isEmpty()) return
 		val heartRateSamples = ArrayList(workoutData.heartRateSamples)
 		workoutData.heartRateSamples.clear()
-		val filename = idToHeartRateFilename(workoutData.id)
-		val newHeartRates = heartRateSamples.toList().joinToString(separator = ",") {
+		val name = idToHeartRateFilename(workoutData.id)
+		var str = heartRateSamples.toList().joinToString(prefix = "[", postfix = "]", separator = ",") {
 			it.toJson().toString()
 		}
 		try{
-			val file = context.getFileStreamPath(filename)
-			val finalJsonString =
-				if(file.exists() && file.length() > 2) {
-					val existingContent =
-						context.openFileInput(filename).bufferedReader().use { it.readText() }
-					val insertionPoint = existingContent.lastIndexOf(']')
-					if(insertionPoint != -1 && newHeartRates.isNotEmpty()) {
-						if(newHeartRates.isNotEmpty()) {
-							val newContent = StringBuilder(existingContent.substring(0, insertionPoint))
-							if(existingContent.length > 2) newContent.append(',')
-							newContent.append(newHeartRates).append(']').toString()
-						} else existingContent
-					} else newHeartRates
-				} else newHeartRates
-			write(context, filename, finalJsonString, onError)
+			val file = context.getFileStreamPath(name)
+			if(file.exists() && file.length() > 2) {
+				var existingSamples = context.openFileInput(name).bufferedReader().use { it.readText() }
+				existingSamples = existingSamples.trim('[', ']')
+				if(existingSamples.length > 2) str = "[$existingSamples,${str.substring(1)}"
+			}
+			write(context, name, str, onError)
 		}catch(e: Exception){
 			logE("WorkoutDataStore.flushHeartRate: ${e.message}")
 			onError()

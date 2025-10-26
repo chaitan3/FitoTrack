@@ -34,6 +34,7 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
 import de.tadris.fitness.data.WorkoutData.Companion.convertTargetValue
+import de.tadris.fitness.data.WorkoutData.TargetType
 import de.tadris.fitness.data.WorkoutData.WorkoutType
 import de.tadris.fitness.ui.ConfirmDialog
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
@@ -433,7 +434,10 @@ fun RecordView(recordActivity: RecordActivity) {
 
 fun WorkoutTypeSettings.Screen.isAvailable(recordActivity: RecordActivity): Boolean =
 	if(isMultisport && recordActivity.workoutData.rootWorkout?.workoutType == WorkoutType.MULTISPORT) true
-	else if(isTarget && recordActivity.workoutData.primaryTargetType != null) true
+	else if(isTarget && (
+				recordActivity.workoutData.primaryTargetType in setOf(TargetType.SPEED, TargetType.HEART_RATE) ||
+				recordActivity.workoutData.secondaryTargetType != null
+				)) true
 	else if(needsLocation &&
 		(recordActivity.locationStatus.isDisabled || !recordActivity.workoutData.isWorkoutTypeGps)
 	) false

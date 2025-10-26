@@ -98,7 +98,7 @@ fun ScreenElevation(
 		Box(
 			modifier = Modifier.fillMaxWidth().weight(3f).padding(
 				start = if(Main.isScreenRound) Main.vw7 else 0.dp,
-				end = if(Main.isScreenRound) Main.vw5 else 0.dp
+				end = if(Main.isScreenRound) Main.vw12 else 0.dp
 			)
 		){ Chart(
 			data = elevationData,
@@ -137,7 +137,9 @@ fun ScreenElevation(
 			}
 		}
 		Field(
-			modifier = Modifier.weight(1f).padding(bottom = Main.vh3),
+			modifier = Modifier.weight(1f).padding(
+				bottom = if(Main.isScreenRound) Main.vh3 else 0.dp
+			),
 			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
@@ -153,6 +155,18 @@ fun PreviewScreenElevation() {
 	workoutData.durationTotal = 8400000L
 	workoutData.elevationLossTotal = 100
 	workoutData.elevationGainTotal = 100
+	var locationSample = WorkoutData.LocationSample()
+	locationSample.time = 1000L
+	locationSample.ele = 50.0
+	workoutData.locationSamplesFiltered.add(locationSample)
+	locationSample = WorkoutData.LocationSample()
+	locationSample.time = 4400000L
+	locationSample.ele = 150.0
+	workoutData.locationSamplesFiltered.add(locationSample)
+	locationSample = WorkoutData.LocationSample()
+	locationSample.time = 8400000L
+	locationSample.ele = 30.0
+	workoutData.locationSamplesFiltered.add(locationSample)
 	AppScaffold { FOTTheme {
 		ScreenElevation(
 			Modifier,

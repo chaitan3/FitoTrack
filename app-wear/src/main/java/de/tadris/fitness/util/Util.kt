@@ -56,10 +56,9 @@ fun Int.prettyDistance(): String =
 	if(this in -1000..1000) String.format(Locale.ENGLISH, "%d", this)
 	else String.format(Locale.ENGLISH,"%.1f", this.toFloat() / 1000)
 fun Double.prettySpeed(): String =
-	if(this*3.6 >= 20) String.format(Locale.ENGLISH, "%.0f", this*3.6)
-	else String.format(Locale.ENGLISH, "%.1f", this*3.6)
+	//if(this*3.6 >= 20) String.format(Locale.ENGLISH, "%.0f", this*3.6)
+	String.format(Locale.ENGLISH, "%.1f", this*3.6)
 fun Double.pretty(): String = String.format(Locale.ENGLISH, "%.0f", this)
-fun Long.isNSeconds(seconds: Int) = this % seconds * 1000L < 1000
 fun Long.prettySize(): String {
 	val gb: Long = 1073741824
 	val mb: Long = 1048576

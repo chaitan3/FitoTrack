@@ -91,7 +91,7 @@ fun ScreenHeartRate(
 		)
 		Box(
 			modifier = Modifier.fillMaxWidth().weight(3f).padding(
-					start = if(Main.isScreenRound) Main.vw5 else 0.dp,
+					start = if(Main.isScreenRound) Main.vw7 else 0.dp,
 					end = if(Main.isScreenRound) Main.vw12 else 0.dp
 				)
 		){
@@ -112,7 +112,9 @@ fun ScreenHeartRate(
 			)
 		}
 		Field(
-			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
+			modifier = Modifier.weight(1f).padding(
+				bottom = if(Main.isScreenRound) Main.vh3 else 0.dp
+			),
 			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
@@ -125,7 +127,13 @@ fun ScreenHeartRate(
 fun PreviewScreenHeartRate() {
 	Main.GetScreenSpecs()
 	val workoutData = WorkoutData()
-	workoutData.durationTotal = 1500000
+	workoutData.durationTotal = 8400000L
+	var heartRateSample = WorkoutData.HeartRateSample(1000L, 70.0)
+	workoutData.heartRateSamplesFiltered.add(heartRateSample)
+	heartRateSample = WorkoutData.HeartRateSample(4400000L, 100.0)
+	workoutData.heartRateSamplesFiltered.add(heartRateSample)
+	heartRateSample = WorkoutData.HeartRateSample(8400000L, 90.0)
+	workoutData.heartRateSamplesFiltered.add(heartRateSample)
 	AppScaffold { FOTTheme {
 		ScreenHeartRate(
 			Modifier,

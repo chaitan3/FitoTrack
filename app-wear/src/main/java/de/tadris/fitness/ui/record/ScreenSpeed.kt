@@ -46,8 +46,6 @@ import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.ui.secsToKeep
-import de.tadris.fitness.util.isNSeconds
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
 
@@ -86,14 +84,15 @@ fun ScreenSpeed(
 
 	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		Field(
-			modifier = Modifier.fillMaxWidth().weight(1f),
+			modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = Main.vw25),
 			value = speed.prettySpeed(),
-			unitText = R.string.field_kmh,
+			unitIcon = R.drawable.kmh,
+			unitIconWeight = 1.3f,
 			isActive = !isPaused
 		)
 		Box(
 			modifier = Modifier.fillMaxWidth().weight(3f).padding(
-				start = if(Main.isScreenRound) Main.vw10 else 0.dp,
+				start = if(Main.isScreenRound) Main.vw7 else 0.dp,
 				end = if(Main.isScreenRound) Main.vw12 else 0.dp
 			)
 		){
@@ -113,7 +112,9 @@ fun ScreenSpeed(
 			)
 		}
 		Field(
-			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
+			modifier = Modifier.weight(1f).padding(
+				bottom = if(Main.isScreenRound) Main.vw5 else 0.dp
+			),
 			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
@@ -121,20 +122,29 @@ fun ScreenSpeed(
 	TargetProgress(targetProgress, targetAchieved)
 }
 
-@Preview(device = WearDevices.LARGE_ROUND)
+@Preview(device = WearDevices.SMALL_ROUND)
 @Composable
 fun PreviewScreenSpeed() {
 	Main.GetScreenSpecs()
 	val workoutData = WorkoutData()
-	val speedData = mutableListOf<ChartData>()
-	speedData.add(ChartData(0, 2.2))
-	speedData.add(ChartData(10000, 2.2))
-	speedData.add(ChartData(30000, 2.2))
+	workoutData.durationTotal = 8400000L
+	var locationSample = WorkoutData.LocationSample()
+	locationSample.time = 1000L
+	locationSample.speed = 2.0
+	workoutData.locationSamplesFiltered.add(locationSample)
+	locationSample = WorkoutData.LocationSample()
+	locationSample.time = 4400000L
+	locationSample.speed = 3.0
+	workoutData.locationSamplesFiltered.add(locationSample)
+	locationSample = WorkoutData.LocationSample()
+	locationSample.time = 8400000L
+	locationSample.speed = 2.0
+	workoutData.locationSamplesFiltered.add(locationSample)
 	AppScaffold { FOTTheme {
 		ScreenSpeed(
 			Modifier,
 			workoutData,
-			speed = 2.2,
+			speed = 6.2,
 			timeToDuration = { it },
 			targetProgress = remember { mutableFloatStateOf(0.9F) },
 			targetAchieved = remember { mutableStateOf(TargetAchieved.NOT) },
@@ -142,3 +152,6 @@ fun PreviewScreenSpeed() {
 		)
 	} }
 }
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun PreviewScreenSpeedLarge() { PreviewScreenSpeed() }
