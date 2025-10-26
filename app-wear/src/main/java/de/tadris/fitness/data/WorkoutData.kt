@@ -92,8 +92,10 @@ class WorkoutData {
     var heartRateMax by mutableIntStateOf(0)
     var speedAvg by mutableDoubleStateOf(0.0)
     var speedMax by mutableDoubleStateOf(0.0)
-    val locationSamples = mutableStateListOf<LocationSample>()
+    val locationSamples = mutableListOf<LocationSample>()
+    val locationSamplesFiltered = mutableStateListOf<LocationSample>()
     val heartRateSamples = mutableListOf<HeartRateSample>()
+	val heartRateSamplesFiltered = mutableStateListOf<HeartRateSample>()
 
 	var rootWorkoutId: Long? = null
 	var rootWorkout: WorkoutData? = null
@@ -277,7 +279,7 @@ class WorkoutData {
 	fun locationsFromJson(locations: JSONArray, filter: Boolean = false) {
 		(0..<locations.length())
 			.asSequence()
-			.filter { !filter || it % 5 == 0 }
+			.filter { !filter || it % 10 == 0 }
 			.map { LocationSample(locations.getJSONObject(it)) }
 			.toList()
 			.let { locationSamples.addAll(it) }

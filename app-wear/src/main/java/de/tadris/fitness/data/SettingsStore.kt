@@ -43,11 +43,11 @@ object SettingsStore {
     fun storeMapSource(context: Context, value: Boolean) =
 		getEditor(context, null).putBoolean("MapSource", value).apply()
 
-    fun getSpeakEnabled(context: Context): Int =
+    fun getTargetNotifyEnabled(context: Context): Int =
 		getSharedPreferences(context, null)
-			.getInt("speakEnabled", 1)
-    fun storeSpeakEnabled(context: Context, value: Int) =
-		getEditor(context, null).putInt("speakEnabled", value).apply()
+			.getInt("targetNotify", 1)
+    fun storeTargetNotify(context: Context, value: Int) =
+		getEditor(context, null).putInt("targetNotify", value).apply()
 
 	fun getLastWorkoutType(context: Context): WorkoutType {
 		val sharedPreferences = getSharedPreferences(context, null)

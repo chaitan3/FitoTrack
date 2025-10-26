@@ -20,7 +20,6 @@ package de.tadris.fitness.ui.record
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -59,13 +58,25 @@ fun ScreenDefault(
 	isPaused: Boolean
 ) {
 	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
-		if(workoutData.isWorkoutTypeGps) {
-			Field(
-				modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
-				value = speed.prettySpeed(),
-				unitIcon = R.drawable.kmh,
-				isActive = !isPaused
-			)
+		Row(
+			modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = Main.vw17),
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			if(workoutData.isWorkoutTypeGps){
+				Field(
+					modifier = Modifier.weight(0.8f),
+					value = speed.prettySpeed(),
+					unitIcon = R.drawable.kmh,
+					isActive = !isPaused
+				)
+			}
+			if(heartRate != null){
+				Field(
+					modifier = Modifier.weight(1.2f),
+					value = heartRate.pretty(),
+					unitText = R.string.field_bpm
+				)
+			}
 		}
 		Row(
 			modifier = Modifier.fillMaxWidth().weight(1f),
@@ -87,13 +98,11 @@ fun ScreenDefault(
 				)
 			}
 		}
-		if(heartRate != null){
-			Field(
-				modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
-				value = heartRate.pretty(),
-				unitText = R.string.field_bpm
-			)
-		}else{ Spacer(Modifier.weight(1f)) }
+		Field(
+			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
+			value = workoutData.caloriesTotal.toString(),
+			unitText = R.string.field_cal
+		)
 	}
 	TargetProgress(targetProgress, targetAchieved)
 }
@@ -106,6 +115,7 @@ fun PreviewScreenDefault(){
 	workoutData.pauseTotal = 100000
 	workoutData.durationTotal = 200000
 	workoutData.distanceTotal = 1100
+	workoutData.caloriesTotal = 100
 	AppScaffold { FOTTheme { ScreenDefault(
 		Modifier,
 		workoutData,

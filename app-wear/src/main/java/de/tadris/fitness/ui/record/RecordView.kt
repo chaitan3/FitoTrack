@@ -293,8 +293,8 @@ fun RecordView(recordActivity: RecordActivity) {
 					workoutData,
 					hasLocation = !recordActivity.locationStatus.isDisabled,
 					hasHeartRate = !recordActivity.heartRateStatus.isDisabled,
-					speakEnabled = recordActivity.speakEnabled,
-					toggleSpeak =  recordActivity::toggleSpeak,
+					targetNotifyEnabled = recordActivity.targetNotifyEnabled,
+					toggleSpeak =  recordActivity::toggleTargetNotify,
 					onTargetClicked = { navController.navigate("Target/$leg") }
 				)
 			}

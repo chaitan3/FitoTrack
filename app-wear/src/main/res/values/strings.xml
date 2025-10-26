@@ -82,7 +82,9 @@
     <string name="BT">Bluetooth</string>
     <string name="enabled">enabled</string>
     <string name="disabled">disabled</string>
+    <string name="primary">primary</string>
     <string name="permission_denied">permission denied</string>
+    <string name="targetNotify">Target notifications</string>
     <string name="screen">Screen</string>
     <string name="screen_keep_on">keep on</string>
     <string name="screen_auto_off">auto off</string>
@@ -97,7 +99,6 @@
 
     <!-- Settings.Maps UI -->
     <string name="maps">Maps</string>
-    <string name="speak">Voice notifications</string>
     <string name="map_source">Map source</string>
     <string name="download">Download</string>
     <string name="updates">Check for updates</string>
@@ -127,6 +128,7 @@
     <string name="field_km">%s km</string>
     <string name="field_m">%s m</string>
     <string name="field_bpm">%s bpm</string>
+    <string name="field_cal">%s kcal</string>
     <string name="field_kmh">%s kmh</string>
     <string name="field_avg_kmh">%s &#216;kmh</string>
 

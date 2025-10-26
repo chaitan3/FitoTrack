@@ -71,6 +71,7 @@ class Main : ComponentActivity() {
 			get() = if(Build.VERSION.SDK_INT >= 31) Manifest.permission.BLUETOOTH_CONNECT else Manifest.permission.BLUETOOTH
 
 		var screenHeight = 0.dp
+		var vh3 = 0.dp
 		var vh5 = 0.dp
 		var vh10 = 0.dp
 		var vh25 = 0.dp
@@ -88,6 +89,7 @@ class Main : ComponentActivity() {
 		fun GetScreenSpecs(){
 			isScreenRound = LocalConfiguration.current.isScreenRound
 			screenHeight = LocalConfiguration.current.screenHeightDp.dp
+			vh3 = screenHeight / 33
 			vh5 = screenHeight / 20
 			vh10 = screenHeight / 10
 			vh25 = screenHeight / 4

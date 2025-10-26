@@ -68,8 +68,8 @@ import de.tadris.fitness.data.SettingsStore
 import de.tadris.fitness.data.SettingsStore.WorkoutTypeSettings
 import de.tadris.fitness.data.WorkoutCapabilities
 import de.tadris.fitness.data.WorkoutData
-import de.tadris.fitness.data.WorkoutData.TargetType
 import de.tadris.fitness.data.WorkoutData.SpeedCachePoint
+import de.tadris.fitness.data.WorkoutData.TargetType
 import de.tadris.fitness.data.WorkoutDataStore
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.record.RecordActivity.SensorStatus
@@ -127,7 +127,7 @@ class RecordActivity : ComponentActivity() {
 		VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 800), -1)
 	val veTargetFull: VibrationEffect =
 		VibrationEffect.createWaveform(longArrayOf(0, 500, 300, 500, 300, 800), -1)
-	var speakEnabled by mutableIntStateOf(0)
+	var targetNotifyEnabled by mutableIntStateOf(0)
 	var textToSpeech: TextToSpeech? = null
 	lateinit var audioManager: AudioManager
 	lateinit var audioFocusRequest: AudioFocusRequest
@@ -164,16 +164,23 @@ class RecordActivity : ComponentActivity() {
 				checkpointDuration = workoutData.checkpoints.lastOrNull()?.duration ?: 0
 				runInBackground {
 					workoutData.locationSamples.clear()
-					WorkoutDataStore.readLocations(context = this, workoutData)
+					workoutData.locationSamplesFiltered.clear()
+					WorkoutDataStore.readLocations(context = this, workoutData, filter = true)
+					workoutData.locationSamplesFiltered.addAll(workoutData.locationSamples)
+					workoutData.locationSamples.clear()
+
 					workoutData.heartRateSamples.clear()
-					WorkoutDataStore.readHeartRates(context = this, workoutData, onDone = {})
+					workoutData.heartRateSamplesFiltered.clear()
+					WorkoutDataStore.readHeartRates(context = this, workoutData, filter = true)
+					workoutData.heartRateSamplesFiltered.addAll(workoutData.heartRateSamples)
+					workoutData.heartRateSamples.clear()
 				}
 			}
 		}
 		workoutTypeSettings = SettingsStore.getWorkoutTypeSettings(this, workoutData.workoutType)
 		setScreenOnFlag()
-		speakEnabled = SettingsStore.getSpeakEnabled(this)
-		if(speakEnabled == 1) initTextToSpeech()
+		targetNotifyEnabled = SettingsStore.getTargetNotifyEnabled(this)
+		if(targetNotifyEnabled == 1) initTextToSpeech()
 
 		checkPermissions()
 		prepareExercise()
@@ -433,6 +440,9 @@ class RecordActivity : ComponentActivity() {
 						//logD("Got heartRate update: $exerciseState $heartRate " + exerciseState.isPaused)
 						if(exerciseState == ACTIVE){
 							workoutData.heartRateSamples.add(sample)
+							if((workoutData.heartRateSamplesFiltered.lastOrNull()?.time ?: 0) < sample.time - 10000) {
+								workoutData.heartRateSamplesFiltered.add(sample)
+							}
 							if(targetCheckType == TargetType.HEART_RATE && workoutData.durationTotal > 60000){
 								if(heartRate >= targetCheckValue.toDouble() &&
 									heartRate <= targetCheckValueHigh.toDouble()
@@ -440,6 +450,15 @@ class RecordActivity : ComponentActivity() {
 									targetCheckJob?.cancel()
 								} else if(targetCheckJob?.isActive != true) {
 									setTargetCheckJob()
+								}
+							}
+							if(workoutData.heartRateSamples.size > 1000) {
+								runInBackground {
+									WorkoutDataStore.flushHeartRate(
+										this@RecordActivity,
+										workoutData,
+										onError = { toastFromBG(R.string.error_workout_write) }
+									)
 								}
 							}
 						}
@@ -460,6 +479,18 @@ class RecordActivity : ComponentActivity() {
 							workoutData.locationSamples.add(sample)
 							lastLocationTime = sample.time
 							sample.speed = lastSpeed
+							if((workoutData.locationSamplesFiltered.lastOrNull()?.time ?: 0) < sample.time - 10000) {
+								workoutData.locationSamplesFiltered.add(sample)
+							}
+							if(workoutData.locationSamples.size > 1000) {
+								runInBackground {
+									WorkoutDataStore.flushLocations(
+										this@RecordActivity,
+										workoutData,
+										onError = { toastFromBG(R.string.error_workout_write) }
+									)
+								}
+							}
 						}
 					}
 					DataType.Companion.ABSOLUTE_ELEVATION ->
@@ -545,6 +576,9 @@ class RecordActivity : ComponentActivity() {
 		}
 	}
 	fun setTargetCheckJob() {
+		if(targetNotifyEnabled < 1 ||
+			(workoutData.primaryTargetType == targetCheckType && targetNotifyEnabled < 2)
+		) return
 		targetCheckJob = CoroutineScope(Dispatchers.Main).launch {
 			delay(5000)
 			var delay = 30000L
@@ -590,13 +624,17 @@ class RecordActivity : ComponentActivity() {
 		targetProgress.floatValue = value.coerceIn(0f, 1f)
 		if(targetAchieved.value == TargetAchieved.NOT && value >= 0.5) {
 			targetAchieved.value = TargetAchieved.HALF
-			vibrator.vibrate(veTargetHalf)
-			speak(R.string.speak_target_half)
+			if(targetNotifyEnabled >= 1) {
+				vibrator.vibrate(veTargetHalf)
+				speak(R.string.speak_target_half)
+			}
 		} else if(targetAchieved.value == TargetAchieved.HALF && value >= 1) {
 			targetAchieved.value = TargetAchieved.FULL
-			vibrator.vibrate(veTargetFull)
 			if(workoutData.targetAutoPause) pauseExercise()
-			speak(R.string.speak_target_full)
+			if(targetNotifyEnabled >= 1) {
+				vibrator.vibrate(veTargetFull)
+				speak(R.string.speak_target_full)
+			}
 		}
 	}
 	val startCallback = object : FutureCallback<Void?> {
@@ -610,18 +648,25 @@ class RecordActivity : ComponentActivity() {
 		}
 	}
 
-	fun toggleSpeak(){
-		if(speakEnabled == 1) {
-			speakEnabled = 0
-			SettingsStore.storeSpeakEnabled(this, speakEnabled)
-			textToSpeech?.stop()
-			textToSpeech?.shutdown()
-			textToSpeech = null
-		} else {
-			speakEnabled = 1
-			SettingsStore.storeSpeakEnabled(this, speakEnabled)
-			initTextToSpeech()
-		}
+	fun toggleTargetNotify(){
+        when (targetNotifyEnabled) {
+            1 -> {
+				targetNotifyEnabled = 2
+				SettingsStore.storeTargetNotify(this, targetNotifyEnabled)
+            }
+            2 -> {
+				targetNotifyEnabled = 0
+				SettingsStore.storeTargetNotify(this, targetNotifyEnabled)
+				textToSpeech?.stop()
+				textToSpeech?.shutdown()
+				textToSpeech = null
+            }
+            else -> {
+                targetNotifyEnabled = 1
+                SettingsStore.storeTargetNotify(this, targetNotifyEnabled)
+                initTextToSpeech()
+            }
+        }
 	}
 	fun initTextToSpeech(){
 		textToSpeech = TextToSpeech(this) { status ->
@@ -636,8 +681,8 @@ class RecordActivity : ComponentActivity() {
 					}
 				})
 			} else {
-				speakEnabled = -1
-				SettingsStore.storeSpeakEnabled(this, -1)
+				targetNotifyEnabled = -1
+				SettingsStore.storeTargetNotify(this, -1)
 			}
 		}
 		audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
@@ -652,7 +697,6 @@ class RecordActivity : ComponentActivity() {
 	}
 	fun speak(text: Int){
 		logD("speak: ${getString(text)}")
-		if(speakEnabled < 1) return
         audioManager.requestAudioFocus(audioFocusRequest)
 		textToSpeech?.speak(
 			getString(text),

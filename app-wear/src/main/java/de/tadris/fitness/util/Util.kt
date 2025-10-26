@@ -18,7 +18,6 @@
  */
 package de.tadris.fitness.util
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -60,7 +59,7 @@ fun Double.prettySpeed(): String =
 	if(this*3.6 >= 20) String.format(Locale.ENGLISH, "%.0f", this*3.6)
 	else String.format(Locale.ENGLISH, "%.1f", this*3.6)
 fun Double.pretty(): String = String.format(Locale.ENGLISH, "%.0f", this)
-fun Long.isSeconds(seconds: Int) = this >= seconds * 1000L
+fun Long.isNSeconds(seconds: Int) = this % seconds * 1000L < 1000
 fun Long.prettySize(): String {
 	val gb: Long = 1073741824
 	val mb: Long = 1048576

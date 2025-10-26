@@ -47,7 +47,7 @@ import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
 import de.tadris.fitness.ui.secsToKeep
-import de.tadris.fitness.util.isSeconds
+import de.tadris.fitness.util.isNSeconds
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
 
@@ -62,34 +62,28 @@ fun ScreenSpeed(
 	isPaused: Boolean
 ) {
 	val speedData = remember { mutableStateListOf<ChartData>() }
-	LaunchedEffect(workoutData.locationSamples.isNotEmpty()) {
-		if(speedData.isEmpty() && workoutData.locationSamples.isNotEmpty()){
-			val locationSamples = workoutData.locationSamples
-			val secsToKeep = secsToKeep(workoutData.durationTotal)
-			val tempList = locationSamples
+	LaunchedEffect(workoutData.locationSamplesFiltered.size) {
+		if(speedData.isEmpty() && workoutData.locationSamplesFiltered.isNotEmpty()){
+			val tempList = workoutData.locationSamplesFiltered
 				.filter { it.speed > 0 }
 				.mapNotNull {
-					val duration = timeToDuration(it.time)
-					if(duration?.isSeconds(secsToKeep) != true) null
-					else ChartData(duration, it.speed)
+					ChartData(
+						duration = timeToDuration(it.time) ?: return@mapNotNull null,
+						value = it.speed
+					)
 				}
 			speedData.addAll(tempList)
+		}else{
+			workoutData.locationSamplesFiltered.lastOrNull()?.let {
+				if(it.speed == 0.0) return@let
+				speedData.add(ChartData(
+					duration = timeToDuration(it.time) ?: return@let,
+					value = it.speed
+				))
+			}
 		}
 	}
-	LaunchedEffect(speed) {
-		if(speedData.size > 1000){
-			val tempList = speedData.toMutableList()
-			val secsToKeep = secsToKeep(workoutData.durationTotal)
-			tempList.removeIf { !it.duration.isSeconds(secsToKeep) }
-			speedData.retainAll(tempList)
-		}
-		if(speed > 0){
-			speedData.add(ChartData(
-				duration = workoutData.durationTotal,
-				value = speed
-			))
-		}
-	}
+
 	Column(modifier.fillMaxSize().padding(top = 20.dp)) {
 		Field(
 			modifier = Modifier.fillMaxWidth().weight(1f),

@@ -50,9 +50,6 @@ import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.ui.secsToKeep
-import de.tadris.fitness.util.isSeconds
-import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDurationShort
 
@@ -67,34 +64,27 @@ fun ScreenElevation(
 	isPaused: Boolean
 ) {
 	val elevationData = remember { mutableStateListOf<ChartData>() }
-	LaunchedEffect(workoutData.locationSamples.isNotEmpty()) {
-		if(elevationData.isEmpty() && workoutData.locationSamples.isNotEmpty()){
-			val locationSamples = workoutData.locationSamples
-			val secsToKeep = secsToKeep(workoutData.durationTotal)
-			val tempList = locationSamples
+	var firstElevation by remember { mutableDoubleStateOf(0.0) }
+	LaunchedEffect(workoutData.locationSamplesFiltered.size) {
+		if(elevationData.isEmpty() && workoutData.locationSamplesFiltered.isNotEmpty()){
+			val tempList = workoutData.locationSamplesFiltered
 				.filter { it.ele != 0.0 }
 				.mapNotNull {
-					val duration = timeToDuration(it.time)
-					if(duration?.isSeconds(secsToKeep) != true) null
-					else ChartData(duration, it.ele)
+					ChartData(
+						duration = timeToDuration(it.time) ?: return@mapNotNull null,
+						value = it.ele
+					)
 				}
 			elevationData.addAll(tempList)
-		}
-	}
-	var firstElevation by remember { mutableDoubleStateOf(0.0) }
-	LaunchedEffect(elevation) {
-		if(elevationData.size > 1000){
-			val tempList = elevationData.toMutableList()
-			val secsToKeep = secsToKeep(workoutData.durationTotal)
-			tempList.removeIf { !it.duration.isSeconds(secsToKeep) }
-			elevationData.retainAll(tempList)
-		}
-		if(elevation != 0.0){
-			elevationData.add(ChartData(
-				duration = workoutData.durationTotal,
-				value = elevation
-			))
-			if(firstElevation == 0.0) firstElevation = elevation
+			firstElevation = elevationData.first().value
+		}else{
+			workoutData.locationSamplesFiltered.lastOrNull()?.let {
+				if(it.ele == 0.0) return@let
+				elevationData.add(ChartData(
+					duration = timeToDuration(it.time) ?: return@let,
+					value = it.ele
+				))
+			}
 		}
 	}
 
@@ -102,7 +92,8 @@ fun ScreenElevation(
 		Field(
 			modifier = Modifier.weight(1f),
 			value = elevation.pretty(),
-			unitText = R.string.field_m
+			unitText = R.string.field_m,
+			isActive = !isPaused
 		)
 		Box(
 			modifier = Modifier.fillMaxWidth().weight(3f).padding(
@@ -129,7 +120,8 @@ fun ScreenElevation(
 					),
 					value = workoutData.elevationGainTotal.toString(),
 					unitText = R.string.field_m,
-					unitIcon = R.drawable.ic_uphill
+					unitIcon = R.drawable.ic_uphill,
+					isActive = !isPaused
 				)
 			}
 			if(showLoss) {
@@ -139,12 +131,13 @@ fun ScreenElevation(
 					),
 					value = workoutData.elevationLossTotal.toString(),
 					unitText = R.string.field_m,
-					unitIcon = R.drawable.ic_downhill
+					unitIcon = R.drawable.ic_downhill,
+					isActive = !isPaused
 				)
 			}
 		}
 		Field(
-			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
+			modifier = Modifier.weight(1f).padding(bottom = Main.vh3),
 			value = workoutData.durationTotal.prettyDurationShort(),
 			isActive = !isPaused
 		)
@@ -152,17 +145,14 @@ fun ScreenElevation(
 	TargetProgress(targetProgress, targetAchieved)
 }
 
-@Preview(device = WearDevices.LARGE_ROUND)
+@Preview(device = WearDevices.SMALL_ROUND)
 @Composable
 fun PreviewScreenElevation() {
 	Main.GetScreenSpecs()
 	val workoutData = WorkoutData()
-	workoutData.elevationLossTotal = 10
-	workoutData.elevationGainTotal = 10
-	val elevationData = mutableListOf<ChartData>()
-	elevationData.add(ChartData(0, 150.0))
-	elevationData.add(ChartData(10000, 151.0))
-	elevationData.add(ChartData(30000, 150.0))
+	workoutData.durationTotal = 8400000L
+	workoutData.elevationLossTotal = 100
+	workoutData.elevationGainTotal = 100
 	AppScaffold { FOTTheme {
 		ScreenElevation(
 			Modifier,
@@ -175,3 +165,6 @@ fun PreviewScreenElevation() {
 		)
 	} }
 }
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun PreviewScreenElevationLarge() { PreviewScreenElevation() }

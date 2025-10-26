@@ -77,7 +77,6 @@ import de.tadris.fitness.ui.getMapPathLine
 import de.tadris.fitness.ui.getTileLayerLocal
 import de.tadris.fitness.ui.getTileLayerOnline
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.util.isSeconds
 import org.mapsforge.core.graphics.Style
 import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.Dimension
@@ -107,7 +106,7 @@ fun ScreenMap(
 	goBack: () -> Unit
 ){
 	val context = LocalContext.current
-	val initLatLong = workoutData.locationSamples.lastOrNull()?.toLatLong()
+	val initLatLong = workoutData.locationSamplesFiltered.lastOrNull()?.toLatLong()
 		?: LatLong(0.0, 0.0)
 	var mapView by remember { mutableStateOf(MapView(context)) }
 	val latLongs = remember { mutableStateListOf<LatLong>() }
@@ -153,23 +152,21 @@ fun ScreenMap(
 		if(mapCenter.value in setOf(MapCenter.ROUTE, MapCenter.FINISH))
 			mapCenter.value = MapCenter.NOT
 	}
-	LaunchedEffect(workoutData.locationSamples.size) {
-		if(latLongs.isEmpty() && workoutData.locationSamples.size >= 5){
-			workoutData.locationSamples
-				.filter { it.time.isSeconds(5) }
+	LaunchedEffect(workoutData.locationSamplesFiltered.size) {
+		if(latLongs.isEmpty() && workoutData.locationSamplesFiltered.isNotEmpty()){
+			workoutData.locationSamplesFiltered
 				.map { it.toLatLong() }
 				.let {
 					latLongs.addAll(it)
 					pathLine.addPoints(it)
 				}
-			if(latLongs.isNotEmpty()) centerMap()
-		}else if(latLongs.isEmpty() || workoutData.locationSamples.size % 5 == 0) {
-			workoutData.locationSamples.lastOrNull()?.let {
+		}else {
+			workoutData.locationSamplesFiltered.lastOrNull()?.let {
 				latLongs.add(it.toLatLong())
 				pathLine.addPoint(it.toLatLong())
 			}
-			if(latLongs.isNotEmpty()) centerMap()
 		}
+		if(latLongs.isNotEmpty()) centerMap()
 	}
 	LaunchedEffect(isPaused) {
 		locationMarker.paintStroke.color = if(isPaused) ColorInactive.toArgb() else ColorWhite.toArgb()

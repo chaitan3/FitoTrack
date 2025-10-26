@@ -46,8 +46,6 @@ import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
-import de.tadris.fitness.ui.secsToKeep
-import de.tadris.fitness.util.isSeconds
 import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDurationShort
 
@@ -62,32 +60,25 @@ fun ScreenHeartRate(
 	isPaused: Boolean
 ) {
 	val heartRateData = remember { mutableStateListOf<ChartData>() }
-	LaunchedEffect(workoutData.heartRateSamples.isNotEmpty()) {
-		if(heartRateData.isEmpty() && workoutData.heartRateSamples.isNotEmpty()){
-			val heartRateSamples = workoutData.heartRateSamples
-			val secsToKeep = secsToKeep(workoutData.durationTotal)
-			val tempList = heartRateSamples
+	LaunchedEffect(workoutData.heartRateSamplesFiltered.size) {
+		if(heartRateData.isEmpty() && workoutData.heartRateSamplesFiltered.isNotEmpty()){
+			val tempList = workoutData.heartRateSamplesFiltered
 				.filter { it.heartRate > 30 }
 				.mapNotNull {
-					val duration = timeToDuration(it.time)
-					if(duration?.isSeconds(secsToKeep) != true) null
-					else ChartData(duration, it.heartRate)
+					ChartData(
+						duration = timeToDuration(it.time) ?: return@mapNotNull null,
+						value = it.heartRate
+					)
 				}
 			heartRateData.addAll(tempList)
-		}
-	}
-	LaunchedEffect(heartRate) {
-		if(heartRateData.size > 1000){
-			val tempList = heartRateData.toMutableList()
-			val secsToKeep = secsToKeep(workoutData.durationTotal)
-			tempList.removeIf { !it.duration.isSeconds(secsToKeep) }
-			heartRateData.retainAll(tempList)
-		}
-		if(heartRate > 30){
-			heartRateData.add(ChartData(
-				duration = workoutData.durationTotal,
-				value = heartRate
-			))
+		}else{
+			workoutData.heartRateSamplesFiltered.lastOrNull()?.let {
+				if(it.heartRate < 30) return@let
+				heartRateData.add(ChartData(
+					duration = timeToDuration(it.time) ?: return@let,
+					value = it.heartRate
+				))
+			}
 		}
 	}
 	Column(modifier.fillMaxSize().padding(top = 20.dp, bottom =
@@ -147,3 +138,6 @@ fun PreviewScreenHeartRate() {
 		)
 	} }
 }
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun PreviewScreenHeartRateLarge() { PreviewScreenHeartRate() }

@@ -58,7 +58,7 @@ fun RecordSettings(
 	workoutData: WorkoutData,
 	hasLocation: Boolean,
 	hasHeartRate: Boolean,
-	speakEnabled: Int,
+	targetNotifyEnabled: Int,
 	toggleSpeak: () -> Unit,
 	onTargetClicked: () -> Unit
 ){
@@ -101,10 +101,11 @@ fun RecordSettings(
 					onClick = toggleSpeak
 				) {
 					Column {
-						Text(text = stringResource(R.string.speak))
+						Text(text = stringResource(R.string.targetNotify))
 						Text(
 							text = stringResource(id =
-								when(speakEnabled) {
+								when(targetNotifyEnabled) {
+									2 -> R.string.primary
 									1 -> R.string.on
 									0 -> R.string.off
 									else -> R.string.unavailable
@@ -223,7 +224,7 @@ fun PreviewRecordSettings(){
 			workoutData,
 			hasLocation = true,
 			hasHeartRate = true,
-			speakEnabled = 1,
+			targetNotifyEnabled = 1,
 			toggleSpeak = {},
 			onTargetClicked = {}
 		)

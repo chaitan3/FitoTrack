@@ -75,7 +75,7 @@ object WorkoutDataStore {
 			if(heartRates != null) workoutData.heartRatesFromJson(heartRates)
 			return workoutData
 		} catch(e: Exception) {
-			logE("WorkoutDataStore.getFullWorkout: " + e.message)
+			logE("WorkoutDataStore.getFullWorkout: ${e.message}")
 		}
 		return null
 	}
@@ -85,7 +85,7 @@ object WorkoutDataStore {
 			val text = context.openFileInput(filename).bufferedReader().use { it.readText() }
 			return WorkoutData(JSONObject(text))
 		} catch(e: Exception) {
-			logE("WorkoutDataStore.readWorkout: " + e.message)
+			logE("WorkoutDataStore.readWorkout: ${e.message}")
 		}
 		return null
 	}
@@ -145,11 +145,7 @@ object WorkoutDataStore {
 	fun storeWorkout(context: Context, workoutData: WorkoutData, onError: () -> Unit) { //Thread: UI
 		workoutData.setDescName()
 		workouts.add(0, workoutData)
-		runInBackground {
-			writeWorkout(context, workoutData, onError)
-			workoutData.locationSamples.clear()
-			workoutData.heartRateSamples.clear()
-		}
+		runInBackground { writeWorkout(context, workoutData, onError) }
 	}
 
 	fun write(context: Context, name: String, str: String, onError: () -> Unit = {}) { //Thread: BG
@@ -159,10 +155,11 @@ object WorkoutDataStore {
 				OutputStreamWriter(out).use { osr -> osr.write(str) }
 			}
 		} catch (e: Exception) {
-			logE("WorkoutDataStore.write: " + e.message)
+			logE("WorkoutDataStore.write: ${e.message}")
 			onError()
 		}
 	}
+
 	fun writeWorkout(context: Context, workoutData: WorkoutData, onError: () -> Unit) { //Thread: BG
 		write(
 			context,
@@ -170,19 +167,79 @@ object WorkoutDataStore {
 			str = workoutData.toJsonString(context),
 			onError
 		)
-		write(
-			context,
-			name = idToLocationFilename(workoutData.id),
-			str = workoutData.locationsToJsonString()
-		)
-		write(
-			context,
-			name = idToHeartRateFilename(workoutData.id),
-			str = workoutData.heartRatesToJsonString()
-		)
+		flushLocations(context, workoutData, onError)
+		flushHeartRate(context, workoutData, onError)
 	}
 
-	private fun idToWorkoutFilename(id: Long): String = "workout_$id.json"
-	private fun idToLocationFilename(id: Long): String = "location_$id.json"
-	private fun idToHeartRateFilename(id: Long): String = "heart_$id.json"
+	fun flushLocations(
+		context: Context,
+		workoutData: WorkoutData,
+		onError: () -> Unit
+	) {
+		if(workoutData.locationSamples.isEmpty()) return
+		val locationSamples = ArrayList(workoutData.locationSamples)
+		workoutData.locationSamples.clear()
+		val filename = idToLocationFilename(workoutData.id)
+		val newLocations = locationSamples.toList().joinToString(separator = ",") {
+			it.toJson().toString()
+		}
+		try{
+			val file = context.getFileStreamPath(filename)
+			val finalJsonString =
+				if(file.exists() && file.length() > 2) {
+					val existingContent =
+						context.openFileInput(filename).bufferedReader().use { it.readText() }
+					val insertionPoint = existingContent.lastIndexOf(']')
+					if(insertionPoint != -1 && newLocations.isNotEmpty()) {
+						if(newLocations.isNotEmpty()) {
+							val newContent = StringBuilder(existingContent.substring(0, insertionPoint))
+							if(existingContent.length > 2) newContent.append(',')
+							newContent.append(newLocations).append(']').toString()
+						} else existingContent
+					} else newLocations
+				} else newLocations
+			write(context, filename, finalJsonString, onError)
+		}catch(e: Exception){
+			logE("WorkoutDataStore.flushLocations: ${e.message}")
+			onError()
+		}
+	}
+
+	fun flushHeartRate(
+		context: Context,
+		workoutData: WorkoutData,
+		onError: () -> Unit
+	) {
+		if(workoutData.heartRateSamples.isEmpty()) return
+		val heartRateSamples = ArrayList(workoutData.heartRateSamples)
+		workoutData.heartRateSamples.clear()
+		val filename = idToHeartRateFilename(workoutData.id)
+		val newHeartRates = heartRateSamples.toList().joinToString(separator = ",") {
+			it.toJson().toString()
+		}
+		try{
+			val file = context.getFileStreamPath(filename)
+			val finalJsonString =
+				if(file.exists() && file.length() > 2) {
+					val existingContent =
+						context.openFileInput(filename).bufferedReader().use { it.readText() }
+					val insertionPoint = existingContent.lastIndexOf(']')
+					if(insertionPoint != -1 && newHeartRates.isNotEmpty()) {
+						if(newHeartRates.isNotEmpty()) {
+							val newContent = StringBuilder(existingContent.substring(0, insertionPoint))
+							if(existingContent.length > 2) newContent.append(',')
+							newContent.append(newHeartRates).append(']').toString()
+						} else existingContent
+					} else newHeartRates
+				} else newHeartRates
+			write(context, filename, finalJsonString, onError)
+		}catch(e: Exception){
+			logE("WorkoutDataStore.flushHeartRate: ${e.message}")
+			onError()
+		}
+	}
+
+	fun idToWorkoutFilename(id: Long): String = "workout_$id.json"
+	fun idToLocationFilename(id: Long): String = "location_$id.json"
+	fun idToHeartRateFilename(id: Long): String = "heart_$id.json"
 }
