@@ -697,7 +697,7 @@ class RecordActivity : ComponentActivity() {
 	}
 	fun speak(text: Int){
 		logD("speak: ${getString(text)}")
-        audioManager.requestAudioFocus(audioFocusRequest)
+		audioManager.requestAudioFocus(audioFocusRequest)
 		textToSpeech?.speak(
 			getString(text),
 			TextToSpeech.QUEUE_FLUSH,

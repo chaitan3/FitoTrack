@@ -43,9 +43,9 @@ fun tryIgnore(block: () -> Unit) = try { block() } catch(_: Exception) {}
 fun runInBackground(block: suspend () -> Unit) =
 	CoroutineScope(Dispatchers.Default).launch { block() }
 
-val sdfDuration = SimpleDateFormat("mm:ss", Locale.GERMANY)
-val sdfDurationShort = SimpleDateFormat("m:ss", Locale.GERMANY)
-val sdfDurationHour = SimpleDateFormat("H:mm:ss", Locale.GERMANY)
+val sdfDuration = SimpleDateFormat("mm:ss", Locale.ROOT)
+val sdfDurationShort = SimpleDateFormat("m:ss", Locale.ROOT)
+val sdfDurationHour = SimpleDateFormat("H:mm:ss", Locale.ROOT)
 fun Long.prettyDuration(): String =
 	if(this >= 3600000) sdfDurationHour.format(this - 3600000)
 	else sdfDuration.format(this)
@@ -53,28 +53,28 @@ fun Long.prettyDurationShort(): String =
 	if(this >= 3600000) sdfDurationHour.format(this - 3600000)
 	else sdfDurationShort.format(this)
 fun Int.prettyDistance(): String =
-	if(this in -1000..1000) String.format(Locale.ENGLISH, "%d", this)
-	else String.format(Locale.ENGLISH,"%.1f", this.toFloat() / 1000)
+	if(this in -1000..1000) String.format(Locale.ROOT, "%d", this)
+	else String.format(Locale.ROOT,"%.1f", this.toFloat() / 1000)
 fun Double.prettySpeed(): String =
-	//if(this*3.6 >= 20) String.format(Locale.ENGLISH, "%.0f", this*3.6)
-	String.format(Locale.ENGLISH, "%.1f", this*3.6)
-fun Double.pretty(): String = String.format(Locale.ENGLISH, "%.0f", this)
+	//if(this*3.6 >= 20) String.format(Locale.ROOT, "%.0f", this*3.6)
+	String.format(Locale.ROOT, "%.1f", this*3.6)
+fun Double.pretty(): String = String.format(Locale.ROOT, "%.0f", this)
 fun Long.prettySize(): String {
 	val gb: Long = 1073741824
 	val mb: Long = 1048576
 	val kb: Long = 1024
 	if(this > gb * 3) {
 		val gbs = toDouble() / gb
-		return String.format(Locale.getDefault(), "%.1f GB", gbs)
+		return String.format(Locale.ROOT, "%.1f GB", gbs)
 	} else if(this > gb) {
 		val gbs = toDouble() / gb
-		return String.format(Locale.getDefault(), "%.2f GB", gbs)
+		return String.format(Locale.ROOT, "%.2f GB", gbs)
 	} else if(this > mb) {
 		val mbs = toDouble() / mb
-		return String.format(Locale.getDefault(), "%.0f MB", mbs)
+		return String.format(Locale.ROOT, "%.0f MB", mbs)
 	} else if(this > kb) {
 		val kbs = toDouble() / kb
-		return String.format(Locale.getDefault(), "%.0f KB", kbs)
+		return String.format(Locale.ROOT, "%.0f KB", kbs)
 	}
 	return toString() + " B"
 }

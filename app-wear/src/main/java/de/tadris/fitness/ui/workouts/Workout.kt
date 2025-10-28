@@ -531,3 +531,7 @@ fun PreviewWorkout() {
 		onFullscreenMap = {}
 	)} }
 }
+
+@Preview(device = WearDevices.LARGE_ROUND)
+@Composable
+fun PreviewWorkoutLarge() { PreviewWorkout() }

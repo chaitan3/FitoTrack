@@ -151,15 +151,13 @@ class WearSyncWorkoutsList : Fragment() {
 	fun addWearSyncWorkout(watchWorkout: JSONObject) {
 		val name = watchWorkout.getString("name") + " " + watchWorkout.getString("workoutType")
 		val workoutId = watchWorkout.getLong("id")
-		val exists = checkWorkoutExists(workoutId)
-		val wearSyncWorkout = WearSyncWorkout(activity, name, workoutId, exists)
+		val duration = watchWorkout.getLong("durationTotal")
+		val done = dB.gpsWorkoutDao().getWorkoutById(workoutId)?.duration == duration
+				|| dB.indoorWorkoutDao().getWorkoutById(workoutId)?.duration == duration
+		val wearSyncWorkout = WearSyncWorkout(activity, name, workoutId, done)
 		wearSyncWorkouts.add(wearSyncWorkout)
 		list.addView(wearSyncWorkout)
 	}
-
-	fun checkWorkoutExists(workoutId: Long): Boolean =//TODO also check duration, this shows if exercise was resumed on watch after sync
-		dB.gpsWorkoutDao().getWorkoutById(workoutId) != null ||
-		dB.indoorWorkoutDao().getWorkoutById(workoutId) != null
 
 	fun sync() {
 		for(wearSyncWorkout in wearSyncWorkouts) {
@@ -188,22 +186,36 @@ class WearSyncWorkoutsList : Fragment() {
 			CoroutineScope(Dispatchers.Main).launch { wearSyncWorkoutInProgress?.setProcessing() }
 			val watchWorkout = response.getJSONObject("workout")
 			workoutId = watchWorkout.getLong("id")
-			if(checkWorkoutExists(workoutId)) {
-				Log.e(LOG_TAG, "getWorkoutResponse somehow already in db, skipping")
-				doneNext()
-				return
-			}
 			val type = watchWorkout.getString("workoutType")
 			if(getWorkoutType(type).getRecordingType() == RecordingType.GPS) {
-				val samples = getGpsSamples(watchWorkout, workoutId)
-				val gpsWorkout = toGpsWorkout(watchWorkout, workoutId)
-				dB.gpsWorkoutDao()
-					.insertWorkoutAndSamples(gpsWorkout, samples.toTypedArray<GpsSample?>())
+				val samples = getGpsSamples(watchWorkout, workoutId).toTypedArray<GpsSample?>()
+				val workout = toGpsWorkout(watchWorkout, workoutId)
+				if(dB.gpsWorkoutDao().getWorkoutById(workoutId) == null){
+					dB.gpsWorkoutDao().insertWorkoutAndSamples(workout, samples)
+				}else {
+					dB.gpsWorkoutDao().updateWorkout(workout)
+					samples.forEach { sample ->
+						if(sample == null) return@forEach
+						if(dB.gpsWorkoutDao().findSampleById(sample.id) == null){
+							dB.gpsWorkoutDao().insertSample(sample)
+						}
+					}
+				}
 			} else {
-				val samples = getIndoorSamples(watchWorkout, workoutId)
-				val indoorWorkout = toIndoorWorkout(watchWorkout, workoutId)
-				dB.indoorWorkoutDao()
-					.insertWorkoutAndSamples(indoorWorkout, samples.toTypedArray<IndoorSample?>())
+				val samples = getIndoorSamples(watchWorkout, workoutId).toTypedArray<IndoorSample?>()
+				val workout = toIndoorWorkout(watchWorkout, workoutId)
+				if(dB.indoorWorkoutDao().getWorkoutById(workoutId) == null){
+					dB.indoorWorkoutDao().insertWorkoutAndSamples(workout, samples)
+				}else {
+					dB.indoorWorkoutDao().updateWorkout(workout)
+					samples.forEach { sample ->
+						if(sample == null) return@forEach
+						if(dB.indoorWorkoutDao().findSampleById(sample.id) == null){
+							dB.indoorWorkoutDao().insertSample(sample)
+						}
+					}
+				}
+
 			}
 			doneNext()
 		} catch(e: Exception) {

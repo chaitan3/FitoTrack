@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class WorkoutData {
-	val sdfGPXName = SimpleDateFormat("E dd MMM HH:mm", Locale.ENGLISH)
+	val sdfGPXName = SimpleDateFormat("E dd MMM HH:mm", Locale.ROOT)
     var id = 0L
 		set(value) {
 			field = value
