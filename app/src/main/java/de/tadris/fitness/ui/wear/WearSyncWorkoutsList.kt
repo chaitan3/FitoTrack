@@ -106,8 +106,9 @@ class WearSyncWorkoutsList : Fragment() {
 		} }
 		lifecycleScope.launch { CommsBT.response.collect { response ->
 			handler.removeCallbacks(onBTTimeout)
+			if(response == null) return@collect
 			try {
-				if(response?.getInt("version") != CommsBT.COMMS_VERSION) {
+				if(response.getInt("version") != CommsBT.COMMS_VERSION) {
 					onBTError(R.string.wear_error_update)
 					return@collect
 				}
