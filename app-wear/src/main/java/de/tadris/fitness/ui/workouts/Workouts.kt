@@ -162,6 +162,15 @@ fun WorkoutsList(onWorkoutClick: (Long) -> Unit){
 					color = ColorFOT
 				)
 			}
+			workouts?.let{
+				if(it.isEmpty()){
+					item { Text(
+						modifier = Modifier.fillMaxWidth(),
+						text = stringResource(R.string.no_workouts),
+						textAlign = TextAlign.Center
+					) }
+				}
+			}
 			if(workouts == null) {
 				item { Text(text = stringResource(R.string.loading)) }
 			} else {

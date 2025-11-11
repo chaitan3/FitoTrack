@@ -53,8 +53,7 @@ object SettingsStore {
 		val sharedPreferences = getSharedPreferences(context, null)
 		val lastWorkoutTypeInt = sharedPreferences.getInt("lastWorkoutType", -1)
 		if(lastWorkoutTypeInt == -1) return WorkoutType.WALK
-		val workoutType = getWorkoutTypeFromInt(lastWorkoutTypeInt)
-		if(workoutType == null) return WorkoutType.WALK
+		val workoutType = getWorkoutTypeFromInt(lastWorkoutTypeInt) ?: return WorkoutType.WALK
 		return workoutType
 	}
 

@@ -103,7 +103,8 @@ fun ScreenDefault(
 		Field(
 			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
 			value = workoutData.caloriesTotal.toString(),
-			unitText = R.string.field_cal
+			unitText = R.string.field_cal,
+			isActive = !isPaused
 		)
 	}
 	TargetProgress(targetProgress, targetAchieved)

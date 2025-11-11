@@ -35,6 +35,7 @@
     <string name="off">off</string>
 
     <!-- Workouts UI -->
+    <string name="no_workouts">nothing here, get moving</string>
     <string name="summary_duration_label">active + pause = total</string>
     <string name="summary_duration">%1$s + %2$s = %3$s</string>
     <string name="summary_kmh">avg %1$s | max %2$s kmh</string>
@@ -165,6 +166,5 @@
     <string name="error_bt_response">Problem with response from phone</string>
     <string name="error_maps_download">Failed to download map</string>
     <string name="error_maps_file_exists">Map already available</string>
-    <string name="error_speak_unavailable">Speak is unavailable</string>
 
 </resources>

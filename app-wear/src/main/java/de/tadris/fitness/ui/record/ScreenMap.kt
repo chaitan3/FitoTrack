@@ -306,9 +306,7 @@ fun ScreenMap(
 				modifier = Modifier.weight(1f)
 			) {
 				Icon(
-					modifier = Modifier
-						.size(48.dp)
-						.padding(4.dp),
+					modifier = Modifier.size(48.dp).padding(4.dp),
 					imageVector = ImageVector.vectorResource(R.drawable.ic_zoom_out),
 					tint = if(mapZoomLevel.value > zoomLevelMin) ColorWhite else ColorInactive,
 					contentDescription = "zoom out"
@@ -319,9 +317,7 @@ fun ScreenMap(
 				modifier = Modifier.weight(1f)
 			) {
 				Icon(
-					modifier = Modifier
-						.size(48.dp)
-						.padding(4.dp),
+					modifier = Modifier.size(48.dp).padding(4.dp),
 					imageVector = ImageVector.vectorResource(R.drawable.ic_zoom_in),
 					tint = if(mapZoomLevel.value < zoomLevelMax) ColorWhite else ColorInactive,
 					contentDescription = "zoom in"
@@ -331,18 +327,14 @@ fun ScreenMap(
 	}
 	if(!mapLoaded){
 		Box(
-			modifier = Modifier
-				.fillMaxSize()
-				.background(colorScheme.background),
+			modifier = Modifier.fillMaxSize().background(colorScheme.background),
 			contentAlignment = Alignment.Center
 		){ Text(text = stringResource(R.string.map_waiting)) }
 	}
 	Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
 		IconButton(onClick = goBack) {
 			Icon(
-				modifier = Modifier
-					.size(48.dp)
-					.padding(top = 15.dp)
+				modifier = Modifier.size(48.dp).padding(top = 15.dp)
 					.then(if(!hasOtherScreens) Modifier.rotate(-90f) else Modifier),
 				imageVector = ImageVector.vectorResource(R.drawable.ic_map_up),
 				contentDescription = "go back"

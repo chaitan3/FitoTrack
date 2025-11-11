@@ -208,8 +208,8 @@ class RecordActivity : ComponentActivity() {
 
 		if(locationStatus.isDisabled && heartRateStatus.isDisabled) return
 		val dataTypes = mutableSetOf<DeltaDataType<*, *>>()
-		if(!locationStatus.isDisabled) dataTypes.add(DataType.Companion.LOCATION)
-		if(!heartRateStatus.isDisabled) dataTypes.add(DataType.Companion.HEART_RATE_BPM)
+		if(!locationStatus.isDisabled) dataTypes.add(DataType.LOCATION)
+		if(!heartRateStatus.isDisabled) dataTypes.add(DataType.HEART_RATE_BPM)
 
 		Futures.addCallback(
 			exerciseClient.prepareExerciseAsync(
@@ -239,19 +239,19 @@ class RecordActivity : ComponentActivity() {
 		val dataTypes = mutableSetOf<DataType<*, *>>()
 		if(!locationStatus.isDisabled && workoutData.isWorkoutTypeGps) {
 			if(workoutData.isWorkoutTypeEle) {
-				dataTypes.add(DataType.Companion.ELEVATION_GAIN_TOTAL)
-				if(workoutData.hasElevationLoss) dataTypes.add(DataType.Companion.ELEVATION_LOSS_TOTAL)
-				if(workoutData.hasElevation) dataTypes.add(DataType.Companion.ABSOLUTE_ELEVATION)
+				dataTypes.add(DataType.ELEVATION_GAIN_TOTAL)
+				if(workoutData.hasElevationLoss) dataTypes.add(DataType.ELEVATION_LOSS_TOTAL)
+				if(workoutData.hasElevation) dataTypes.add(DataType.ABSOLUTE_ELEVATION)
 			}
-			dataTypes.add(DataType.Companion.DISTANCE_TOTAL)
-			dataTypes.add(DataType.Companion.LOCATION)
-			dataTypes.add(DataType.Companion.SPEED_STATS)
+			dataTypes.add(DataType.DISTANCE_TOTAL)
+			dataTypes.add(DataType.LOCATION)
+			dataTypes.add(DataType.SPEED_STATS)
 			configBuilder.setIsGpsEnabled(true)
 		}
 		if(!heartRateStatus.isDisabled) {
-			dataTypes.add(DataType.Companion.CALORIES_TOTAL)
-			dataTypes.add(DataType.Companion.HEART_RATE_BPM)
-			dataTypes.add(DataType.Companion.HEART_RATE_BPM_STATS)
+			dataTypes.add(DataType.CALORIES_TOTAL)
+			dataTypes.add(DataType.HEART_RATE_BPM)
+			dataTypes.add(DataType.HEART_RATE_BPM_STATS)
 		}
 
 		if(dataTypes.isEmpty()) {
@@ -417,8 +417,7 @@ class RecordActivity : ComponentActivity() {
 					workoutData.addCheckpoint(checkpointTime, checkpointDuration)
 					if(checkpointDurationPrev == checkpointDuration && checkpointDuration > 0) {
 						//resumed after a pause
-						workoutData.pauseTotal =
-							System.currentTimeMillis() - checkpointTimePrev + workoutData.pauseTotal
+						workoutData.pauseTotal += System.currentTimeMillis() - checkpointTimePrev
 					}
 					if(workoutData.id == 0L) workoutData.id = checkpointTime
 					if(workoutData.endTime > 0L) {
@@ -431,7 +430,7 @@ class RecordActivity : ComponentActivity() {
 			val dataPointContainer = update.latestMetrics
 			for(dataPoint in dataPointContainer.sampleDataPoints) {
 				when(dataPoint.dataType) {
-					DataType.Companion.HEART_RATE_BPM -> {
+					DataType.HEART_RATE_BPM -> {
 						val sample = WorkoutData.HeartRateSample(
 							dataPoint.timeDurationFromBoot.plusMillis(bootTime).toMillis(),
 							dataPoint.value as Double
@@ -463,7 +462,7 @@ class RecordActivity : ComponentActivity() {
 							}
 						}
 					}
-					DataType.Companion.LOCATION -> {
+					DataType.LOCATION -> {
 						val sample = WorkoutData.LocationSample()
 						sample.time = dataPoint.timeDurationFromBoot.plusMillis(bootTime).toMillis()
 						sample.lat = (dataPoint.value as LocationData).latitude
@@ -493,29 +492,29 @@ class RecordActivity : ComponentActivity() {
 							}
 						}
 					}
-					DataType.Companion.ABSOLUTE_ELEVATION ->
+					DataType.ABSOLUTE_ELEVATION ->
 						lastElevation = dataPoint.value as Double
 					else -> logD("Unknown SampleDataPoint: " + dataPoint.dataType + " dataPoint: $dataPoint")
 				}
 			}
 			for(dataPoint in dataPointContainer.statisticalDataPoints) {
 				when(dataPoint.dataType) {
-					DataType.Companion.HEART_RATE_BPM_STATS -> {
+					DataType.HEART_RATE_BPM_STATS -> {
 						workoutData.heartRateAvg = (dataPoint.average as Double).toInt()
 						workoutData.heartRateMax = (dataPoint.max as Double).toInt()
 					}
-					DataType.Companion.SPEED_STATS ->
+					DataType.SPEED_STATS ->
 						workoutData.speedAvg = dataPoint.average as Double
 					else -> logD("Unknown StatisticalDataPoint: " + dataPoint.dataType + " dataPoint: $dataPoint")
 				}
 			}
 			for(dataPoint in dataPointContainer.cumulativeDataPoints) {
 				when(dataPoint.dataType) {
-					DataType.Companion.CALORIES_TOTAL -> {
+					DataType.CALORIES_TOTAL -> {
 						workoutData.caloriesTotal = (dataPoint.total as Double).toInt() +
 								workoutData.calories
 					}
-					DataType.Companion.DISTANCE_TOTAL -> {
+					DataType.DISTANCE_TOTAL -> {
 						val distance = (dataPoint.total as Double).toInt()
 						workoutData.distanceTotal = distance + workoutData.distance
 						updateLastSpeed()
@@ -530,10 +529,10 @@ class RecordActivity : ComponentActivity() {
 							}
 						}
 					}
-					DataType.Companion.ELEVATION_GAIN_TOTAL ->
+					DataType.ELEVATION_GAIN_TOTAL ->
 						workoutData.elevationGainTotal = (dataPoint.total as Double).toInt() +
 								workoutData.elevationGain
-					DataType.Companion.ELEVATION_LOSS_TOTAL ->
+					DataType.ELEVATION_LOSS_TOTAL ->
 						workoutData.elevationLossTotal = (dataPoint.total as Double).toInt() +
 								workoutData.elevationLoss
 					else ->
@@ -543,8 +542,8 @@ class RecordActivity : ComponentActivity() {
 		}
 
 		override fun onAvailabilityChanged(dataType: DataType<*, *>, availability: Availability) {
-			if(dataType == DataType.Companion.HEART_RATE_BPM) {
-				heartRateStatus = if(availability == DataTypeAvailability.Companion.AVAILABLE)
+			if(dataType == DataType.HEART_RATE_BPM) {
+				heartRateStatus = if(availability == DataTypeAvailability.AVAILABLE)
 					SensorStatus.AVAILABLE
 				else SensorStatus.UNAVAILABLE
 			}
@@ -728,7 +727,7 @@ class RecordActivity : ComponentActivity() {
 		override fun onExerciseUpdateReceived(update: ExerciseUpdate) {
 			for(dataPoint in update.latestMetrics.sampleDataPoints) {
 				when(dataPoint.dataType) {
-					DataType.Companion.HEART_RATE_BPM -> {
+					DataType.HEART_RATE_BPM -> {
 						val sample = WorkoutData.HeartRateSample(
 							dataPoint.timeDurationFromBoot.plusMillis(bootTime).toMillis(),
 							dataPoint.value as Double

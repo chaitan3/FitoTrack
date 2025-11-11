@@ -98,7 +98,7 @@ fun TargetEntry(
 		return if(targetValueFullString.length > 3){
 			stringResource(
 				R.string.heart_rate_preview,
-				targetValueFullString.substring(0, targetValueFullString.length-3),
+				targetValueFullString.dropLast(3),
 				targetValueFullString.substring(targetValueFullString.length-3),
 			)
 		}else{

@@ -19,7 +19,6 @@
 package de.tadris.fitness.data
 
 import android.content.Context
-import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.logW
 import de.tadris.fitness.util.runInBackground
@@ -46,8 +45,7 @@ object WorkoutDataStore {
 	}
 
 	fun readWorkouts(context: Context) { //Thread: BG
-		val files = context.filesDir.listFiles()
-		if(files == null) return
+		val files = context.filesDir.listFiles() ?: return
 		Arrays.sort(files)
 		workouts.clear()
 		for(i in files.indices.reversed()) {
@@ -66,8 +64,7 @@ object WorkoutDataStore {
 
 	fun getFullWorkout(context: Context, id: Long): WorkoutData? { //Thread: BG
 		try {
-			val workoutData = readWorkout(context, idToWorkoutFilename(id))
-			if(workoutData == null) return null
+			val workoutData = readWorkout(context, idToWorkoutFilename(id)) ?: return null
 			if(workoutData.isWorkoutTypeGps) {
 				val locations = readLocations(context, id)
 				if(locations != null) workoutData.locationsFromJson(locations)
@@ -98,8 +95,7 @@ object WorkoutDataStore {
 		filter: Boolean = false
 	) {
 		try {
-			val locations = readLocations(context, workoutData.id)
-			if(locations == null) return
+			val locations = readLocations(context, workoutData.id) ?: return
 			workoutData.locationsFromJson(locations, filter)
 			workoutData.legs.forEach { readLocations(context, workoutData = it, onDone, filter) }
 			onDone()
@@ -124,8 +120,7 @@ object WorkoutDataStore {
 		filter: Boolean = false
 	) {
 		try {
-			val heartRates = readHeartRates(context, workoutData.id)
-			if(heartRates == null) return
+			val heartRates = readHeartRates(context, workoutData.id) ?: return
 			workoutData.heartRatesFromJson(heartRates, filter)
 			workoutData.legs.forEach { readHeartRates(context, workoutData = it, onDone, filter) }
 			onDone()

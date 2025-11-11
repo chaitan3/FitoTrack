@@ -64,15 +64,15 @@ class WorkoutData {
 	var workoutType = WorkoutType.OTHER_OUTDOOR
 	val exerciseType: ExerciseType
 		get() = when(workoutType) {
-			WorkoutType.CLIMB -> ExerciseType.Companion.ROCK_CLIMBING
-			WorkoutType.CYCLE -> ExerciseType.Companion.BIKING
-			WorkoutType.HIKE -> ExerciseType.Companion.HIKING
-			WorkoutType.RUN -> ExerciseType.Companion.RUNNING
-			WorkoutType.SNOWBOARDING -> ExerciseType.Companion.SNOWBOARDING
-			WorkoutType.SNOWSHOEING -> ExerciseType.Companion.SNOWSHOEING
-			WorkoutType.SWIM_OUTDOOR -> ExerciseType.Companion.SWIMMING_OPEN_WATER
-			WorkoutType.WINDSURFING -> ExerciseType.Companion.SAILING
-			else -> ExerciseType.Companion.WALKING
+			WorkoutType.CLIMB -> ExerciseType.ROCK_CLIMBING
+			WorkoutType.CYCLE -> ExerciseType.BIKING
+			WorkoutType.HIKE -> ExerciseType.HIKING
+			WorkoutType.RUN -> ExerciseType.RUNNING
+			WorkoutType.SNOWBOARDING -> ExerciseType.SNOWBOARDING
+			WorkoutType.SNOWSHOEING -> ExerciseType.SNOWSHOEING
+			WorkoutType.SWIM_OUTDOOR -> ExerciseType.SWIMMING_OPEN_WATER
+			WorkoutType.WINDSURFING -> ExerciseType.SAILING
+			else -> ExerciseType.WALKING
 		}
     var calories by mutableIntStateOf(0)
     var caloriesTotal by mutableIntStateOf(0)

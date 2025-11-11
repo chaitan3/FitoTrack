@@ -18,7 +18,6 @@
  */
 package de.tadris.fitness.data
 
-import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -45,8 +44,7 @@ class MapStore {
 		fun getLocalMaps(context: Context): List<File> {
 			val localMaps = mutableListOf<File>()
 			try {
-				val files = context.filesDir.listFiles()
-				if(files == null) return localMaps
+				val files = context.filesDir.listFiles() ?: return localMaps
 				Arrays.sort(files)
 				for(i in files.indices.reversed()) {
 					val filename = files[i].getName()

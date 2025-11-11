@@ -139,13 +139,7 @@ fun PreviewRoundScreen(){
 }
 
 data class ChartData(val duration: Long, val value: Double)
-fun secsToKeep(durationTotal: Long): Int =
-	if(durationTotal > 12800000) 32
-	else if(durationTotal > 5800000) 16
-	else if(durationTotal > 2500000) 8
-	else if(durationTotal > 1600000) 4
-	else if(durationTotal > 800000) 2
-	else 1
+
 @Composable
 fun Chart(
 	data: List<ChartData>,
@@ -200,7 +194,7 @@ fun Chart(
 		val yDiffStep = yDiff/yLabelCount
 		val yPixelPerDiff = if(yDiff == 0.0) 0f else (height / yDiff).toFloat()
 		drawYAxisLabelAndLine(yMax, top)
-		for(i in 1..yLabelCount-1){
+		for(i in 1..<yLabelCount){
 			drawYAxisLabelAndLine(yMax-yDiffStep*i, top + yLabelStep*i)
 		}
 		drawYAxisLabelAndLine(yMin, top + height, true)
@@ -232,7 +226,7 @@ fun Chart(
 		val xDiff: Long = xMax - xMin
 		val xDiffStep: Long = xDiff/xLabelCount//can be long, because it is in ms
 		val xPixelPerDiff: Float = width / xDiff
-		for(i in 1..xLabelCount-1){
+		for(i in 1..<xLabelCount){
 			drawXAxisLabelAndLine(xMin+xDiffStep*i, left + xLabelStep*i)
 		}
 		drawXAxisLabelAndLine(xMax, size.width-(xLabelWidth/2))

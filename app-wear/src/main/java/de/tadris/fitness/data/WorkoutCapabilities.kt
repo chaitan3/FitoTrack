@@ -26,10 +26,10 @@ object WorkoutCapabilities {
 		capabilities?.autoPauseAndResumeEnabledExercises?.contains(exerciseType) == true
 	fun hasElevation(exerciseType: ExerciseType) =
 		capabilities?.getExerciseTypeCapabilities(exerciseType)?.supportedDataTypes?.contains(
-			DataType.Companion.ABSOLUTE_ELEVATION
+			DataType.ABSOLUTE_ELEVATION
 		) == true
 	fun hasElevationLoss(exerciseType: ExerciseType) =
 		capabilities?.getExerciseTypeCapabilities(exerciseType)?.supportedDataTypes?.contains(
-			DataType.Companion.ELEVATION_LOSS_TOTAL
+			DataType.ELEVATION_LOSS_TOTAL
 		) == true
 }
