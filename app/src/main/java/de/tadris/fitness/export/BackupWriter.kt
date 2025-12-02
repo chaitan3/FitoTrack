@@ -20,10 +20,10 @@ class BackupWriter(
 ) {
 
     companion object {
-        private const val VERSION = 4
-        private const val FILE_VERSION = "version.txt"
-        private const val FILE_DATA = "data.json"
-        private const val FILE_WORKOUT = "workout_%d.json"
+        internal const val VERSION = 4
+        internal const val FILE_VERSION = "version.txt"
+        internal const val FILE_DATA = "data.json"
+        internal const val FILE_WORKOUT = "workout_%d.json"
     }
 
     private val db = Instance.getInstance(context).db
@@ -45,13 +45,13 @@ class BackupWriter(
         fileStream.close()
     }
 
-    fun writeVersionFile(){
+    private fun writeVersionFile() {
         zipStream.putNextEntry(ZipEntry(FILE_VERSION))
         zipStream.write(VERSION.toString().toByteArray())
         zipStream.closeEntry()
     }
 
-    fun writeExtraData(){
+    private fun writeExtraData() {
         val intervalSets = db.intervalDao().allSets.map {
             IntervalSetContainer(it, db.intervalDao().getAllIntervalsOfSet(it.id).toList())
         }
@@ -64,7 +64,7 @@ class BackupWriter(
         zipStream.closeEntry()
     }
 
-    fun writeWorkouts(){
+    private fun writeWorkouts() {
         val dao = db.workoutDao()
         val workouts = dao.getWorkouts()
         workouts.forEachIndexed { index, workout ->

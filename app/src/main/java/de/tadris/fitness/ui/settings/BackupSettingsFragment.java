@@ -103,7 +103,7 @@ public class BackupSettingsFragment extends FitoTrackSettingFragment {
     }
 
     private void exportBackup() {
-        exportTask(progressDialog -> new BackupExportSource(true).provideFile(
+        exportTask(progressDialog -> new BackupExportSource(true).exportToFile(
                 requireContext(),
                 (progress, action) -> mHandler.post(() -> progressDialog.setProgress(progress, action))
         ));
