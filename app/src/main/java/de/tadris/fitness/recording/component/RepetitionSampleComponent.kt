@@ -60,6 +60,7 @@ class RepetitionSampleComponent : RecorderServiceComponent {
             frequency
         )
 
+        repetitionAggregation.clear()
         service.instance.db.workoutDao().insertSample(sample)
         EventBus.getDefault().post(RepetitionSampleEvent(sample))
     }

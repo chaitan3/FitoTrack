@@ -118,6 +118,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         currentIntensity = e.sample.intensity
         currentFrequency = e.sample.frequency
         repetitions += e.sample.repetitions
+        sampleCount++
     }
 
     @Subscribe
