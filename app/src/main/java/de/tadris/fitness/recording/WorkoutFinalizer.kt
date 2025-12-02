@@ -135,7 +135,7 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
         return activeDuration
     }
 
-    private fun getEnergy() = CalorieCalculator(context).calculateCalories(
+    private fun getEnergy() = CalorieCalculator(context).calculateEnergy(
         UserMeasurements.from(context),
         getActiveDuration(),
         calculatedValues.getAscentAndDescent().first.roundToInt(),

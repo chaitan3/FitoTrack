@@ -22,8 +22,11 @@ package de.tadris.fitness.data;
 import android.content.Context;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 import de.tadris.fitness.Instance;
+import de.tadris.fitness.data.preferences.UserMeasurements;
+import de.tadris.fitness.util.calorie.CalorieCalculator;
 
 public class WorkoutBuilder {
 
@@ -32,7 +35,7 @@ public class WorkoutBuilder {
     private Calendar start;
     private long duration;
 
-    private double length;
+    private double distance; // in meters
 
     private String comment;
 
@@ -43,13 +46,33 @@ public class WorkoutBuilder {
         workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(context, WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING);
         start = Calendar.getInstance();
         duration = 1000L * 60 * 10;
-        length = 500;
+        distance = 500;
         comment = "";
     }
 
     public Workout create(Context context) {
         long pauseDuration = fromExistingWorkout ? existingWorkout.getPauseDuration() : 0L;
-        return null; // TODO
+        long activeDuration = duration - pauseDuration;
+        double energy = new CalorieCalculator(context).calculateEnergy(
+                UserMeasurements.from(context),
+                activeDuration,
+                0, // TODO
+                workoutType.id,
+                distance / (activeDuration / 1000.0)
+        );
+        return new Workout(
+                System.nanoTime(),
+                UUID.randomUUID().toString(),
+                start.getTimeInMillis(),
+                start.getTimeInMillis() + duration,
+                activeDuration,
+                comment,
+                distance,
+                0,
+                energy,
+                workoutType.id,
+                -1
+        );
     }
 
     public Workout saveWorkout(Context context) {
@@ -94,12 +117,12 @@ public class WorkoutBuilder {
         this.duration = duration;
     }
 
-    public double getLength() {
-        return length;
+    public double getDistance() {
+        return distance;
     }
 
-    public void setLength(double length) {
-        this.length = length;
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public String getComment() {
@@ -121,7 +144,7 @@ public class WorkoutBuilder {
         builder.workoutType = workout.getWorkoutType(context);
         builder.start.setTimeInMillis(workout.getStart());
         builder.duration = workout.getActiveDuration();
-        builder.length = workout.getDistance();
+        builder.distance = workout.getDistance();
         builder.comment = workout.getComment();
 
         return builder;

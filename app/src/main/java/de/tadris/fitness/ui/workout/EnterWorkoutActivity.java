@@ -149,7 +149,7 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
     private void loadFromWorkout(Workout workout) {
         workoutBuilder = WorkoutBuilder.fromWorkout(this, workout);
         distanceEditText.setText(String.valueOf(
-                UnitUtils.roundDouble(unitSystem.getDistanceFromKilometers(workoutBuilder.getLength() / 1000d), 3)
+                UnitUtils.roundDouble(unitSystem.getDistanceFromKilometers(workoutBuilder.getDistance() / 1000d), 3)
         ));
         commentEditText.setText(workoutBuilder.getComment());
         setTitle(R.string.editWorkout);
@@ -160,7 +160,7 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
         try {
             // uses LongDistance, needs to be converted to meters (long => short => meters)
             double longDistance = Double.parseDouble(distanceEditText.getText().toString());
-            workoutBuilder.setLength((int) unitSystem.getMetersFromLongDistance(longDistance));
+            workoutBuilder.setDistance((int) unitSystem.getMetersFromLongDistance(longDistance));
         } catch (NumberFormatException ignored) {
             distanceEditText.requestFocus();
             distanceEditText.setError(getString(R.string.errorEnterValidNumber));
