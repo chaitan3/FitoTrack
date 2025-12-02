@@ -96,6 +96,9 @@ interface WorkoutDao {
     fun insertSample(sample: RouteSample)
 
     @Insert
+    fun insertSample(sample: HeartRateSample)
+
+    @Insert
     fun insertSample(sample: RepetitionSample)
 
     @Insert
