@@ -106,7 +106,7 @@ public class ShowWorkoutMapDiagramActivity extends ShowWorkoutColoredMapActivity
         converterManager.selectedConverters.add(defaultConverter);
         chart = addDiagram(defaultConverter);
 
-        Runnable update = () -> updateChart();
+        Runnable update = this::updateChart;
         chart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

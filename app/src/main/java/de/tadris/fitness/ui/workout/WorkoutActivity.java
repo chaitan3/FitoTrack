@@ -190,10 +190,10 @@ public abstract class WorkoutActivity extends InformationActivity {
 
         int converterIndex = 0;
         for (SampleConverter converter : converters) {
-            List<Entry> entries = SampleAggregator.INSTANCE.aggregatedSamples(
+            List<Entry> entries = SampleAggregator.INSTANCE.aggregateSamples(
                     converter.getEntries(data)
                             .stream()
-                            .map((pair) -> new Entry(pair.getFirst().getRelativeTime() / 1000f / 60f, pair.getSecond()))
+                            .map((pair) -> new Entry(pair.getFirst().getRelativeTime() / 1000f / 60f, pair.getSecond(), pair.getFirst()))
                             .collect(Collectors.toList()),
                     NUMBER_OF_SAMPLES_IN_DIAGRAM,
                     chartViewField

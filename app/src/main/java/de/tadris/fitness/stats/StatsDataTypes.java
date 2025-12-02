@@ -75,6 +75,14 @@ public class StatsDataTypes {
             return this.endTime - this.startTime;
         }
 
+        @Override
+        public String toString() {
+            return "TimeSpan{" +
+                    "startTime=" + startTime +
+                    ", endTime=" + endTime +
+                    '}';
+        }
+
         public enum Type {
             WEEK(0),
             MONTH(1),

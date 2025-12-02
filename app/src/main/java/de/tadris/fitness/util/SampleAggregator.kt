@@ -9,7 +9,7 @@ import kotlin.math.pow
 
 object SampleAggregator {
 
-    fun aggregatedSamples(
+    fun aggregateSamples(
         samples: List<Entry>,
         maxSampleNumber: Int,
         viewFieldSpan: TimeSpan
@@ -21,7 +21,7 @@ object SampleAggregator {
 
         // Generating a list with all samples in the current view field
         for (sample in samples) {
-            if (viewFieldSpan.contains(sample.x.toLong())) {
+            if (viewFieldSpan.contains((sample.x * 1000 * 60).toLong())) {
                 viewFieldSamples.add(sample)
             }
             if (viewFieldSamples.isEmpty()) {
@@ -45,6 +45,7 @@ object SampleAggregator {
                 val combinedSample = Entry(
                     (combinedSamples.sumOf { it.x.toDouble() } / combinedSamples.size).toFloat(),
                     (combinedSamples.sumOf { it.y.toDouble() } / combinedSamples.size).toFloat(),
+                    combinedSamples.first().data
                 )
                 aggregatedSamples.add(combinedSample)
                 combinedSamples.clear()
@@ -53,6 +54,14 @@ object SampleAggregator {
             }
 
             combinedSamples.add(i.next())
+        }
+        if (combinedSamples.isNotEmpty()) {
+            val combinedSample = Entry(
+                (combinedSamples.sumOf { it.x.toDouble() } / combinedSamples.size).toFloat(),
+                (combinedSamples.sumOf { it.y.toDouble() } / combinedSamples.size).toFloat(),
+                combinedSamples.first().data
+            )
+            aggregatedSamples.add(combinedSample)
         }
 
         // Index of element directly behind the last shown group
