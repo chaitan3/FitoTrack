@@ -33,6 +33,7 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -74,6 +75,7 @@ import de.tadris.fitness.data.WorkoutDataStore
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.record.RecordActivity.SensorStatus
 import de.tadris.fitness.ui.workouts.WorkoutActivity
+import de.tadris.fitness.util.LOG_TAG
 import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.runInBackground
@@ -172,7 +174,7 @@ class RecordActivity : ComponentActivity() {
 					workoutData.heartRateSamples.clear()
 					workoutData.heartRateSamplesFiltered.clear()
 					WorkoutDataStore.readHeartRates(context = this, workoutData, filter = true)
-					workoutData.heartRateSamplesFiltered.addAll(workoutData.heartRateSamples)
+					workoutData.heartRateSamplesFiltered.addAll(workoutData.heartRateSamples)//TODO filter for 10 seconds
 					workoutData.heartRateSamples.clear()
 				}
 			}
@@ -373,7 +375,7 @@ class RecordActivity : ComponentActivity() {
 					continue
 				}else{
 					workoutData.durationTotal = currentTime - checkpointTime + checkpointDuration
-					if(workoutData.primaryTargetType == TargetType.DURATION) {
+					if(workoutData.primaryTargetType == TargetType.DURATION && workoutData.primaryTargetValue.toLong() > 0) {
 						updateTargetProgress(workoutData.durationTotal.toFloat()/workoutData.primaryTargetValue.toLong())
 					} else if (targetCheckType == TargetType.DURATION && workoutData.durationTotal > 60000) {
 						if(workoutData.durationTotal <= targetCheckValue.toLong() * targetProgress.floatValue) {
@@ -582,6 +584,7 @@ class RecordActivity : ComponentActivity() {
 			delay(5000)
 			var delay = 30000L
 			while(isActive){
+				logD("RecordActivity.setTargetCheckJob notify below")
 				vibrator.vibrate(veTargetBelow)
 				if(targetCheckType == TargetType.HEART_RATE && heartRate > targetCheckValueHigh.toInt()) {
 					speak(R.string.speak_target_above)
@@ -624,6 +627,7 @@ class RecordActivity : ComponentActivity() {
 		if(targetAchieved.value == TargetAchieved.NOT && value >= 0.5) {
 			targetAchieved.value = TargetAchieved.HALF
 			if(targetNotifyEnabled >= 1) {
+				logD("RecordActivity.updateTargetProgress notify half")
 				vibrator.vibrate(veTargetHalf)
 				speak(R.string.speak_target_half)
 			}
@@ -631,6 +635,7 @@ class RecordActivity : ComponentActivity() {
 			targetAchieved.value = TargetAchieved.FULL
 			if(workoutData.targetAutoPause) pauseExercise()
 			if(targetNotifyEnabled >= 1) {
+				logD("RecordActivity.updateTargetProgress notify full")
 				vibrator.vibrate(veTargetFull)
 				speak(R.string.speak_target_full)
 			}
@@ -672,16 +677,18 @@ class RecordActivity : ComponentActivity() {
 			if(status == TextToSpeech.SUCCESS) {
 				textToSpeech?.setOnUtteranceProgressListener(object: UtteranceProgressListener() {
 					override fun onStart(utteranceId: String?) {}
-					override fun onError(utteranceId: String?) {
+					override fun onError(utteranceId: String?) {//Deprecated, but cannot be removed...
+						logE("RecordActivity.initTextToSpeech.onError")
+						audioManager.abandonAudioFocusRequest(audioFocusRequest)
+					}
+					override fun onError(utteranceId: String?, errorCode: Int) {
+						logE("RecordActivity.initTextToSpeech.onError: $errorCode")
 						audioManager.abandonAudioFocusRequest(audioFocusRequest)
 					}
 					override fun onDone(utteranceId: String?) {
 						audioManager.abandonAudioFocusRequest(audioFocusRequest)
 					}
 				})
-			} else {
-				targetNotifyEnabled = -1
-				SettingsStore.storeTargetNotify(this, -1)
 			}
 		}
 		audioManager = getSystemService(AUDIO_SERVICE) as AudioManager

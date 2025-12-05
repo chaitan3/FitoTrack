@@ -97,6 +97,7 @@
     <string name="screen_elevation">Elevation screen</string>
     <string name="screen_heart_rate">Heart rate screen</string>
     <string name="screen_speed">Speed screen</string>
+    <string name="on_no_speak">on (no speak)</string>
 
     <!-- Settings.Maps UI -->
     <string name="maps">Maps</string>
@@ -148,6 +149,7 @@
     <string name="WorkoutType_CYCLE">Cycling</string>
     <string name="WorkoutType_HIKE">Hiking</string>
     <string name="WorkoutType_RUN">Running</string>
+    <string name="WorkoutType_SKI">Skiing</string>
     <string name="WorkoutType_SNOWBOARDING">Snowboarding</string>
     <string name="WorkoutType_SNOWSHOEING">Snowshoeing</string>
     <string name="WorkoutType_SWIM_OUTDOOR">Swim (outdoor)</string>

@@ -421,6 +421,7 @@ class WearSyncWorkoutsList : Fragment() {
 			"Cycling" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_CYCLING
 			"Hiking" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_HIKING
 			"Running" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING
+			"Skiing" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SKIING
 			"Snowboarding" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SNOWBOARDING
 			"Snowshoeing" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SNOWSHOEING
 			"Swim (outdoor)" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SWIMMING

@@ -58,7 +58,7 @@ class WorkoutData {
 	var secondaryTargetValueHigh: Number = 0
 
 	enum class WorkoutType {
-		CLIMB, CYCLE, HIKE, RUN, SNOWBOARDING, SNOWSHOEING, SWIM_OUTDOOR, WALK, WINDSURFING,
+		CLIMB, CYCLE, HIKE, RUN, SKIING, SNOWBOARDING, SNOWSHOEING, SWIM_OUTDOOR, WALK, WINDSURFING,
 		OTHER_INDOOR, OTHER_OUTDOOR, MULTISPORT
 	}
 	var workoutType = WorkoutType.OTHER_OUTDOOR
@@ -68,6 +68,7 @@ class WorkoutData {
 			WorkoutType.CYCLE -> ExerciseType.BIKING
 			WorkoutType.HIKE -> ExerciseType.HIKING
 			WorkoutType.RUN -> ExerciseType.RUNNING
+			WorkoutType.SKIING -> ExerciseType.SKIING
 			WorkoutType.SNOWBOARDING -> ExerciseType.SNOWBOARDING
 			WorkoutType.SNOWSHOEING -> ExerciseType.SNOWSHOEING
 			WorkoutType.SWIM_OUTDOOR -> ExerciseType.SWIMMING_OPEN_WATER
@@ -211,6 +212,7 @@ class WorkoutData {
 			"Cycling" -> WorkoutType.CYCLE
 			"Hiking" -> WorkoutType.HIKE
 			"Running" -> WorkoutType.RUN
+			"Skiing" -> WorkoutType.SKIING
 			"Snowboarding" -> WorkoutType.SNOWBOARDING
 			"Snowshoeing" -> WorkoutType.SNOWSHOEING
 			"Swim (outdoor)" -> WorkoutType.SWIM_OUTDOOR
@@ -304,6 +306,7 @@ class WorkoutData {
 				WorkoutType.CYCLE -> R.string.WorkoutType_CYCLE
 				WorkoutType.HIKE -> R.string.WorkoutType_HIKE
 				WorkoutType.RUN -> R.string.WorkoutType_RUN
+				WorkoutType.SKIING -> R.string.WorkoutType_SKI
 				WorkoutType.SNOWBOARDING -> R.string.WorkoutType_SNOWBOARDING
 				WorkoutType.SNOWSHOEING -> R.string.WorkoutType_SNOWSHOEING
 				WorkoutType.SWIM_OUTDOOR -> R.string.WorkoutType_SWIM_OUTDOOR
@@ -320,6 +323,7 @@ class WorkoutData {
 				WorkoutType.CYCLE -> R.drawable.ic_cycle
 				WorkoutType.HIKE -> R.drawable.ic_hike
 				WorkoutType.RUN -> R.drawable.ic_run
+				WorkoutType.SKIING -> R.drawable.ic_downhill_ski
 				WorkoutType.SNOWBOARDING -> R.drawable.ic_snowboarding
 				WorkoutType.SNOWSHOEING -> R.drawable.ic_snowshoeing
 				WorkoutType.SWIM_OUTDOOR -> R.drawable.ic_swim
