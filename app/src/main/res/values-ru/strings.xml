@@ -549,4 +549,8 @@
     <string name="workoutDurationPrecisionToSeconds">Продолжительность с точностью до секунд</string>
     <string name="askForComment">Запрос комментария</string>
     <string name="askForCommentSummary">Запрос ввода комментария после остановки записи</string>
+    <string name="removeOAuthToken">Удалить OAuth токен</string>
+    <string name="removedOAuthToken">OAuth токен удален</string>
+    <string name="saveChangesQuestion">Сохранить изменения?</string>
+    <string name="saveChangesQuestionMessage">Вы действительно хотите сохранить изменения?</string>
 </resources>
