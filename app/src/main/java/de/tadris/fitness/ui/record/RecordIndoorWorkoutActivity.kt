@@ -35,8 +35,6 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RepetitionSample
-import de.tadris.fitness.data.WorkoutType
-import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
@@ -65,23 +63,6 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val wasAlreadyRunning = if (LAUNCH_ACTION != intent.action) {
-            true
-        } else currentState != RecordingState.IDLE
-
-        if (wasAlreadyRunning) {
-            workoutType = AggregatedRecordingValuesEvent.getCurrent().workoutType
-        } else {
-            val workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA)
-            if (workoutType is WorkoutType) {
-                this@RecordIndoorWorkoutActivity.workoutType = workoutType
-            } else {
-                val workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA)
-                this@RecordIndoorWorkoutActivity.workoutType =
-                    WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
-            }
-        }
-
         initBeforeContent()
         setContentView(R.layout.activity_record_indoor_workout)
         repetitionsText = findViewById(R.id.indoorRecordingReps)
@@ -97,7 +78,7 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
 
         setTitle(R.string.recordWorkout)
 
-        if (wasAlreadyRunning) {
+        if (wasAlreadyRunning()) {
             if (currentState != RecordingState.IDLE) {
                 recordStartButtonsRoot.visibility = View.INVISIBLE
                 timeView.visibility = View.VISIBLE

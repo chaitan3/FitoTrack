@@ -83,7 +83,6 @@ import de.tadris.fitness.recording.autostart.DefaultMovementDetector
 import de.tadris.fitness.recording.autostart.MovementDetector
 import de.tadris.fitness.recording.component.AnnouncementComponent
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
-import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent.Companion.getCurrent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
@@ -179,8 +178,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         instance = Instance.getInstance(this)
-        workoutType = WorkoutTypeManager.getInstance()
-            .getWorkoutTypeById(this, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER)
+        workoutType = determineWorkoutType()
 
         // only use NFC when it's enabled in settings AND supported by the device
         this.useNfcStart = instance.userPreferences.useNfcStart &&
@@ -458,7 +456,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         // cancel auto start if necessary
         cancelAutoStart(true)
 
-        val current = getCurrent()
+        val current = AggregatedRecordingValuesEvent.getCurrent()
         if (current.currentState != RecordingState.IDLE) { // Only Running Records can be stopped
             EventBus.getDefault().post(WorkoutActionStop(reason))
             if (current.recordedSomething) {
@@ -591,9 +589,9 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         EventBus.getDefault().unregister(this)
 
         // Kill Service on Finished or not Started Recording
-        val state = getCurrent().currentState
+        val state = AggregatedRecordingValuesEvent.getCurrent().currentState
         if (state == RecordingState.STOPPED || state == RecordingState.IDLE) {
-            log(TAG, "Recorder state is " + state + ", stopping recording")
+            log(TAG, "Recorder state is $state, stopping recording")
             stop(StopReason.ACTIVITY_DESTROY)
             stopService()
             if (state == RecordingState.IDLE) {
@@ -625,12 +623,12 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         super.onResume()
         log(TAG, "Activity onResume")
         finished = false
-        if (instance!!.userPreferences.showOnLockScreen) {
+        if (instance.userPreferences.showOnLockScreen) {
             enableLockScreenVisibility()
         }
         invalidateOptionsMenu()
         isResumed2 = true
-        updateDescription(getCurrent())
+        updateDescription(AggregatedRecordingValuesEvent.getCurrent())
 
         // start intercepting NFC intents
         if (useNfcStart && NfcAdapterHelper.isNfcEnabled(this)) {
@@ -859,15 +857,15 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     }
 
     private fun onManualPauseButtonClick() {
-        val state = getCurrent().currentState
+        val state = AggregatedRecordingValuesEvent.getCurrent().currentState
         if (state == RecordingState.RUNNING || state == RecordingState.AUTO_PAUSE) {
-            startPopupButton!!.visibility = View.GONE
+            startPopupButton.visibility = View.GONE
             showStartButton()
             EventBus.getDefault().post(WorkoutActionPause(false))
             updateStartButton(
                 true,
-                R.string.actionResume,
-                View.OnClickListener { v: View? -> onManualPauseButtonClick() })
+                R.string.actionResume
+            ) { _: View? -> onManualPauseButtonClick() }
         } else if (state == RecordingState.MANUAL_PAUSE) {
             EventBus.getDefault().post(WorkoutActionResume)
             hideStartButton()
@@ -897,7 +895,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         }
         try {
             ChooseBluetoothDeviceDialog(this, this).show()
-        } catch (ignored: BluetoothNotAvailableException) {
+        } catch (_: BluetoothNotAvailableException) {
             askToActivateBluetooth()
         }
     }
@@ -1013,7 +1011,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             slot,
             information.id
         )
-        this.updateDescription(getCurrent())
+        this.updateDescription(AggregatedRecordingValuesEvent.getCurrent())
     }
 
     override fun onSelectBluetoothDevice(device: BluetoothDevice) {
@@ -1042,6 +1040,29 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         get() = startedSem.availablePermits() == 0
 
     protected val currentState: RecordingState
-        get() = getCurrent().currentState
+        get() =
+            AggregatedRecordingValuesEvent.getCurrent().currentState
+
+    protected fun determineWorkoutType(): WorkoutType {
+        if (wasAlreadyRunning()) {
+            return AggregatedRecordingValuesEvent.getCurrent().workoutType
+        } else {
+            val workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA)
+            if (workoutType is WorkoutType) {
+                return workoutType
+            } else {
+                val workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA)
+                return WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
+            }
+        }
+    }
+
+    protected fun wasAlreadyRunning(): Boolean {
+        return if (LAUNCH_ACTION != intent.action) {
+            true
+        } else {
+            currentState != RecordingState.IDLE
+        }
+    }
 
 }

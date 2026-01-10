@@ -20,6 +20,7 @@
 package de.tadris.fitness.recording
 
 import android.content.Context
+import android.util.Log
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.Workout
@@ -62,6 +63,7 @@ class RecordingStateHolder {
 
     fun init(context: Context){
         recordingType = RecordingType.findById(workoutType.recordingType)
+        Log.d("RecordingStateHolder", "Init with type=$workoutType recordingType=$recordingType")
         createFreshWorkout().also {
             workoutId = it.id
             Instance.getInstance(context).db.workoutDao().insertWorkout(it)

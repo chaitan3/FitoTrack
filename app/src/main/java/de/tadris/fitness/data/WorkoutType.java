@@ -35,8 +35,6 @@ public class WorkoutType implements Serializable {
 
     /**
      * String-ID
-     *
-     * @see Workout#workoutTypeId
      */
     @PrimaryKey
     @NonNull
@@ -110,5 +108,11 @@ public class WorkoutType implements Serializable {
     @JsonIgnore
     public RecordingType getRecordingType() {
         return RecordingType.findById(this.recordingType);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return id;
     }
 }

@@ -51,20 +51,16 @@ import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.overlay.FixedPixelCircle;
 import org.mapsforge.map.layer.overlay.Polyline;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.WorkoutType;
-import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.map.MapManager;
 import de.tadris.fitness.recording.GpsState;
 import de.tadris.fitness.recording.RecordingState;
 import de.tadris.fitness.recording.StartReason;
 import de.tadris.fitness.recording.component.GpsComponent;
-import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 import de.tadris.fitness.recording.event.LocationChangeEvent;
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent;
 import de.tadris.fitness.recording.event.SatelliteCountEvent;
@@ -90,28 +86,6 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-
-
-        boolean wasAlreadyRunning = false;
-        if (!LAUNCH_ACTION.equals(intent.getAction())) {
-            wasAlreadyRunning = true;
-        } else if (getCurrentState() != RecordingState.IDLE) {
-            wasAlreadyRunning = true;
-        }
-
-
-        if (wasAlreadyRunning) {
-            workoutType = AggregatedRecordingValuesEvent.Companion.getCurrent().getWorkoutType();
-        } else {
-            Serializable workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA);
-            if (workoutType instanceof WorkoutType) {
-                workoutType = (WorkoutType) workoutType;
-            } else {
-                String workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA);
-                workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId);
-            }
-        }
 
         initBeforeContent();
         setContentView(R.layout.activity_record_workout);
@@ -133,7 +107,7 @@ public class RecordGpsWorkoutActivity extends RecordWorkoutActivity {
 
         onGPSStateChanged(new WorkoutGPSStateChanged(GpsState.SIGNAL_LOST, GpsState.SIGNAL_LOST));
 
-        if (wasAlreadyRunning) {
+        if (wasAlreadyRunning()) {
             if (getCurrentState() != RecordingState.IDLE) {
                 recordStartButtonsRoot.setVisibility(View.INVISIBLE);
                 timeView.setVisibility(View.VISIBLE);
