@@ -352,15 +352,16 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
         AlertDialog.Builder(this)
             .setTitle(R.string.enterComment)
             .setPositiveButton(
-                R.string.okay,
-                DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
-                    changeComment(editText.getText().toString())
-                })
+                R.string.okay
+            ) { _: DialogInterface?, _: Int ->
+                changeComment(editText.getText().toString())
+            }
             .setView(editText).create().show()
     }
 
     private fun changeComment(comment: String?) {
-        Instance.getInstance(this).db.workoutDao().updateWorkout(workout.copy(comment = comment))
+        workout = workout.copy(comment = comment)
+        Instance.getInstance(this).db.workoutDao().updateWorkout(workout)
         updateCommentText()
     }
 
@@ -372,10 +373,10 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
             }
             str += getString(R.string.comment) + ": " + workout.comment
         }
-        if (str!!.length == 0) {
+        if (str!!.isEmpty()) {
             str = getString(R.string.noComment)
         }
-        commentView!!.setText(str)
+        commentView.text = str
     }
 
     private val date: String?
