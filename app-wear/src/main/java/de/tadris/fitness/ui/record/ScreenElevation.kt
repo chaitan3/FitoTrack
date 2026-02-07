@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+ * Copyright (c) 2026 Bart Vullings <dev@windkracht8.com>
  *
  * This file is part of FitoTrack
  *
@@ -46,6 +46,8 @@ import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.ui.Chart
 import de.tadris.fitness.ui.ChartData
 import de.tadris.fitness.ui.FOTTheme
+import de.tadris.fitness.ui.FadingHorizontalDivider
+import de.tadris.fitness.ui.FadingVerticalDivider
 import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
@@ -125,6 +127,7 @@ fun ScreenElevation(
 				)
 			}
 			if(showLoss) {
+				if(showGain) FadingVerticalDivider()
 				Field(
 					modifier = Modifier.weight(1f).padding(horizontal =
 						if(!showGain) Main.vw12 else 0.dp
@@ -136,6 +139,7 @@ fun ScreenElevation(
 				)
 			}
 		}
+		FadingHorizontalDivider()
 		Field(
 			modifier = Modifier.weight(1f).padding(
 				bottom = if(Main.isScreenRound) Main.vh3 else 0.dp

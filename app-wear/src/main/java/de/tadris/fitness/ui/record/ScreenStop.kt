@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+ * Copyright (c) 2026 Bart Vullings <dev@windkracht8.com>
  *
  * This file is part of FitoTrack
  *
@@ -42,6 +42,8 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.ui.FOTTheme
+import de.tadris.fitness.ui.FadingHorizontalDivider
+import de.tadris.fitness.ui.FadingVerticalDivider
 import de.tadris.fitness.ui.Field
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
@@ -84,6 +86,7 @@ fun ScreenStop(
 				)
 			}
 		}
+		FadingHorizontalDivider()
 		Row(
 			modifier = Modifier.fillMaxWidth().weight(1f),
 			verticalAlignment = Alignment.CenterVertically
@@ -93,6 +96,7 @@ fun ScreenStop(
 				value = workoutData.pause.prettyDurationShort(),
 				isActive = isPaused
 			)
+			FadingVerticalDivider()
 			Field(
 				modifier = Modifier.weight(1f),
 				value = workoutData.durationTotal.prettyDurationShort(),

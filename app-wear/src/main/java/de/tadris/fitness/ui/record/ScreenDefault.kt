@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+ * Copyright (c) 2026 Bart Vullings <dev@windkracht8.com>
  *
  * This file is part of FitoTrack
  *
@@ -37,8 +37,10 @@ import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.tooling.preview.devices.WearDevices
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutData
-import de.tadris.fitness.ui.FOTTheme
+import de.tadris.fitness.ui.FadingHorizontalDivider
+import de.tadris.fitness.ui.FadingVerticalDivider
 import de.tadris.fitness.ui.Field
+import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
@@ -46,6 +48,7 @@ import de.tadris.fitness.util.pretty
 import de.tadris.fitness.util.prettyDistance
 import de.tadris.fitness.util.prettyDurationShort
 import de.tadris.fitness.util.prettySpeed
+
 
 @Composable
 fun ScreenDefault(
@@ -73,6 +76,7 @@ fun ScreenDefault(
 				)
 			}
 			if(heartRate != null){
+				if(workoutData.isWorkoutTypeGps) FadingVerticalDivider()
 				Field(
 					modifier = Modifier.weight(1.1f),
 					value = heartRate.pretty(),
@@ -80,6 +84,7 @@ fun ScreenDefault(
 				)
 			}
 		}
+		FadingHorizontalDivider()
 		Row(
 			modifier = Modifier.fillMaxWidth().weight(1f),
 			verticalAlignment = Alignment.CenterVertically
@@ -90,6 +95,7 @@ fun ScreenDefault(
 				isActive = !isPaused
 			)
 			if(workoutData.isWorkoutTypeGps) {
+				FadingVerticalDivider()
 				Field(
 					modifier = Modifier.weight(1f),
 					value = workoutData.distanceTotal.prettyDistance(),
@@ -100,6 +106,7 @@ fun ScreenDefault(
 				)
 			}
 		}
+		FadingHorizontalDivider()
 		Field(
 			modifier = Modifier.weight(1f).padding(horizontal = Main.vw25),
 			value = workoutData.caloriesTotal.toString(),

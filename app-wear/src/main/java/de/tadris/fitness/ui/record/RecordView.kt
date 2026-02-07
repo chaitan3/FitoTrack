@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Bart Vullings <dev@windkracht8.com>
+ * Copyright (c) 2026 Bart Vullings <dev@windkracht8.com>
  *
  * This file is part of FitoTrack
  *
