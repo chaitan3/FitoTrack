@@ -57,6 +57,7 @@ import de.tadris.fitness.ui.settings.SettingsActivity
 import de.tadris.fitness.ui.workouts.WorkoutsActivity
 import de.tadris.fitness.util.CommsBT
 import de.tadris.fitness.util.toast
+import de.tadris.fitness.util.tryIgnore
 import kotlinx.coroutines.launch
 
 class Main : ComponentActivity() {
@@ -126,7 +127,9 @@ class Main : ComponentActivity() {
 	override fun onResume() {
 		super.onResume()
 		if(hasBTPermission && SettingsStore.getBTEnabled(this)) {
-			startService(Intent(this, CommsBT::class.java))
+			tryIgnore {
+				startService(Intent(this, CommsBT::class.java))
+			}
 		}
 	}
 	override fun onDestroy() {

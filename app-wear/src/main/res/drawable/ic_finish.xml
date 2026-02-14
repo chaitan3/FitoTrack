@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright (c) 2026 Bart Vullings <dev@windkracht8.com>
+  ~
+  ~ This file is part of FitoTrack
+  ~
+  ~ FitoTrack is free software: you can redistribute it and/or modify
+  ~ 	it under the terms of the GNU General Public License as published by
+  ~ 	the Free Software Foundation, either version 3 of the License, or
+  ~ 	(at your option) any later version.
+  ~
+  ~ 	FitoTrack is distributed in the hope that it will be useful,
+  ~ 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ 	GNU General Public License for more details.
+  ~
+  ~ 	You should have received a copy of the GNU General Public License
+  ~ 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="19dp"
+    android:height="19dp"
+    android:viewportWidth="19"
+    android:viewportHeight="19">
+  <path
+      android:pathData="M1,12V1H18V12H1v7"
+      android:strokeWidth="2"
+      android:strokeColor="#000000"/>
+  <path
+      android:pathData="M2,2.h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M5,2.h3v3h-3z"
+      android:fillColor="#fff"/>
+  <path
+      android:pathData="M5,5h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M2,5.h3v3h-3z"
+      android:fillColor="#fff"/>
+  <path
+      android:pathData="M2,8h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M8,2h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M11,2.h3v3h-3z"
+      android:fillColor="#fff"/>
+  <path
+      android:pathData="M11,5h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M8,5.h3v3h-3z"
+      android:fillColor="#fff"/>
+  <path
+      android:pathData="M8,8h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M14,5.h3v3h-3z"
+      android:fillColor="#fff"/>
+  <path
+      android:pathData="M14,2h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M5,8.h3v3h-3z"
+      android:fillColor="#fff"/>
+  <path
+      android:pathData="M14,8h3v3h-3z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M11,8.h3v3h-3z"
+      android:fillColor="#fff"/>
+</vector>

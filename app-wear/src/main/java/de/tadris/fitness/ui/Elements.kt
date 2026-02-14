@@ -19,6 +19,7 @@
 package de.tadris.fitness.ui
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,15 +32,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -52,10 +58,13 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getDrawable
+import androidx.core.graphics.createBitmap
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.LocalTextStyle
@@ -73,17 +82,22 @@ import de.tadris.fitness.util.prettyDuration
 import de.tadris.fitness.util.prettySpeed
 import de.tadris.fitness.util.toast
 import org.mapsforge.core.graphics.Style
+import org.mapsforge.core.model.LatLong
+import org.mapsforge.map.android.graphics.AndroidBitmap
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.android.util.AndroidUtil
 import org.mapsforge.map.datastore.MultiMapDataStore
 import org.mapsforge.map.layer.download.TileDownloadLayer
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik
+import org.mapsforge.map.layer.overlay.FixedPixelCircle
+import org.mapsforge.map.layer.overlay.Marker
 import org.mapsforge.map.layer.overlay.Polyline
 import org.mapsforge.map.layer.renderer.TileRendererLayer
 import org.mapsforge.map.model.Model
 import org.mapsforge.map.reader.MapFile
 import org.mapsforge.map.rendertheme.internal.MapsforgeThemes
 import kotlin.math.floor
+
 
 @Composable
 fun Field(
@@ -93,22 +107,33 @@ fun Field(
 	unitIcon: Int? = null,
 	unitIconWeight: Float = 1f,
 	isActive: Boolean = true
-){
+) {
 	Row(
 		modifier = modifier.padding(horizontal = 5.dp),
 		verticalAlignment = Alignment.CenterVertically
 	) {
-		BasicText(
-			modifier = Modifier.weight(3F),
-			text =
-				if(unitText == null) value
-				else stringResource(unitText, value),
-			style = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-			color = { if(isActive) ColorWhite else ColorInactive },
+		var fontSize by remember(value.length) { mutableStateOf(30.sp) }
+		var readyToDraw by remember(value.length) { mutableStateOf(false) }
+
+		Text(
+			modifier = Modifier
+				.weight(3F)
+				.drawWithContent { if (readyToDraw) drawContent() },
+			text = if (unitText == null) value else stringResource(unitText, value),
+			style = LocalTextStyle.current.copy(
+				textAlign = TextAlign.Center,
+				fontSize = fontSize,
+				fontFamily = FontFamily.Serif
+			),
+			color = if (isActive) ColorWhite else ColorInactive,
 			maxLines = 1,
-			autoSize = TextAutoSize.StepBased(minFontSize = 8.sp)
+			softWrap = false,
+			onTextLayout = {
+				if (it.hasVisualOverflow) fontSize *= 0.9f
+				else readyToDraw = true
+			}
 		)
-		if(unitIcon != null) {
+		if (unitIcon != null) {
 			Icon(
 				modifier = Modifier.weight(unitIconWeight),
 				imageVector = ImageVector.vectorResource(unitIcon),
@@ -379,27 +404,43 @@ fun getMapPathLine(color: Color = ColorFOT): Polyline{
 	paintStroke.color = color.toArgb()
 	return Polyline(paintStroke, AndroidGraphicFactory.INSTANCE)
 }
+fun getStartMarker(latLong: LatLong): FixedPixelCircle {
+	val paintStroke = AndroidGraphicFactory.INSTANCE.createPaint()
+	paintStroke.setStyle(Style.STROKE)
+	paintStroke.strokeWidth = 8f
+	val paintFill = AndroidGraphicFactory.INSTANCE.createPaint()
+	paintFill.setStyle(Style.FILL)
+	paintFill.color = ColorStartMarker.toArgb()
+	return FixedPixelCircle(latLong, 4f, paintFill, paintStroke)
+}
+fun getEndMarker(context: Context, latLong: LatLong): Marker? =
+	getDrawable(context, R.drawable.ic_finish)?.let{ drawable->
+		val size = Main.widthPixels / 15
+		val bitmap = createBitmap(size, size)
+		val canvas = android.graphics.Canvas(bitmap)
+		drawable.setBounds(0, 0, size, size)
+		drawable.draw(canvas)
+		Marker(latLong, AndroidBitmap(bitmap), size/2, -size/2)
+	}
 
 @Composable
 fun FadingHorizontalDivider(modifier: Modifier = Modifier) {
 	Box(
-		modifier.fillMaxWidth().height(1.dp)
-			.background(
-				brush = Brush.horizontalGradient(
-					listOf(Color.Transparent, ColorInactive, Color.Transparent)
-				)
+		modifier.fillMaxWidth().height(1.dp).background(
+			brush = Brush.horizontalGradient(
+				listOf(Color.Transparent, ColorInactive, Color.Transparent)
 			)
+		)
 	)
 }
 
 @Composable
 fun FadingVerticalDivider(modifier: Modifier = Modifier) {
 	Box(
-		modifier.fillMaxHeight().width(1.dp)
-			.background(
-				brush = Brush.verticalGradient(
-					listOf(Color.Transparent, ColorInactive, ColorInactive, Color.Transparent)
-				)
+		modifier.fillMaxHeight().width(1.dp).background(
+			brush = Brush.verticalGradient(
+				listOf(Color.Transparent, ColorInactive, ColorInactive, Color.Transparent)
 			)
+		)
 	)
 }

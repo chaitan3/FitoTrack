@@ -77,8 +77,10 @@ fun ScreenElevation(
 						value = it.ele
 					)
 				}
-			elevationData.addAll(tempList)
-			firstElevation = elevationData.first().value
+			if(tempList.isNotEmpty()) {
+				elevationData.addAll(tempList)
+				firstElevation = elevationData.first().value
+			}
 		}else{
 			workoutData.locationSamplesFiltered.lastOrNull()?.let {
 				if(it.ele == 0.0) return@let

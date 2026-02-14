@@ -30,10 +30,11 @@ val ColorTransparent = Color(0x00000000)
 val ColorInactive = Color(0xFFAAAAAA)
 val ColorProgressDone = Color(0xFF4CAF50)
 val ColorProgressDoneDark = Color(0xFF244D26)
-val ColorLocationCircle = Color(0xFF2A7FFF)
 val ColorProgressBg = Color(0xFF444444)
 val ColorProgressAhead = Color(0xFF008800)
 val ColorProgressBehind = Color(0xFFCC0000)
+val ColorLocationCircle = Color(0xFF2A7FFF)
+val ColorStartMarker = Color(0xFF00FF00)
 
 internal val fotColorScheme = ColorScheme(
 	primary = ColorWhite,

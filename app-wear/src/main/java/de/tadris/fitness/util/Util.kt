@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.floor
 
 const val LOG_TAG = "FitoTrack"
 
@@ -53,8 +54,11 @@ fun Long.prettyDurationShort(): String =
 	if(this >= 3600000) sdfDurationHour.format(this - 3600000)
 	else sdfDurationShort.format(this)
 fun Int.prettyDistance(): String =
-	if(this in -1000..1000) String.format(Locale.ROOT, "%d", this)
-	else String.format(Locale.ROOT,"%.1f", this.toFloat() / 1000)
+	when (this) {
+		in -1000..1000 -> String.format(Locale.ROOT, "%d", this)
+		in -10000..10000 -> String.format(Locale.ROOT, "%.2f", floor(this.toFloat() / 10) / 100)
+		else -> String.format(Locale.ROOT, "%.1f", floor(this.toFloat() / 100) / 10)
+	}
 fun Double.prettySpeed(): String =
 	//if(this*3.6 >= 20) String.format(Locale.ROOT, "%.0f", this*3.6)
 	String.format(Locale.ROOT, "%.1f", this*3.6)

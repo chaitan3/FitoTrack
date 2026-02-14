@@ -65,9 +65,11 @@ import de.tadris.fitness.ui.ColorLocationCircle
 import de.tadris.fitness.ui.ColorProgressDone
 import de.tadris.fitness.ui.ConfirmDialog
 import de.tadris.fitness.ui.FOTTheme
-import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.FullscreenMapActivity
+import de.tadris.fitness.ui.Main
+import de.tadris.fitness.ui.getEndMarker
 import de.tadris.fitness.ui.getMapPathLine
+import de.tadris.fitness.ui.getStartMarker
 import de.tadris.fitness.ui.getTileLayerLocal
 import de.tadris.fitness.ui.getTileLayerOnline
 import de.tadris.fitness.ui.record.MultisportTransition
@@ -146,12 +148,12 @@ fun Workout(
 	var showHeartRateChart by remember { mutableStateOf<Boolean?>(null) }
 	var delWorkout by remember { mutableStateOf(false) }
 	var resume = false
-	fun Long.timeToDuration(): Long? {
-		if(workoutData.checkpoints.isEmpty()) return null
+	fun Long.timeToDuration(): Long {
+		if(workoutData.checkpoints.isEmpty()) return 0
 		var checkpoint = workoutData.checkpoints[0]
 		for(i in 1..<workoutData.checkpoints.size) {
 			if(workoutData.checkpoints[i].time > this) {
-				if(workoutData.checkpoints[i].duration == checkpoint.duration) { return null }//during a break, don't show
+				if(workoutData.checkpoints[i].duration == checkpoint.duration) { return checkpoint.duration }//during a break
 				else { break }
 			}
 			checkpoint = workoutData.checkpoints[i]
@@ -239,7 +241,7 @@ fun Workout(
 					true -> item {
 						Box(modifier = Modifier.clickable { onFullscreenMap() }) {
 							WorkoutMap(locationSamplesSet =
-								if (workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
+								if(workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
 								else workoutData.legs
 									.filter { it.locationSamples.size > 10 }
 									.map { it.locationSamples }
@@ -282,16 +284,12 @@ fun Workout(
 						}
 						item {
 							val skipFrames = remember(workoutData.locationSamples.size) {
-								maxOf(1, workoutData.locationSamples.size / Main.vw80px)
+								maxOf(5, workoutData.locationSamples.size / Main.vw80px)
 							}
 							val chartData = remember(workoutData.locationSamples.size) {
 								workoutData.locationSamples
-									.filterIndexed { i, locationSample ->
-										i % skipFrames == 0 &&
-										locationSample.speed > 0.0 &&
-										locationSample.time.timeToDuration() != null
-									}
-									.map { ChartData(it.time.timeToDuration() ?: 0, it.speed) }
+									.filterIndexed { i, it -> i % skipFrames == 0 && it.speed > 0.0 }
+									.map { ChartData(it.time.timeToDuration(), it.speed) }
 							}
 							Row(Modifier.size(width = Main.vw80, height = Main.vh50)) {
 								Chart(
@@ -340,16 +338,12 @@ fun Workout(
 						true -> {
 							item {
 								val skipFrames = remember(workoutData.locationSamples.size) {
-									maxOf(1, workoutData.locationSamples.size / Main.vw80px)
+									maxOf(5, workoutData.locationSamples.size / Main.vw80px)
 								}
 								val chartData = remember(workoutData.locationSamples.size) {
 									workoutData.locationSamples
-										.filterIndexed { i, locationSample ->
-											i % skipFrames == 0 &&
-											locationSample.ele != 0.0 &&
-											locationSample.time.timeToDuration() != null
-										}
-										.map { ChartData(it.time.timeToDuration() ?: 0, it.ele) }
+										.filterIndexed { i, it -> i % skipFrames == 0 && it.ele != 0.0 }
+										.map { ChartData(it.time.timeToDuration(), it.ele) }
 								}
 								Row(Modifier.size(width = Main.vw80, height = Main.vh50)) {
 									Chart(
@@ -376,11 +370,12 @@ fun Workout(
 					if(workoutData.workoutType == WorkoutType.MULTISPORT) return@item
 					TextButton(
 						modifier = Modifier.fillMaxWidth(),
-						onClick = { showHeartRateChart = workoutData.heartRateSamples.isNotEmpty() }
+						onClick = { showHeartRateChart = false }
 					) { Text(text = stringResource(R.string.show_chart)) }
 				}
 				false -> {
 					runInBackground {
+						workoutData.heartRateSamples.clear()
 						WorkoutDataStore.readHeartRates(
 							context,
 							workoutData,
@@ -390,22 +385,16 @@ fun Workout(
 					item { Text(text = stringResource(R.string.loading)) }
 				}
 				true -> {
-					var skipFrames = workoutData.heartRateSamples.size / Main.vw80px
-					if (skipFrames < 5) skipFrames = 5
+					val skipFrames = maxOf(5, workoutData.heartRateSamples.size / Main.vw80px)
 					val chartData = workoutData.heartRateSamples
 						.filterIndexed { i, it -> i % skipFrames == 0 && it.heartRate > 30 }
-						.mapNotNull {
-							val duration = it.time.timeToDuration()
-							if(duration == null) null
-							else ChartData(duration, it.heartRate)
-						}
+						.map { ChartData(it.time.timeToDuration(), it.heartRate) }
 					var target1: Double? = null
 					var target2: Double? = null
 					if(workoutData.primaryTargetType == TargetType.HEART_RATE){
 						target1 = workoutData.primaryTargetValue.toDouble()
 						target2 = workoutData.primaryTargetValueHigh.toDouble()
-					}
-					if(workoutData.secondaryTargetType == TargetType.HEART_RATE){
+					}else if(workoutData.secondaryTargetType == TargetType.HEART_RATE){
 						target1 = workoutData.secondaryTargetValue.toDouble()
 						target2 = workoutData.secondaryTargetValueHigh.toDouble()
 					}
@@ -466,10 +455,10 @@ fun WorkoutMap(locationSamplesSet: Set<List<WorkoutData.LocationSample>>){
 				AndroidGraphicFactory.createInstance(context)
 				isClickable = false
 				if(SettingsStore.getMapSource(context)) {
-					layerManager.layers.add(getTileLayerLocal(context, model))
+					layerManager.layers.add(getTileLayerLocal(context, model), false)
 				} else {
 					val tileLayerOnline = getTileLayerOnline(context, model)
-					layerManager.layers.add(tileLayerOnline)
+					layerManager.layers.add(tileLayerOnline, false)
 					tileLayerOnline.onResume()
 				}
 				mapScaleBar = null
@@ -479,6 +468,7 @@ fun WorkoutMap(locationSamplesSet: Set<List<WorkoutData.LocationSample>>){
 					var box: BoundingBox? = null
 					locationSamplesSet.forEachIndexed { legIndex, locationSamples ->
 						val latLongs = locationSamples.map { it.toLatLong() }
+						layerManager.layers.add(getStartMarker(latLongs.first()), false)
 						val pathLine = when(legIndex) {
 							0 -> getMapPathLine()
 							1 -> getMapPathLine(ColorLocationCircle)
@@ -486,17 +476,17 @@ fun WorkoutMap(locationSamplesSet: Set<List<WorkoutData.LocationSample>>){
 							else -> getMapPathLine()
 						}
 						latLongs.forEach { pathLine.addPoint(it) }
-						layerManager.layers.add(pathLine)
+						layerManager.layers.add(pathLine, false)
+						getEndMarker(context, latLongs.last())?.let{ layerManager.layers.add(it, false) }
 						box = if(box == null) BoundingBox(latLongs)
 						else box.extendBoundingBox(BoundingBox(latLongs))
 					}
 
 					box?.let {
-						box.extendMeters(50)
 						setCenter(box.centerPoint)
 						setZoomLevel(
 							LatLongUtils.zoomForBounds(
-								Dimension(Main.vw80px, Main.vh80px),
+								Dimension((Main.vw80px*.85).toInt(), (Main.vh80px*.85).toInt()),
 								box,
 								model.displayModel.tileSize
 							).coerceIn(

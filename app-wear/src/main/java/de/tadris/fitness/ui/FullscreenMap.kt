@@ -80,7 +80,7 @@ class FullscreenMapActivity : ComponentActivity() {
                     goBack = { finishAndRemoveTask() },
                     locationSamplesSet =
                         if(workoutData == null) null
-                        else if (workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
+                        else if(workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
                         else workoutData.legs
                             .filter { it.locationSamples.size > 10 }
                             .map { it.locationSamples }
@@ -130,10 +130,10 @@ fun FullscreenMap(
                 AndroidGraphicFactory.createInstance(context)
                 isClickable = true
                 if(SettingsStore.getMapSource(context)) {
-                    layerManager.layers.add(getTileLayerLocal(context, model))
+                    layerManager.layers.add(getTileLayerLocal(context, model), false)
                 } else {
                     val tileLayerOnline = getTileLayerOnline(context, model)
-                    layerManager.layers.add(tileLayerOnline)
+                    layerManager.layers.add(tileLayerOnline, false)
                     tileLayerOnline.onResume()
                 }
 
@@ -158,6 +158,7 @@ fun FullscreenMap(
                     var box: BoundingBox? = null
                     locationSamplesSet?.forEachIndexed { legIndex, locationSamples ->
                         val latLongs = locationSamples.map { it.toLatLong() }
+                        layerManager.layers.add(getStartMarker(latLongs.first()), false)
                         val pathLine = when(legIndex) {
                             0 -> getMapPathLine()
                             1 -> getMapPathLine(ColorLocationCircle)
@@ -165,7 +166,8 @@ fun FullscreenMap(
                             else -> getMapPathLine()
                         }
                         latLongs.forEach { pathLine.addPoint(it) }
-                        layerManager.layers.add(pathLine)
+                        layerManager.layers.add(pathLine, false)
+                        getEndMarker(context, latLongs.last())?.let{ layerManager.layers.add(it, false) }
                         box = if(box == null) BoundingBox(latLongs)
                         else box.extendBoundingBox(BoundingBox(latLongs))
                     }

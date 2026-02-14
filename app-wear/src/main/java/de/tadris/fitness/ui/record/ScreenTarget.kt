@@ -136,7 +136,7 @@ fun ScreenTarget(
 			if(workoutData.primaryTargetType != TargetType.HEART_RATE) {
 				TargetBarSpeed(
 					Modifier.weight(.8f)
-						.padding(horizontal = if (Main.isScreenRound) Main.vw7 else 5.dp)
+						.padding(horizontal = if(Main.isScreenRound) Main.vw7 else 5.dp)
 						.border(1.dp, ColorWhite),
 					target,
 					value = workoutData.speedAvg,

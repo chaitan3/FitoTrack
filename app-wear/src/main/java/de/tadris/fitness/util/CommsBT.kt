@@ -216,14 +216,14 @@ class CommsBT : Service() {
 				logD("CommsBTConnect.run 1 $disconnect")
 				bluetoothSocket = bluetoothServerSocket?.accept()
 				logD("CommsBTConnect.run 2 $disconnect")
-				if (!disconnect) {
+				if(!disconnect) {
 					logD("CommsBTConnect.run accepted")
 					commsBTConnected = CommsBTConnected()
 					commsBTConnected?.start()
 				}
 			} catch (e: Exception) {
 				logD("CommsBTConnect.run Exception: " + e.message)
-				if (!disconnect) logE("CommsBTConnect.run Exception: " + e.message)
+				if(!disconnect) logE("CommsBTConnect.run Exception: " + e.message)
 			}
 		}
 	}
@@ -276,11 +276,11 @@ class CommsBT : Service() {
 
 		suspend fun read() {
 			try {
-				if ((inputStream?.available() ?: 0) < 5) return
+				if((inputStream?.available() ?: 0) < 5) return
 				var lastReadTime = System.currentTimeMillis()
 				var request = ""
 				while(System.currentTimeMillis() - lastReadTime < 3000) {
-					if ((inputStream?.available() ?: 0) == 0) {
+					if((inputStream?.available() ?: 0) == 0) {
 						delay(100)
 						continue
 					}

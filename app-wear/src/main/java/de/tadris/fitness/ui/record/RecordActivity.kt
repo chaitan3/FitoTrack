@@ -33,7 +33,6 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -72,10 +71,10 @@ import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.WorkoutData.SpeedCachePoint
 import de.tadris.fitness.data.WorkoutData.TargetType
 import de.tadris.fitness.data.WorkoutDataStore
+import de.tadris.fitness.data.WorkoutDataStore.writeWorkout
 import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.record.RecordActivity.SensorStatus
 import de.tadris.fitness.ui.workouts.WorkoutActivity
-import de.tadris.fitness.util.LOG_TAG
 import de.tadris.fitness.util.logD
 import de.tadris.fitness.util.logE
 import de.tadris.fitness.util.runInBackground
@@ -174,7 +173,7 @@ class RecordActivity : ComponentActivity() {
 					workoutData.heartRateSamples.clear()
 					workoutData.heartRateSamplesFiltered.clear()
 					WorkoutDataStore.readHeartRates(context = this, workoutData, filter = true)
-					workoutData.heartRateSamplesFiltered.addAll(workoutData.heartRateSamples)//TODO filter for 10 seconds
+					workoutData.heartRateSamplesFiltered.addAll(workoutData.heartRateSamples)
 					workoutData.heartRateSamples.clear()
 				}
 			}
@@ -273,6 +272,9 @@ class RecordActivity : ComponentActivity() {
 
 		currentWorkoutTypeIcon = workoutData.workoutTypeIcon
 		startForegroundService(Intent(this, RecordService::class.java))
+		runInBackground {
+			SettingsStore.storeLastWorkoutType(this, workoutData.workoutType)
+		}
 	}
 	fun pauseResumeClicked() =
 		if(exerciseState.isPaused) exerciseClient.resumeExerciseAsync()
@@ -314,9 +316,6 @@ class RecordActivity : ComponentActivity() {
 				checkpointTime = 0L
 				checkpointDuration = 0L
 			}
-		}
-		runInBackground {
-			SettingsStore.storeLastWorkoutType(this, workoutData.workoutType)
 		}
 	}
 	val restartCallback = object : FutureCallback<Void?> {
@@ -377,11 +376,19 @@ class RecordActivity : ComponentActivity() {
 					workoutData.durationTotal = currentTime - checkpointTime + checkpointDuration
 					if(workoutData.primaryTargetType == TargetType.DURATION && workoutData.primaryTargetValue.toLong() > 0) {
 						updateTargetProgress(workoutData.durationTotal.toFloat()/workoutData.primaryTargetValue.toLong())
-					} else if (targetCheckType == TargetType.DURATION && workoutData.durationTotal > 60000) {
+					} else if(targetCheckType == TargetType.DURATION && workoutData.durationTotal > 60000) {
 						if(workoutData.durationTotal <= targetCheckValue.toLong() * targetProgress.floatValue) {
 							targetCheckJob?.cancel()
 						} else if(targetCheckJob?.isActive != true) {
 							setTargetCheckJob()
+						}
+					}
+					if((workoutData.durationTotal/1000) % 300 == 0L) {
+						workoutData.setDescName()
+						runInBackground { writeWorkout(
+							context = this@RecordActivity,
+							workoutData,
+							onError = { toastFromBG(R.string.error_workout_write) })
 						}
 					}
 					delay(1000 - (workoutData.durationTotal % 1000))
@@ -438,7 +445,7 @@ class RecordActivity : ComponentActivity() {
 							dataPoint.value as Double
 						)
 						heartRate = sample.heartRate
-						//logD("Got heartRate update: $exerciseState $heartRate " + exerciseState.isPaused)
+						//logD("Got heartRate update: $exerciseState $heartRate $exerciseState")
 						if(exerciseState == ACTIVE){
 							workoutData.heartRateSamples.add(sample)
 							if((workoutData.heartRateSamplesFiltered.lastOrNull()?.time ?: 0) < sample.time - 10000) {
@@ -451,15 +458,6 @@ class RecordActivity : ComponentActivity() {
 									targetCheckJob?.cancel()
 								} else if(targetCheckJob?.isActive != true) {
 									setTargetCheckJob()
-								}
-							}
-							if(workoutData.heartRateSamples.size > 1000) {
-								runInBackground {
-									WorkoutDataStore.flushHeartRate(
-										this@RecordActivity,
-										workoutData,
-										onError = { toastFromBG(R.string.error_workout_write) }
-									)
 								}
 							}
 						}
@@ -483,19 +481,9 @@ class RecordActivity : ComponentActivity() {
 							if((workoutData.locationSamplesFiltered.lastOrNull()?.time ?: 0) < sample.time - 10000) {
 								workoutData.locationSamplesFiltered.add(sample)
 							}
-							if(workoutData.locationSamples.size > 1000) {
-								runInBackground {
-									WorkoutDataStore.flushLocations(
-										this@RecordActivity,
-										workoutData,
-										onError = { toastFromBG(R.string.error_workout_write) }
-									)
-								}
-							}
 						}
 					}
-					DataType.ABSOLUTE_ELEVATION ->
-						lastElevation = dataPoint.value as Double
+					DataType.ABSOLUTE_ELEVATION -> lastElevation = dataPoint.value as Double
 					else -> logD("Unknown SampleDataPoint: " + dataPoint.dataType + " dataPoint: $dataPoint")
 				}
 			}
@@ -553,18 +541,18 @@ class RecordActivity : ComponentActivity() {
 	}
 
 	fun updateLastSpeed() {
-		if (lastLocationTime == 0L || workoutData.distanceTotal == 0) return
+		if(lastLocationTime == 0L || workoutData.distanceTotal == 0) return
 		speedCache.add(SpeedCachePoint(lastLocationTime, workoutData.distanceTotal))
-		if (speedCache.size < 10) return  //wait for the speed cache to fill up a bit
+		if(speedCache.size < 10) return  //wait for the speed cache to fill up a bit
 		var distanceDiff = (workoutData.distanceTotal - speedCache[0].distance).toDouble() //meters
 		val timeDiff = (lastLocationTime - speedCache[0].timestamp).toDouble() //milliseconds
-		if (distanceDiff < 4 || timeDiff < 1) {
+		if(distanceDiff < 4 || timeDiff < 1) {
 			lastSpeed = 0.0
 			return
 		}
 		lastSpeed = (distanceDiff * 1000) / timeDiff //meters/second
 
-		if (lastSpeed > workoutData.speedMax) workoutData.speedMax = lastSpeed
+		if(lastSpeed > workoutData.speedMax) workoutData.speedMax = lastSpeed
 		while (speedCache.size > 30 && distanceDiff > 200.0) {
 			speedCache.removeAt(0)
 			distanceDiff = (workoutData.distanceTotal - speedCache[0].distance).toDouble()
@@ -781,12 +769,12 @@ class RecordActivity : ComponentActivity() {
 	val requestPermissions =
 		registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
 			permissions.entries.forEach {
-				if (it.value && it.key == Manifest.permission.ACCESS_FINE_LOCATION)
+				if(it.value && it.key == Manifest.permission.ACCESS_FINE_LOCATION)
 					locationStatus = SensorStatus.UNAVAILABLE
-				if (it.value && it.key == Manifest.permission.BODY_SENSORS)
+				if(it.value && it.key == Manifest.permission.BODY_SENSORS)
 					heartRateStatus = SensorStatus.UNAVAILABLE
 			}
-			if (locationStatus == SensorStatus.UNAVAILABLE ||
+			if(locationStatus == SensorStatus.UNAVAILABLE ||
 				heartRateStatus == SensorStatus.UNAVAILABLE
 			) prepareExercise()
 		}

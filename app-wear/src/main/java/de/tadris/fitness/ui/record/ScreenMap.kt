@@ -74,6 +74,7 @@ import de.tadris.fitness.ui.FOTTheme
 import de.tadris.fitness.ui.Main
 import de.tadris.fitness.ui.TargetProgress
 import de.tadris.fitness.ui.getMapPathLine
+import de.tadris.fitness.ui.getStartMarker
 import de.tadris.fitness.ui.getTileLayerLocal
 import de.tadris.fitness.ui.getTileLayerOnline
 import de.tadris.fitness.ui.record.RecordActivity.TargetAchieved
@@ -209,10 +210,10 @@ fun ScreenMap(
 					isClickable = true
 
 					if(SettingsStore.getMapSource(context)) {
-						layerManager.layers.add(getTileLayerLocal(context, model))
+						layerManager.layers.add(getTileLayerLocal(context, model), false)
 					} else {
 						tileLayerOnline = getTileLayerOnline(context, model)
-						layerManager.layers.add(tileLayerOnline)
+						layerManager.layers.add(tileLayerOnline, false)
 						tileLayerOnline.onResume()
 					}
 					val scaleBar = DefaultMapScaleBar(
@@ -233,8 +234,9 @@ fun ScreenMap(
 					isFocusable = true
 					isFocusableInTouchMode = true
 
-					layerManager.layers.add(pathLine)
-					layerManager.layers.add(locationMarker)
+					layerManager.layers.add(getStartMarker(latLongs.first()), false)
+					layerManager.layers.add(pathLine, false)
+					layerManager.layers.add(locationMarker, false)
 					addInputListener(mapInputListener)
 
 					post {
@@ -248,10 +250,11 @@ fun ScreenMap(
 			}
 		)
 	}
+	val osmCopyright = stringResource(R.string.osm_copyright)
 	if(Main.isScreenRound){
 		CurvedLayout(modifier = Modifier.fillMaxSize(), anchor = 35f) {
 			curvedText(
-				text = context.getString(R.string.osm_copyright),
+				text = osmCopyright,
 				color = ColorBlack,
 				fontSize = 8.sp,
 				angularDirection = CurvedDirection.Angular.CounterClockwise
@@ -260,7 +263,7 @@ fun ScreenMap(
 	} else {
 		Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
 			Text(
-				text = stringResource(R.string.osm_copyright),
+				text = osmCopyright,
 				color = ColorBlack,
 				fontSize = 8.sp
 			)
@@ -278,9 +281,7 @@ fun ScreenMap(
 			}
 		) {
 			Icon(
-				modifier = Modifier
-					.size(48.dp)
-					.padding(4.dp),
+				modifier = Modifier.size(48.dp).padding(4.dp),
 				imageVector = ImageVector.vectorResource(
 					when(mapCenter.value){
 						MapCenter.POSITION -> R.drawable.ic_map_center_pos
