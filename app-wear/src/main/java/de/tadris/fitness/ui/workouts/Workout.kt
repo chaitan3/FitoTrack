@@ -142,9 +142,10 @@ fun Workout(
 ){
 	val context = LocalContext.current
 	val columnState = rememberTransformingLazyColumnState()
-	var showMap by remember { mutableStateOf<Boolean?>(null) }
-	var showSpeedChart by remember { mutableStateOf<Boolean?>(null) }
-	var showElevationChart by remember { mutableStateOf<Boolean?>(null) }
+	var locationSamplesAvailable by remember { mutableStateOf(false) }
+	var showMap by remember { mutableStateOf(false) }
+	var showSpeedChart by remember { mutableStateOf(false) }
+	var showElevationChart by remember { mutableStateOf(false) }
 	var showHeartRateChart by remember { mutableStateOf<Boolean?>(null) }
 	var delWorkout by remember { mutableStateOf(false) }
 	var resume = false
@@ -227,18 +228,18 @@ fun Workout(
 							if(workoutData.distanceTotal >= 1000) " km" else " m"
 					)
 				}
-				when(showMap) {
-					null -> item {
+				if(!showMap){
+					item {
 						TextButton(
 							modifier = Modifier.fillMaxWidth(),
-							onClick = { showMap = workoutData.locationSamples.isNotEmpty() }
+							onClick = { showMap = true }
 						) { Text(text = stringResource(R.string.show_map)) }
 					}
-					false -> {
-						readLocations { showMap = true }
-						item { Text(text = stringResource(R.string.loading)) }
-					}
-					true -> item {
+				}else if(!locationSamplesAvailable){
+					readLocations { locationSamplesAvailable = true }
+					item { Text(text = stringResource(R.string.loading)) }
+				}else{
+					item {
 						Box(modifier = Modifier.clickable { onFullscreenMap() }) {
 							WorkoutMap(locationSamplesSet =
 								if(workoutData.legs.isEmpty()) setOf(workoutData.locationSamples)
@@ -259,54 +260,52 @@ fun Workout(
 					)
 				) }
 
-				when(showSpeedChart) {
-					null -> item {
+				if(!showSpeedChart){
+					item {
 						if(workoutData.workoutType == WorkoutType.MULTISPORT) return@item
 						TextButton(
 							modifier = Modifier.fillMaxWidth(),
-							onClick = { showSpeedChart = workoutData.locationSamples.isNotEmpty() }
+							onClick = { showSpeedChart = true }
 						) { Text(text = stringResource(R.string.show_chart)) }
 					}
-					false -> {
-						readLocations { showSpeedChart = true }
-						item { Text(text = stringResource(R.string.loading)) }
+				}else if(!locationSamplesAvailable){
+					readLocations { locationSamplesAvailable = true }
+					item { Text(text = stringResource(R.string.loading)) }
+				}else{
+					if(workoutData.primaryTargetType == TargetType.SPEED) {
+						item { Text(text = stringResource(R.string.target_kmh,
+							workoutData.primaryTargetValue.toDouble().prettySpeed()
+						)) }
 					}
-					true -> {
-						if(workoutData.primaryTargetType == TargetType.SPEED) {
-							item { Text(text = stringResource(R.string.target_kmh,
-								workoutData.primaryTargetValue.toDouble().prettySpeed()
-							)) }
+					if(workoutData.secondaryTargetType == TargetType.SPEED) {
+						item { Text(text = stringResource(R.string.target_kmh,
+							workoutData.secondaryTargetValue.toDouble().prettySpeed()
+						)) }
+					}
+					item {
+						val skipFrames = remember(workoutData.locationSamples.size) {
+							maxOf(5, workoutData.locationSamples.size / Main.vw80px)
 						}
-						if(workoutData.secondaryTargetType == TargetType.SPEED) {
-							item { Text(text = stringResource(R.string.target_kmh,
-								workoutData.secondaryTargetValue.toDouble().prettySpeed()
-							)) }
+						val chartData = remember(workoutData.locationSamples.size) {
+							workoutData.locationSamples
+								.filterIndexed { i, it -> i % skipFrames == 0 && it.speed > 0.0 }
+								.map { ChartData(it.time.timeToDuration(), it.speed) }
 						}
-						item {
-							val skipFrames = remember(workoutData.locationSamples.size) {
-								maxOf(5, workoutData.locationSamples.size / Main.vw80px)
-							}
-							val chartData = remember(workoutData.locationSamples.size) {
-								workoutData.locationSamples
-									.filterIndexed { i, it -> i % skipFrames == 0 && it.speed > 0.0 }
-									.map { ChartData(it.time.timeToDuration(), it.speed) }
-							}
-							Row(Modifier.size(width = Main.vw80, height = Main.vh50)) {
-								Chart(
-									data = chartData,
-									target1 =
-										if(workoutData.primaryTargetType == TargetType.SPEED)
-											workoutData.primaryTargetValue.toDouble()
-										else null,
-									target2 =
-										if(workoutData.secondaryTargetType == TargetType.SPEED)
-											workoutData.secondaryTargetValue.toDouble()
-										else null,
-									yMinInit = 0.0,
-									yMaxInit = 1.11,
-									isSpeed = true
-								)
-							}
+						Row(Modifier.size(width = Main.vw80, height = Main.vh50)) {
+							Chart(
+								data = chartData,
+								target1 =
+									if(workoutData.primaryTargetType == TargetType.SPEED)
+										workoutData.primaryTargetValue.toDouble()
+									else null,
+								target2 =
+									if(workoutData.secondaryTargetType == TargetType.SPEED)
+										workoutData.secondaryTargetValue.toDouble()
+									else null,
+								yMinInit = 0.0,
+								yMaxInit = 1.11,
+								isSpeed = true
+							)
 						}
 					}
 				}
@@ -321,8 +320,8 @@ fun Workout(
 							,workoutData.elevationLossTotal
 						)
 					) }
-					when(showElevationChart) {
-						null -> item {
+					if(!showElevationChart){
+						item {
 							if(workoutData.workoutType == WorkoutType.MULTISPORT) return@item
 							TextButton(
 								modifier = Modifier.fillMaxWidth(),
@@ -331,27 +330,25 @@ fun Workout(
 								}
 							) { Text(text = stringResource(R.string.show_chart)) }
 						}
-						false -> {
-							readLocations { showElevationChart = true }
-							item { Text(text = stringResource(R.string.loading)) }
-						}
-						true -> {
-							item {
-								val skipFrames = remember(workoutData.locationSamples.size) {
-									maxOf(5, workoutData.locationSamples.size / Main.vw80px)
-								}
-								val chartData = remember(workoutData.locationSamples.size) {
-									workoutData.locationSamples
-										.filterIndexed { i, it -> i % skipFrames == 0 && it.ele != 0.0 }
-										.map { ChartData(it.time.timeToDuration(), it.ele) }
-								}
-								Row(Modifier.size(width = Main.vw80, height = Main.vh50)) {
-									Chart(
-										data = chartData,
-										yMinInit = chartData.firstOrNull()?.value ?: 0.0,
-										yMaxInit = chartData.firstOrNull()?.value ?: 10.0
-									)
-								}
+					}else if(!locationSamplesAvailable){
+						readLocations { showElevationChart = true }
+						item { Text(text = stringResource(R.string.loading)) }
+					}else{
+						item {
+							val skipFrames = remember(workoutData.locationSamples.size) {
+								maxOf(5, workoutData.locationSamples.size / Main.vw80px)
+							}
+							val chartData = remember(workoutData.locationSamples.size) {
+								workoutData.locationSamples
+									.filterIndexed { i, it -> i % skipFrames == 0 && it.ele != 0.0 }
+									.map { ChartData(it.time.timeToDuration(), it.ele) }
+							}
+							Row(Modifier.size(width = Main.vw80, height = Main.vh50)) {
+								Chart(
+									data = chartData,
+									yMinInit = chartData.firstOrNull()?.value ?: 0.0,
+									yMaxInit = chartData.firstOrNull()?.value ?: 10.0
+								)
 							}
 						}
 					}

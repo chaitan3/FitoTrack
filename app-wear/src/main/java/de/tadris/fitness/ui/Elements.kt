@@ -137,7 +137,8 @@ fun Field(
 			Icon(
 				modifier = Modifier.weight(unitIconWeight),
 				imageVector = ImageVector.vectorResource(unitIcon),
-				contentDescription = "unit icon"
+				contentDescription = "unit icon",
+				tint = if (isActive) ColorWhite else ColorInactive
 			)
 		}
 	}

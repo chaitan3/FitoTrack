@@ -197,6 +197,7 @@ class RecordActivity : ComponentActivity() {
 	}
 
 	fun prepareExercise() {
+		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 		try {
 			if(locationStatus == SensorStatus.UNAVAILABLE &&
 				!(getSystemService(LOCATION_SERVICE) as LocationManager)
@@ -665,6 +666,7 @@ class RecordActivity : ComponentActivity() {
 			if(status == TextToSpeech.SUCCESS) {
 				textToSpeech?.setOnUtteranceProgressListener(object: UtteranceProgressListener() {
 					override fun onStart(utteranceId: String?) {}
+					@Deprecated("Deprecated in Java")
 					override fun onError(utteranceId: String?) {//Deprecated, but cannot be removed...
 						logE("RecordActivity.initTextToSpeech.onError")
 						audioManager.abandonAudioFocusRequest(audioFocusRequest)
