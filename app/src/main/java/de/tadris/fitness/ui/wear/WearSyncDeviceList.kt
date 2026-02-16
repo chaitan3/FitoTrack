@@ -19,10 +19,8 @@
 package de.tadris.fitness.ui.wear
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothDevice
-import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -83,6 +81,7 @@ class WearSyncDeviceList : Fragment() {
 						val knownDevices: Set<BluetoothDevice> = CommsBT.knownDevices
 						CoroutineScope(Dispatchers.Main).launch {
 							title.setText(R.string.wear_device_select_title)
+							list.removeAllViews()
 							knownDevices.forEach{ deviceFound(known, it) }
 							showList()
 						}
@@ -119,11 +118,9 @@ class WearSyncDeviceList : Fragment() {
 			return
 		}
 		CoroutineScope(Dispatchers.Main).launch {
-			list.let { layout ->
-				layout.removeAllViews()
-				bluetoothDevices.forEach{ bluetoothDevice -> deviceFound(layout, bluetoothDevice) }
-				showList()
-			}
+			list.removeAllViews()
+			bluetoothDevices.forEach{ deviceFound(list, it) }
+			showList()
 		}
 	}
 
