@@ -149,7 +149,7 @@
     <string name="avgSpeedTotalLong">Meánluas san iomlán</string>
     <string name="unitKilometersPerHour">Ciliméadair san uair</string>
     <string name="unitMetersPerSecond">Méadair in aghaidh an tsoicind</string>
-    <string name="unitHeartBeatsPerMinute">BPMName</string>
+    <string name="unitHeartBeatsPerMinute">bpm</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="speedLastMinuteSpoken">Luas laistigh den nóiméad deireanach</string>
     <string name="cannotFindWorkout">Ní féidir workout a aimsiú</string>
