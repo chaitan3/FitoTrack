@@ -19,7 +19,9 @@
 
 package de.tadris.fitness.recording.component
 
+import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.recording.RecorderService
+import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.event.RouteSampleEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -42,6 +44,13 @@ abstract class LastSampleTimeComponent : RecorderServiceComponent {
     @Subscribe
     fun onNewRouteSample(e: RouteSampleEvent) {
         lastSampleTime = System.currentTimeMillis()
+    }
+
+    @Subscribe
+    fun onNewRepetitionSample(e: RepetitionSampleEvent){
+        if(service.stateHolder.recordingType == RecordingType.INDOOR){
+            lastSampleTime = System.currentTimeMillis()
+        }
     }
 
 }

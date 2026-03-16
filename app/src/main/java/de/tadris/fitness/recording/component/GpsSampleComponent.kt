@@ -71,6 +71,7 @@ class GpsSampleComponent : RecorderServiceComponent {
             val sample = createSampleFromLocation(location)
             saveSample(sample)
             EventBus.getDefault().post(RouteSampleEvent(sample))
+            this.lastSample = sample
         }
     }
 
