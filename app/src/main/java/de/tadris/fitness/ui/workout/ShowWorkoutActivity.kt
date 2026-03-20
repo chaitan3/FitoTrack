@@ -159,10 +159,9 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
             mapRoot.setOnClickListener { v: View? -> startFullscreenMapActivity() }
         }
 
-
-        addTitle(getString(R.string.workoutSpeed))
-
         if (data.hasRouteData) {
+            addTitle(getString(R.string.workoutSpeed))
+
             addKeyValue(
                 getString(R.string.avgSpeedInMotion),
                 distanceUnitUtils.getSpeed(workout.averageSpeedActive),
@@ -179,11 +178,6 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
             addTitle(getString(R.string.histogram))
             addSpeedHistogram()
-        } else {
-            addKeyValue(
-                getString(R.string.workoutAvgSpeedShort),
-                distanceUnitUtils.getSpeed(workout.averageSpeedActive)
-            )
         }
 
         if (data.hasRepetitions) {

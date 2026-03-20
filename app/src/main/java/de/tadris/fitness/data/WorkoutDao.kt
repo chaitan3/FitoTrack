@@ -103,6 +103,30 @@ interface WorkoutDao {
         }
     }
 
+    @Transaction
+    fun updateWorkoutData(data: WorkoutData){
+        updateWorkout(data.workout)
+        for (sample in data.samples) {
+            updateSample(sample)
+        }
+
+        for (pause in data.pauses) {
+            updatePause(pause)
+        }
+
+        for (event in data.events) {
+            updateWorkoutEvent(event)
+        }
+
+        for (repetitionSample in data.repetitionSamples) {
+            updateSample(repetitionSample)
+        }
+
+        for (heartRateSample in data.heartRateSamples) {
+            updateSample(heartRateSample)
+        }
+    }
+
     @Insert
     fun insertWorkoutAndSamples(workout: Workout, samples: Array<RouteSample>)
 
@@ -138,6 +162,18 @@ interface WorkoutDao {
 
     @Update
     fun updateSample(sample: RouteSample)
+
+    @Update
+    fun updateSample(sample: HeartRateSample)
+
+    @Update
+    fun updateSample(sample: RepetitionSample)
+
+    @Update
+    fun updatePause(pause: WorkoutPause)
+
+    @Update
+    fun updateWorkoutEvent(event: WorkoutEvent)
 
     @Update
     fun updateRepetitionSample(sample: RepetitionSample)

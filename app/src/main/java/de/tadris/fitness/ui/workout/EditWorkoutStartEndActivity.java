@@ -35,6 +35,7 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.WorkoutCutter;
 import de.tadris.fitness.map.SimpleColoringStrategy;
 import de.tadris.fitness.map.WorkoutLayer;
 
@@ -155,7 +156,8 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
         if (item.getItemId() == R.id.actionMoveApply) {
             if (selectedStartSample != null || selectedEndSample != null){
-                // TODO do somthing like cutting the workout
+                // Cut workout
+                new WorkoutCutter(this, data, selectedStartSample, selectedEndSample).save();
 
                 Intent intent=new Intent();
                 setResult(INTENT_RESULT_CODE_WORKOUT_MODIFIED,intent);
