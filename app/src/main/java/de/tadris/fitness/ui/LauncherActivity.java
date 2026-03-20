@@ -105,6 +105,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
                     init();
                 });
             } catch (Exception e) {
+                e.printStackTrace();
                 runOnUiThread(() -> showErrorDialog(e));
             }
         }).start();

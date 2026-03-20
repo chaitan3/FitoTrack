@@ -22,7 +22,6 @@ import android.content.Context
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -61,13 +60,13 @@ data class Workout(
 
     val pauseDuration get() = totalDuration - activeDuration // ms
 
-    val averageSpeedActive get() = distance / (activeDuration / 1000.0) // m/s
+    val averageSpeedActive get() = if (activeDuration > 0) distance / (activeDuration / 1000.0) else 0.0 // m/s
 
-    val averageSpeedTotal get() = distance / (totalDuration / 1000.0) // m/s
+    val averageSpeedTotal get() = if (activeDuration > 0) distance / (totalDuration / 1000.0) else 0.0 // m/s
 
-    val averagePaceActive get() = (activeDuration / 1000.0 / 60.0) / (distance / 1000.0) // min/km
+    val averagePaceActive get() = if (distance > 0) (activeDuration / 1000.0 / 60.0) / (distance / 1000.0) else 0.0 // min/km
 
-    val averageFrequency get() = repetitions / (activeDuration / 1000.0)
+    val averageFrequency get() = if (activeDuration > 0) repetitions / (activeDuration / 1000.0) else 0.0
 
     // returns a file name string without suffix that can be used for exports
     fun getExportFileName(context: Context?): String {
