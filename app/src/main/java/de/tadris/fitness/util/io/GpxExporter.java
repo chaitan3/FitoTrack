@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
+import de.tadris.fitness.data.HeartRateSample;
 import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutData;
@@ -47,7 +48,7 @@ import de.tadris.fitness.util.io.general.IWorkoutExporter;
 
 public class GpxExporter implements IWorkoutExporter {
 
-    @SuppressLint("SimpleDateFormat") // This has nothing to do with localisation
+    @SuppressLint("SimpleDateFormat") // This has nothing to do with localization
     public final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     public GpxExporter() {
@@ -76,23 +77,23 @@ public class GpxExporter implements IWorkoutExporter {
         Workout workout = data.getWorkout();
         Track track = new Track();
         track.setNumber(number);
-        track.setName(workout.toString());
+        track.setName(workout.getComment());
         track.setCmt(workout.getComment());
         track.setDesc(workout.getComment());
         track.setSrc("FitoTrack");
         track.setType(workout.getWorkoutTypeId());
-        track.setTrkseg(new ArrayList<>());
 
         TrackSegment segment = new TrackSegment();
         ArrayList<TrackPoint> trkpt = new ArrayList<>();
 
         for (RouteSample sample : data.getSamples()) {
+            int hr = getHeartRateAt(data, sample.getTimestamp()); // yes, this is O(n²) - sorry. but you can fix it ;)
             trkpt.add(new TrackPoint(
                     sample.getLatitude(),
                     sample.getLongitude(),
-                    sample.getElevation(),
+                    sample.getElevationMSL(),
                     getDateTime(sample.getTimestamp()),
-                    new TrackPointExtensions(sample.getSpeed(), new GpxTpxExtension(0)) // TODO get HR
+                    new TrackPointExtensions(sample.getSpeed(), new GpxTpxExtension(hr))
             ));
         }
         segment.setTrkpt(trkpt);
@@ -102,6 +103,15 @@ public class GpxExporter implements IWorkoutExporter {
         track.setTrkseg(segments);
 
         return track;
+    }
+
+    private int getHeartRateAt(WorkoutData data, long time){
+        for(HeartRateSample sample : data.getHeartRateSamples()){
+            if(sample.getTimestamp() > time){ // find first sample whose time is greater than input time
+                return sample.getHeartRate();
+            }
+        }
+        return 0;
     }
 
     private String getDateTime(long time) {

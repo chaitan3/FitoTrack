@@ -98,8 +98,8 @@ data class Workout(
     val safeComment: String
         get() {
             if (comment == null) return ""
-            val safeComment = comment!!.replace(
-                "\\P{LD}".toRegex(),
+            val safeComment = comment.replace(
+                "[^\\p{L}\\p{Nd}]".toRegex(),
                 "_"
             ) // leave Unicode letters & digits, replace other chars by "_"
             return safeComment.substring(
@@ -110,7 +110,7 @@ data class Workout(
 
     @JsonIgnore
     fun getSafeWorkoutTypeTitle(context: Context?): String {
-        return getWorkoutType(context).title.replace("\\P{LD}".toRegex(), "_")
+        return getWorkoutType(context).title.replace("[^\\p{L}\\p{Nd}]".toRegex(), "_")
     }
 
     @JsonIgnore

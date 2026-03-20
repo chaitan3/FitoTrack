@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
  * @property id ID
  * @property startDate Start of pause
  * @property endDate End of pause
- * @property userInitiated true if the pause was initiated manually by the user, false for automatic pauses
+ * @property userInitiated true if the pause was initiated manually by the user, false for automatic pauses. Will default to false if unknown
  */
 @Entity(
     tableName = "workout_pause",

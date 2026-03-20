@@ -22,6 +22,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 
 @Dao
@@ -76,6 +77,31 @@ interface WorkoutDao {
 
     @Query("SELECT * FROM route_sample")
     fun getSamples(): Array<RouteSample>
+
+
+    @Transaction
+    fun insertWorkoutData(data: WorkoutData){
+        insertWorkout(data.workout)
+        for (sample in data.samples) {
+            insertSample(sample)
+        }
+
+        for (pause in data.pauses) {
+            insertPause(pause)
+        }
+
+        for (event in data.events) {
+            insertWorkoutEvent(event)
+        }
+
+        for (repetitionSample in data.repetitionSamples) {
+            insertSample(repetitionSample)
+        }
+
+        for (heartRateSample in data.heartRateSamples) {
+            insertSample(heartRateSample)
+        }
+    }
 
     @Insert
     fun insertWorkoutAndSamples(workout: Workout, samples: Array<RouteSample>)

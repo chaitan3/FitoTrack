@@ -16,149 +16,156 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.tadris.fitness.util.io
 
-package de.tadris.fitness.util.io;
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.github.sisyphsu.dateparser.DateParserUtils
+import de.tadris.fitness.data.HeartRateSample
+import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.util.gpx.Gpx
+import de.tadris.fitness.util.gpx.Track
+import de.tadris.fitness.util.gpx.TrackPointExtensions
+import de.tadris.fitness.util.gpx.TrackSegment
+import de.tadris.fitness.util.io.general.IWorkoutImporter
+import de.tadris.fitness.util.io.general.IWorkoutImporter.WorkoutImportResult
+import java.io.IOException
+import java.io.InputStream
+import java.util.Date
+import java.util.UUID
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.sisyphsu.dateparser.DateParserUtils;
+class GpxImporter : IWorkoutImporter {
+    private lateinit var gpx: Gpx
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+    @Throws(IOException::class)
+    override fun readWorkouts(input: InputStream?): WorkoutImportResult {
+        getGpx(input)
 
-import de.tadris.fitness.data.WorkoutData;
-import de.tadris.fitness.util.gpx.Gpx;
-import de.tadris.fitness.util.gpx.Track;
-import de.tadris.fitness.util.io.general.IWorkoutImporter;
+        require(
+            !(gpx.getTrk().isEmpty()
+                    || gpx.getTrk()[0].getTrkseg().isEmpty()
+                    || gpx.getTrk()[0].getTrkseg()[0].getTrkpt().isEmpty())
+        ) { "given GPX file does not contain location data" }
 
-public class GpxImporter implements IWorkoutImporter {
-
-    private Gpx gpx;
-
-    @Override
-    public WorkoutImportResult readWorkouts(InputStream input) throws IOException {
-        getGpx(input);
-
-        if (gpx.getTrk().size() == 0
-                || gpx.getTrk().get(0).getTrkseg().size() == 0
-                || gpx.getTrk().get(0).getTrkseg().get(0).getTrkpt().size() == 0) {
-            throw new IllegalArgumentException("given GPX file does not contain location data");
+        val workouts = mutableListOf<WorkoutData>()
+        for (track in gpx.getTrk()) {
+            workouts.add(getWorkoutDataFromTrack(track))
         }
 
-        List<WorkoutData> workouts = new ArrayList<>();
-        for (Track track : gpx.getTrk()) {
-            // TODO workouts.add(getWorkoutDataFromTrack(track));
-        }
-
-        return new WorkoutImportResult(workouts);
+        return WorkoutImportResult(workouts)
     }
 
-    private void getGpx(InputStream input) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        mapper.configure(JsonParser.Feature.IGNORE_UNDEFINED, true);
-        gpx = mapper.readValue(input, Gpx.class);
+    @Throws(IOException::class)
+    private fun getGpx(input: InputStream?) {
+        val mapper = XmlMapper()
+        mapper.configure(JsonParser.Feature.IGNORE_UNDEFINED, true)
+        gpx = mapper.readValue(input, Gpx::class.java)
     }
 
-    /*TODO private WorkoutData getWorkoutDataFromTrack(Track track) {
-        TrackSegment firstSegment = track.getTrkseg().get(0);
-        TrackPoint firstPoint = firstSegment.getTrkpt().get(0);
+    private fun getWorkoutDataFromTrack(track: Track): WorkoutData {
+        val firstSegment = track.getTrkseg().first()
+        val firstPoint = firstSegment.getTrkpt().first()
 
-        GpsWorkout workout = new GpsWorkout();
-        workout.comment = track.getName();
-        if (workout.comment == null) {
-            workout.comment = track.getDesc();
-        }
-        if (gpx.getMetadata() != null) {
-            if (workout.comment == null) {
-                workout.comment = gpx.getMetadata().getName();
-            }
-            if (workout.comment == null) {
-                workout.comment = gpx.getMetadata().getDesc();
-            }
-        }
-
-        String startTime = firstPoint.getTime();
+        val startTime = firstPoint.time
 
         if (startTime == null || startTime.isEmpty()) {
-            throw new RuntimeException("The GPX file doesn't include timestamps.");
+            throw RuntimeException("The GPX file doesn't include timestamps.")
         }
 
-        workout.start = parseDate(startTime).getTime();
+        val index = firstSegment.getTrkpt().size
+        val lastTime = firstSegment.getTrkpt()[index - 1].time
+        val start = parseDate(startTime).time
+        val end = parseDate(lastTime).time
 
-        int index = firstSegment.getTrkpt().size();
-        String lastTime = firstSegment.getTrkpt().get(index - 1).getTime();
-        workout.end = parseDate(lastTime).getTime();
-        workout.duration = workout.end - workout.start;
-        String extractedWorkoutTypeId = getTypeIdById(gpx.getTrk().get(0).getType());
-        if (!extractedWorkoutTypeId.isEmpty()) {
-            workout.workoutTypeId = extractedWorkoutTypeId;
-        }
+        val routeSamples = track.getRouteSamples()
 
-        List<RouteSample> samples = getSamplesFromTrack(workout.start, gpx.getTrk().get(0));
+        val heartRateSamples = track.getHrSamples()
 
-        return new WorkoutData(workout, samples);
+        val workout = Workout(
+            id = -1,
+            uuid = UUID.randomUUID().toString(),
+            start = start,
+            end = end,
+            activeDuration = end - start,
+            comment = track.getComment(),
+            distance = 0.0,
+            repetitions = 0,
+            energy = 0.0,
+            workoutTypeId = track.getTypeId(),
+            intervalSetUsedId = -1,
+        )
+
+        return WorkoutData(
+            workout = workout,
+            samples = routeSamples,
+            pauses = emptyList(),
+            events = emptyList(),
+            repetitionSamples = emptyList(),
+            heartRateSamples = heartRateSamples
+        )
     }
 
-    private static List<RouteSample> getSamplesFromTrack(long startTime, Track track) {
-        List<RouteSample> samples = new ArrayList<>();
+    private fun Track.getRouteSamples() = trkseg.asSequence().flatMap { it.trkpt }.map { point ->
+        RouteSample(
+            workoutId = -1,
+            id = -1,
+            timestamp = parseDate(point.time).time,
+            relativeTime = -1,
+            latitude = point.lat,
+            longitude = point.lon,
+            elevation = point.ele,
+            elevationMSL = point.ele, // MSL from GPX
+            speed = point.extensions?.speed ?: 0.0,
+            pressure = -1f
+        )
+    }.toList()
 
-        for (TrackSegment segment : track.getTrkseg()) {
-            samples.addAll(getSamplesFromTrackSegment(startTime, segment));
-        }
+    private fun Track.getHrSamples() = trkseg.asSequence().flatMap { it.trkpt }.mapNotNull { point ->
+        val hr = point.extensions?.gpxTpxExtension?.hr ?: 0
+        return@mapNotNull if(hr > 0){
+            HeartRateSample(
+                workoutId = -1,
+                id = -1,
+                timestamp = parseDate(point.time).time,
+                relativeTime = -1,
+                heartRate = hr
+            )
+        } else null
+    }.toList()
 
-        return samples;
+    private fun Track.getTypeId() = getTypeIdById(getType())
+
+    private fun Track.getComment() = when {
+        name != null -> name
+        desc != null -> desc
+        gpx.metadata?.name != null -> gpx.metadata.name
+        gpx.metadata?.desc != null -> gpx.metadata.desc
+        else -> null
     }
 
-    private static List<RouteSample> getSamplesFromTrackSegment(long startTime, TrackSegment segment) {
-        List<RouteSample> samples = new ArrayList<>();
-        for (TrackPoint point : segment.getTrkpt()) {
-            RouteSample sample = new RouteSample();
-            sample.absoluteTime = parseDate(point.getTime()).getTime();
-            sample.elevation = point.getEle();
-            sample.latitude = point.getLat();
-            sample.longitude = point.getLon();
-            sample.relativeTime = sample.absoluteTime - startTime;
-            TrackPointExtensions extensions = point.getExtensions();
-            if (extensions != null) {
-                sample.speed = extensions.getSpeed();
-                if (extensions.getGpxTpxExtension() != null) {
-                    sample.heartRate = extensions.getGpxTpxExtension().getHr();
-                }
+    companion object {
+
+        private fun parseDate(str: String): Date {
+            try {
+                // Need parseCalendar because parseDate seems to be corrupted.
+                // The hour is always one lesser than the original time.
+                return DateParserUtils.parseCalendar(str).getTime()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw RuntimeException("Cannot parse timestamps: " + e.message, e.cause)
             }
-            samples.add(sample);
         }
-        return samples;
-    }*/
 
-    private static Date parseDate(String str) {
-        try {
-            // Need parseCalendar because parseDate seems to be corrupted.
-            // The hour is always one lesser then the original time.
-            return DateParserUtils.parseCalendar(str).getTime();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Cannot parse timestamps: " + e.getMessage(), e.getCause());
-        }
-    }
-
-    private static String getTypeIdById(String id) {
-        if (id == null) {
-            id = "";
-        }
-        switch (id) {
-            // Strava IDs
-            case "1":
-                return "running";
-            case "2":
-                return "cycling";
-            case "11":
-                return "walking";
-
-            default:
-                return id;
+        private fun getTypeIdById(id: String?): String {
+            return when (id) {
+                null -> ""
+                "1" -> "running"
+                "2" -> "cycling"
+                "11" -> "walking"
+                else -> id
+            }
         }
     }
 }

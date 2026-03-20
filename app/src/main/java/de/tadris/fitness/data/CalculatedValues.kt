@@ -25,7 +25,7 @@ import kotlin.math.min
 class CalculatedValues(private val data: WorkoutData) {
 
     companion object {
-        const val ASCENT_FLOATING_CONSTANT = 1.0 // meter
+        const val ASCENT_FLOATING_CONSTANT = 2.0 // meter
         const val ROUNDED_ELEVATION_WINDOW = 5
     }
 

@@ -25,9 +25,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.List;
 
+import de.tadris.fitness.Instance;
+import de.tadris.fitness.data.AppDatabase;
 import de.tadris.fitness.data.WorkoutData;
+import de.tadris.fitness.util.io.ImportWorkoutSaver;
 
 public interface IWorkoutImporter {
     class WorkoutImportResult {
@@ -46,12 +50,12 @@ public interface IWorkoutImporter {
     default int importWorkout(Context context, InputStream input) throws IOException {
         WorkoutImportResult importResult = readWorkouts(input);
         for (WorkoutData data : importResult.workouts) {
-            // TODO new ImportWorkoutSaver(context, data).saveWorkout();
+            new ImportWorkoutSaver(context, data).save();
         }
         return importResult.workouts.size();
     }
 
     default int importWorkout(Context context, File file) throws IOException {
-        return importWorkout(context, new FileInputStream(file));
+        return importWorkout(context, Files.newInputStream(file.toPath()));
     }
 }

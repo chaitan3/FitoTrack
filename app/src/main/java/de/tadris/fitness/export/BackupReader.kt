@@ -184,33 +184,9 @@ class BackupReader(
     private fun restoreWorkout(zipStream: ZipInputStream) {
         val workoutData = mapper.readValue(zipStream, WorkoutData::class.java)
 
-        val workout = workoutData.workout
-        val workoutId = workout.id
-
         // Only import unknown workouts on merge
-        if (replace || database.workoutDao().findById(workoutId) == null) {
-            database.workoutDao().insertWorkout(workout)
-
-            // Insert all related data
-            for (sample in workoutData.samples) {
-                database.workoutDao().insertSample(sample)
-            }
-
-            for (pause in workoutData.pauses) {
-                database.workoutDao().insertPause(pause)
-            }
-
-            for (event in workoutData.events) {
-                database.workoutDao().insertWorkoutEvent(event)
-            }
-
-            for (repetitionSample in workoutData.repetitionSamples) {
-                database.workoutDao().insertSample(repetitionSample)
-            }
-
-            for (heartRateSample in workoutData.heartRateSamples) {
-                database.workoutDao().insertSample(heartRateSample)
-            }
+        if (replace || database.workoutDao().findById(workoutData.workout.id) == null) {
+            database.workoutDao().insertWorkoutData(workoutData)
         }
     }
 
