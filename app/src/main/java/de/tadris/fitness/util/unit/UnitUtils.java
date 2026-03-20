@@ -49,8 +49,8 @@ public abstract class UnitUtils {
     }
 
     public static String round(double d, int count) {
-        double value = roundDouble(d, count);
-        return String.valueOf(value).replaceAll("\\.", String.valueOf(getDecimalSeparator()));
+        String rounded = String.format("%." + count + "f", d);
+        return rounded.replaceAll("\\.", String.valueOf(getDecimalSeparator()));
     }
 
     public static double roundDouble(double d, int count) {
