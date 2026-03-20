@@ -533,4 +533,6 @@
     <string name="askForCommentSummary">Запитувати введення коментаря при завершенні запису</string>
     <string name="removeOAuthToken">Вилучити OAuth токен</string>
     <string name="removedOAuthToken">OAuth токен вилучено</string>
+    <string name="saveChangesQuestion">Зберегти зміни?</string>
+    <string name="saveChangesQuestionMessage">Ви справді хочете зберегти зміни?</string>
 </resources>

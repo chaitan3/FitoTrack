@@ -1,0 +1,8 @@
+- Ricerca di dispositivi Bluetooth non accoppiati
+- Interruzione degli allenamenti
+- Colore per i tracciati
+- Opzione per calcolare la velocità nel tempo
+- Monitora-ritmo che ti avvisa se stai correndo troppo lentamente/troppo velocemente
+- Edita gli intervalli
+
+Per un elenco più dettagliato delle modifiche, consulta il repository del progetto su Codeberg.

@@ -18,7 +18,7 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="chooseBackupFile">Ficheiro de copia de apoio</string>
-    <string name="loadingFile">Cargando arquivo</string>
+    <string name="loadingFile">Cargando o ficheiro</string>
     <string name="finished">Rematado</string>
     <string name="converting">Converter</string>
     <string name="locationData">Datos da localización</string>
@@ -34,17 +34,17 @@
     <string name="stop">Deter</string>
     <string name="app_name">FitoTrack</string>
     <string name="pref_announcements_config_title">Activador do anuncio</string>
-    <string name="importBackupMessage">Fai unha copia de apoio dos datos se queres conservalos. Restablecer unha copia anterior agora\?</string>
+    <string name="importBackupMessage">Fai unha copia de apoio dos datos se queres conservalos. Queres restablecer unha copia anterior?</string>
     <string name="recordingPermissionNotGrantedTitle">Permisos non concedidos</string>
     <string name="unitFootSingular">Pé</string>
     <string name="unitFootPlural">Pés</string>
     <string name="noWorkoutStarted">Non se iniciou a actividade</string>
     <string name="editDisplayedInformationHint">Sempre que a actividade non tivese comezado, podes editar os valores mostrados premendo nalgún dos catro campos.</string>
     <string name="editDisplayedInformation">Editar a información presentada</string>
-    <string name="aboutSendFeedback">Enviar comentarios ao desenvolvedor</string>
+    <string name="aboutSendFeedback">Enviar comentarios sobre a app</string>
     <string name="aboutSourceCode">Ver código fonte</string>
-    <string name="aboutContributors">Colaboradores</string>
-    <string name="aboutAuthor">Autor</string>
+    <string name="aboutContributors">Colaboracións</string>
+    <string name="aboutAuthor">Autoría</string>
     <string name="aboutLinks">Ligazóns</string>
     <string name="aboutReportBug">Informar dun erro</string>
     <string name="aboutOpenSourceLibraries">Bibliotecas de código aberto</string>
@@ -70,7 +70,7 @@
     <string name="statsFilter">Filtro:</string>
     <string name="workoutNumber">Número de adestramentos</string>
     <string name="sum">Suma</string>
-    <string name="avg">Prom</string>
+    <string name="avg">Promedio</string>
     <string name="max">Máx</string>
     <string name="min">Min</string>
     <string name="year">Ano</string>
@@ -104,7 +104,7 @@
     <string name="workoutDiscarded">Desbotouse a actividade</string>
     <string name="preferenceTimeFormat">Formato da hora</string>
     <string name="preferenceDateFormat">Formato da data</string>
-    <string name="preferencesCategoryAppearance">Aspecto</string>
+    <string name="preferencesCategoryAppearance">Aparencia</string>
     <string name="preferencesBackupSummary">Copiar/Restablecer os teus datos de actividades</string>
     <string name="preferencesBackupTitle">Base de datos</string>
     <string name="preferencesRecordingSummary">Xestionar a gravación de actividades</string>
@@ -115,7 +115,7 @@
     <string name="avgSpeedTotalShort">Vel. Promedio (Total)</string>
     <string name="avgSpeedInMotion">Vel. Promedio (en movemento)</string>
     <string name="enterDescription">Escribe unha descrición</string>
-    <string name="hintAddWorkout">Preme na icona máis para engadir unha actividade.</string>
+    <string name="hintAddWorkout">Preme na icona «+» para engadir unha actividade.</string>
     <string name="currentSpeed">Velocidade actual</string>
     <string name="intervalSets">Conxunto de intervalos</string>
     <string name="intervalSet">Conxunto de intervalos</string>
@@ -144,7 +144,7 @@
     <string name="theme">Decorado</string>
     <string name="OpenStreetMapAttribution">© Colaboradoras de OpenStreetMap</string>
     <string name="info">Información</string>
-    <string name="savingFailed">Erro ó gardar</string>
+    <string name="savingFailed">Erro ao gardar</string>
     <string name="savedSuccessfully">Gardado</string>
     <string name="share">Compartir</string>
     <string name="save">Gardar</string>
@@ -200,8 +200,8 @@
     <string name="workoutDescent">Descenso</string>
     <string name="workoutAscent">Ascenso</string>
     <string name="uploadFailedOsmNotAuthorized">Non autorizado, inténtao novamente</string>
-    <string name="uploadFailed">Fallo na subida</string>
-    <string name="uploadSuccessful">Suba exitosa</string>
+    <string name="uploadFailed">Fallo ao enviar</string>
+    <string name="uploadSuccessful">Subida correcta</string>
     <string name="upload">Subir</string>
     <string name="authenticationFailed">Erro na autenticación.</string>
     <string name="enterVerificationCode">Escribe o código de verificación</string>
@@ -217,7 +217,7 @@
     <string name="workoutRoute">Ruta</string>
     <string name="workoutPace">Ritmo</string>
     <string name="workoutDistance">Distancia</string>
-    <string name="workoutEndTime">Hora de remate</string>
+    <string name="workoutEndTime">Hora de fin</string>
     <string name="workoutStartTime">Hora de inicio</string>
     <string name="workoutPauseDuration">En pausa</string>
     <string name="workoutDuration">Tempo</string>
@@ -228,7 +228,7 @@
     <string name="pref_announcements_content">Contido dos anuncios</string>
     <string name="pref_announcements_config_summary">Elixe o tempo e a distancia entre os anuncios de voz</string>
     <string name="pref_voice_announcements_summary">Configura as indicacións de voz que te informarán durante a actividade</string>
-    <string name="voiceAnnouncementsTitle">Anuncios de voz</string>
+    <string name="voiceAnnouncementsTitle">Anuncios por voz</string>
     <string name="announcementGPSStatus">Estado do GPS</string>
     <string name="errorEnterValidDuration">Escribe unha duración válida</string>
     <string name="errorWorkoutAddFuture">A actividade non pode estar no futuro</string>
@@ -241,10 +241,10 @@
     <string name="timeMinuteShort">min</string>
     <string name="timeMinutePlural">Minutos</string>
     <string name="timeMinuteSingular">Minuto</string>
-    <string name="setPreferencesMessage">Podes establecer o sistema de unidades preferido e o teu peso nos axustes.</string>
+    <string name="setPreferencesMessage">Podes indicar o sistema de unidades preferido e o teu peso nos axustes.</string>
     <string name="setPreferencesTitle">Establecer preferencias</string>
     <string name="backup">Copia de apoio</string>
-    <string name="restore">Restaurar</string>
+    <string name="restore">Restablecer</string>
     <string name="importingFiles">Importación de ficheiros</string>
     <string name="importMultipleMessageSelectFolder">Elixe un cartafol que conteña todos os ficheiros GPX que queres importar.</string>
     <string name="importMultipleGpxFiles">Importa varios ficheiros GPX</string>
@@ -254,7 +254,7 @@
     <string name="recordingStateIdle">Inactivo</string>
     <string name="speechConfigNoSpeech">Sen anuncio</string>
     <string name="actionGrant">Conceder</string>
-    <string name="aboutPrivacyPolicy">Política de Privacidade</string>
+    <string name="aboutPrivacyPolicy">Directiva de Privacidade</string>
     <string name="aboutHelpTranslating">Axuda a traducir</string>
     <string name="aboutUnlistedContributors">Grazas a todas as colaboradoras non mencionadas que axudaron a traducir e mellorar FitoTrack!</string>
     <string name="inclination">Inclinación</string>
@@ -275,7 +275,7 @@
     <string name="autoPauseTitle">Pausa automática</string>
     <string name="resumeWorkout">Retomar actividade</string>
     <string name="heartRateNotAvailable">O pulso cardíaco non está dispoñible.</string>
-    <string name="announcementWorkoutActions">Accións na actividade (pausar, retomar, etc.)</string>
+    <string name="announcementWorkoutActions">Accións na actividade (deter, retomar, etc.)</string>
     <string name="resumeWorkoutConfirmation">Reactivar a actividade? Isto engadirá unha pausa desde o momento en que a actividade se detivo.</string>
     <string name="prefShowOnLockScreenSummary">Mostrar información da actividade aínda que o dispositivo estea bloqueado.</string>
     <string name="prefShowOnLockScreenTitle">Visible na pantalla de bloqueo</string>
@@ -298,7 +298,7 @@
     <string name="hintManageWorkoutTypes">Preme na icona máis para engadir tipos de actividades.</string>
     <string name="workoutTypeAdd">Engadir</string>
     <string name="actionImportMultiple">Importar varios</string>
-    <string name="actionImport">Importar</string>
+    <string name="actionImport">Importar un</string>
     <string name="importWorkoutMultipleQuestion">Queres importar un só ficheiro GPX ou varios\?</string>
     <string name="downloading">Descargando…</string>
     <string name="chooseMapHint">Escolle o ficheiro do mapa</string>
@@ -317,7 +317,7 @@
     <string name="workoutTypeAll">Todo</string>
     <string name="pref_auto_start_mode_unknown">Descoñecido (non usar)</string>
     <string name="pref_auto_start_mode_on_move">Agardar a que comeces a moverte</string>
-    <string name="pref_auto_start_mode_wait_for_gps">Agardo por localización precisa</string>
+    <string name="pref_auto_start_mode_wait_for_gps">Agardar por localización precisa</string>
     <string name="pref_auto_start_mode_instant">Comezar inmediatamente</string>
     <string name="pref_auto_start_mode_title">Modo Auto-Inicio</string>
     <string name="intervalAutoStartModeTraining">Modo de inicio automatico da actividade</string>
@@ -355,7 +355,7 @@
     <string name="pref_auto_start_delay_title">Conta atrás do Inicio Automático</string>
     <string name="manageAutoStartDelaySummary">Valor por defecto para o inicio automatico da actividade</string>
     <string name="intervalAutoStartDelayTraining">Retraso no Inicio Automatico da actividade</string>
-    <string name="scanFailed">Fallo o escaneo</string>
+    <string name="scanFailed">Fallou o escaneo</string>
     <string name="scanning">Escaneando…</string>
     <string name="invalidNumberFormat">Formato de número non válido.</string>
     <string name="pref_announcements_pace_control_title">Avisos de ritmo</string>
@@ -394,7 +394,7 @@
     <string name="recordingActivityPermissionMessage">FitoTrack require o permiso para rexistrar a túa actividade física ao gravar actividades en interior.</string>
     <string name="pref_step_length">Lonx. da zancada</string>
     <plurals name="workoutPushUp">
-        <item quantity="one">flexión</item>
+        <item quantity="one">Flexión</item>
         <item quantity="other">Flexións</item>
     </plurals>
     <string name="workoutTypePushUps">Flexións</string>
@@ -413,7 +413,7 @@
     <string name="workoutAvgIntensityShort">Intensidade Med</string>
     <string name="workoutIntensity">Intensidade</string>
     <string name="workoutMaxFrequency">Frecuencia Máx</string>
-    <string name="workoutAvgFrequencyShort">Frecuencia Media</string>
+    <string name="workoutAvgFrequencyShort">Frec. Media</string>
     <string name="workoutFrequency">Frecuencia</string>
     <string name="workoutSets">Conxuntos</string>
     <string name="workoutRepetitions">Repeticións</string>
@@ -429,10 +429,10 @@
     </plurals>
     <string name="hidden">Agochado</string>
     <string name="identifiable_visibility">Identificable</string>
-    <string name="trackable_visibility">Trazable</string>
+    <string name="trackable_visibility">Seguible</string>
     <string name="private_visibility">Privado</string>
-    <string name="kcal_unit">quilocaloría (kcal)</string>
-    <string name="joule_unit">Xulio</string>
+    <string name="kcal_unit">kcal</string>
+    <string name="joule_unit">Joule</string>
     <string name="always_mode">Sempre</string>
     <string name="only_on_headphones_mode">Só con auriculares</string>
     <string name="mapnik_default_osm_mapstyle">Mapnik
@@ -533,4 +533,6 @@
     <string name="askForCommentSummary">Pedir que escribas un comentario ao finalizar a gravación</string>
     <string name="removeOAuthToken">Eliminar Token OAuth</string>
     <string name="removedOAuthToken">Eliminouse o Token OAuth</string>
+    <string name="saveChangesQuestion">Gardar os cambios?</string>
+    <string name="saveChangesQuestionMessage">Tes certeza de querer cambiar os cambios?</string>
 </resources>

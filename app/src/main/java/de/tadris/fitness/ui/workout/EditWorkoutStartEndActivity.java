@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
@@ -35,6 +36,7 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RouteSample;
+import de.tadris.fitness.data.WorkoutCutter;
 import de.tadris.fitness.data.WorkoutCutter;
 import de.tadris.fitness.map.SimpleColoringStrategy;
 import de.tadris.fitness.map.WorkoutLayer;
@@ -156,20 +158,29 @@ public class EditWorkoutStartEndActivity extends ShowWorkoutMapDiagramActivity {
 
         if (item.getItemId() == R.id.actionMoveApply) {
             if (selectedStartSample != null || selectedEndSample != null){
-                // Cut workout
-                new WorkoutCutter(this, data, selectedStartSample, selectedEndSample).save();
-
-                Intent intent=new Intent();
-                setResult(INTENT_RESULT_CODE_WORKOUT_MODIFIED,intent);
-                finish();
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.saveChangesQuestion)
+                        .setMessage(R.string.saveChangesQuestionMessage)
+                        .setPositiveButton(R.string.save, (dialog, which) -> applyChanges())
+                        .setNegativeButton(R.string.cancel, null)
+                        .create().show();
             } else {
-                //TODO: TOAST nothing selected?
+                Toast.makeText(this, R.string.nothingSelected, Toast.LENGTH_SHORT).show();
             }
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void applyChanges() {
+        // Cut workout
+        new WorkoutCutter(this, data, selectedStartSample, selectedEndSample).save();
+
+        Intent intent=new Intent();
+        setResult(INTENT_RESULT_CODE_WORKOUT_MODIFIED,intent);
+        finish();
     }
 
 }

@@ -20,7 +20,7 @@
     <string name="app_name">FitoTrack</string>
     <string name="backup">Sichern</string>
     <string name="cancel">Abbrechen</string>
-    <string name="chooseBackupFile">Wähle die Sicherungsdatei</string>
+    <string name="chooseBackupFile">Sicherungsdatei auswählen</string>
     <string name="comment">Kommentar</string>
     <string name="continue_">Weiter</string>
     <string name="converting">Konvertieren</string>
@@ -546,4 +546,6 @@
     <string name="askForComment">Nach Kommentar fragen</string>
     <string name="removedOAuthToken">OAuth-Token entfernt</string>
     <string name="removeOAuthToken">OAuth-Token entfernen</string>
+    <string name="saveChangesQuestionMessage">Möchtest du die Änderungen wirklich speichern?</string>
+    <string name="saveChangesQuestion">Änderungen speichern?</string>
 </resources>

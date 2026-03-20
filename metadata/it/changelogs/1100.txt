@@ -1,0 +1,10 @@
+- Avvio automatico con modalità multiple
+- Supporto mappe offline
+
+- Miglioramenti alla stabilità
+- Filtro “Tutto” per le statistiche di allenamento
+- Aggiunta del flag “modificato” agli allenamenti solo se sono state modificate la distanza, la data o la durata
+
+- Varie correzioni di bug
+
+Per un elenco più dettagliato delle modifiche, consultate il repository del progetto su Codeberg.

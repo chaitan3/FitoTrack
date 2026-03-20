@@ -421,7 +421,7 @@ public class StatsHistoryFragment extends StatsFragment {
             exploreChart.clear();
             ((CombinedChartRenderer) exploreChart.getRenderer()).createRenderers();
             if(!(property == WorkoutProperty.START) && !(property == WorkoutProperty.END)) {
-                String unit = property.getUnit(getContext(), combinedData.getYMax() - combinedData.getYMin());
+                String unit = property.getUnit(getContext(), combinedData.getYMax());
                 ChartStyles.setYAxisLabel(exploreChart, unit, context);
             }
             ChartStyles.updateStatsHistoryCombinedChartToSpan(exploreChart, combinedData, aggregationSpan, activity);

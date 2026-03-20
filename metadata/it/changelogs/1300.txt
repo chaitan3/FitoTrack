@@ -1,0 +1,10 @@
+- Traccia gli allenamenti indoor
+  - attualmente supportati: tapis roulant, flessioni, salto con la corda e salto sul trampolino
+- Supporta i temi Zip render per mappe offline / personalizzazione
+
+- Accetta i file intent: ora puoi condividere e aprire file GPX da altre app per importarli
+- Ordina i tipi di allenamento in base all'ultimo utilizzo
+- Avvio degli allenamenti già durante l'“attesa GPS”
+- Altri miglioramenti e correzioni di bug...
+
+Per un elenco più dettagliato delle modifiche, consultate il repository del progetto su Codeberg.

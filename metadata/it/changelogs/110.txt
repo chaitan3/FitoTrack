@@ -1,0 +1,8 @@
+Novità:
+- Misurazione dell'altezza tramite GPS e sensore di pressione
+- Visualizzazione del diagramma dell'altezza
+- Visualizzazione di una finestra di dialogo se il GPS è disattivato
+
+Correzioni:
+- Il pulsante Indietro nelle Impostazioni causava un arresto anomalo nelle versioni precedenti di Android (#20)
+- Correzione del sistema di unità “Imperiale con metri”

@@ -531,4 +531,6 @@
     <string name="hintConfigureExportTargets">Geef locatie op waarnaar bestanden moeten worden geëxporteerd.</string>
     <string name="removeOAuthToken">OAuth-Token wissen</string>
     <string name="removedOAuthToken">OAuth-Token gewist</string>
+    <string name="saveChangesQuestion">Wijzigingen opslaan?</string>
+    <string name="saveChangesQuestionMessage">Wil je de wijzigingen echt opslaan?</string>
 </resources>

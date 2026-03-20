@@ -219,7 +219,7 @@ public class StatsProvider {
         if (workoutProperty == WorkoutProperty.START || workoutProperty == WorkoutProperty.END) {
             dataSet.setValueFormatter(new DayTimeFormatter(ctx));
         } else {
-            dataSet.setValueFormatter(workoutProperty.getValueFormatter(ctx, dataSet.getYMax() - dataSet.getYMin()));
+            dataSet.setValueFormatter(workoutProperty.getValueFormatter(ctx, dataSet.getYMax()));
         }
         return dataSet;
     }
@@ -228,7 +228,7 @@ public class StatsProvider {
         ArrayList<BarEntry> barEntries = getCombinedSumData(span, workoutTypes, workoutProperty);
         BarDataSet dataSet = DataSetStyles.applyDefaultBarStyle(ctx, new BarDataSet(barEntries,
                 ctx.getString(workoutProperty.getTitleRes())));
-        dataSet.setValueFormatter(workoutProperty.getValueFormatter(ctx, dataSet.getYMax()-dataSet.getYMin()));
+        dataSet.setValueFormatter(workoutProperty.getValueFormatter(ctx, dataSet.getYMax()));
         return dataSet;
     }
 
@@ -386,7 +386,7 @@ public class StatsProvider {
             BubbleDataSet set =new BubbleDataSet(bubbleEntries, type.title);
             int alpha = 255/(bubbleEntries.size());
             set.setColor(type.color, min(max(alpha, 20), 160));
-            set.setValueFormatter(yAxis.getValueFormatter(ctx, set.getYMax()-set.getYMin()));
+            set.setValueFormatter(yAxis.getValueFormatter(ctx, set.getYMax()));
             set.setDrawValues(false);
             dataSets.add(set);
         }

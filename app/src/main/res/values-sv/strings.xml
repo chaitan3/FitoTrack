@@ -509,4 +509,12 @@
     <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitärt
 \nTöm karta, men inte alltid tillgänglig</string>
     <string name="bright_night">Ljus kväll</string>
+    <string name="massExportGpxSummary">Skapar en ZIP-fil som innehållet alla träningspass som GPX-dokument</string>
+    <string name="massExportGpxTitle">Exportera alla träningspass som GPX</string>
+    <string name="enterValidUrl">Ange en giltig HTTP-URL</string>
+    <string name="httpUrl">URL</string>
+    <string name="exportIntervalTitle">Intervall för säkerhetskopiering</string>
+    <string name="autoExportBackupSummary">Exportera säkerhetskopior automatisk</string>
+    <string name="saveChangesQuestionMessage">Vill du verkligen spara ändringarna?</string>
+    <string name="saveChangesQuestion">Spara ändringar?</string>
 </resources>

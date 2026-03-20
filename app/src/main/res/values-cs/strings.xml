@@ -301,7 +301,7 @@
     <string name="workoutTypeAdd">Přidat</string>
     <string name="downloadFailed">Stahování selhalo</string>
     <string name="downloadSuccess">Stahováno dokončeno</string>
-    <string name="downloadMapConfirmation">Stáhnout soubor mapy \\\"%s\\\"\?</string>
+    <string name="downloadMapConfirmation">Stáhnout soubor mapy „%s“?</string>
     <string name="pref_auto_start_mode_unknown">Neznámé (nepoužívat)</string>
     <string name="pref_auto_start_mode_on_move">Počkat než se začnete pohybovat</string>
     <string name="pref_auto_start_mode_wait_for_gps">Počkat na přesnou polohu</string>
@@ -314,12 +314,12 @@
     <string name="ttsLongSecondCountdownAnnouncement"><xliff:g example="5 seconds" id="secs">%1$s</xliff:g> do startu</string>
     <plurals name="minutes">
         <item quantity="one"><xliff:g example="1" id="mins">%1$d</xliff:g> minuta</item>
-        <item quantity="few"><xliff:g example="5" id="mins">%1$d</xliff:g> minuty</item>
+        <item quantity="few"><xliff:g example="3" id="mins">%1$d</xliff:g> minuty</item>
         <item quantity="other"><xliff:g example="5" id="mins">%1$d</xliff:g> minut</item>
     </plurals>
     <plurals name="seconds">
         <item quantity="one"><xliff:g example="1" id="secs">%1$d</xliff:g> sekunda</item>
-        <item quantity="few"><xliff:g example="12" id="secs">%1$d</xliff:g> sekundy</item>
+        <item quantity="few"><xliff:g example="4" id="secs">%1$d</xliff:g> sekundy</item>
         <item quantity="other"><xliff:g example="12" id="secs">%1$d</xliff:g> sekund</item>
     </plurals>
     <string name="scanFailed">Skenování se nezdařilo</string>
@@ -353,7 +353,7 @@
     <string name="actionCancelDownload">Zrušit stahování</string>
     <string name="alreadyDownloading">Soubor se již stahuje</string>
     <string name="actionDownloadMap">Stáhnout mapu</string>
-    <string name="overwriteMapConfirmation">Přepsat stávající soubor mapy \\\"%s\\\"\?</string>
+    <string name="overwriteMapConfirmation">Přepsat stávající soubor mapy „%s“?</string>
     <string name="downloadMapsSpecifyDirectory">Nejprve zadejte adresář pro offline mapy</string>
     <string name="downloadMapsTitle">Stáhnout mapy</string>
     <string name="actionImportMultiple">Importovat více</string>
@@ -543,4 +543,6 @@
     <string name="askForComment">Ptát se na komentář</string>
     <string name="removeOAuthToken">Odstranit token OAuth</string>
     <string name="removedOAuthToken">Token OAuth odstraněn</string>
+    <string name="saveChangesQuestion">Uložit změny?</string>
+    <string name="saveChangesQuestionMessage">Opravdu chcete uložit změny?</string>
 </resources>

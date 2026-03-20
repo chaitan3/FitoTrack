@@ -1,0 +1,3 @@
+- Behebt Absturz bei Android-Versionen vor Oreo (< 8)
+- Behebt Absturz beim Speichern von Trainingseinheiten, wenn diese unterbrochen wurden
+- Behebt verlorenen Fokus bei Audio

@@ -40,10 +40,12 @@ public class FitoTrackSettingsActivity extends FitoTrackActivity implements Pref
 
         setTitle(R.string.settings);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings_container, new MainSettingsFragment())
-                .commit();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings_container, new MainSettingsFragment())
+                    .commit();
+        }
     }
 
     @Override

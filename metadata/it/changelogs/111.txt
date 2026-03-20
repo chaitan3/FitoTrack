@@ -1,0 +1,1 @@
+- Maggiore precisione nei dati relativi all'altezza

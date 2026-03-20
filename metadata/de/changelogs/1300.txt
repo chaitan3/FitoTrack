@@ -1,0 +1,10 @@
+- Zeichne Indoor-Workouts auf
+  - aktuell unterstützt: Laufband, Pushups, Seilspringen und Trampolin springen
+- Unterstützt Zip-Themes für Offline-Karten / Anpassungen
+
+- Unterstützt Datei-Importe: Du kannst nun GPX-Dateien teilen und sie von anderen Apps öffnen, um sie zu importieren
+- Sortiere Workout-Arten nach letzter Benutzung
+- Starte Workouts während nach GPS gesucht wird
+- Weitere Verbesserungen und Fehlerbehebungen...
+
+Bitte besuche das Projekt-Repository auf Codeberg, um eine detaillierte Änderungsliste zu erhalten
