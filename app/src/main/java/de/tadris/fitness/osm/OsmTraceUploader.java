@@ -27,6 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.StringRes;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class OsmTraceUploader {
     private final Activity activity;
     private final Handler handler;
     private final Workout workout;
-    private final List<RouteSample> samples;
+    private final ArrayList<RouteSample> samples;
     private final GpsTraceDetails.Visibility visibility;
     private final String oauthToken;
     private final boolean cut;
@@ -59,7 +60,7 @@ public class OsmTraceUploader {
         this.activity = activity;
         this.handler = handler;
         this.workout = workout;
-        this.samples = samples;
+        this.samples = new ArrayList<>(samples); // make it mutable
         this.visibility = visibility;
         this.oauthToken = oauthToken;
         this.cut = cut;
