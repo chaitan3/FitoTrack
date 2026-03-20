@@ -2,19 +2,23 @@ package de.tadris.fitness.export
 
 import android.content.Context
 import android.net.Uri
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.json.JsonMapper
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.AppDatabase
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.export.BackupWriter.ExportStatusListener
 import de.tadris.fitness.export.model.DataContainer
+import tools.jackson.core.StreamReadFeature
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import java.io.IOException
 import java.io.InputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
+/**
+ * Reads a backup from [input] and writes the result into the local DB.
+ */
 class BackupReader(
     private val context: Context,
     private val input: Uri,
@@ -23,9 +27,11 @@ class BackupReader(
 ) {
 
     private val database: AppDatabase = Instance.getInstance(context).db
-    private val mapper = JsonMapper.builder()
-        .configure(JsonParser.Feature.IGNORE_UNDEFINED, true)
-        .build()
+    private val mapper = jsonMapper {
+        addModule(kotlinModule())
+        configure(StreamReadFeature.IGNORE_UNDEFINED, true)
+        configure(StreamReadFeature.AUTO_CLOSE_SOURCE, false)
+    }
 
     @Throws(IOException::class, UnsupportedVersionException::class)
     fun read() {

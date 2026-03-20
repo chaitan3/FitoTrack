@@ -539,8 +539,6 @@ public abstract class AppDatabase extends RoomDatabase {
                             db.execSQL("insert into repetition_sample (id,timestamp,relativeTime,timestampEnd,repetitionTypeId,repetitions,intensity,frequency,workoutId)\n" +
                                     "select id,absoluteTime,relativeTime,absoluteEndTime,0,repetitions,intensity,frequency,workout_id from indoor_sample;");
 
-                            // TODO update repetition type id afterwards
-
                             // HANDLE HR SAMPLES
 
                             db.execSQL("create table heart_rate_sample (" +

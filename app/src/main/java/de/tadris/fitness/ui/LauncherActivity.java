@@ -35,6 +35,7 @@ import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.migration.Migration;
 import de.tadris.fitness.data.migration.Migration15DistancePeriod;
+import de.tadris.fitness.data.migration.Migration16Energy;
 import de.tadris.fitness.data.migration.Migration16PausesRepetitions;
 import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
@@ -86,6 +87,9 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
         }
         if(preferences.getLastVersionCode() < 1600) {
             migrations.add(new Migration16PausesRepetitions(this, this));
+        }
+        if(preferences.getLastVersionCode() < 1601) {
+            migrations.add(new Migration16Energy(this, this));
         }
         progressDialog = new ProgressDialogController(this, getString(R.string.runningMigrations));
         progressDialog.show();

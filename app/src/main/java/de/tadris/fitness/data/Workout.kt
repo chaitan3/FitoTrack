@@ -30,7 +30,7 @@ import kotlin.math.min
 
 /**
  * @property id Unique ID (internal, fast)
- * @property uuid Unique UUID (external, fully unique)
+ * @property uuid Unique UUID (external, globally unique)
  * @property start timestamp of start
  * @property end timestamp of end
  * @property activeDuration active duration in ms
@@ -51,7 +51,6 @@ data class Workout(
     val distance: Double,
     val repetitions: Int,
     val energy: Double,
-    @JsonProperty(value = "workoutType")
     val workoutTypeId: String,
     val intervalSetUsedId: Long,
 ) {

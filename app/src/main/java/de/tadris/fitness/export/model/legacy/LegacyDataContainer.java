@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.export.model;
+package de.tadris.fitness.export.model.legacy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -28,19 +28,21 @@ import java.util.List;
 import de.tadris.fitness.data.RouteSample;
 import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutType;
+import de.tadris.fitness.export.model.IntervalSetContainer;
 
 @JacksonXmlRootElement(localName = "fito-track")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LegacyDataContainer {
 
     private int version;
-    private List<Workout> workouts = new ArrayList<>();
-    private List<RouteSample> routeSamples = new ArrayList<>();
+    private List<LegacyGpsWorkout> workouts = new ArrayList<>();
+    private List<LegacyGpsSample> samples = new ArrayList<>();
+    private List<LegacyIndoorWorkout> indoorWorkouts = new ArrayList<>();
+    private List<LegacyIndoorSample> indoorSamples = new ArrayList<>();
     private List<IntervalSetContainer> intervalSets = new ArrayList<>();
     private List<WorkoutType> workoutTypes = new ArrayList<>();
 
-    public LegacyDataContainer() {
-    }
+    public LegacyDataContainer() { }
 
     public int getVersion() {
         return version;
@@ -50,20 +52,20 @@ public class LegacyDataContainer {
         this.version = version;
     }
 
-    public List<Workout> getWorkouts() {
+    public List<LegacyGpsWorkout> getWorkouts() {
         return workouts;
     }
 
-    public void setWorkouts(List<Workout> workouts) {
+    public void setWorkouts(List<LegacyGpsWorkout> workouts) {
         this.workouts = workouts;
     }
 
-    public List<RouteSample> getRouteSamples() {
-        return routeSamples;
+    public List<LegacyGpsSample> getSamples() {
+        return samples;
     }
 
-    public void setRouteSamples(List<RouteSample> routeSamples) {
-        this.routeSamples = routeSamples;
+    public void setSamples(List<LegacyGpsSample> samples) {
+        this.samples = samples;
     }
 
     public List<IntervalSetContainer> getIntervalSets() {
@@ -80,5 +82,21 @@ public class LegacyDataContainer {
 
     public void setWorkoutTypes(List<WorkoutType> workoutTypes) {
         this.workoutTypes = workoutTypes;
+    }
+
+    public List<LegacyIndoorWorkout> getIndoorWorkouts() {
+        return indoorWorkouts;
+    }
+
+    public void setIndoorWorkouts(List<LegacyIndoorWorkout> indoorWorkouts) {
+        this.indoorWorkouts = indoorWorkouts;
+    }
+
+    public List<LegacyIndoorSample> getIndoorSamples() {
+        return indoorSamples;
+    }
+
+    public void setIndoorSamples(List<LegacyIndoorSample> indoorSamples) {
+        this.indoorSamples = indoorSamples;
     }
 }
