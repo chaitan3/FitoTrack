@@ -29,7 +29,7 @@ import org.mapsforge.core.model.LatLong
  * @property latitude Latitude
  * @property longitude Longitude
  * @property elevation Elevation over the WGS84 ellipsoid in meters
- * @property elevationMSL Elevation over the media sea level in meters. This value should be displayed to the user.
+ * @property elevationMSL Elevation over the mean sea level in meters. This value should be displayed to the user.
  * @property speed Speed in m/s
  * @property pressure Pressure in hPa
  *

@@ -24,6 +24,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
+import de.tadris.fitness.BuildConfig
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutTypeManager
@@ -108,6 +109,7 @@ class RecorderService : Service() {
         this.instance = Instance.getInstance(baseContext)
 
         log(TAG, "Service created")
+        log(TAG, "App Version Code: " + BuildConfig.VERSION_CODE)
         log(TAG, "Android: " + Build.VERSION.RELEASE + " Sdk: " + Build.VERSION.SDK_INT)
         log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL)
     }

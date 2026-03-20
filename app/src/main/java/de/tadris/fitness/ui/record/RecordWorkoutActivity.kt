@@ -569,11 +569,11 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
         // once that's done, make sure no one stays registered to its event bus thereby creating
         // a stale process
-        movementDetector!!.stop()
-        movementDetector!!.unregisterFromBus()
-        autoStartWorkout!!.unregisterFromBus()
-        autoStartVibratorFeedback!!.unregisterFromBus()
-        autoStartSoundFeedback!!.unregisterFromBus()
+        movementDetector.stop()
+        movementDetector.unregisterFromBus()
+        autoStartWorkout.unregisterFromBus()
+        autoStartVibratorFeedback.unregisterFromBus()
+        autoStartSoundFeedback.unregisterFromBus()
         autoStartAnnouncements!!.unregisterFromBus()
 
         // shutdown Text-to-Speech engine
