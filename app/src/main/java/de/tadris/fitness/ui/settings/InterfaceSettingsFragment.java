@@ -29,7 +29,10 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
@@ -48,6 +51,24 @@ public class InterfaceSettingsFragment extends FitoTrackSettingFragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         setPreferencesFromResource(R.xml.preferences_user_interface, rootKey);
 
+        // Update the settings UI to reflect the current language setting
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String str = AppCompatDelegate.getApplicationLocales().toLanguageTags();
+        if (str.isEmpty()) {
+            editor.putString("language", "1");
+            ((ListPreference) findPreference("language")).setValue("1");
+        } else {
+            for (String value : getResources().getStringArray(R.array.pref_language_values)) {
+                if (str.startsWith(value)) {
+                    editor.putString("language", value);
+                    ((ListPreference) findPreference("language")).setValue(value);
+                    break;
+                }
+            }
+        }
+        editor.apply();
+
+        bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("unitSystem"));
         bindPreferenceSummaryToValue(findPreference("mapStyle"));
         bindPreferenceSummaryToValue(findPreference("trackStyle"));
@@ -57,6 +78,18 @@ public class InterfaceSettingsFragment extends FitoTrackSettingFragment {
         bindPreferenceSummaryToValue(findPreference("timeFormat"));
         bindPreferenceSummaryToValue(findPreference("firstDayOfWeek"));
         bindPreferenceSummaryToValue(findPreference("energyUnit"));
+
+        findPreference("language").setOnPreferenceChangeListener((preference, newValue) -> {
+            if (newValue.equals("1")) {  // System default
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.create());
+            } else {
+                AppCompatDelegate.setApplicationLocales(
+                        LocaleListCompat.forLanguageTags(newValue.toString())
+                );
+            }
+            return true;
+        });
+
         findPreference("themeSetting").setOnPreferenceChangeListener((preference, newValue) -> {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, newValue);
             Toast.makeText(requireContext(), R.string.hintRestart, Toast.LENGTH_LONG).show();
