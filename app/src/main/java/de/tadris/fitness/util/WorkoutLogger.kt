@@ -33,7 +33,7 @@ class WorkoutLogger(context: Context) {
 
     companion object {
 
-        private const val MAX_LOG_SIZE = 1000L * 1000 * 2 // 2 MB
+        private const val MAX_LOG_SIZE = 1000L * 1000 * 1 // 1 MB
 
         @JvmStatic
         fun log(tag: String, message: String) {
