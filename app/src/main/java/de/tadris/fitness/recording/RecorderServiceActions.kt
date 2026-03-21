@@ -125,7 +125,18 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun stop(reason: StopReason) {
         log(TAG, "Called stop, reason: ${reason.logMessage}")
-        pause(isAutomatic = true)
+        if (state == RecordingState.STOPPED) {
+            log(TAG, "Already stopped")
+            return
+        }
+        if (state == RecordingState.IDLE) {
+            log(TAG, "Was in IDLE, discarding workout")
+            return
+        }
+
+        log(TAG, "Stopping and finalizing workout...")
+        resume() // Append pause
+        pause(true) // Append last active time
         state = RecordingState.STOPPED
         service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
             it.copy(end = System.currentTimeMillis())
@@ -136,6 +147,7 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun discard(){
         log(TAG, "Discard called")
+        state = RecordingState.STOPPED
         service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)?.let {
             service.instance.db.workoutDao().deleteWorkout(it)
         }
