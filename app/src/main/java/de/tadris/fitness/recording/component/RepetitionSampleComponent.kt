@@ -12,7 +12,7 @@ class RepetitionSampleComponent : RecorderServiceComponent {
 
     private lateinit var service: RecorderService
     val minRepetitionCount get() = service.stateHolder.workoutType.minDistance
-    val lastPush = 0L
+    var lastPush = 0L
     val repetitionAggregation = mutableListOf<RepetitionRecognizedEvent>()
 
     override fun register(service: RecorderService) {
@@ -60,6 +60,7 @@ class RepetitionSampleComponent : RecorderServiceComponent {
             frequency
         )
 
+        lastPush = endTime
         repetitionAggregation.clear()
         service.instance.db.workoutDao().insertSample(sample)
         EventBus.getDefault().post(RepetitionSampleEvent(sample))
