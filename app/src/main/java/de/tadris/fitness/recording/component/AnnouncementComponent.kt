@@ -25,7 +25,7 @@ import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.announcement.VoiceAnnouncements
-import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.event.WorkoutGPSStateChanged
 import de.tadris.fitness.recording.information.GPSStatus
 import org.greenrobot.eventbus.EventBus
@@ -72,8 +72,8 @@ class AnnouncementComponent : RecorderServiceComponent {
     @Subscribe
     fun onGPSStateChange(event: WorkoutGPSStateChanged) {
         val announcement = GPSStatus(service)
-        val info = AggregatedRecordingValuesEvent.getCurrent()
-        if (info.currentState == RecordingState.RUNNING && announcement.isAnnouncementEnabled) {
+        val info = RecordingStateChangeEvent.getCurrent()
+        if (info.newState == RecordingState.RUNNING && announcement.isAnnouncementEnabled) {
             if (event.oldState == GpsState.SIGNAL_LOST) { // GPS Signal found
                 mTTSController.speak(announcement.spokenGPSFound)
             } else if (event.newState == GpsState.SIGNAL_LOST) {

@@ -84,6 +84,7 @@ import de.tadris.fitness.recording.autostart.MovementDetector
 import de.tadris.fitness.recording.component.AnnouncementComponent
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
 import de.tadris.fitness.recording.information.InformationDisplay
@@ -457,7 +458,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         cancelAutoStart(true)
 
         val current = AggregatedRecordingValuesEvent.getCurrent()
-        if (current.currentState != RecordingState.IDLE) { // Only Running Records can be stopped
+        if (currentState != RecordingState.IDLE) { // Only Running Records can be stopped
             EventBus.getDefault().post(WorkoutActionStop(reason))
             if (current.recordedSomething) {
                 if (askForComment) {
@@ -589,7 +590,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         EventBus.getDefault().unregister(this)
 
         // Kill Service on Finished or not Started Recording
-        val state = AggregatedRecordingValuesEvent.getCurrent().currentState
+        val state = currentState
         if (state == RecordingState.STOPPED || state == RecordingState.IDLE) {
             log(TAG, "Recorder state is $state, stopping recording")
             stop(StopReason.ACTIVITY_DESTROY)
@@ -857,7 +858,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     }
 
     private fun onManualPauseButtonClick() {
-        val state = AggregatedRecordingValuesEvent.getCurrent().currentState
+        val state = currentState
         if (state == RecordingState.RUNNING || state == RecordingState.AUTO_PAUSE) {
             startPopupButton.visibility = View.GONE
             showStartButton()
@@ -931,6 +932,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val state = this.currentState
+        Log.d(TAG, "onPrepareOptionsMenu, state=$state")
         val preparationPhase = state == RecordingState.IDLE
         menu.findItem(R.id.actionSelectIntervalSet).isVisible = preparationPhase && voiceFeedbackAvailable
         menu.findItem(R.id.actionEditHint).isVisible = preparationPhase
@@ -1040,8 +1042,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         get() = startedSem.availablePermits() == 0
 
     protected val currentState: RecordingState
-        get() =
-            AggregatedRecordingValuesEvent.getCurrent().currentState
+        get() = RecordingStateChangeEvent.getCurrent().newState
 
     protected fun determineWorkoutType(): WorkoutType {
         if (wasAlreadyRunning()) {

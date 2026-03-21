@@ -37,7 +37,13 @@ class RecorderServiceActions(private val service: RecorderService) {
         set(value) {
             val oldState = service.stateHolder.state
             service.stateHolder.state = value
-            EventBus.getDefault().post(RecordingStateChangeEvent(service.stateHolder.workoutId, oldState, value))
+            EventBus.getDefault().postSticky(
+                RecordingStateChangeEvent(
+                    service.stateHolder.workoutId,
+                    oldState,
+                    value
+                )
+            )
         }
 
     companion object {
@@ -96,7 +102,7 @@ class RecorderServiceActions(private val service: RecorderService) {
             service.instance.db.workoutDao().insertPause(
                 WorkoutPause(
                     service.stateHolder.workoutId,
-                    0L,
+                    System.nanoTime(),
                     service.stateHolder.lastStateChange,
                     System.currentTimeMillis(),
                     state == RecordingState.MANUAL_PAUSE

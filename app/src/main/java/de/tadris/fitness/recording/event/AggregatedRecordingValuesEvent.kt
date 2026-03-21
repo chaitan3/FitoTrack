@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.EventBus
 data class AggregatedRecordingValuesEvent(
     val recordingType: RecordingType,
     val workoutType: WorkoutType,
-    val currentState: RecordingState,
+    val currentState: RecordingState, // note that this can be outdated a bit until next aggregation. to get current state, use RecordingStateChangeEvent
     val activeDuration: Long, // in ms
     val pauseDuration: Long, // in ms
     val distance: Double, // in m
