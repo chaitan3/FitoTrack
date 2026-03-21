@@ -68,7 +68,9 @@ class GpsSampleComponent : RecorderServiceComponent {
             }
         }
 
-        if (service.stateHolder.state == RecordingState.RUNNING) {
+        if (service.stateHolder.state == RecordingState.RUNNING ||
+            service.stateHolder.state == RecordingState.AUTO_PAUSE
+        ) {
             val sample = createSampleFromLocation(location)
             saveSample(sample)
             EventBus.getDefault().post(RouteSampleEvent(sample))
