@@ -261,8 +261,8 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
     private fun addSpeedHistogram() {
         val chart = BarChart(this)
-        val data: MutableList<Double?> = ArrayList()
-        val weights: MutableList<Double?> = ArrayList()
+        val data: MutableList<Double> = ArrayList()
+        val weights: MutableList<Double> = ArrayList()
 
         // Gather the data for the histogram
         val sectionListModel = SectionListModel(this.data)
@@ -274,6 +274,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
         // speed diagram.
         sectionListModel.sectionLength = sectionTime
         val sections: MutableList<SectionListModel.Section> = sectionListModel.getSectionList()
+        if (sections.isEmpty()) return
         for (section in sections) {
             weights.add(section.getTime(true))
             val speed = 1 / section.pace
