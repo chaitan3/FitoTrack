@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -20,7 +20,6 @@ package de.tadris.fitness.util.calorie
 
 import android.content.Context
 import de.tadris.fitness.data.CalculatedValues
-import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.util.unit.Kcal

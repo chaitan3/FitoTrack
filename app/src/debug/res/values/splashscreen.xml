@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+  ~ Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
   ~
   ~ This file is part of FitoTrack
   ~
@@ -17,7 +17,7 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
      <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <!-- Set the splash screen background, animated icon, and animation

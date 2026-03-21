@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -59,13 +59,13 @@ import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.stats.StatsProvider;
 import de.tadris.fitness.stats.WorkoutProperty;
 import de.tadris.fitness.ui.FitoTrackActivity;
+import de.tadris.fitness.ui.statistics.ChartSynchronizer;
 import de.tadris.fitness.ui.statistics.DetailStatsActivity;
+import de.tadris.fitness.ui.statistics.OnChartGestureMultiListener;
 import de.tadris.fitness.ui.statistics.TextToggle;
 import de.tadris.fitness.ui.statistics.WorkoutTypeSelection;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.DataSetStyles;
-import de.tadris.fitness.ui.statistics.ChartSynchronizer;
-import de.tadris.fitness.ui.statistics.OnChartGestureMultiListener;
 
 public class StatsHistoryFragment extends StatsFragment {
     FitoTrackActivity activity;

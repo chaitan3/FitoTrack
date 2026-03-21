@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -20,7 +20,6 @@ package de.tadris.fitness.recording.announcement
 
 import android.content.Context
 import de.tadris.fitness.data.Interval
-import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.announcement.interval.IntervalAnnouncements
 

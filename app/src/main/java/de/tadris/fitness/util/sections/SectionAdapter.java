@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;

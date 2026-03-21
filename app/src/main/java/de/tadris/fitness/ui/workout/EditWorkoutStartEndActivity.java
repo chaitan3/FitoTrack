@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -36,7 +36,6 @@ import java.util.List;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.WorkoutCutter;
 import de.tadris.fitness.data.WorkoutCutter;
 import de.tadris.fitness.map.SimpleColoringStrategy;
 import de.tadris.fitness.map.WorkoutLayer;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -36,7 +36,6 @@ import de.tadris.fitness.R;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.formatter.DistanceFormatter;
 import de.tadris.fitness.util.charts.formatter.FractionedDateFormatter;
-import de.tadris.fitness.util.charts.formatter.SpeedFormatter;
 import de.tadris.fitness.util.charts.formatter.TimeFormatter;
 
 public enum WorkoutProperty {

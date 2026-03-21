@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -26,7 +26,7 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import kotlin.concurrent.thread
 
 class WorkoutLogger(context: Context) {

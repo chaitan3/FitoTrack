@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -22,7 +22,6 @@ package de.tadris.fitness.aggregation.information
 import android.content.Context
 import de.tadris.fitness.R
 import de.tadris.fitness.aggregation.AggregationType
-import de.tadris.fitness.aggregation.information.AbstractWorkoutInformation
 import de.tadris.fitness.data.Workout
 
 class Hidden(ctx: Context) : AbstractWorkoutInformation(ctx) {

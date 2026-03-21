@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -20,9 +20,9 @@ package de.tadris.fitness.util;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.ImageView;
 import android.os.Build;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
@@ -30,14 +30,14 @@ import androidx.core.graphics.BlendModeColorFilterCompat;
 import androidx.core.graphics.BlendModeCompat;
 import androidx.core.graphics.drawable.IconCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 import de.tadris.fitness.util.charts.BitmapHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShortcutsUtils {
     private static final String TAG = "ShortcutsUtils";
