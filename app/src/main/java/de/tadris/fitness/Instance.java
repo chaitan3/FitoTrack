@@ -20,12 +20,14 @@
 package de.tadris.fitness;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import de.tadris.fitness.data.AppDatabase;
 import de.tadris.fitness.data.preferences.UserPreferences;
+import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.util.DataManager;
 import de.tadris.fitness.util.FitoTrackThemes;
 import de.tadris.fitness.util.ShortcutsUtils;
@@ -36,6 +38,8 @@ import de.tadris.fitness.util.unit.DistanceUnitUtils;
 import de.tadris.fitness.util.unit.EnergyUnitUtils;
 
 public class Instance {
+
+    private static final String TAG = "Instance";
 
     private static Instance instance;
 
@@ -50,7 +54,7 @@ public class Instance {
 
     public static Instance getInstance(Context context) {
         if (context == null) {
-            Log.w("Instance", "no Context Provided");
+            Log.w(TAG, "no Context Provided");
         }
         if (instance == null && context != null) {
             instance = new Instance(context);
@@ -81,10 +85,22 @@ public class Instance {
         shortcuts = new ShortcutsUtils(context);
 
         startBackgroundClean(context);
+        checkUnfinishedRecording(context);
     }
 
     private void startBackgroundClean(Context context) {
         DataManager.cleanFilesASync(context);
+    }
+
+    // Checks if a workout was recorded before app exit and resume it in that case
+    private void checkUnfinishedRecording(Context context) {
+        boolean hasUnfinishedWorkout = db.workoutDao().findRunningWorkout() != null;
+        WorkoutLogger.log(TAG, "Checking for unfinished workout. Result=" + hasUnfinishedWorkout);
+        if (hasUnfinishedWorkout) {
+            Intent intent = new Intent(context, RecorderService.class);
+            intent.putExtra(RecorderService.EXTRA_USE_EXISTING, true);
+            context.startForegroundService(intent);
+        }
     }
 
 }

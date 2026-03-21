@@ -52,6 +52,9 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun register() {
         EventBus.getDefault().register(this)
+        EventBus.getDefault().postSticky(
+            RecordingStateChangeEvent(service.stateHolder.workoutId, state, state)
+        )
     }
 
     fun unregister() {

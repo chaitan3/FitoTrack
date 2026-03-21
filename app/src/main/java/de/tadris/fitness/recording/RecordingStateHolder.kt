@@ -24,7 +24,9 @@ import android.util.Log
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.data.WorkoutTypeManager
 import java.util.UUID
 
 class RecordingStateHolder {
@@ -61,16 +63,45 @@ class RecordingStateHolder {
         get() = pauseDuration +
                 if (state.isPause()) timeSinceLastStateChange else 0
 
-    fun init(context: Context){
+    fun initFresh(context: Context, workoutType: WorkoutType) {
+        this.workoutType = workoutType
         recordingType = RecordingType.findById(workoutType.recordingType)
         Log.d("RecordingStateHolder", "Init with type=$workoutType recordingType=$recordingType")
-        createFreshWorkout().also {
+        createFreshWorkout(workoutType).also {
             workoutId = it.id
             Instance.getInstance(context).db.workoutDao().insertWorkout(it)
         }
     }
 
-    private fun createFreshWorkout() = Workout(
+    fun initExisting(context: Context) {
+        val existingWorkout = Instance.getInstance(context).db.workoutDao().findRunningWorkout()
+            ?: createFreshWorkout(
+                WorkoutTypeManager.getInstance()
+                    .getWorkoutTypeById(context, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER)
+            )
+
+        workoutType = existingWorkout.getWorkoutType(context)
+        recordingType = RecordingType.findById(workoutType.recordingType)
+        workoutId = existingWorkout.id
+        Log.d("RecordingStateHolder", "Init with type=$workoutType recordingType=$recordingType")
+
+        recoverStateVariables(context, existingWorkout)
+    }
+
+    private fun recoverStateVariables(context: Context, workout: Workout) {
+        state = RecordingState.RUNNING
+
+        // Estimate pause and active time from recorded samples
+        val data = WorkoutData.fromWorkout(context, workout)
+        val allSamples = data.samples + data.repetitionSamples + data.events + data.heartRateSamples
+        val lastSample = allSamples.maxByOrNull { it.relativeTime }
+
+        activeDuration = lastSample?.relativeTime ?: 0
+        pauseDuration = data.pauses.sumOf { it.duration }
+        lastStateChange = lastSample?.timestamp ?: System.currentTimeMillis()
+    }
+
+    private fun createFreshWorkout(workoutType: WorkoutType) = Workout(
         id = System.nanoTime(),
         uuid = UUID.randomUUID().toString(),
         start = -1,

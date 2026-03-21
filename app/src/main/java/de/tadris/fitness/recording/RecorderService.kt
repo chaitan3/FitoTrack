@@ -58,6 +58,7 @@ import java.util.concurrent.TimeUnit
 class RecorderService : Service() {
 
     companion object {
+        const val EXTRA_USE_EXISTING = "useExisting"
         const val EXTRA_WORKOUT_TYPE = "workoutType"
 
         const val TAG: String = "RecorderService"
@@ -119,10 +120,18 @@ class RecorderService : Service() {
         super.onStartCommand(intent, flags, startId)
 
         stateHolder = RecordingStateHolder()
-        stateHolder.workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(
-            this, intent?.getStringExtra(EXTRA_WORKOUT_TYPE) ?: WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
-        )
-        stateHolder.init(this)
+
+        val useExisting = intent?.getBooleanExtra(EXTRA_USE_EXISTING, false) ?: false
+        if (useExisting) {
+            stateHolder.initExisting(this)
+        } else {
+            val workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(
+                this,
+                intent?.getStringExtra(EXTRA_WORKOUT_TYPE)
+                    ?: WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
+            )
+            stateHolder.initFresh(this, workoutType)
+        }
 
         acquireWakelock()
 
