@@ -32,7 +32,7 @@ import java.util.UUID
 class RecordingStateHolder {
 
     companion object {
-        private const val RUNNING_WORKOUT_END_TIME = -1L
+        const val RUNNING_WORKOUT_END_TIME = -1L
     }
 
     lateinit var workoutType: WorkoutType
@@ -108,7 +108,7 @@ class RecordingStateHolder {
 
         activeDuration = lastSample?.relativeTime ?: 0
         pauseDuration = data.pauses.sumOf { it.duration }
-        lastStateChange = lastSample?.timestamp ?: System.currentTimeMillis()
+        lastStateChange = System.currentTimeMillis()
     }
 
     private fun createFreshWorkout(workoutType: WorkoutType) = Workout(

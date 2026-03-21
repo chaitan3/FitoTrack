@@ -58,7 +58,6 @@ import java.util.concurrent.TimeUnit
 class RecorderService : Service() {
 
     companion object {
-        const val EXTRA_USE_EXISTING = "useExisting"
         const val EXTRA_WORKOUT_TYPE = "workoutType"
 
         const val TAG: String = "RecorderService"

@@ -45,19 +45,19 @@ interface WorkoutDao {
     @Query("SELECT * FROM route_sample WHERE id = :id")
     fun findSampleById(id: Long): RouteSample?
 
-    @Query("SELECT * FROM route_sample WHERE workoutId = :workoutId")
+    @Query("SELECT * FROM route_sample WHERE workoutId = :workoutId order by relativeTime asc")
     fun getAllSamplesOfWorkout(workoutId: Long): Array<RouteSample>
 
-    @Query("SELECT * FROM workout_pause WHERE workoutId = :workoutId")
+    @Query("SELECT * FROM workout_pause WHERE workoutId = :workoutId order by startDate asc")
     fun getAllPausesOfWorkout(workoutId: Long): Array<WorkoutPause>
 
-    @Query("SELECT * FROM workout_event WHERE workoutId = :workoutId")
+    @Query("SELECT * FROM workout_event WHERE workoutId = :workoutId order by relativeTime asc")
     fun getEventsOfWorkout(workoutId: Long): Array<WorkoutEvent>
 
-    @Query("SELECT * FROM repetition_sample WHERE workoutId = :workoutId")
+    @Query("SELECT * FROM repetition_sample WHERE workoutId = :workoutId order by relativeTime asc")
     fun getAllRepetitionSamplesOfWorkout(workoutId: Long): Array<RepetitionSample>
 
-    @Query("SELECT * FROM heart_rate_sample WHERE workoutId = :workoutId")
+    @Query("SELECT * FROM heart_rate_sample WHERE workoutId = :workoutId order by relativeTime asc")
     fun getAllHeartRateSamplesOfWorkout(workoutId: Long): Array<HeartRateSample>
 
     @Query("SELECT * FROM workout ORDER BY start DESC")
@@ -80,9 +80,6 @@ interface WorkoutDao {
 
     @Query("SELECT * FROM workout WHERE id = :id")
     fun getWorkoutById(id: Long): Workout?
-
-    @Query("SELECT * FROM route_sample")
-    fun getSamples(): Array<RouteSample>
 
 
     @Transaction

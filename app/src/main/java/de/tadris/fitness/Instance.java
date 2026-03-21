@@ -98,7 +98,6 @@ public class Instance {
         WorkoutLogger.log(TAG, "Checking for unfinished workout. Result=" + hasUnfinishedWorkout);
         if (hasUnfinishedWorkout) {
             Intent intent = new Intent(context, RecorderService.class);
-            intent.putExtra(RecorderService.EXTRA_USE_EXISTING, true);
             context.startForegroundService(intent);
         }
     }

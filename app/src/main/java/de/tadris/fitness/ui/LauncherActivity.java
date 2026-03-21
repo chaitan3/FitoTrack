@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import androidx.core.splashscreen.SplashScreen;
@@ -74,7 +73,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
                 Instance.getInstance(this).userPreferences.updateLastVersionCode();
                 Instance.getInstance(this).shortcuts.init();
                 MapManager.initMapProvider(this);
-                new Handler().postDelayed(this::start, 1000);
+                start();
             }
         } catch (Exception e) {
             e.printStackTrace();
