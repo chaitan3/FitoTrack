@@ -492,8 +492,6 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "       start,`end`,duration,comment,0.0,repetitions,calorie,workoutType,-1\n" +
                                     "FROM indoor_workout;\n");
 
-                            // TODO recalculate estimated distance from step length
-
                             // HANDLE ROUTE SAMPLE
 
                             db.execSQL("CREATE TABLE route_sample (" +

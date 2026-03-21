@@ -28,6 +28,7 @@ import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.util.AltitudeCorrection
 import de.tadris.fitness.util.WorkoutLogger
+import de.tadris.fitness.util.autoexport.AutoExportPlanner
 import de.tadris.fitness.util.calorie.CalorieCalculator
 import de.tadris.fitness.util.totalDistance
 import kotlin.math.roundToInt
@@ -44,14 +45,15 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
         updateMSLValues()
         updateRouteSamples()
 
-        workoutDao.updateWorkout(
-            workout.copy(
-                activeDuration = getActiveDuration(),
-                distance = data.samples.totalDistance,
-                repetitions = data.repetitionSamples.sumOf { it.repetitions },
-                energy = getEnergy(),
-            )
+        val finalVersion = workout.copy(
+            activeDuration = getActiveDuration(),
+            distance = data.samples.totalDistance,
+            repetitions = data.repetitionSamples.sumOf { it.repetitions },
+            energy = getEnergy(),
         )
+
+        workoutDao.updateWorkout(finalVersion)
+        AutoExportPlanner(context).onWorkoutRecorded(finalVersion)
     }
 
     fun recalculateElevation() {
