@@ -57,6 +57,7 @@ import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.ui.workout.diagram.SampleConverter;
 import de.tadris.fitness.util.SampleAggregator;
+import de.tadris.fitness.util.WorkoutCalculator;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.marker.DisplayValueMarker;
 import de.tadris.fitness.util.unit.DistanceUnitUtils;
@@ -233,10 +234,9 @@ public abstract class WorkoutActivity extends InformationActivity {
         if (showIntervalSets && intervals != null && intervals.length > 0) {
             List<BarEntry> barEntries = new ArrayList<>();
 
-            /* TODO reimplement display of interval set
-            for (long relativeTime : WorkoutCalculator.getIntervalSetTimesFromWorkout(getBaseWorkoutData())) {
+            for (long relativeTime : WorkoutCalculator.INSTANCE.getIntervalSetTimesFromWorkout(data)) {
                 barEntries.add(new BarEntry((float) (relativeTime) / 1000f / 60f, yMax));
-            }*/
+            }
 
             BarDataSet barDataSet = new BarDataSet(barEntries, getString(R.string.intervalSet));
             barDataSet.setBarBorderWidth(3);

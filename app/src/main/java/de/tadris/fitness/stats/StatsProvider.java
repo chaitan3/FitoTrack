@@ -19,16 +19,12 @@
 
 package de.tadris.fitness.stats;
 
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import android.content.Context;
 
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BubbleDataSet;
-import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -362,40 +358,6 @@ public class StatsProvider {
         return barEntries;
     }
 
-    public List<BubbleDataSet> getExperimentalData(List<WorkoutType> workoutTypes, StatsDataTypes.TimeSpan timeSpan, AggregationSpan aggregationSpan, WorkoutProperty xAxis, WorkoutProperty yAxis, WorkoutProperty bubbleSize) throws NoDataException {
-        List<BubbleDataSet> dataSets = new ArrayList<>();
-        for(WorkoutType type : workoutTypes) {
-            List<WorkoutType> typeList = new ArrayList<>();
-            typeList.add(type);
-            ArrayList<StatsDataTypes.DataPoint> xData = dataProvider.getData(xAxis,
-                    typeList, timeSpan);
-            ArrayList<StatsDataTypes.DataPoint> yData = dataProvider.getData(yAxis,
-                    typeList, timeSpan);
-            ArrayList<StatsDataTypes.DataPoint> bubbleData = dataProvider.getData(bubbleSize,
-                    typeList, timeSpan);
-
-            if (xData.isEmpty() || yData.isEmpty() || bubbleData.isEmpty()) {
-                continue;
-            }
-
-            List<BubbleEntry> bubbleEntries = new ArrayList<>();
-            for (int i = 0; i < xData.size(); i++) {
-                bubbleEntries.add(new BubbleEntry((float) xData.get(i).value, (float) yData.get(i).value, (float) bubbleData.get(i).value));
-            }
-            Collections.sort(bubbleEntries, (Entry a, Entry b) -> a.getX() < b.getX() ? -1 : a.getX() > b.getX() ? 1 : 0);
-            BubbleDataSet set =new BubbleDataSet(bubbleEntries, type.title);
-            int alpha = 255/(bubbleEntries.size());
-            set.setColor(type.color, min(max(alpha, 20), 160));
-            set.setValueFormatter(yAxis.getValueFormatter(ctx, set.getYMax()));
-            set.setDrawValues(false);
-            dataSets.add(set);
-        }
-        if(dataSets.size() == 0) {
-            throw new NoDataException();
-        }
-        return dataSets;
-    }
-
     public static LineDataSet convertCandleToMeanLineData(CandleDataSet candleDataSet) {
         ArrayList<Entry> lineData = new ArrayList<>();
 
@@ -424,14 +386,4 @@ public class StatsProvider {
         return sum;
     }
 
-    public void setAxisLimits(AxisBase axis, WorkoutProperty property) {
-        try {
-            axis.setAxisMinimum(dataProvider.getFirstData(
-                    property, WorkoutTypeManager.getInstance().getAllTypes(ctx)).time);
-            axis.setAxisMaximum(dataProvider.getLastData(
-                    property, WorkoutTypeManager.getInstance().getAllTypes(ctx)).time);
-        } catch (NoDataException e) {
-            e.printStackTrace();
-        }
-    }
 }

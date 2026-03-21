@@ -34,7 +34,7 @@ import kotlin.math.abs
 
 class GpsSampleComponent : RecorderServiceComponent {
 
-    private var minDistance = 10 // TODO get from workout type
+    private var minDistance = 10
 
     private lateinit var service: RecorderService
     private var lastSample: RouteSample? = null
@@ -42,6 +42,7 @@ class GpsSampleComponent : RecorderServiceComponent {
 
     override fun register(service: RecorderService) {
         this.service = service
+        minDistance = service.stateHolder.workoutType.minDistance
         EventBus.getDefault().register(this)
     }
 

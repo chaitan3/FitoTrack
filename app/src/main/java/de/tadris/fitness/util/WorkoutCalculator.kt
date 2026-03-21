@@ -25,6 +25,14 @@ import org.mapsforge.core.model.LatLong
 
 object WorkoutCalculator {
 
+    fun getIntervalSetTimesFromWorkout(data: WorkoutData): List<Long> {
+        return data.events
+            .asSequence()
+            .filter { it.typeId == WorkoutEvent.TYPE_ID_INTERVAL }
+            .map { it.relativeTime }
+            .toList()
+    }
+
     fun getSetsFromWorkout(data: WorkoutData): List<Set> {
         val workout = data.workout
         val samples = data.repetitionSamples.toMutableList()

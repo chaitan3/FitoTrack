@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -25,6 +25,7 @@ import androidx.annotation.StringRes;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationType;
+import de.tadris.fitness.data.CalculatedValues;
 import de.tadris.fitness.data.Workout;
 
 public class TopSpeed extends AbstractWorkoutInformation {
@@ -50,8 +51,8 @@ public class TopSpeed extends AbstractWorkoutInformation {
 
     @Override
     public double getValueFromWorkout(Workout workout) {
-        return 0;
-        // TODO return distanceUnitUtils.getDistanceUnitSystem().getSpeedFromMeterPerSecond(workout.topSpeed);
+        // Note that this queries all workout samples
+        return new CalculatedValues(context, workout).getTopSpeed();
     }
 
     @Override
