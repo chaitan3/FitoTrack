@@ -33,6 +33,7 @@ import java.util.List;
 import de.tadris.fitness.BuildConfig;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
+import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.migration.Migration;
 import de.tadris.fitness.data.migration.Migration15DistancePeriod;
 import de.tadris.fitness.data.migration.Migration16Energy;
@@ -40,7 +41,11 @@ import de.tadris.fitness.data.migration.Migration16PausesRepetitions;
 import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.MapManager;
+import de.tadris.fitness.recording.RecordingState;
+import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
+import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 
 public class LauncherActivity extends Activity implements Migration.MigrationListener {
 
@@ -126,24 +131,21 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
     }
 
     private void start() {
-        /*TODO WorkoutRecorder recorder = Instance.getInstance(this).recorder;
-        if (recorder.getState() == GpsWorkoutRecorder.RecordingState.PAUSED ||
-                recorder.getState() == GpsWorkoutRecorder.RecordingState.RUNNING) {
-            // Resume to running Workout
-            Intent recorderActivityIntent = new Intent(this, recorder.getActivityClass());
+        RecordingState state = RecordingStateChangeEvent.Companion.getCurrent().getNewState();
+        if (state != RecordingState.IDLE && state != RecordingState.STOPPED) {
+            // currently recording a workout -> go to recording activity
+            RecordingType type = AggregatedRecordingValuesEvent.Companion.getCurrent().getWorkoutType().getRecordingType();
+            Intent recorderActivityIntent = new Intent(this, type.recorderActivityClass);
             recorderActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             recorderActivityIntent.setAction(RecordWorkoutActivity.RESUME_ACTION);
             startActivity(recorderActivityIntent);
-            finish();
-            overridePendingTransition(R.anim.fade_in, R.anim.stay);
         } else {
+            // Go to Workout List
+            Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
+            listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(listWorkoutActivityIntent);
+        }
 
-        }*/
-
-        // Go to Workout List
-        Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
-        listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(listWorkoutActivityIntent);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.stay);
     }
