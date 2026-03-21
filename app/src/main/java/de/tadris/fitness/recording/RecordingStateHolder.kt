@@ -103,11 +103,8 @@ class RecordingStateHolder {
 
         // Estimate pause and active time from recorded samples
         val data = WorkoutData.fromWorkout(context, workout)
-        val allSamples = data.samples + data.repetitionSamples + data.events + data.heartRateSamples
-        val lastSample = allSamples.maxByOrNull { it.relativeTime }
-
-        activeDuration = lastSample?.relativeTime ?: 0
         pauseDuration = data.pauses.sumOf { it.duration }
+        activeDuration = System.currentTimeMillis() - workout.start - pauseDuration
         lastStateChange = System.currentTimeMillis()
     }
 
