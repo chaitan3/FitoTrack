@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.core.splashscreen.SplashScreen;
@@ -34,15 +35,17 @@ import de.tadris.fitness.BuildConfig;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.RecordingType;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.migration.Migration;
 import de.tadris.fitness.data.migration.Migration15DistancePeriod;
 import de.tadris.fitness.data.migration.Migration16Energy;
 import de.tadris.fitness.data.migration.Migration16PausesRepetitions;
+import de.tadris.fitness.data.migration.Migration16RunningWorkouts;
 import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.MapManager;
 import de.tadris.fitness.recording.RecordingState;
-import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent;
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
 import de.tadris.fitness.ui.record.RecordWorkoutActivity;
@@ -71,7 +74,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
                 Instance.getInstance(this).userPreferences.updateLastVersionCode();
                 Instance.getInstance(this).shortcuts.init();
                 MapManager.initMapProvider(this);
-                start();
+                new Handler().postDelayed(this::start, 1000);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,6 +98,9 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
         }
         if(preferences.getLastVersionCode() < 1601) {
             migrations.add(new Migration16Energy(this, this));
+        }
+        if (preferences.getLastVersionCode() < 1602) {
+            migrations.add(new Migration16RunningWorkouts(this, this));
         }
         progressDialog = new ProgressDialogController(this, getString(R.string.runningMigrations));
         progressDialog.show();
@@ -132,10 +138,13 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
 
     private void start() {
         RecordingState state = RecordingStateChangeEvent.Companion.getCurrent().getNewState();
-        if (state != RecordingState.IDLE && state != RecordingState.STOPPED) {
+        Workout runningWorkout = Instance.getInstance(this).db.workoutDao().findRunningWorkout();
+        if (runningWorkout != null && state != RecordingState.STOPPED) {
             // currently recording a workout -> go to recording activity
-            RecordingType type = AggregatedRecordingValuesEvent.Companion.getCurrent().getWorkoutType().getRecordingType();
-            Intent recorderActivityIntent = new Intent(this, type.recorderActivityClass);
+            WorkoutType workoutType = runningWorkout.getWorkoutType(this);
+            RecordingType recordingType = workoutType.getRecordingType();
+            Intent recorderActivityIntent = new Intent(this, recordingType.recorderActivityClass);
+            recorderActivityIntent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id);
             recorderActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             recorderActivityIntent.setAction(RecordWorkoutActivity.RESUME_ACTION);
             startActivity(recorderActivityIntent);

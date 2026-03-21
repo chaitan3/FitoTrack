@@ -134,6 +134,7 @@ class RecorderServiceActions(private val service: RecorderService) {
         }
         if (state == RecordingState.IDLE) {
             log(TAG, "Was in IDLE, discarding workout")
+            discard()
             return
         }
 
@@ -151,8 +152,12 @@ class RecorderServiceActions(private val service: RecorderService) {
     fun discard(){
         log(TAG, "Discard called")
         state = RecordingState.STOPPED
-        service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)?.let {
-            service.instance.db.workoutDao().deleteWorkout(it)
+        val workout = service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)
+        if (workout != null) {
+            log(TAG, "Deleting workout from DB")
+            service.instance.db.workoutDao().deleteWorkout(workout)
+        } else {
+            log(TAG, "Couldn't delete, workout not found ID: ${service.stateHolder.workoutId}")
         }
         service.stopSelf()
     }

@@ -121,7 +121,7 @@ class RecorderService : Service() {
 
         stateHolder = RecordingStateHolder()
 
-        val useExisting = intent?.getBooleanExtra(EXTRA_USE_EXISTING, false) ?: false
+        val useExisting = Instance.getInstance(this).db.workoutDao().findRunningWorkout() != null
         if (useExisting) {
             stateHolder.initExisting(this)
         } else {

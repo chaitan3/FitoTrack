@@ -458,20 +458,18 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         cancelAutoStart(true)
 
         val current = AggregatedRecordingValuesEvent.getCurrent()
-        if (currentState != RecordingState.IDLE) { // Only Running Records can be stopped
-            EventBus.getDefault().post(WorkoutActionStop(reason))
-            if (current.recordedSomething) {
-                if (askForComment) {
-                    showEnterDescriptionDialog()
-                } else {
-                    activityFinish()
-                }
+        EventBus.getDefault().post(WorkoutActionStop(reason))
+        if (current.recordedSomething) {
+            if (askForComment) {
+                showEnterDescriptionDialog()
             } else {
-                Toast.makeText(this, R.string.workoutDiscarded, Toast.LENGTH_LONG).show()
-                EventBus.getDefault().post(WorkoutActionDiscard)
                 activityFinish()
             }
         } else {
+            if (current.currentState != RecordingState.IDLE) {
+                Toast.makeText(this, R.string.workoutDiscarded, Toast.LENGTH_LONG).show()
+            }
+            EventBus.getDefault().post(WorkoutActionDiscard)
             activityFinish()
         }
     }
@@ -589,17 +587,6 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
 
         EventBus.getDefault().unregister(this)
 
-        // Kill Service on Finished or not Started Recording
-        val state = currentState
-        if (state == RecordingState.STOPPED || state == RecordingState.IDLE) {
-            log(TAG, "Recorder state is $state, stopping recording")
-            stop(StopReason.ACTIVITY_DESTROY)
-            stopService()
-            if (state == RecordingState.IDLE) {
-                // Inform the user
-                Toast.makeText(this, R.string.noWorkoutStarted, Toast.LENGTH_LONG).show()
-            }
-        }
         super.onDestroy()
     }
 
@@ -963,6 +950,16 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     protected fun activityFinish() {
         if (!this.finished) {
             this.finished = true
+
+            val state = currentState
+            if (state == RecordingState.IDLE) {
+                log(TAG, "Recorder state is $state, stopping recording")
+                Toast.makeText(this, R.string.noWorkoutStarted, Toast.LENGTH_LONG).show()
+                stop(StopReason.ACTIVITY_DESTROY)
+            }
+
+            stopService()
+
             this.finish()
             val launcherIntent = Intent(this, LauncherActivity::class.java)
             launcherIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -1045,16 +1042,12 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         get() = RecordingStateChangeEvent.getCurrent().newState
 
     protected fun determineWorkoutType(): WorkoutType {
-        if (wasAlreadyRunning()) {
-            return AggregatedRecordingValuesEvent.getCurrent().workoutType
+        val workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA)
+        if (workoutType is WorkoutType) {
+            return workoutType
         } else {
-            val workoutType = intent.getSerializableExtra(WORKOUT_TYPE_EXTRA)
-            if (workoutType is WorkoutType) {
-                return workoutType
-            } else {
-                val workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA)
-                return WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
-            }
+            val workoutTypeId = intent.getStringExtra(WORKOUT_TYPE_EXTRA)
+            return WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
         }
     }
 

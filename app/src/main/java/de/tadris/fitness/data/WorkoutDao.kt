@@ -33,8 +33,11 @@ interface WorkoutDao {
         updateWorkout(editor(workout))
     }
 
-    @Query("select * from workout where `end` != 0")
+    @Query("select * from workout where `end` == -1")
     fun findRunningWorkout(): Workout?
+
+    @Query("select * from workout where `end` == -1")
+    fun findAllRunningWorkouts(): List<Workout>
 
     @Query("SELECT * FROM workout WHERE id = :id")
     fun findById(id: Long): Workout?

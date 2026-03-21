@@ -31,6 +31,10 @@ import java.util.UUID
 
 class RecordingStateHolder {
 
+    companion object {
+        private const val RUNNING_WORKOUT_END_TIME = -1L
+    }
+
     lateinit var workoutType: WorkoutType
     var recordingType: RecordingType = RecordingType.GPS
     var workoutId: Long = -1
@@ -66,11 +70,14 @@ class RecordingStateHolder {
     fun initFresh(context: Context, workoutType: WorkoutType) {
         this.workoutType = workoutType
         recordingType = RecordingType.findById(workoutType.recordingType)
-        Log.d("RecordingStateHolder", "Init with type=$workoutType recordingType=$recordingType")
         createFreshWorkout(workoutType).also {
             workoutId = it.id
             Instance.getInstance(context).db.workoutDao().insertWorkout(it)
         }
+        Log.d(
+            "RecordingStateHolder",
+            "Init fresh with type=$workoutType recordingType=$recordingType ID=$workoutId"
+        )
     }
 
     fun initExisting(context: Context) {
@@ -78,12 +85,15 @@ class RecordingStateHolder {
             ?: createFreshWorkout(
                 WorkoutTypeManager.getInstance()
                     .getWorkoutTypeById(context, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER)
-            )
+            ).also { Instance.getInstance(context).db.workoutDao().insertWorkout(it) }
 
         workoutType = existingWorkout.getWorkoutType(context)
         recordingType = RecordingType.findById(workoutType.recordingType)
         workoutId = existingWorkout.id
-        Log.d("RecordingStateHolder", "Init with type=$workoutType recordingType=$recordingType")
+        Log.d(
+            "RecordingStateHolder",
+            "Init existing with type=$workoutType recordingType=$recordingType ID=${existingWorkout.id}"
+        )
 
         recoverStateVariables(context, existingWorkout)
     }
@@ -105,7 +115,7 @@ class RecordingStateHolder {
         id = System.nanoTime(),
         uuid = UUID.randomUUID().toString(),
         start = -1,
-        end = -1,
+        end = RUNNING_WORKOUT_END_TIME,
         activeDuration = 0,
         comment = "",
         distance = 0.0,
