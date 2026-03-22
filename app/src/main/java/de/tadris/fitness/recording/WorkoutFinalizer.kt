@@ -143,7 +143,7 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
     }
 
     private fun updateRouteSamples(){
-        data.samples.forEach { workoutDao.updateSample(it) }
+        workoutDao.updateSamples(data.samples)
     }
 
     private fun getActiveDuration(): Long {

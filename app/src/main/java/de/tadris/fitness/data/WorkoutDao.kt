@@ -161,7 +161,7 @@ interface WorkoutDao {
     fun deleteSample(sample: RouteSample)
 
     @Update
-    fun updateSamples(samples: Array<RouteSample>)
+    fun updateSamples(samples: List<RouteSample>)
 
     @Update
     fun updateSample(sample: RouteSample)
