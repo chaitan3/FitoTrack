@@ -119,10 +119,18 @@ class RecorderService : Service() {
         super.onStartCommand(intent, flags, startId)
 
         stateHolder = RecordingStateHolder()
-        stateHolder.workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(
-            this, intent?.getStringExtra(EXTRA_WORKOUT_TYPE) ?: WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
-        )
-        stateHolder.init(this)
+
+        val useExisting = Instance.getInstance(this).db.workoutDao().findRunningWorkout() != null
+        if (useExisting) {
+            stateHolder.initExisting(this)
+        } else {
+            val workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(
+                this,
+                intent?.getStringExtra(EXTRA_WORKOUT_TYPE)
+                    ?: WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
+            )
+            stateHolder.initFresh(this, workoutType)
+        }
 
         acquireWakelock()
 

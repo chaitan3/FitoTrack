@@ -34,11 +34,11 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import de.tadris.fitness.R
-import de.tadris.fitness.data.RepetitionSample
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent
+import de.tadris.fitness.recording.event.RepetitionSampleEvent
 import de.tadris.fitness.recording.indoor.exercise.RepetitionRecognizedEvent
 import de.tadris.fitness.util.unit.UnitUtils
 import org.greenrobot.eventbus.Subscribe
@@ -90,7 +90,7 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
             if (samples.isNotEmpty()) {
                 lastSampleTime = samples.first().timestamp
                 samples.subList(0, samples.size - 1).forEach {
-                    onSampleFinalized(it)
+                    onSampleFinalized(RepetitionSampleEvent(it))
                 }
             }
         }
@@ -202,7 +202,8 @@ class RecordIndoorWorkoutActivity : RecordWorkoutActivity() {
     private var lastSampleTime = System.currentTimeMillis()
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSampleFinalized(sample: RepetitionSample) {
+    fun onSampleFinalized(e: RepetitionSampleEvent) {
+        val sample = e.sample
         val frequency =
             1000 * sample.repetitions.toDouble() / (sample.timestampEnd - lastSampleTime + 1)
         lastSampleTime = sample.timestampEnd

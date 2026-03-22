@@ -3,6 +3,7 @@ package de.tadris.fitness.util.sections;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tadris.fitness.data.CalculatedValues;
 import de.tadris.fitness.util.unit.DistanceUnitUtils;
 import de.tadris.fitness.util.unit.UnitUtils;
 
@@ -81,11 +82,9 @@ public class DistanceTranslator {
                     if (criterion == SectionListModel.SectionCriterion.DISTANCE)
                         length = listModel.getWorkout().getDistance() / length; // Transform num sections to simple distance criterion
                     else if (criterion == SectionListModel.SectionCriterion.ASCENT)
-                        length = 0;
-                        // TODO length = listModel.getWorkout().ascent / length;
+                        length = new CalculatedValues(listModel.getWorkoutData()).getAscent() / length;
                     else if (criterion == SectionListModel.SectionCriterion.DESCENT)
-                        length = 0;
-                // TODO length = listModel.getWorkout().descent / length;
+                        length = new CalculatedValues(listModel.getWorkoutData()).getDescent() / length;
                 break;
         }
         return length;
@@ -114,11 +113,9 @@ public class DistanceTranslator {
                     if (criterion == SectionListModel.SectionCriterion.DISTANCE)
                         length = listModel.getWorkout().getDistance() / length; // Transform num sections to simple distance criterion
                     else if (criterion == SectionListModel.SectionCriterion.ASCENT)
-                        length = 0;
-                        // TODO length = listModel.getWorkout().ascent / length;
+                        length = new CalculatedValues(listModel.getWorkoutData()).getAscent() / length;
                     else if (criterion == SectionListModel.SectionCriterion.DESCENT)
-                        length = 0;
-                // TODO length = listModel.getWorkout().descent / length;
+                        length = new CalculatedValues(listModel.getWorkoutData()).getDescent() / length;
                 break;
         }
         return UnitUtils.roundDouble(length, 2);

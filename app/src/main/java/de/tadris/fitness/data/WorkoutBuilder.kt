@@ -24,6 +24,7 @@ import de.tadris.fitness.data.preferences.UserMeasurements.Companion.from
 import de.tadris.fitness.util.calorie.CalorieCalculator
 import java.util.Calendar
 import java.util.UUID
+import kotlin.math.roundToInt
 
 class WorkoutBuilder(context: Context?) {
     var workoutType: WorkoutType
@@ -45,10 +46,14 @@ class WorkoutBuilder(context: Context?) {
     fun create(context: Context): Workout {
         val pauseDuration = if (this.isFromExistingWorkout) existingWorkout!!.pauseDuration else 0L
         val activeDuration = duration - pauseDuration
+        val ascent = if (isFromExistingWorkout) CalculatedValues(
+            context,
+            existingWorkout!!
+        ).ascent.roundToInt() else 0
         val energy = CalorieCalculator(context).calculateEnergy(
             from(context),
             activeDuration,
-            0,  // TODO
+            ascent,
             workoutType.id,
             distance / (activeDuration / 1000.0)
         )

@@ -37,7 +37,13 @@ class RecorderServiceActions(private val service: RecorderService) {
         set(value) {
             val oldState = service.stateHolder.state
             service.stateHolder.state = value
-            EventBus.getDefault().post(RecordingStateChangeEvent(service.stateHolder.workoutId, oldState, value))
+            EventBus.getDefault().postSticky(
+                RecordingStateChangeEvent(
+                    service.stateHolder.workoutId,
+                    oldState,
+                    value
+                )
+            )
         }
 
     companion object {
@@ -46,6 +52,9 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun register() {
         EventBus.getDefault().register(this)
+        EventBus.getDefault().postSticky(
+            RecordingStateChangeEvent(service.stateHolder.workoutId, state, state)
+        )
     }
 
     fun unregister() {
@@ -96,7 +105,7 @@ class RecorderServiceActions(private val service: RecorderService) {
             service.instance.db.workoutDao().insertPause(
                 WorkoutPause(
                     service.stateHolder.workoutId,
-                    0L,
+                    System.nanoTime(),
                     service.stateHolder.lastStateChange,
                     System.currentTimeMillis(),
                     state == RecordingState.MANUAL_PAUSE
@@ -108,7 +117,7 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun pause(isAutomatic: Boolean) {
         if (state == RecordingState.RUNNING) {
-            log("Recorder", "Pause, isAutomatic=$isAutomatic")
+            log(TAG, "Pause, isAutomatic=$isAutomatic")
             state = if (isAutomatic) {
                 RecordingState.AUTO_PAUSE
             } else {
@@ -119,7 +128,19 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun stop(reason: StopReason) {
         log(TAG, "Called stop, reason: ${reason.logMessage}")
-        pause(isAutomatic = true)
+        if (state == RecordingState.STOPPED) {
+            log(TAG, "Already stopped")
+            return
+        }
+        if (state == RecordingState.IDLE) {
+            log(TAG, "Was in IDLE, discarding workout")
+            discard()
+            return
+        }
+
+        log(TAG, "Stopping and finalizing workout...")
+        resume() // Append pause
+        pause(true) // Append last active time
         state = RecordingState.STOPPED
         service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
             it.copy(end = System.currentTimeMillis())
@@ -130,8 +151,13 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     fun discard(){
         log(TAG, "Discard called")
-        service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)?.let {
-            service.instance.db.workoutDao().deleteWorkout(it)
+        state = RecordingState.STOPPED
+        val workout = service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)
+        if (workout != null) {
+            log(TAG, "Deleting workout from DB")
+            service.instance.db.workoutDao().deleteWorkout(workout)
+        } else {
+            log(TAG, "Couldn't delete, workout not found ID: ${service.stateHolder.workoutId}")
         }
         service.stopSelf()
     }

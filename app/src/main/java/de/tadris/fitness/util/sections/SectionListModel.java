@@ -70,6 +70,10 @@ public class SectionListModel {
         return data.getWorkout();
     }
 
+    public WorkoutData getWorkoutData() {
+        return data;
+    }
+
     public void setUnits(List<String> units) {
         this.units = units;
     }

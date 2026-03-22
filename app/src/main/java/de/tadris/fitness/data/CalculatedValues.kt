@@ -19,10 +19,18 @@
 
 package de.tadris.fitness.data
 
+import android.content.Context
 import kotlin.math.max
 import kotlin.math.min
 
 class CalculatedValues(private val data: WorkoutData) {
+
+    constructor(context: Context, workout: Workout) : this(
+        WorkoutData.fromWorkout(
+            context,
+            workout
+        )
+    )
 
     companion object {
         const val ASCENT_FLOATING_CONSTANT = 2.0 // meter

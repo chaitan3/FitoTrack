@@ -33,14 +33,21 @@ import java.util.List;
 import de.tadris.fitness.BuildConfig;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
+import de.tadris.fitness.data.RecordingType;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.migration.Migration;
 import de.tadris.fitness.data.migration.Migration15DistancePeriod;
 import de.tadris.fitness.data.migration.Migration16Energy;
 import de.tadris.fitness.data.migration.Migration16PausesRepetitions;
+import de.tadris.fitness.data.migration.Migration16RunningWorkouts;
 import de.tadris.fitness.data.migration.MigrationCleanData;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.map.MapManager;
+import de.tadris.fitness.recording.RecordingState;
+import de.tadris.fitness.recording.event.RecordingStateChangeEvent;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
+import de.tadris.fitness.ui.record.RecordWorkoutActivity;
 
 public class LauncherActivity extends Activity implements Migration.MigrationListener {
 
@@ -91,6 +98,9 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
         if(preferences.getLastVersionCode() < 1601) {
             migrations.add(new Migration16Energy(this, this));
         }
+        if (preferences.getLastVersionCode() < 1602) {
+            migrations.add(new Migration16RunningWorkouts(this, this));
+        }
         progressDialog = new ProgressDialogController(this, getString(R.string.runningMigrations));
         progressDialog.show();
         new Thread(() -> {
@@ -105,6 +115,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
                     init();
                 });
             } catch (Exception e) {
+                e.printStackTrace();
                 runOnUiThread(() -> showErrorDialog(e));
             }
         }).start();
@@ -125,24 +136,24 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
     }
 
     private void start() {
-        /*TODO WorkoutRecorder recorder = Instance.getInstance(this).recorder;
-        if (recorder.getState() == GpsWorkoutRecorder.RecordingState.PAUSED ||
-                recorder.getState() == GpsWorkoutRecorder.RecordingState.RUNNING) {
-            // Resume to running Workout
-            Intent recorderActivityIntent = new Intent(this, recorder.getActivityClass());
+        RecordingState state = RecordingStateChangeEvent.Companion.getCurrent().getNewState();
+        Workout runningWorkout = Instance.getInstance(this).db.workoutDao().findRunningWorkout();
+        if (runningWorkout != null && state != RecordingState.STOPPED) {
+            // currently recording a workout -> go to recording activity
+            WorkoutType workoutType = runningWorkout.getWorkoutType(this);
+            RecordingType recordingType = workoutType.getRecordingType();
+            Intent recorderActivityIntent = new Intent(this, recordingType.recorderActivityClass);
+            recorderActivityIntent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id);
             recorderActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             recorderActivityIntent.setAction(RecordWorkoutActivity.RESUME_ACTION);
             startActivity(recorderActivityIntent);
-            finish();
-            overridePendingTransition(R.anim.fade_in, R.anim.stay);
         } else {
+            // Go to Workout List
+            Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
+            listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(listWorkoutActivityIntent);
+        }
 
-        }*/
-
-        // Go to Workout List
-        Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
-        listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(listWorkoutActivityIntent);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.stay);
     }

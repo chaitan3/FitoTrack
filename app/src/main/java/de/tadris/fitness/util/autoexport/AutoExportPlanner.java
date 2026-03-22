@@ -76,7 +76,6 @@ public class AutoExportPlanner {
         WorkManager.getInstance(context).enqueue(workRequest);
     }
 
-    // TODO call after workout was recorded
     public void onWorkoutRecorded(Workout workout) {
         for (ExportTargetConfiguration configuration : getConfigurations(ExportSource.EXPORT_SOURCE_WORKOUT_GPX)) {
             planWorkoutExportFor(workout, configuration);

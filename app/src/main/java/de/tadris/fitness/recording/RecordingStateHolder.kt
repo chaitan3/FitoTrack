@@ -24,10 +24,16 @@ import android.util.Log
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.data.WorkoutTypeManager
 import java.util.UUID
 
 class RecordingStateHolder {
+
+    companion object {
+        const val RUNNING_WORKOUT_END_TIME = -1L
+    }
 
     lateinit var workoutType: WorkoutType
     var recordingType: RecordingType = RecordingType.GPS
@@ -61,20 +67,52 @@ class RecordingStateHolder {
         get() = pauseDuration +
                 if (state.isPause()) timeSinceLastStateChange else 0
 
-    fun init(context: Context){
+    fun initFresh(context: Context, workoutType: WorkoutType) {
+        this.workoutType = workoutType
         recordingType = RecordingType.findById(workoutType.recordingType)
-        Log.d("RecordingStateHolder", "Init with type=$workoutType recordingType=$recordingType")
-        createFreshWorkout().also {
+        createFreshWorkout(workoutType).also {
             workoutId = it.id
             Instance.getInstance(context).db.workoutDao().insertWorkout(it)
         }
+        Log.d(
+            "RecordingStateHolder",
+            "Init fresh with type=$workoutType recordingType=$recordingType ID=$workoutId"
+        )
     }
 
-    private fun createFreshWorkout() = Workout(
+    fun initExisting(context: Context) {
+        val existingWorkout = Instance.getInstance(context).db.workoutDao().findRunningWorkout()
+            ?: createFreshWorkout(
+                WorkoutTypeManager.getInstance()
+                    .getWorkoutTypeById(context, WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER)
+            ).also { Instance.getInstance(context).db.workoutDao().insertWorkout(it) }
+
+        workoutType = existingWorkout.getWorkoutType(context)
+        recordingType = RecordingType.findById(workoutType.recordingType)
+        workoutId = existingWorkout.id
+        Log.d(
+            "RecordingStateHolder",
+            "Init existing with type=$workoutType recordingType=$recordingType ID=${existingWorkout.id}"
+        )
+
+        recoverStateVariables(context, existingWorkout)
+    }
+
+    private fun recoverStateVariables(context: Context, workout: Workout) {
+        state = RecordingState.RUNNING
+
+        // Estimate pause and active time from recorded samples
+        val data = WorkoutData.fromWorkout(context, workout)
+        pauseDuration = data.pauses.sumOf { it.duration }
+        activeDuration = System.currentTimeMillis() - workout.start - pauseDuration
+        lastStateChange = System.currentTimeMillis()
+    }
+
+    private fun createFreshWorkout(workoutType: WorkoutType) = Workout(
         id = System.nanoTime(),
         uuid = UUID.randomUUID().toString(),
         start = -1,
-        end = -1,
+        end = RUNNING_WORKOUT_END_TIME,
         activeDuration = 0,
         comment = "",
         distance = 0.0,

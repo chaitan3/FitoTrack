@@ -21,6 +21,7 @@ package de.tadris.fitness.recording.component
 
 import android.hardware.SensorManager
 import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
@@ -71,6 +72,22 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         val prefs = UserPreferences(service)
         useAverageForCurrentSpeed = prefs.useAverageForCurrentSpeed
         currentSpeedAverageTime = prefs.timeForCurrentSpeed * 1000
+
+        replayExistingWorkout()
+        publishAggregatedValues()
+    }
+
+    fun replayExistingWorkout() {
+        val workout = service.instance.db.workoutDao().findById(service.stateHolder.workoutId)
+        if (workout != null) {
+            val data = WorkoutData.fromWorkout(service.instance.db.workoutDao(), workout)
+            for (sample in data.samples) {
+                onNewRouteSample(RouteSampleEvent(sample))
+            }
+            for (sample in data.repetitionSamples) {
+                onNewRepetitionSample(RepetitionSampleEvent(sample))
+            }
+        }
     }
 
     override fun unregister() {

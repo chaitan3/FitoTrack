@@ -37,14 +37,19 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
+import de.tadris.fitness.data.WorkoutPause
+import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.osm.OAuthAuthentication.Companion.getAccessToken
 import de.tadris.fitness.osm.OsmTraceUploader
+import de.tadris.fitness.recording.RecorderService
+import de.tadris.fitness.recording.RecordingStateHolder
 import de.tadris.fitness.stats.StatsProvider
 import de.tadris.fitness.ui.ShareFileActivity
 import de.tadris.fitness.ui.dialog.ProgressDialogController
+import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
 import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
 import de.tadris.fitness.ui.workout.diagram.HeightConverter
@@ -261,8 +266,8 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
     private fun addSpeedHistogram() {
         val chart = BarChart(this)
-        val data: MutableList<Double?> = ArrayList()
-        val weights: MutableList<Double?> = ArrayList()
+        val data: MutableList<Double> = ArrayList()
+        val weights: MutableList<Double> = ArrayList()
 
         // Gather the data for the histogram
         val sectionListModel = SectionListModel(this.data)
@@ -274,6 +279,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
         // speed diagram.
         sectionListModel.sectionLength = sectionTime
         val sections: MutableList<SectionListModel.Section> = sectionListModel.getSectionList()
+        if (sections.isEmpty()) return
         for (section in sections) {
             weights.add(section.getTime(true))
             val speed = 1 / section.pace
@@ -586,15 +592,30 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
     }
 
     private fun resumeWorkout() {
-        /*TODO // Load workout into instance
-        Instance.getInstance(this).prepareResume(this, workout)
+        // Update workout to be running + insert a pause
+        val dao = Instance.getInstance(this).db.workoutDao()
+        dao.insertPause(
+            WorkoutPause(
+                workout.id,
+                System.nanoTime(),
+                workout.end,
+                System.currentTimeMillis(),
+                true
+            )
+        )
+        dao.updateWorkout(workout.copy(end = RecordingStateHolder.RUNNING_WORKOUT_END_TIME)) // set workout to running
 
-        // Start recording activity
-        val recorderActivityIntent = Intent(this, RecordGpsWorkoutActivity::class.java)
+        // Start service
+        startForegroundService(Intent(this, RecorderService::class.java))
+
+        // Then navigate to record activity
+        val workoutType: WorkoutType = workout.getWorkoutType(this)
+        val recordingType = workoutType.getRecordingType()
+        val recorderActivityIntent = Intent(this, recordingType.recorderActivityClass)
+        recorderActivityIntent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id)
         recorderActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        recorderActivityIntent.setAction(RecordGpsWorkoutActivity.RESUME_ACTION)
+        recorderActivityIntent.setAction(RecordWorkoutActivity.RESUME_ACTION)
         startActivity(recorderActivityIntent)
-        finish()*/
     }
 
     override fun initRoot() {

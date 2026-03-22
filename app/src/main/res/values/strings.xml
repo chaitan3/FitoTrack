@@ -366,6 +366,7 @@
     <string name="preferenceCategoryVoiceFeedback">Voice feedback</string>
     <string name="customWorkoutTypesTitle">Custom Workout Types</string>
     <string name="runningMigrations">Running migrations</string>
+    <string name="workoutNumber">Workout count</string>
     <string name="actionSave">Save</string>
     <string name="deleteWorkoutType">Delete Workout Type</string>
     <string name="deleteWorkoutTypeConfirmation">Do you really want to delete this workout type?</string>
