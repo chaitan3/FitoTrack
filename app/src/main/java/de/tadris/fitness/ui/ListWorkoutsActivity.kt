@@ -312,7 +312,7 @@ class ListWorkoutsActivity : FitoTrackActivity(), WorkoutAdapterListener {
     }
 
     private fun loadData() {
-        this.workouts = Instance.getInstance(this).db.allWorkouts.toTypedArray()
+        this.workouts = Instance.getInstance(this).db.workoutDao().getWorkouts().toTypedArray()
 
         hintText.visibility = if (workouts.isEmpty()) View.VISIBLE else View.INVISIBLE
         adapter.setWorkouts(this.workouts)

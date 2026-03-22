@@ -59,7 +59,7 @@ public class StatsDataProvider {
 
     public ArrayList<StatsDataTypes.DataPoint> getData(WorkoutProperty requestedProperty, List<WorkoutType> workoutTypes, @Nullable StatsDataTypes.TimeSpan timeSpan) {
         ArrayList<StatsDataTypes.DataPoint> data = new ArrayList<>();
-        List<Workout> workouts = Instance.getInstance(context).db.getAllWorkouts();
+        List<Workout> workouts = Instance.getInstance(context).db.workoutDao().getWorkouts();
         for (Workout workout : workouts) {
             if ((timeSpan == null) || timeSpan.contains(workout.getStart())) {
                 WorkoutType type = workout.getWorkoutType(context);
