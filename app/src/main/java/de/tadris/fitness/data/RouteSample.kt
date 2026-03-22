@@ -21,6 +21,7 @@ package de.tadris.fitness.data;
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.mapsforge.core.model.LatLong
@@ -43,6 +44,9 @@ import org.mapsforge.core.model.LatLong
             childColumns = ["workoutId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("workoutId")
     ]
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
