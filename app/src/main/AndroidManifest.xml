@@ -80,6 +80,11 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".ui.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.App.Starting" />
+        <activity
             android:name=".ui.settings.DebugPressureActivity"
             android:exported="false" />
         <activity
@@ -122,15 +127,18 @@
         <activity
             android:name=".ui.workout.ShowWorkoutActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".osm.OAuthAuthentication"
-            android:launchMode="singleTop"
-            android:exported="true">
+        <activity
+            android:name=".osm.OAuthAuthentication"
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:host="callback"
+
+                <data
+                    android:host="callback"
                     android:scheme="auth" />
             </intent-filter>
         </activity>
@@ -179,7 +187,6 @@
         <service
             android:name=".recording.RecorderService"
             android:foregroundServiceType="location" />
-
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
@@ -188,7 +195,6 @@
                 android:name="autoStoreLocales"
                 android:value="true" />
         </service>
-
     </application>
 
 </manifest>

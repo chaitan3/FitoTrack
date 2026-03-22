@@ -560,4 +560,5 @@
     <string name="saveChangesQuestion">Save changes?</string>
     <string name="saveChangesQuestionMessage">Do you really want to save the changes?</string>
     <string name="restorePreparing">Preparing</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
