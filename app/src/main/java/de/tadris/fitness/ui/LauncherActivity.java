@@ -141,7 +141,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
         if (runningWorkout != null && state != RecordingState.STOPPED) {
             // currently recording a workout -> go to recording activity
             WorkoutType workoutType = runningWorkout.getWorkoutType(this);
-            RecordingType recordingType = workoutType.getRecordingType();
+            RecordingType recordingType = workoutType.getRecordingTypeDecoded();
             Intent recorderActivityIntent = new Intent(this, recordingType.recorderActivityClass);
             recorderActivityIntent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id);
             recorderActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

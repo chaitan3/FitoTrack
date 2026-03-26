@@ -26,18 +26,25 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import de.tadris.fitness.Instance
+import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.recording.RecorderService
+import de.tadris.fitness.recording.RecordingStateHolder
 import de.tadris.fitness.ui.dashboard.DashboardScreen
+import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
 import de.tadris.fitness.ui.statistics.StatisticsActivity
-import de.tadris.fitness.ui.workout.ShowWorkoutActivity
-import de.tadris.fitness.ui.workout.WorkoutActivity
+import de.tadris.fitness.ui.workout.show.ShowWorkoutScreen
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
     @Serializable
     data object Dashboard : Route
+
+    @Serializable
+    data class ShowWorkout(val id: Long) : Route
 }
 
 @Composable
@@ -55,9 +62,7 @@ fun AppNavigation(
             DashboardScreen(
                 workoutDao = Instance.getInstance(context).db.workoutDao(),
                 onWorkoutClick = { workout ->
-                    val intent = Intent(context, ShowWorkoutActivity::class.java)
-                    intent.putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                    context.startActivity(intent)
+                    navController.navigate(Route.ShowWorkout(workout.id))
                 },
                 onDeleteWorkout = { workout ->
                     Thread {
@@ -73,6 +78,33 @@ fun AppNavigation(
                 },
                 onStatistics = {
                     context.startActivity(Intent(context, StatisticsActivity::class.java))
+                },
+            )
+        }
+        composable<Route.ShowWorkout> { backStackEntry ->
+            ShowWorkoutScreen(
+                id = backStackEntry.toRoute<Route.ShowWorkout>().id,
+                onBack = { navController.popBackStack() },
+                onResumeWorkout = { workout ->
+                    val dao = Instance.getInstance(context).db.workoutDao()
+                    dao.insertPause(
+                        WorkoutPause(
+                            workout.id,
+                            System.nanoTime(),
+                            workout.end,
+                            System.currentTimeMillis(),
+                            true
+                        )
+                    )
+                    dao.updateWorkout(workout.copy(end = RecordingStateHolder.RUNNING_WORKOUT_END_TIME))
+                    context.startForegroundService(Intent(context, RecorderService::class.java))
+                    val workoutType = workout.getWorkoutType(context)
+                    context.startActivity(
+                        Intent(context, workoutType.recordingTypeDecoded.recorderActivityClass)
+                            .putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id)
+                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            .setAction(RecordWorkoutActivity.RESUME_ACTION)
+                    )
                 },
             )
         }

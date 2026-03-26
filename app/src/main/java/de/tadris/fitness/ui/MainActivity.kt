@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startRecording(workoutType: WorkoutType) {
-        val intent = Intent(this, workoutType.getRecordingType().recorderActivityClass)
+        val intent = Intent(this, workoutType.getRecordingTypeDecoded().recorderActivityClass)
         intent.action = RecordWorkoutActivity.LAUNCH_ACTION
         intent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType)
         startActivity(intent)

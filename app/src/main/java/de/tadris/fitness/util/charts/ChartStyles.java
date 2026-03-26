@@ -51,6 +51,7 @@ import de.tadris.fitness.R;
 import de.tadris.fitness.aggregation.AggregationSpan;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.ui.FitoTrackActivity;
+import de.tadris.fitness.ui.ThemeExtensionsKt;
 import de.tadris.fitness.util.Icon;
 import de.tadris.fitness.util.charts.formatter.FractionedDateFormatter;
 import de.tadris.fitness.util.charts.marker.DisplayValueMarker;
@@ -81,26 +82,26 @@ public class ChartStyles {
         chart.setFitBars(true);
     }
 
-    public static void defaultLineChart(BarLineChartBase chart, FitoTrackActivity context) {
+    public static void defaultLineChart(BarLineChartBase chart, Context context) {
         defaultChart(chart);
         chart.getAxisRight().setEnabled(false);
         chart.getXAxis().setEnabled(true);
         chart.getXAxis().setDrawGridLines(true);
-        chart.getXAxis().setTextColor(context.getThemeTextColor());
-        chart.getAxisLeft().setTextColor(context.getThemeTextColor());
-        chart.getAxisRight().setTextColor(context.getThemeTextColor());
+        chart.getXAxis().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
+        chart.getAxisLeft().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
+        chart.getAxisRight().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
     }
 
-    public static void setXAxisLabel(Chart chart, String label, FitoTrackActivity context) {
+    public static void setXAxisLabel(Chart chart, String label, Context context) {
         Description description = new Description();
         description.setText(label);
         description.setTextSize(10);
         description.setEnabled(true);
-        description.setTextColor(context.getThemeTextColor());
+        description.setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
         chart.setDescription(description);
     }
 
-    public static void setYAxisLabel(Chart chart, String label, FitoTrackActivity context) {
+    public static void setYAxisLabel(Chart chart, String label, Context context) {
         LegendEntry legend = new LegendEntry();
         legend.label = label;
         chart.getLegend().setCustom(Collections.singletonList(legend));
@@ -110,10 +111,10 @@ public class ChartStyles {
         chart.getLegend().setFormSize(0);
         chart.getLegend().setFormToTextSpace(-16);
         chart.getLegend().setForm(Legend.LegendForm.NONE);
-        chart.getLegend().setTextColor(context.getThemeTextColor());
+        chart.getLegend().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
     }
 
-    public static void defaultHistogram(BarChart chart, FitoTrackActivity context, ValueFormatter xValueFormatter, ValueFormatter yValueFormatter) {
+    public static void defaultHistogram(BarChart chart, Context context, ValueFormatter xValueFormatter, ValueFormatter yValueFormatter) {
         float min = chart.getBarData().getDataSets().get(0).getEntryForIndex(0).getX();
         int nBins = chart.getBarData().getDataSets().get(0).getEntryCount();
         float max = chart.getBarData().getDataSets().get(0).getEntryForIndex(nBins - 1).getX();
@@ -149,9 +150,9 @@ public class ChartStyles {
         chart.getXAxis().setAxisMinimum(-0.5f);
         chart.getXAxis().setAxisMaximum(nBins + 0.5f);
         chart.getAxisLeft().setValueFormatter(yValueFormatter);
-        chart.getXAxis().setTextColor(context.getThemeTextColor());
-        chart.getAxisLeft().setTextColor(context.getThemeTextColor());
-        chart.getAxisRight().setTextColor(context.getThemeTextColor());
+        chart.getXAxis().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
+        chart.getAxisLeft().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
+        chart.getAxisRight().setTextColor(ThemeExtensionsKt.getThemeTextColor(context));
 
         LegendEntry[] entries = chart.getLegend().getEntries();
         String unit = entries.length > 0 ? entries[0].label : "";

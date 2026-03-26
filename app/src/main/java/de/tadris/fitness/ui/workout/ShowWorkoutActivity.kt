@@ -610,7 +610,7 @@ class ShowWorkoutActivity : MapWorkoutActivity(), WorkoutDeleter {
 
         // Then navigate to record activity
         val workoutType: WorkoutType = workout.getWorkoutType(this)
-        val recordingType = workoutType.getRecordingType()
+        val recordingType = workoutType.recordingTypeDecoded
         val recorderActivityIntent = Intent(this, recordingType.recorderActivityClass)
         recorderActivityIntent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id)
         recorderActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
