@@ -59,7 +59,7 @@ public class IntervalAnnouncements {
 
     private long getWorkoutDuration() {
         AggregatedRecordingValuesEvent event = AggregatedRecordingValuesEvent.Companion.getCurrent();
-        if (preferences.intervalsIncludePauses()) {
+        if (preferences.getIntervalsIncludePauses()) {
             return event.getActiveDuration();
         } else {
             return event.getTotalDuration();

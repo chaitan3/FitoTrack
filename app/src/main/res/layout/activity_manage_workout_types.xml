@@ -18,7 +18,6 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,15 +29,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.github.clans.fab.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/workoutTypesAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_add_white"
-        app:fab_colorNormal="@color/colorPrimary"
-        app:fab_colorPressed="@color/colorPrimaryDark" />
+        android:src="@drawable/ic_add_white" />
 
     <TextView
         android:id="@+id/workoutTypesHint"
