@@ -19,9 +19,7 @@
 
 package de.tadris.fitness.ui.workout.show
 
-import android.app.Activity
 import android.content.Intent
-import android.util.DisplayMetrics
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +30,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -79,6 +79,7 @@ import de.tadris.fitness.ui.workout.ShowWorkoutMapDiagramActivity
 import de.tadris.fitness.ui.workout.WorkoutActivity
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
 import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
+import de.tadris.fitness.ui.workout.diagram.HeightConverter
 import de.tadris.fitness.ui.workout.diagram.IntensityConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
 import de.tadris.fitness.util.sections.SectionListModel
@@ -247,6 +248,7 @@ private fun ShowWorkoutContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
                 .padding(horizontal = MaterialTheme.spacing.defaultFull),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.defaultHalf),
@@ -319,10 +321,9 @@ private fun ShowWorkoutContent(
                 SectionHeader(stringResource(R.string.workoutRoute))
                 WorkoutMap(
                     data = data,
-                    workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(mapHeightDp(context).dp)
+                        .height(mapHeightDp().dp)
                 )
             }
 
@@ -345,7 +346,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp(context) / 2).dp),
+                        .height((mapHeightDp() / 2).dp),
                     onClick = {
                         context.startActivity(
                             Intent(context, ShowWorkoutMapDiagramActivity::class.java)
@@ -360,10 +361,9 @@ private fun ShowWorkoutContent(
                 SectionHeader(stringResource(R.string.histogram))
                 SpeedHistogram(
                     data = data,
-                    workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp(context) / 2).dp)
+                        .height((mapHeightDp() / 2).dp)
                 )
             }
 
@@ -389,7 +389,7 @@ private fun ShowWorkoutContent(
                         workout = workout,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height((mapHeightDp(context) / 2).dp)
+                            .height((mapHeightDp() / 2).dp)
                     )
                 } else {
                     KeyValueRow(
@@ -419,7 +419,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp(context) / 2).dp),
+                        .height((mapHeightDp() / 2).dp),
                     onClick = {
                         context.startActivity(
                             Intent(context, ShowWorkoutMapDiagramActivity::class.java)
@@ -457,11 +457,23 @@ private fun ShowWorkoutContent(
                     stringResource(R.string.workoutDescent),
                     distanceUnitUtils.getElevation(calculatedValues.descent.roundToInt())
                 )
-                KeyValueRow(
-                    stringResource(R.string.workoutAscent),
-                    distanceUnitUtils.getElevation(calculatedValues.ascent.roundToInt()),
-                    stringResource(R.string.workoutDescent),
-                    distanceUnitUtils.getElevation(calculatedValues.descent.roundToInt())
+                WorkoutDiagram(
+                    converter = HeightConverter(context),
+                    data = data,
+                    workout = workout,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height((mapHeightDp() / 2).dp),
+                    onClick = {
+                        context.startActivity(
+                            Intent(context, ShowWorkoutMapDiagramActivity::class.java)
+                                .putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
+                                .putExtra(
+                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_EXTRA,
+                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_HEIGHT
+                                )
+                        )
+                    }
                 )
                 SectionHeader(stringResource(R.string.sections))
                 AndroidView(
@@ -490,7 +502,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp(context) / 2).dp)
+                        .height((mapHeightDp() / 2).dp)
                 )
             }
 
@@ -618,9 +630,6 @@ private fun KeyValueRow(
 // ─── Map ────────────────────────────────────────────────────────────────────
 
 
-private fun mapHeightDp(context: android.content.Context): Int {
-    val dm = DisplayMetrics()
-    (context as? Activity)?.windowManager?.defaultDisplay?.getMetrics(dm)
-        ?: return 300
-    return (dm.widthPixels * 3 / 4 / dm.density).toInt()
+private fun mapHeightDp(): Int {
+    return 300
 }

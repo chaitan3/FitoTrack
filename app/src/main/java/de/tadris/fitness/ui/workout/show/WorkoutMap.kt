@@ -23,9 +23,9 @@ import android.graphics.Color
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.viewinterop.AndroidView
 import de.tadris.fitness.Instance
-import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.map.GradientColoringStrategy
 import de.tadris.fitness.map.MapManager
@@ -43,7 +43,6 @@ import org.mapsforge.map.layer.overlay.FixedPixelCircle
 @Composable
 internal fun WorkoutMap(
     data: WorkoutData,
-    workout: Workout,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current ?: return
@@ -131,6 +130,6 @@ internal fun WorkoutMap(
             mapView.destroyAll()
             AndroidGraphicFactory.clearResourceMemoryCache()
         },
-        modifier = modifier,
+        modifier = modifier.clipToBounds(),
     )
 }

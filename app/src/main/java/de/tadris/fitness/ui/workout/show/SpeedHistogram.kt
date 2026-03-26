@@ -26,7 +26,6 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.stats.StatsProvider
 import de.tadris.fitness.util.charts.ChartStyles
@@ -39,7 +38,6 @@ import java.util.concurrent.TimeUnit
 @Composable
 internal fun SpeedHistogram(
     data: WorkoutData,
-    workout: Workout,
     modifier: Modifier = Modifier,
 ) {
     AndroidView(
