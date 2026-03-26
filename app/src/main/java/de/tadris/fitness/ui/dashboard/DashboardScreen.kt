@@ -18,6 +18,7 @@
  */
 package de.tadris.fitness.ui.dashboard
 
+import android.preference.PreferenceManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -125,9 +126,22 @@ fun DashboardScreen(
     val context = LocalContext.current
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
     var workoutToDelete by remember { mutableStateOf<Workout?>(null) }
+    var showFirstStartDialog by rememberSaveable {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val isFirstStart = prefs.getBoolean("firstStart", true)
+        if (isFirstStart) prefs.edit().putBoolean("firstStart", false).apply()
+        mutableStateOf(isFirstStart)
+    }
 
     val lastWorkoutType = remember(workouts) {
         workouts.firstOrNull()?.getWorkoutType(context)
+    }
+
+    if (showFirstStartDialog) {
+        FirstStartDialog(
+            onSettings = { showFirstStartDialog = false; onSettings() },
+            onDismiss = { showFirstStartDialog = false },
+        )
     }
 
     if (workoutToDelete != null) {
@@ -218,6 +232,28 @@ fun DashboardScreen(
             }
         }
     }
+}
+
+@Composable
+private fun FirstStartDialog(
+    onSettings: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.setPreferencesTitle)) },
+        text = { Text(stringResource(R.string.setPreferencesMessage)) },
+        confirmButton = {
+            TextButton(onClick = onSettings) {
+                Text(stringResource(R.string.settings))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 @Composable

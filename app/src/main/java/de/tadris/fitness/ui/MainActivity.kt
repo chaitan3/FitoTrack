@@ -26,7 +26,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -91,7 +90,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        checkFirstStart()
     }
 
     override fun onResume() {
@@ -217,21 +215,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }.start()
-    }
-
-    private fun checkFirstStart() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        if (preferences.getBoolean("firstStart", true)) {
-            preferences.edit().putBoolean("firstStart", false).apply()
-            AlertDialog.Builder(this)
-                .setTitle(R.string.setPreferencesTitle)
-                .setMessage(R.string.setPreferencesMessage)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.settings) { _: DialogInterface?, _: Int ->
-                    startActivity(Intent(this, FitoTrackSettingsActivity::class.java))
-                }
-                .create().show()
-        }
     }
 
     private fun hasPermission() = PermissionUtils.checkStoragePermissions(this, false)
