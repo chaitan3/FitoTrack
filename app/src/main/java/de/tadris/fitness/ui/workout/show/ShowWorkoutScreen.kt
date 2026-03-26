@@ -19,7 +19,11 @@
 
 package de.tadris.fitness.ui.workout.show
 
+import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -73,8 +77,10 @@ import de.tadris.fitness.ui.theme.spacing
 import de.tadris.fitness.ui.workout.EditWorkoutStartEndActivity
 import de.tadris.fitness.ui.workout.EnterWorkoutActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutActivity
+import de.tadris.fitness.ui.workout.ShowWorkoutFullscreenMapActivity
 import de.tadris.fitness.ui.workout.ShowWorkoutMapDiagramActivity
 import de.tadris.fitness.ui.workout.WorkoutActivity
+import de.tadris.fitness.ui.workout.WorkoutActivity.WORKOUT_ID_EXTRA
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
 import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
 import de.tadris.fitness.ui.workout.diagram.HeightConverter
@@ -141,6 +147,7 @@ private fun ShowWorkoutContent(
     onDelete: () -> Unit,
     onResumeWorkout: () -> Unit,
 ) {
+    val activity = LocalActivity.current
     val context = LocalContext.current
     val workout = state.workout
     val data = state.data
@@ -156,6 +163,13 @@ private fun ShowWorkoutContent(
     var showCommentDialog by rememberSaveable { mutableStateOf(false) }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var showResumeDialog by rememberSaveable { mutableStateOf(false) }
+    var showOsmUploadDialog by rememberSaveable { mutableStateOf(false) }
+
+    val oauthLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) showOsmUploadDialog = true
+    }
 
     Scaffold(
         topBar = {
@@ -177,10 +191,12 @@ private fun ShowWorkoutContent(
                         )
                     }
                     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.delete)) },
-                            onClick = { showMenu = false; showDeleteDialog = true }
-                        )
+                        if (data.hasRouteData && state.isLastWorkout) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.resumeWorkout)) },
+                                onClick = { showMenu = false; showResumeDialog = true }
+                            )
+                        }
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.editWorkout)) },
                             onClick = {
@@ -203,7 +219,7 @@ private fun ShowWorkoutContent(
                                 text = { Text(stringResource(R.string.actionUploadToOSM)) },
                                 onClick = {
                                     showMenu = false
-                                    context.startActivity(
+                                    oauthLauncher.launch(
                                         Intent(
                                             context,
                                             OAuthAuthentication::class.java
@@ -231,11 +247,9 @@ private fun ShowWorkoutContent(
                                     )
                                 }
                             )
-                        }
-                        if (state.isLastWorkout) {
                             DropdownMenuItem(
-                                text = { Text(stringResource(R.string.resumeWorkout)) },
-                                onClick = { showMenu = false; showResumeDialog = true }
+                                text = { Text(stringResource(R.string.delete)) },
+                                onClick = { showMenu = false; showDeleteDialog = true }
                             )
                         }
                     }
@@ -322,6 +336,12 @@ private fun ShowWorkoutContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(MaterialTheme.spacing.mapHeight)
+                        .clickable {
+                            val intent =
+                                Intent(context, ShowWorkoutFullscreenMapActivity::class.java)
+                            intent.putExtra(WORKOUT_ID_EXTRA, workout.id)
+                            activity?.startActivity(intent)
+                        }
                 )
             }
 
@@ -572,6 +592,15 @@ private fun ShowWorkoutContent(
                     showResumeDialog = false
                 }) { Text(stringResource(R.string.cancel)) }
             }
+        )
+    }
+
+    // OSM upload dialog
+    if (showOsmUploadDialog) {
+        OsmUploadDialog(
+            workout = workout,
+            samples = data.samples,
+            onDismiss = { showOsmUploadDialog = false },
         )
     }
 }
