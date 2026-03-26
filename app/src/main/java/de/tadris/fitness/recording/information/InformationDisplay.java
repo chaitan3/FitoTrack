@@ -42,7 +42,7 @@ public class InformationDisplay {
     public DisplaySlot getDisplaySlot(AggregatedRecordingValuesEvent values, int slot) {
         String informationId = null;
         try {
-            informationId = preferences.getRecordingScreenInformationPreferences().getIdOfDisplayedInformation(mode.id, slot);
+            informationId = preferences.recordingScreenInformationPreferences.getIdOfDisplayedInformation(mode.id, slot);
         } catch (RecordingScreenInformationPreferences.UnknownModeException e) {
             e.printStackTrace();
             // Should never happen as long as all Workout Recording Types are handled inside RecordingScreenInformationPreferences
