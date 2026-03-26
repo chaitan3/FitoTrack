@@ -32,7 +32,7 @@
 
         <!-- Set the theme of the Activity that directly follows your splash
         screen. This is required. -->
-        <item name="postSplashScreenTheme">@style/AppTheme</item>
+         <item name="postSplashScreenTheme">@style/AppThemeNoActionbar</item>
     </style>
 
 </resources>

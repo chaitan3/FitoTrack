@@ -74,13 +74,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutDao
 import de.tadris.fitness.data.WorkoutType
-import de.tadris.fitness.ui.statistics.ShortStatsView
 import de.tadris.fitness.ui.theme.FitoTrackTheme
 import de.tadris.fitness.util.Icon
 import java.util.Date
@@ -160,7 +158,7 @@ fun DashboardScreen(
                 actions = {
                     IconButton(onClick = onStatistics) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_history),
+                            painter = painterResource(R.drawable.outline_bar_chart_24),
                             contentDescription = stringResource(R.string.workout_statistics),
                         )
                     }
@@ -210,14 +208,6 @@ fun DashboardScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                item {
-                    AndroidView(
-                        factory = { ctx -> ShortStatsView(ctx, null) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
-                    )
-                }
                 items(workouts, key = { it.id }) { workout ->
                     WorkoutListItem(
                         workout = workout,
