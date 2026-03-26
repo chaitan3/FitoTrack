@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -27,8 +27,6 @@ import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.util.gpx.Gpx
 import de.tadris.fitness.util.gpx.Track
-import de.tadris.fitness.util.gpx.TrackPointExtensions
-import de.tadris.fitness.util.gpx.TrackSegment
 import de.tadris.fitness.util.io.general.IWorkoutImporter
 import de.tadris.fitness.util.io.general.IWorkoutImporter.WorkoutImportResult
 import java.io.IOException

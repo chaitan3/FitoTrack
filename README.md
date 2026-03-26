@@ -64,7 +64,7 @@ You can also [email](mailto:jannis@tadris.de) me or join the [Telegram Group](ht
 
 ## License
 
-Copyright (C) 2024 Jannis Scheibe <jannis@tadris.de>
+Copyright (C) 2026 Jannis Scheibe <jannis@tadris.de>
 
 	FitoTrack is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

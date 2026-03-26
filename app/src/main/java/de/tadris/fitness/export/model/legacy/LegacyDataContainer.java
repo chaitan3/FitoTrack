@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -25,8 +25,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tadris.fitness.data.RouteSample;
-import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.export.model.IntervalSetContainer;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -21,7 +21,6 @@ package de.tadris.fitness.data.preferences
 
 import android.content.SharedPreferences
 import de.tadris.fitness.data.RecordingType
-import de.tadris.fitness.data.WorkoutType
 
 /**
  * Preferences within this class concern the Metrics (Information) shown on the Sharing

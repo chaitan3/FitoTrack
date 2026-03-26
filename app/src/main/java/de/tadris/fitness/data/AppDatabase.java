@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -32,7 +32,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.Arrays;
 import java.util.List;
 
-@Database(version = 17, entities = {
+@Database(version = 18, entities = {
         Workout.class,
         RouteSample.class,
         WorkoutPause.class,
@@ -563,6 +563,23 @@ public abstract class AppDatabase extends RoomDatabase {
                             db.execSQL("drop table workout_sample;");
                             db.execSQL("drop table indoor_workout;");
                             db.execSQL("drop table indoor_sample;");
+
+                            db.setTransactionSuccessful();
+                        } finally {
+                            db.endTransaction();
+                        }
+                    }
+                }, new Migration(17, 18) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase db) {
+                        try {
+                            db.beginTransaction();
+
+                            db.execSQL("create index index_route_sample_workoutId on route_sample (workoutId)");
+                            db.execSQL("create index index_heart_rate_sample_workoutId on heart_rate_sample (workoutId)");
+                            db.execSQL("create index index_workout_event_workoutId on workout_event (workoutId)");
+                            db.execSQL("create index index_workout_pause_workoutId on workout_pause (workoutId)");
+                            db.execSQL("create index index_repetition_sample_workoutId on repetition_sample (workoutId)");
 
                             db.setTransactionSuccessful();
                         } finally {

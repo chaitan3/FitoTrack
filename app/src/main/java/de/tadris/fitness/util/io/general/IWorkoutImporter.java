@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -22,14 +22,11 @@ package de.tadris.fitness.util.io.general;
 import android.content.Context;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.data.AppDatabase;
 import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.util.io.ImportWorkoutSaver;
 

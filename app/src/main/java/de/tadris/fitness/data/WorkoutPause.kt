@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -21,6 +21,7 @@ package de.tadris.fitness.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
@@ -40,6 +41,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
             childColumns = ["workoutId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("workoutId")
     ]
 )
 @JsonIgnoreProperties(ignoreUnknown = true)

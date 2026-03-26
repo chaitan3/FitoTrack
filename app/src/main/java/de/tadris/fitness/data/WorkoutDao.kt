@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -159,7 +159,7 @@ interface WorkoutDao {
     fun deleteSample(sample: RouteSample)
 
     @Update
-    fun updateSamples(samples: Array<RouteSample>)
+    fun updateSamples(samples: List<RouteSample>)
 
     @Update
     fun updateSample(sample: RouteSample)

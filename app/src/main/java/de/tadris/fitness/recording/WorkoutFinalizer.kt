@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Jannis Scheibe <jannis@tadris.de>
+ * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
  *
  * This file is part of FitoTrack
  *
@@ -31,6 +31,8 @@ import de.tadris.fitness.util.WorkoutLogger
 import de.tadris.fitness.util.autoexport.AutoExportPlanner
 import de.tadris.fitness.util.calorie.CalorieCalculator
 import de.tadris.fitness.util.totalDistance
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val workoutId: Long) {
@@ -42,6 +44,7 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
 
     fun finalize() {
         recalculateElevation()
+        smoothElevation()
         updateMSLValues()
         updateRouteSamples()
 
@@ -100,6 +103,20 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
         )
     }
 
+    fun smoothElevation() {
+        val window = 7
+        data = data.copy(
+            samples = data.samples.mapIndexed { index, sample ->
+                val minIndex = max(index - window, 0)
+                val maxIndex = min(index + window, data.samples.lastIndex)
+                val samplesInWindow = data.samples.subList(minIndex, maxIndex)
+                val averageElevation = samplesInWindow.sumOf { it.elevation } / samplesInWindow.size
+
+                sample.copy(elevation = averageElevation)
+            }
+        )
+    }
+
     fun updateMSLValues() {
         if (data.samples.isEmpty()) return
 
@@ -126,7 +143,7 @@ class WorkoutFinalizer(val context: Context, val workoutDao: WorkoutDao, val wor
     }
 
     private fun updateRouteSamples(){
-        data.samples.forEach { workoutDao.updateSample(it) }
+        workoutDao.updateSamples(data.samples)
     }
 
     private fun getActiveDuration(): Long {
