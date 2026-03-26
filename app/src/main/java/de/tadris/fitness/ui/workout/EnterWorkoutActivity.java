@@ -175,10 +175,13 @@ public class EnterWorkoutActivity extends InformationActivity implements SelectW
             return;
         }
         Workout workout = workoutBuilder.saveWorkout(this);
+        /*
+        todo navigate to showworkoutscreen
         final Intent intent = new Intent(this, ShowWorkoutActivity.class);
         intent.putExtra(ShowWorkoutActivity.WORKOUT_ID_EXTRA, workout.getId());
         startActivity(intent);
         finish();
+         */
     }
 
     private void updateTextViews() {

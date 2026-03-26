@@ -19,7 +19,6 @@
 
 package de.tadris.fitness.ui.statistics;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -51,7 +50,6 @@ import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.stats.StatsProvider;
 import de.tadris.fitness.stats.WorkoutProperty;
 import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.ui.workout.ShowWorkoutActivity;
 import de.tadris.fitness.util.charts.ChartStyles;
 import de.tadris.fitness.util.charts.DataSetStyles;
 
@@ -158,9 +156,11 @@ public class DetailStatsActivity extends FitoTrackActivity {
             CandleEntry entry = currentCandleDataSet.getEntryForXValue(xPosition, 0);
             StatsDataTypes.DataPoint dataPoint = (StatsDataTypes.DataPoint) entry.getData();
 
+            /*
             Intent intent = new Intent(this, ShowWorkoutActivity.class);
             intent.putExtra(ShowWorkoutActivity.WORKOUT_ID_EXTRA, dataPoint.workoutID);
             startActivity(intent);
+             */
         }
     }
 
