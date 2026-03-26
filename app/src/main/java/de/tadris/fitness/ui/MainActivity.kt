@@ -16,6 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package de.tadris.fitness.ui
 
 import android.Manifest
@@ -34,20 +35,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.documentfile.provider.DocumentFile
-import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.osm.OAuthAuthentication
-import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.dialog.SelectWorkoutTypeDialog
 import de.tadris.fitness.ui.dialog.ThreadSafeProgressDialogController
+import de.tadris.fitness.ui.navigation.AppNavigation
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
-import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
-import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.theme.FitoTrackTheme
 import de.tadris.fitness.ui.workout.EnterWorkoutActivity
-import de.tadris.fitness.ui.workout.ShowWorkoutActivity
-import de.tadris.fitness.ui.workout.WorkoutActivity
 import de.tadris.fitness.util.PermissionUtils
 import de.tadris.fitness.util.io.general.IOHelper
 
@@ -60,36 +56,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val workoutDao = Instance.getInstance(this).db.workoutDao()
-
         setContent {
             FitoTrackTheme {
-                DashboardScreen(
-                    workoutDao = workoutDao,
-                    onWorkoutClick = { workout ->
-                        val intent = Intent(this, ShowWorkoutActivity::class.java)
-                        intent.putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                        startActivity(intent)
-                    },
-                    onDeleteWorkout = { workout ->
-                        Thread {
-                            Instance.getInstance(this).db.workoutDao().deleteWorkout(workout)
-                        }.start()
-                    },
+                AppNavigation(
                     onRecord = { showWorkoutSelection() },
                     onRecordLast = { workoutType -> startRecording(workoutType) },
                     onEnterWorkout = { startEnterWorkoutActivity() },
                     onImport = { showImportDialog() },
-                    onSettings = {
-                        startActivity(Intent(this, FitoTrackSettingsActivity::class.java))
-                    },
-                    onStatistics = {
-                        startActivity(Intent(this, StatisticsActivity::class.java))
-                    },
                 )
             }
         }
-
     }
 
     override fun onResume() {
@@ -192,9 +168,7 @@ class MainActivity : ComponentActivity() {
                             imported++
                         } catch (e: Exception) {
                             e.printStackTrace()
-                            if (imported == 0 && i == files.size - 1) {
-                                throw e
-                            }
+                            if (imported == 0 && i == files.size - 1) throw e
                         }
                     }
                 }

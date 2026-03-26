@@ -117,6 +117,8 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     val offlineMapDirectoryName by NullableStringSharedPreference("offlineMapDirectoryName")
 
+    var firstStart by BooleanSharedPreference("firstStart", true)
+
     var useNfcStart by BooleanSharedPreference("nfcStart", false)
 
     var autoStartDelay by IntSharedPreference(
