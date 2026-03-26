@@ -164,6 +164,7 @@ private fun ShowWorkoutContent(
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var showResumeDialog by rememberSaveable { mutableStateOf(false) }
     var showOsmUploadDialog by rememberSaveable { mutableStateOf(false) }
+    val gpxExport = rememberGpxExportState(data)
 
     val oauthLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -212,7 +213,7 @@ private fun ShowWorkoutContent(
                                 text = { Text(stringResource(R.string.exportAsGpxFile)) },
                                 onClick = {
                                     showMenu = false
-                                    // TODO
+                                    gpxExport.onExport()
                                 }
                             )
                             DropdownMenuItem(
