@@ -149,7 +149,7 @@ public class LauncherActivity extends Activity implements Migration.MigrationLis
             startActivity(recorderActivityIntent);
         } else {
             // Go to Workout List
-            Intent listWorkoutActivityIntent = new Intent(this, ListWorkoutsActivity.class);
+            Intent listWorkoutActivityIntent = new Intent(this, MainActivity.class);
             listWorkoutActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(listWorkoutActivityIntent);
         }
