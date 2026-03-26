@@ -24,7 +24,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,7 +39,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -260,7 +258,7 @@ private fun ShowWorkoutContent(
                 stringResource(R.string.noComment)
             Text(
                 text = commentText,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -323,7 +321,7 @@ private fun ShowWorkoutContent(
                     data = data,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(mapHeightDp().dp)
+                        .height(MaterialTheme.spacing.mapHeight)
                 )
             }
 
@@ -346,7 +344,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp() / 2).dp),
+                        .height(MaterialTheme.spacing.mapHeight / 2),
                     onClick = {
                         context.startActivity(
                             Intent(context, ShowWorkoutMapDiagramActivity::class.java)
@@ -363,7 +361,7 @@ private fun ShowWorkoutContent(
                     data = data,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp() / 2).dp)
+                        .height(MaterialTheme.spacing.mapHeight / 2)
                 )
             }
 
@@ -389,7 +387,7 @@ private fun ShowWorkoutContent(
                         workout = workout,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height((mapHeightDp() / 2).dp)
+                            .height(MaterialTheme.spacing.mapHeight / 2)
                     )
                 } else {
                     KeyValueRow(
@@ -419,7 +417,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp() / 2).dp),
+                        .height(MaterialTheme.spacing.mapHeight / 2),
                     onClick = {
                         context.startActivity(
                             Intent(context, ShowWorkoutMapDiagramActivity::class.java)
@@ -463,7 +461,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp() / 2).dp),
+                        .height(MaterialTheme.spacing.mapHeight / 2),
                     onClick = {
                         context.startActivity(
                             Intent(context, ShowWorkoutMapDiagramActivity::class.java)
@@ -502,7 +500,7 @@ private fun ShowWorkoutContent(
                     workout = workout,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((mapHeightDp() / 2).dp)
+                        .height(MaterialTheme.spacing.mapHeight / 2)
                 )
             }
 
@@ -578,58 +576,3 @@ private fun ShowWorkoutContent(
     }
 }
 
-// ─── Section helpers ────────────────────────────────────────────────────────
-
-@Composable
-private fun SectionHeader(title: String) {
-    Column(Modifier.fillMaxWidth()) {
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
-        )
-        HorizontalDivider(Modifier.padding(top = 4.dp))
-    }
-}
-
-@Composable
-private fun KeyValueRow(
-    label1: String,
-    value1: String,
-    label2: String? = null,
-    value2: String? = null,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Column(Modifier.weight(1f)) {
-            Text(
-                label1,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(value1, style = MaterialTheme.typography.bodyLarge)
-        }
-        if (label2 != null && value2 != null) {
-            Column(Modifier.weight(1f)) {
-                Text(
-                    label2,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(value2, style = MaterialTheme.typography.bodyLarge)
-            }
-        }
-    }
-}
-
-// ─── Map ────────────────────────────────────────────────────────────────────
-
-
-private fun mapHeightDp(): Int {
-    return 300
-}

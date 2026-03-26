@@ -33,6 +33,7 @@ data class Spacing(
     val defaultHalf: Dp = 6.dp,
     val defaultFull: Dp = 12.dp,
     val defaultDouble: Dp = 24.dp,
+    val mapHeight: Dp = 300.dp,
 )
 
 val LocalSpacing = compositionLocalOf { Spacing() }
@@ -41,4 +42,3 @@ val MaterialTheme.spacing: Spacing
     @Composable
     @ReadOnlyComposable
     get() = LocalSpacing.current
-
