@@ -19,8 +19,10 @@
 
 package de.tadris.fitness.ui.workout.show
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
@@ -40,6 +42,7 @@ internal fun SpeedHistogram(
     data: WorkoutData,
     modifier: Modifier = Modifier,
 ) {
+    val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
     AndroidView(
         factory = { ctx ->
             val chart = BarChart(ctx)
@@ -65,6 +68,14 @@ internal fun SpeedHistogram(
                 ChartStyles.defaultHistogram(chart, ctx, speedFormatter, timeFormatter)
                 ChartStyles.setXAxisLabel(chart, distanceUnitUtils.speedUnit, ctx)
                 ChartStyles.setYAxisLabel(chart, ctx.getString(R.string.timeMinuteShort), ctx)
+
+                // Override text colors with M3 theme colors
+                chart.xAxis.textColor = textColor
+                chart.axisLeft.textColor = textColor
+                chart.axisRight.textColor = textColor
+                chart.description.textColor = textColor
+                chart.legend.textColor = textColor
+
                 chart.marker = DisplayValueMarker(
                     ctx,
                     chart.axisLeft.valueFormatter,

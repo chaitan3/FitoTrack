@@ -19,8 +19,10 @@
 
 package de.tadris.fitness.ui.workout.show
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.data.BarData
@@ -44,10 +46,11 @@ internal fun WorkoutDiagram(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
 ) {
+    val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
     AndroidView(
         factory = { ctx ->
             val chart = CombinedChart(ctx)
-            buildCombinedChart(chart, converter, data, workout)
+            buildCombinedChart(chart, converter, data, workout, textColor)
             if (onClick != null) chart.setOnClickListener { onClick() }
             chart
         },
@@ -60,6 +63,7 @@ private fun buildCombinedChart(
     converter: SampleConverter,
     data: WorkoutData,
     workout: Workout,
+    textColor: Int,
 ) {
     chart.setScaleXEnabled(false)
     chart.setScaleYEnabled(false)
@@ -100,6 +104,13 @@ private fun buildCombinedChart(
     ChartStyles.setXAxisLabel(chart, converter.xAxisLabel, chart.context)
     ChartStyles.setYAxisLabel(chart, converter.yAxisLabel, chart.context)
     ChartStyles.defaultLineChart(chart, chart.context)
+
+    // Override text colors with M3 theme colors
+    chart.xAxis.textColor = textColor
+    chart.axisLeft.textColor = textColor
+    chart.axisRight.textColor = textColor
+    chart.description.textColor = textColor
+    chart.legend.textColor = textColor
 
     chart.description.isEnabled = true
     chart.legend.isEnabled = true
