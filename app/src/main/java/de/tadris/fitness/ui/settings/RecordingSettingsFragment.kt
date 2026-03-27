@@ -30,12 +30,7 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.announcement.TTSController
-import de.tadris.fitness.recording.autostart.AutoStartWorkout
 import de.tadris.fitness.recording.event.TTSReadyEvent
-import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog
-import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog.AutoStartDelaySelectListener
-import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog
-import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog.AutoStartModeSelectListener
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog.AutoTimeoutSelectListener
 import de.tadris.fitness.util.NumberPickerUtils
@@ -43,8 +38,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class RecordingSettingsFragment : FitoTrackSettingFragment(), AutoStartModeSelectListener,
-    AutoStartDelaySelectListener, AutoTimeoutSelectListener {
+class RecordingSettingsFragment : FitoTrackSettingFragment(), AutoTimeoutSelectListener {
 
     lateinit var instance: Instance
     lateinit var preferences: UserPreferences
@@ -63,16 +57,6 @@ class RecordingSettingsFragment : FitoTrackSettingFragment(), AutoStartModeSelec
         findPreference<Preference>("intervals")!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
                 showIntervalSetManagement()
-                true
-            }
-        findPreference<Preference>("autoStartModeConfig")!!.onPreferenceClickListener =
-            Preference.OnPreferenceClickListener {
-                showAutoStartModeConfig()
-                true
-            }
-        findPreference<Preference>("autoStartDelayConfig")!!.onPreferenceClickListener =
-            Preference.OnPreferenceClickListener {
-                showAutoStartDelayConfig()
                 true
             }
         findPreference<Preference>("autoTimeoutConfig")!!.onPreferenceClickListener =
@@ -127,18 +111,6 @@ class RecordingSettingsFragment : FitoTrackSettingFragment(), AutoStartModeSelec
         startActivity(Intent(requireContext(), ManageIntervalSetsActivity::class.java))
     }
 
-    private fun showAutoStartModeConfig() {
-        ChooseAutoStartModeDialog(requireActivity(), this).show()
-    }
-
-    private fun showAutoStartDelayConfig() {
-        val initialDelayS = instance.userPreferences.autoStartDelay
-        ChooseAutoStartDelayDialog(
-            requireActivity(), this,
-            initialDelayS.toLong() * 1000
-        ).show()
-    }
-
     private fun showCurrentSpeedAverageTimePicker() {
         val d = AlertDialog.Builder(requireActivity())
         val disabledAlpha = 0.3f
@@ -180,14 +152,6 @@ class RecordingSettingsFragment : FitoTrackSettingFragment(), AutoStartModeSelec
 
     private fun showAutoTimeoutConfig() {
         ChooseAutoTimeoutDialog(requireActivity(), this).show()
-    }
-
-    override fun onSelectAutoStartMode(mode: AutoStartWorkout.Mode) {
-        Instance.getInstance(context).userPreferences.autoStartMode = mode
-    }
-
-    override fun onSelectAutoStartDelay(delayS: Int) {
-        Instance.getInstance(context).userPreferences.autoStartDelay = delayS
     }
 
     override fun onSelectAutoTimeout(timeoutM: Int) {

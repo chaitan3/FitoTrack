@@ -91,9 +91,7 @@ import de.tadris.fitness.ui.FitoTrackActivity
 import de.tadris.fitness.ui.LauncherActivity
 import de.tadris.fitness.ui.dialog.AlertDialogWrapper
 import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog
-import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog.AutoStartDelaySelectListener
 import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog
-import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog.AutoStartModeSelectListener
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog.BluetoothDeviceSelectListener
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog.BluetoothNotAvailableException
@@ -148,8 +146,6 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
     protected lateinit var recordStartButtonsRoot: ConstraintLayout
     protected lateinit var informationDisplay: InformationDisplay
 
-    private var autoStartDelayMs: Long = 0 // in ms
-    private var autoStartMode: AutoStartWorkout.Mode? = null
     private var autoStartCountdownOverlay: View? = null
     private var autoStartDelayDialog: AlertDialogWrapper? = null
     private lateinit var movementDetector: MovementDetector
@@ -176,14 +172,6 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         super.onCreate(savedInstanceState)
         instance = Instance.getInstance(this)
         workoutType = determineWorkoutType()
-
-        this.autoStartDelayMs =
-            instance.userPreferences.autoStartDelay.toLong() * AUTO_START_DELAY_MULTIPLIER
-        this.autoStartMode = instance.userPreferences.autoStartMode
-        Log.d(
-            TAG, "auto start enabled, auto start delay: " +
-                    this.autoStartDelayMs + ", auto start mode: " + autoStartMode
-        )
         this.askForComment = instance.userPreferences.askForComment
 
         log(TAG, "Activity created")
@@ -207,10 +195,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         ttsController = TTSController(applicationContext, TAG)
         movementDetector = DefaultMovementDetector()
         autoStartWorkout = AutoStartWorkout(
-            AutoStartWorkout.Config(
-                autoStartDelayMs,
-                autoStartMode
-            ), movementDetector
+            movementDetector
         )
         movementDetector.registerTo(EventBus.getDefault())
         movementDetector.start()
@@ -608,11 +593,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
         startPopupMenu = PopupMenu(this, v)
         startPopupMenu!!.setOnMenuItemClickListener { menuItem: MenuItem? ->
             val itemId = menuItem!!.itemId
-            if (itemId == R.id.auto_start) {
-                Log.d(TAG, "Auto start from popup menu selected")
-                val config = autoStartWorkout.defaultStartConfig
-                beginAutoStart(config.countdownMs, config.mode)
-            } else if (itemId == R.id.auto_start_immediately) {
+            if (itemId == R.id.auto_start_immediately) {
                 start(StartReason.START_BUTTON_IMMEDIATE)
             } else if (itemId == R.id.auto_start_on_move) {
                 beginAutoStart(0, AutoStartWorkout.Mode.ON_MOVE)
@@ -625,20 +606,20 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
                 // they'll be preloaded with either the last selected or the default value from
                 // preferences
                 autoStartDelayDialog =
-                    ChooseAutoStartDelayDialog(this, AutoStartDelaySelectListener { delayS: Int ->
+                    ChooseAutoStartDelayDialog(this, { delayS: Int ->
                         autoStartDelayDialog = ChooseAutoStartModeDialog(
                             this,
-                            AutoStartModeSelectListener { mode: AutoStartWorkout.Mode? ->
+                            { mode: AutoStartWorkout.Mode? ->
                                 beginAutoStart(delayS * 1000L, mode)
                                 Log.d(
                                     TAG, "Auto start from popup menu with delay of " + delayS +
                                             "s and mode " + mode
                                 )
                             },
-                            autoStartWorkout!!.lastStartConfig.mode
+                            autoStartWorkout.lastStartConfig.mode
                         )
                         autoStartDelayDialog!!.show()
-                    }, autoStartWorkout!!.lastStartConfig.countdownMs)
+                    }, autoStartWorkout.lastStartConfig.countdownMs)
                 autoStartDelayDialog!!.show()
             } else {
                 return@setOnMenuItemClickListener false

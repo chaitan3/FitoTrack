@@ -21,7 +21,6 @@ package de.tadris.fitness.ui.dialog;
 
 import android.app.Activity;
 
-import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.recording.autostart.AutoStartWorkout;
 
@@ -40,17 +39,6 @@ public class ChooseAutoStartModeDialog extends NumberPickerDialog<AutoStartWorko
         super(context, context.getString(R.string.pref_auto_start_mode_title));
         this.listener = listener;
         this.initialMode = initialMode;
-    }
-
-    /**
-     * Initialize dialog with default delay from preferences
-     * @param context       The context this dialog should be shown in
-     * @param listener      The listener that is called when the user selects a delay
-     */
-    public ChooseAutoStartModeDialog(Activity context, AutoStartModeSelectListener listener) {
-        super(context, context.getString(R.string.pref_auto_start_mode_title));
-        this.listener = listener;
-        this.initialMode = Instance.getInstance(context).userPreferences.getAutoStartMode();
     }
 
     @Override

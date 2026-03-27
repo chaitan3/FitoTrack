@@ -50,18 +50,6 @@ public class ChooseAutoStartDelayDialog extends NumberPickerDialog<Integer> {
         this.initialDelayS = (int) initialDelayMs / 1_000;
     }
 
-    /**
-     * Initialize dialog with default delay from preferences
-     * @param context       The context this dialog should be shown in
-     * @param listener      The listener that is called when the user selects a delay
-     */
-    public ChooseAutoStartDelayDialog(Activity context, AutoStartDelaySelectListener listener) {
-        super(context, context.getString(R.string.pref_auto_start_delay_title),
-                context.getString(R.string.customAutoStartDelay));
-        this.listener = listener;
-        this.initialDelayS = Instance.getInstance(context).userPreferences.getAutoStartDelay();
-    }
-
     @Override
     protected int getOptionCount() {
         return delaysS.length;

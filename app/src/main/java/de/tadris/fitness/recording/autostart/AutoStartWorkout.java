@@ -104,7 +104,6 @@ public class AutoStartWorkout implements EventBusMember {
     private State state = State.IDLE;
     private long countdownMs;
     private Config lastStartConfig;
-    private Config defaultStartConfig;
     private MovementDetector movementDetector;
     private CountDownTimer autoStartCountdownTimer;
     private final Timer autoStartWaitTimer = new Timer("AutoStartOnGpsOkay");
@@ -114,11 +113,9 @@ public class AutoStartWorkout implements EventBusMember {
 
     /**
      * Creates an {@link AutoStartWorkout} instance.
-     * @param defaultConfig the default config for this instance (e.g. taken from preferences)
      */
-    public AutoStartWorkout(Config defaultConfig, MovementDetector movementDetector) {
-        this.lastStartConfig = defaultConfig;
-        this.defaultStartConfig = defaultConfig;
+    public AutoStartWorkout(MovementDetector movementDetector) {
+        this.lastStartConfig = new Config(20000, Mode.INSTANT);
         this.movementDetector = movementDetector;
     }
 
@@ -240,13 +237,6 @@ public class AutoStartWorkout implements EventBusMember {
      */
     public Config getLastStartConfig() {
         return lastStartConfig;
-    }
-
-    /**
-     * Get the default auto start config
-     */
-    public Config getDefaultStartConfig() {
-        return defaultStartConfig;
     }
 
     /**

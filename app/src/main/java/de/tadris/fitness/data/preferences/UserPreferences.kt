@@ -119,25 +119,6 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var firstStart by BooleanSharedPreference("firstStart", true)
 
-    var autoStartDelay by IntSharedPreference(
-        "autoStartDelayPeriod",
-        AutoStartWorkout.DEFAULT_DELAY_S
-    )
-
-    var autoStartMode: AutoStartWorkout.Mode
-        get() {
-            return try {
-                AutoStartWorkout.Mode.valueOf(
-                    preferences.getString(AUTO_START_MODE_VARIABLE, DEFAULT_AUTO_START_MODE)!!
-                )
-            } catch (_: IllegalArgumentException) {
-                AutoStartWorkout.Mode.getDefault()
-            }
-        }
-        set(mode) {
-            preferences.edit { putString(AUTO_START_MODE_VARIABLE, mode.toString()) }
-        }
-
     var autoTimeout by IntSharedPreference("autoTimeoutPeriod", 20)
 
     var useAutoPause by BooleanSharedPreference("autoPause", true)
