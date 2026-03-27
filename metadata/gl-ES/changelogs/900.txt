@@ -1,0 +1,11 @@
+- engadiuse a medida do ritmo cardíaco
+- importar/exportar ritmo cardíaco a/desde ficheiros GPX
+- retomar actividades detidas
+- desactivar pausa automática e usar a opción de pausa manual
+- novo anuncio: cambios no estado da actividade como comezar, deter, retomar
+
+- melloras nas pantallas con gráficos
+- escala do mapa en función do tamaño da pantalla
+- facer optativa a opción «mostrar con pantalla bloqueada» (desactivada por defecto)
+
+Podes ver todos os cambios da versión na páxina do proxecto en Codeberg
