@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -39,6 +41,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -58,9 +61,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -70,6 +78,7 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutType
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import de.tadris.fitness.util.Icon as WorkoutIcon
 
 @Composable
 fun EnterWorkoutScreen(
@@ -158,6 +167,13 @@ private fun EnterWorkoutContent(
                 label = stringResource(R.string.type),
                 value = form.workoutType.title,
                 onClick = { showTypeDialog = true },
+                leadingContent = {
+                    Icon(
+                        painter = painterResource(WorkoutIcon.getIcon(form.workoutType.icon)),
+                        contentDescription = null,
+                        tint = Color(form.workoutType.color),
+                    )
+                },
             )
             OutlinedTextField(
                 value = form.distanceText,
@@ -266,10 +282,18 @@ private fun WorkoutTypePickerDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         text = {
-            Column {
-                types.forEach { type ->
+            LazyColumn {
+                items(types) { type ->
                     ListItem(
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(WorkoutIcon.getIcon(type.icon)),
+                                contentDescription = null,
+                                tint = Color(type.color),
+                            )
+                        },
                         headlineContent = { Text(type.title) },
+                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         modifier = Modifier.clickable { onSelect(type) },
                     )
                 }
@@ -335,14 +359,12 @@ private fun FormListItem(
     label: String,
     value: String,
     onClick: () -> Unit,
+    leadingContent: @Composable (() -> Unit)? = null,
 ) {
     ListItem(
-        overlineContent = {
-            Text(label, style = MaterialTheme.typography.labelLarge)
-        },
-        headlineContent = {
-            Text(value, style = MaterialTheme.typography.bodyLarge)
-        },
+        overlineContent = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        headlineContent = { Text(value, style = MaterialTheme.typography.bodyLarge) },
+        leadingContent = leadingContent,
         modifier = Modifier.clickable(onClick = onClick),
     )
 }
@@ -354,12 +376,22 @@ private fun DurationNumberField(
     label: String,
     modifier: Modifier = Modifier,
 ) {
+    var tfv by remember(value) {
+        mutableStateOf(TextFieldValue(value.toString()))
+    }
     OutlinedTextField(
-        value = value.toString(),
-        onValueChange = { onValueChange(it.toIntOrNull() ?: 0) },
+        value = tfv,
+        onValueChange = { new ->
+            tfv = new
+            onValueChange(new.text.toIntOrNull() ?: 0)
+        },
         label = { Text(label) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
-        modifier = modifier,
+        modifier = modifier.onFocusChanged { focusState ->
+            if (focusState.isFocused) {
+                tfv = tfv.copy(selection = TextRange(0, tfv.text.length))
+            }
+        },
     )
 }
