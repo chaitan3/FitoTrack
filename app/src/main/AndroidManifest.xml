@@ -158,10 +158,6 @@
             android:name=".ui.statistics.DetailStatsActivity"
             android:exported="true"
             android:screenOrientation="landscape" />
-        <activity
-            android:name=".ui.workout.ShareWorkoutActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

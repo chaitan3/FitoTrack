@@ -40,6 +40,7 @@ import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
 import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.workout.EnterWorkoutScreen
+import de.tadris.fitness.ui.workout.ShareWorkoutScreen
 import de.tadris.fitness.ui.workout.show.DiagramType
 import de.tadris.fitness.ui.workout.show.EditWorkoutStartEndScreen
 import de.tadris.fitness.ui.workout.show.ShowWorkoutFullscreenMapScreen
@@ -66,6 +67,9 @@ sealed interface Route {
     /** id == 0L means create new workout, non-zero means edit existing */
     @Serializable
     data class EnterWorkout(val id: Long = 0L) : Route
+
+    @Serializable
+    data class ShareWorkout(val id: Long) : Route
 }
 
 @Composable
@@ -124,6 +128,12 @@ fun AppNavigation(
                 onWorkoutModified = { navController.popBackStack() },
             )
         }
+        composable<Route.ShareWorkout> { backStackEntry ->
+            ShareWorkoutScreen(
+                id = backStackEntry.toRoute<Route.ShareWorkout>().id,
+                onBack = { navController.popBackStack() },
+            )
+        }
         composable<Route.EnterWorkout> { backStackEntry ->
             EnterWorkoutScreen(
                 id = backStackEntry.toRoute<Route.EnterWorkout>().id,
@@ -150,6 +160,9 @@ fun AppNavigation(
                 },
                 onEditWorkout = { workoutId ->
                     navController.navigate(Route.EnterWorkout(workoutId))
+                },
+                onShareWorkout = { workoutId ->
+                    navController.navigate(Route.ShareWorkout(workoutId))
                 },
                 onResumeWorkout = { workout ->
                     val dao = Instance.getInstance(context).db.workoutDao()

@@ -78,8 +78,6 @@ import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.theme.spacing
-import de.tadris.fitness.ui.workout.ShareWorkoutActivity
-import de.tadris.fitness.ui.workout.WorkoutActivity
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
 import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
 import de.tadris.fitness.ui.workout.diagram.HeightConverter
@@ -101,6 +99,7 @@ fun ShowWorkoutScreen(
     onShowDiagram: (Long, DiagramType) -> Unit = { _, _ -> },
     onEditStartEnd: (Long) -> Unit = {},
     onEditWorkout: (Long) -> Unit = {},
+    onShareWorkout: (Long) -> Unit = {},
 ) {
     val context = LocalContext.current
     val vm: ShowWorkoutViewModel = viewModel(
@@ -148,6 +147,7 @@ fun ShowWorkoutScreen(
             onShowDiagram = { diagramType -> onShowDiagram(s.workout.id, diagramType) },
             onEditStartEnd = { onEditStartEnd(s.workout.id) },
             onEditWorkout = { onEditWorkout(s.workout.id) },
+            onShareWorkout = { onShareWorkout(s.workout.id) },
         )
     }
 }
@@ -164,6 +164,7 @@ private fun ShowWorkoutContent(
     onShowDiagram: (DiagramType) -> Unit = {},
     onEditStartEnd: () -> Unit = {},
     onEditWorkout: () -> Unit = {},
+    onShareWorkout: () -> Unit = {},
 ) {
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -249,13 +250,7 @@ private fun ShowWorkoutContent(
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.share)) },
-                                onClick = {
-                                    showMenu = false
-                                    context.startActivity(
-                                        Intent(context, ShareWorkoutActivity::class.java)
-                                            .putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                                    )
-                                }
+                                onClick = { showMenu = false; onShareWorkout() }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.delete)) },
