@@ -23,6 +23,7 @@ import android.graphics.Color
 import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -75,95 +76,119 @@ internal fun WorkoutMap(
     onMapUpdate: ((MapView) -> Unit)? = null,
 ) {
     val activity = LocalActivity.current ?: return
-    val holder = remember { WorkoutMapHolder() }
     val instance = Instance.getInstance(LocalContext.current)
     val coloringStrategy = getColoringStrategy(instance.userPreferences.trackStyle)
 
-    AndroidView(
-        factory = { ctx ->
-            val mapView = MapManager(activity).setupMap()
+    key(data) {
+        val holder = remember { WorkoutMapHolder() }
+        AndroidView(
+            factory = { ctx ->
+                val mapView = MapManager(activity).setupMap()
 
-            val primaryColor = ThemeUtils.resolveThemeColor(ctx, android.R.attr.colorPrimary)
-            val workoutLayer =
-                WorkoutLayer(data.samples, SimpleColoringStrategy(primaryColor), coloringStrategy)
-            holder.layer = workoutLayer
+                val primaryColor = ThemeUtils.resolveThemeColor(ctx, android.R.attr.colorPrimary)
+                val workoutLayer =
+                    WorkoutLayer(
+                        data.samples,
+                        SimpleColoringStrategy(primaryColor),
+                        coloringStrategy
+                    )
+                holder.layer = workoutLayer
 
-            if (coloring == WorkoutMapColoring.FollowPreference &&
-                instance.userPreferences.trackStyleMode == UserPreferences.STYLE_USAGE_ALWAYS
-            ) {
-                workoutLayer.setSampleConverter(data, SpeedConverter(ctx))
-            }
-
-            if (onSelectionChanged != null) {
-                workoutLayer.addMapSampleSelectionListener { sample ->
-                    onSelectionChanged(sample)
+                if (coloring == WorkoutMapColoring.FollowPreference &&
+                    instance.userPreferences.trackStyleMode == UserPreferences.STYLE_USAGE_ALWAYS
+                ) {
+                    workoutLayer.setSampleConverter(data, SpeedConverter(ctx))
                 }
-            }
 
-            mapView.addLayer(workoutLayer)
+                if (onSelectionChanged != null) {
+                    workoutLayer.addMapSampleSelectionListener { sample ->
+                        onSelectionChanged(sample)
+                    }
+                }
 
-            val bounds: BoundingBox = workoutLayer.boundingBox.extendMeters(50)
-            mapView.postDelayed({
-                mapView.model.mapViewPosition.mapPosition = MapPosition(
-                    bounds.centerPoint,
-                    LatLongUtils.zoomForBounds(
-                        mapView.dimension,
-                        bounds,
-                        mapView.model.displayModel.tileSize
+                mapView.addLayer(workoutLayer)
+
+                val bounds: BoundingBox = workoutLayer.boundingBox.extendMeters(50)
+                mapView.postDelayed({
+                    mapView.model.mapViewPosition.mapPosition = MapPosition(
+                        bounds.centerPoint,
+                        LatLongUtils.zoomForBounds(
+                            mapView.dimension,
+                            bounds,
+                            mapView.model.displayModel.tileSize
+                        )
+                    )
+                    mapView.animate().alpha(1f).setDuration(1000).start()
+                }, 500)
+
+                mapView.alpha = 0f
+                mapView.isClickable = clickable
+
+                if (showPauses) {
+                    val pBlue =
+                        AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.BLUE }
+                    for (pauseLocation in WorkoutCalculator.getPausesFromWorkout(data)) {
+                        val radius =
+                            min(10f, max(2f, sqrt(pauseLocation.pause.duration / 1000.0).toFloat()))
+                        mapView.addLayer(
+                            FixedPixelCircle(
+                                pauseLocation.location,
+                                radius,
+                                pBlue,
+                                null
+                            )
+                        )
+                    }
+                }
+
+                val pGreen =
+                    AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.GREEN }
+                mapView.addLayer(
+                    FixedPixelCircle(
+                        data.samples.first().toLatLong(),
+                        10f,
+                        pGreen,
+                        null
                     )
                 )
-                mapView.animate().alpha(1f).setDuration(1000).start()
-            }, 500)
 
-            mapView.alpha = 0f
-            mapView.isClickable = clickable
+                val pRed =
+                    AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.RED }
+                mapView.addLayer(FixedPixelCircle(data.samples.last().toLatLong(), 10f, pRed, null))
 
-            if (showPauses) {
-                val pBlue =
-                    AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.BLUE }
-                for (pauseLocation in WorkoutCalculator.getPausesFromWorkout(data)) {
-                    val radius =
-                        min(10f, max(2f, sqrt(pauseLocation.pause.duration / 1000.0).toFloat()))
-                    mapView.addLayer(FixedPixelCircle(pauseLocation.location, radius, pBlue, null))
+                mapView
+            },
+            update = { mapView ->
+                val layer = holder.layer ?: return@AndroidView
+                when (coloring) {
+                    WorkoutMapColoring.FollowPreference -> {}
+                    WorkoutMapColoring.None -> layer.setSampleConverter(data, null)
+                    is WorkoutMapColoring.Custom -> layer.setSampleConverter(
+                        data,
+                        coloring.converter
+                    )
                 }
-            }
-
-            val pGreen =
-                AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.GREEN }
-            mapView.addLayer(FixedPixelCircle(data.samples.first().toLatLong(), 10f, pGreen, null))
-
-            val pRed = AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.RED }
-            mapView.addLayer(FixedPixelCircle(data.samples.last().toLatLong(), 10f, pRed, null))
-
-            mapView
-        },
-        update = { mapView ->
-            val layer = holder.layer ?: return@AndroidView
-            when (coloring) {
-                WorkoutMapColoring.FollowPreference -> {}
-                WorkoutMapColoring.None -> layer.setSampleConverter(data, null)
-                is WorkoutMapColoring.Custom -> layer.setSampleConverter(data, coloring.converter)
-            }
-            if (holder.currentSelectedSample != selectedSample) {
-                holder.currentSelectedSample = selectedSample
-                holder.highlightCircle?.let { mapView.layerManager.layers.remove(it) }
-                holder.highlightCircle = null
-                if (selectedSample != null) {
-                    val p = AndroidGraphicFactory.INSTANCE.createPaint()
-                        .also { it.color = 0xff693cff.toInt() }
-                    val circle = FixedPixelCircle(selectedSample.toLatLong(), 10f, p, null)
-                    mapView.addLayer(circle)
-                    holder.highlightCircle = circle
+                if (holder.currentSelectedSample != selectedSample) {
+                    holder.currentSelectedSample = selectedSample
+                    holder.highlightCircle?.let { mapView.layerManager.layers.remove(it) }
+                    holder.highlightCircle = null
+                    if (selectedSample != null) {
+                        val p = AndroidGraphicFactory.INSTANCE.createPaint()
+                            .also { it.color = 0xff693cff.toInt() }
+                        val circle = FixedPixelCircle(selectedSample.toLatLong(), 10f, p, null)
+                        mapView.addLayer(circle)
+                        holder.highlightCircle = circle
+                    }
                 }
-            }
-            onMapUpdate?.invoke(mapView)
-        },
-        onRelease = { mapView ->
-            mapView.destroyAll()
-            AndroidGraphicFactory.clearResourceMemoryCache()
-        },
-        modifier = modifier.clipToBounds(),
-    )
+                onMapUpdate?.invoke(mapView)
+            },
+            onRelease = { mapView ->
+                mapView.destroyAll()
+                AndroidGraphicFactory.clearResourceMemoryCache()
+            },
+            modifier = modifier.clipToBounds(),
+        )
+    }
 }
 
 @Composable
