@@ -127,7 +127,6 @@
         <activity android:name=".ui.settings.ManageIntervalSetsActivity" />
         <activity android:name=".ui.settings.FitoTrackSettingsActivity" />
         <activity android:name=".ui.workout.EnterWorkoutActivity" />
-        <activity android:name=".ui.workout.ShowWorkoutMapDiagramActivity" />
         <activity
             android:name=".osm.OAuthAuthentication"
             android:exported="true"

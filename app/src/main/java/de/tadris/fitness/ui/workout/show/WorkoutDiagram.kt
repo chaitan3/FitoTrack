@@ -19,17 +19,28 @@
 
 package de.tadris.fitness.ui.workout.show
 
+import android.view.MotionEvent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.CombinedChart
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.stats.StatsDataTypes
@@ -38,81 +49,286 @@ import de.tadris.fitness.util.SampleAggregator
 import de.tadris.fitness.util.charts.ChartStyles
 import de.tadris.fitness.util.charts.marker.DisplayValueMarker
 
+private class WorkoutDiagramHolder {
+    var chart: CombinedChart? = null
+    var currentExternalHighlight: RouteSample? = null
+}
+
+/** Single-converter overload — backward-compatible with existing usages. */
 @Composable
 internal fun WorkoutDiagram(
     converter: SampleConverter,
     data: WorkoutData,
     workout: Workout,
     modifier: Modifier = Modifier,
+    interactive: Boolean = false,
+    onSelectionChanged: ((RouteSample?) -> Unit)? = null,
+    externalHighlight: RouteSample? = null,
+    onClick: (() -> Unit)? = null,
+) = WorkoutDiagram(
+    converters = listOf(converter),
+    data = data,
+    workout = workout,
+    modifier = modifier,
+    interactive = interactive,
+    onSelectionChanged = onSelectionChanged,
+    externalHighlight = externalHighlight,
+    onClick = onClick,
+)
+
+/** Multi-converter overload — used by the map+diagram screen. */
+@Composable
+internal fun WorkoutDiagram(
+    converters: List<SampleConverter>,
+    data: WorkoutData,
+    workout: Workout,
+    modifier: Modifier = Modifier,
+    interactive: Boolean = false,
+    showIntervals: Boolean = false,
+    onSelectionChanged: ((RouteSample?) -> Unit)? = null,
+    externalHighlight: RouteSample? = null,
     onClick: (() -> Unit)? = null,
 ) {
+    require(converters.isNotEmpty())
     val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
+    val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
+    val holder = remember { WorkoutDiagramHolder() }
+    // Tracks visible X range in milliseconds after a zoom/pan gesture.
+    var visibleRange by remember { mutableStateOf<Pair<Long, Long>?>(null) }
+
     AndroidView(
         factory = { ctx ->
             val chart = CombinedChart(ctx)
-            buildCombinedChart(chart, converter, data, workout, textColor)
-            if (onClick != null) chart.setOnClickListener { onClick() }
+            holder.chart = chart
+
+            if (interactive) {
+                chart.setScaleXEnabled(true)
+                chart.isHighlightPerDragEnabled = true
+                chart.isHighlightPerTapEnabled = true
+
+                chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                    override fun onValueSelected(e: Entry, h: Highlight) {
+                        onSelectionChanged?.invoke(e.data as? RouteSample)
+                    }
+
+                    override fun onNothingSelected() {
+                        onSelectionChanged?.invoke(null)
+                    }
+                })
+
+                chart.onChartGestureListener = object : OnChartGestureListener {
+                    override fun onChartGestureStart(
+                        me: MotionEvent,
+                        lastPerformedGesture: ChartTouchListener.ChartGesture
+                    ) {
+                    }
+
+                    override fun onChartGestureEnd(
+                        me: MotionEvent,
+                        lastPerformedGesture: ChartTouchListener.ChartGesture
+                    ) {
+                    }
+
+                    override fun onChartLongPressed(me: MotionEvent) {}
+                    override fun onChartDoubleTapped(me: MotionEvent) {
+                        updateRange()
+                    }
+
+                    override fun onChartSingleTapped(me: MotionEvent) {}
+                    override fun onChartFling(
+                        me1: MotionEvent,
+                        me2: MotionEvent,
+                        velocityX: Float,
+                        velocityY: Float
+                    ) {
+                    }
+
+                    override fun onChartScale(me: MotionEvent, scaleX: Float, scaleY: Float) {
+                        updateRange()
+                    }
+
+                    override fun onChartTranslate(me: MotionEvent, dX: Float, dY: Float) {
+                        updateRange()
+                    }
+
+                    private fun updateRange() {
+                        val low = (chart.lowestVisibleX * 60000).toLong()
+                        val high = (chart.highestVisibleX * 60000).toLong()
+                        if (high > low) visibleRange = low to high
+                    }
+                }
+            } else {
+                chart.setScaleXEnabled(false)
+                chart.isHighlightPerDragEnabled = false
+                chart.isHighlightPerTapEnabled = false
+                if (onClick != null) chart.setOnClickListener { onClick() }
+            }
+
+            chart.setScaleYEnabled(false)
+            buildChartData(
+                chart,
+                converters,
+                data,
+                workout,
+                textColor,
+                primaryColor,
+                showIntervals,
+                visibleRange
+            )
             chart
+        },
+        update = { chart ->
+            buildChartData(
+                chart,
+                converters,
+                data,
+                workout,
+                textColor,
+                primaryColor,
+                showIntervals,
+                visibleRange
+            )
+
+            if (interactive) {
+                val h = holder.currentExternalHighlight
+                if (h != externalHighlight) {
+                    holder.currentExternalHighlight = externalHighlight
+                    if (externalHighlight != null) {
+                        val dataIndex = externalHighlight.relativeTime / 1000f / 60f
+                        val highlight = Highlight(dataIndex, 0f, -1)
+                        highlight.dataIndex = 0
+                        chart.highlightValue(highlight)
+                        chart.centerViewTo(dataIndex, 0f, YAxis.AxisDependency.LEFT)
+                    } else {
+                        chart.highlightValue(null)
+                    }
+                }
+            }
         },
         modifier = modifier,
     )
 }
 
-private fun buildCombinedChart(
+private fun buildChartData(
     chart: CombinedChart,
-    converter: SampleConverter,
+    converters: List<SampleConverter>,
     data: WorkoutData,
     workout: Workout,
     textColor: Int,
+    primaryColor: Int,
+    showIntervals: Boolean,
+    visibleRange: Pair<Long, Long>?,
 ) {
-    chart.setScaleXEnabled(false)
-    chart.setScaleYEnabled(false)
-    chart.isHighlightPerDragEnabled = false
-    chart.isHighlightPerTapEnabled = false
+    val timeSpan = visibleRange
+        ?.let { (start, end) -> StatsDataTypes.TimeSpan(start, end) }
+        ?: StatsDataTypes.TimeSpan(0, workout.activeDuration)
 
-    val entries: List<Entry> = SampleAggregator.aggregateSamples(
-        converter.getEntries(data).map { (sample, value) ->
-            Entry(sample.relativeTime / 1000f / 60f, value, sample)
-        },
-        100,
-        StatsDataTypes.TimeSpan(0, workout.activeDuration)
-    )
+    val hasMultiple = converters.size > 1
+    val lineData = LineData()
 
-    chart.xAxis.valueFormatter = converter.xValueFormatter
+    converters.forEachIndexed { index, converter ->
+        val entries: List<Entry> = SampleAggregator.aggregateSamples(
+            converter.getEntries(data).map { (sample, value) ->
+                Entry(sample.relativeTime / 1000f / 60f, value, sample)
+            },
+            100,
+            timeSpan,
+        )
 
-    val dataSet = LineDataSet(entries, converter.name)
-    dataSet.color = chart.context.resources.getColor(converter.color, chart.context.theme)
-    dataSet.setDrawValues(false)
-    dataSet.setDrawCircles(false)
-    dataSet.lineWidth = 2f
-    dataSet.highlightLineWidth = 2.5f
-    dataSet.mode = LineDataSet.Mode.LINEAR
+        chart.xAxis.valueFormatter = converter.xValueFormatter
 
-    chart.axisLeft.valueFormatter = converter.yValueFormatter
-    chart.axisRight.valueFormatter = converter.yValueFormatter
-    chart.axisRight.isEnabled = false
+        val dataSet = LineDataSet(entries, converter.name)
+        dataSet.color = if (hasMultiple) {
+            chart.context.resources.getColor(converter.color, chart.context.theme)
+        } else {
+            primaryColor
+        }
+        dataSet.setDrawValues(false)
+        dataSet.setDrawCircles(false)
+        dataSet.lineWidth = 2f
+        dataSet.highlightLineWidth = 2.5f
+        dataSet.mode = LineDataSet.Mode.LINEAR
 
-    val lineData = LineData(dataSet)
+        if (hasMultiple) {
+            val axis = if (index == 0) YAxis.AxisDependency.LEFT else YAxis.AxisDependency.RIGHT
+            dataSet.axisDependency = axis
+            chart.getAxis(axis).valueFormatter = converter.yValueFormatter
+            chart.axisRight.isEnabled = true
+        } else {
+            chart.axisLeft.valueFormatter = converter.yValueFormatter
+            chart.axisRight.valueFormatter = converter.yValueFormatter
+            chart.axisRight.isEnabled = false
+        }
+
+        lineData.addDataSet(dataSet)
+    }
+
+    // Fix axis scale based on data ranges
+    chart.axisLeft.axisMaximum = converters[0].getMaxValue(data) * 1.05f
+    chart.axisLeft.axisMinimum = converters[0].getMinValue(data) * 0.95f
+    if (hasMultiple) {
+        chart.axisRight.axisMaximum = converters[1].getMaxValue(data) * 1.05f
+        chart.axisRight.axisMinimum = converters[1].getMinValue(data) * 0.95f
+    }
+
     val combinedData = CombinedData()
     combinedData.setData(lineData)
-    combinedData.setData(BarData())
+
+    if (showIntervals) {
+        combinedData.setData(buildIntervalBars(chart, data, lineData))
+    } else {
+        combinedData.setData(BarData())
+    }
 
     chart.data = combinedData
-    chart.marker =
-        DisplayValueMarker(chart.context, converter.yValueFormatter, converter.unit, lineData)
 
-    ChartStyles.setXAxisLabel(chart, converter.xAxisLabel, chart.context)
-    ChartStyles.setYAxisLabel(chart, converter.yAxisLabel, chart.context)
+    val marker = if (hasMultiple) {
+        DisplayValueMarker(chart.context, converters[0].yValueFormatter, "", lineData)
+    } else {
+        DisplayValueMarker(
+            chart.context,
+            converters[0].yValueFormatter,
+            converters[0].unit,
+            lineData
+        )
+    }
+    chart.marker = marker
+
+    ChartStyles.setXAxisLabel(chart, converters[0].xAxisLabel, chart.context)
+    ChartStyles.setYAxisLabel(
+        chart,
+        if (hasMultiple) "" else converters[0].yAxisLabel,
+        chart.context
+    )
     ChartStyles.defaultLineChart(chart, chart.context)
 
-    // Override text colors with M3 theme colors
     chart.xAxis.textColor = textColor
     chart.axisLeft.textColor = textColor
     chart.axisRight.textColor = textColor
     chart.description.textColor = textColor
     chart.legend.textColor = textColor
-
     chart.description.isEnabled = true
     chart.legend.isEnabled = true
     chart.invalidate()
+}
+
+private fun buildIntervalBars(
+    chart: CombinedChart,
+    data: WorkoutData,
+    lineData: LineData,
+): BarData {
+    val yMax = lineData.getDataSetByIndex(0).yMax * 1.05f
+    val barEntries = de.tadris.fitness.util.WorkoutCalculator.getIntervalSetTimesFromWorkout(data)
+        .map { relativeTime ->
+            com.github.mikephil.charting.data.BarEntry(relativeTime / 1000f / 60f, yMax)
+        }
+    if (barEntries.isEmpty()) return BarData()
+
+    val barDataSet = com.github.mikephil.charting.data.BarDataSet(barEntries, "")
+    barDataSet.barBorderWidth = 3f
+    barDataSet.color = android.graphics.Color.GRAY
+    val barData = BarData(barDataSet)
+    barData.barWidth = 0.01f
+    barData.setDrawValues(false)
+    return barData
 }

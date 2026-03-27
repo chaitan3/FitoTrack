@@ -77,7 +77,6 @@ import de.tadris.fitness.ui.theme.spacing
 import de.tadris.fitness.ui.workout.EditWorkoutStartEndActivity
 import de.tadris.fitness.ui.workout.EnterWorkoutActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutActivity
-import de.tadris.fitness.ui.workout.ShowWorkoutMapDiagramActivity
 import de.tadris.fitness.ui.workout.WorkoutActivity
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
 import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
@@ -97,6 +96,7 @@ fun ShowWorkoutScreen(
     onBack: () -> Unit,
     onResumeWorkout: (Workout) -> Unit,
     onShowFullscreenMap: (Long) -> Unit = {},
+    onShowDiagram: (Long, DiagramType) -> Unit = { _, _ -> },
 ) {
     val context = LocalContext.current
     val vm: ShowWorkoutViewModel = viewModel(
@@ -134,6 +134,7 @@ fun ShowWorkoutScreen(
             onDelete = { vm.deleteWorkout(onBack) },
             onResumeWorkout = { onResumeWorkout(s.workout) },
             onShowFullscreenMap = { onShowFullscreenMap(s.workout.id) },
+            onShowDiagram = { diagramType -> onShowDiagram(s.workout.id, diagramType) },
         )
     }
 }
@@ -147,6 +148,7 @@ private fun ShowWorkoutContent(
     onDelete: () -> Unit,
     onResumeWorkout: () -> Unit,
     onShowFullscreenMap: () -> Unit = {},
+    onShowDiagram: (DiagramType) -> Unit = {},
 ) {
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -362,16 +364,7 @@ private fun ShowWorkoutContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(MaterialTheme.spacing.mapHeight / 2),
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, ShowWorkoutMapDiagramActivity::class.java)
-                                .putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                                .putExtra(
-                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_EXTRA,
-                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_SPEED
-                                )
-                        )
-                    }
+                    onClick = { onShowDiagram(DiagramType.SPEED) }
                 )
                 SectionHeader(stringResource(R.string.histogram))
                 SpeedHistogram(
@@ -435,16 +428,7 @@ private fun ShowWorkoutContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(MaterialTheme.spacing.mapHeight / 2),
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, ShowWorkoutMapDiagramActivity::class.java)
-                                .putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                                .putExtra(
-                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_EXTRA,
-                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_HEART_RATE
-                                )
-                        )
-                    }
+                    onClick = { onShowDiagram(DiagramType.HEART_RATE) }
                 )
             }
 
@@ -479,16 +463,7 @@ private fun ShowWorkoutContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(MaterialTheme.spacing.mapHeight / 2),
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, ShowWorkoutMapDiagramActivity::class.java)
-                                .putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                                .putExtra(
-                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_EXTRA,
-                                    ShowWorkoutMapDiagramActivity.DIAGRAM_TYPE_HEIGHT
-                                )
-                        )
-                    }
+                    onClick = { onShowDiagram(DiagramType.HEIGHT) }
                 )
                 SectionHeader(stringResource(R.string.sections))
                 AndroidView(

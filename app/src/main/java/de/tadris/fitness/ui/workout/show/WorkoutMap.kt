@@ -21,11 +21,16 @@ package de.tadris.fitness.ui.workout.show
 
 import android.graphics.Color
 import androidx.activity.compose.LocalActivity
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import de.tadris.fitness.Instance
+import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.map.GradientColoringStrategy
@@ -51,6 +56,12 @@ internal sealed class WorkoutMapColoring {
     data class Custom(val converter: SampleConverter) : WorkoutMapColoring()
 }
 
+private class WorkoutMapHolder {
+    var layer: WorkoutLayer? = null
+    var highlightCircle: FixedPixelCircle? = null
+    var currentSelectedSample: RouteSample? = null
+}
+
 @Composable
 internal fun WorkoutMap(
     data: WorkoutData,
@@ -58,59 +69,17 @@ internal fun WorkoutMap(
     showPauses: Boolean = false,
     clickable: Boolean = false,
     coloring: WorkoutMapColoring = WorkoutMapColoring.FollowPreference,
+    selectedSample: RouteSample? = null,
+    onSelectionChanged: ((RouteSample?) -> Unit)? = null,
 ) {
     val activity = LocalActivity.current ?: return
-    val holder = androidx.compose.runtime.remember {
-        object {
-            var layer: WorkoutLayer? = null
-        }
-    }
+    val holder = remember { WorkoutMapHolder() }
+    val instance = Instance.getInstance(LocalContext.current)
+    val coloringStrategy = getColoringStrategy(instance.userPreferences.trackStyle)
 
     AndroidView(
         factory = { ctx ->
             val mapView = MapManager(activity).setupMap()
-
-            val instance = Instance.getInstance(ctx)
-            val trackStyle = instance.userPreferences.trackStyle
-
-            val coloringStrategy = when (trackStyle) {
-                "purple_rain" -> GradientColoringStrategy.fromPattern(
-                    GradientColoringStrategy.PATTERN_PURPLE,
-                    true
-                )
-
-                "pink_mist" -> GradientColoringStrategy.fromPattern(
-                    GradientColoringStrategy.PATTERN_PINK,
-                    false
-                )
-
-                "rainbow_warrior" -> GradientColoringStrategy.fromPattern(
-                    GradientColoringStrategy.PATTERN_MAP,
-                    true
-                )
-
-                "height_map" -> GradientColoringStrategy.fromPattern(
-                    GradientColoringStrategy.PATTERN_HEIGHT_MAP,
-                    true
-                )
-
-                "bright_night" -> GradientColoringStrategy.fromPattern(
-                    GradientColoringStrategy.PATTERN_BRIGHT,
-                    false
-                )
-
-                "mondriaan" -> GradientColoringStrategy.fromPattern(
-                    GradientColoringStrategy.PATTERN_YELLOW_RED_BLUE,
-                    false
-                )
-
-                else -> SimpleColoringStrategy(
-                    ThemeUtils.resolveThemeColor(
-                        ctx,
-                        android.R.attr.colorPrimary
-                    )
-                )
-            }
 
             val primaryColor = ThemeUtils.resolveThemeColor(ctx, android.R.attr.colorPrimary)
             val workoutLayer =
@@ -123,6 +92,12 @@ internal fun WorkoutMap(
                 workoutLayer.setSampleConverter(data, SpeedConverter(ctx))
             }
 
+            if (onSelectionChanged != null) {
+                workoutLayer.addMapSampleSelectionListener { sample ->
+                    onSelectionChanged(sample)
+                }
+            }
+
             mapView.addLayer(workoutLayer)
 
             val bounds: BoundingBox = workoutLayer.boundingBox.extendMeters(50)
@@ -130,7 +105,8 @@ internal fun WorkoutMap(
                 mapView.model.mapViewPosition.mapPosition = MapPosition(
                     bounds.centerPoint,
                     LatLongUtils.zoomForBounds(
-                        mapView.dimension, bounds,
+                        mapView.dimension,
+                        bounds,
                         mapView.model.displayModel.tileSize
                     )
                 )
@@ -146,9 +122,7 @@ internal fun WorkoutMap(
                 for (pauseLocation in WorkoutCalculator.getPausesFromWorkout(data)) {
                     val radius =
                         min(10f, max(2f, sqrt(pauseLocation.pause.duration / 1000.0).toFloat()))
-                    mapView.addLayer(
-                        FixedPixelCircle(pauseLocation.location, radius, pBlue, null)
-                    )
+                    mapView.addLayer(FixedPixelCircle(pauseLocation.location, radius, pBlue, null))
                 }
             }
 
@@ -161,12 +135,24 @@ internal fun WorkoutMap(
 
             mapView
         },
-        update = { _ ->
+        update = { mapView ->
             val layer = holder.layer ?: return@AndroidView
             when (coloring) {
                 WorkoutMapColoring.FollowPreference -> {}
                 WorkoutMapColoring.None -> layer.setSampleConverter(data, null)
                 is WorkoutMapColoring.Custom -> layer.setSampleConverter(data, coloring.converter)
+            }
+            if (holder.currentSelectedSample != selectedSample) {
+                holder.currentSelectedSample = selectedSample
+                holder.highlightCircle?.let { mapView.layerManager.layers.remove(it) }
+                holder.highlightCircle = null
+                if (selectedSample != null) {
+                    val p = AndroidGraphicFactory.INSTANCE.createPaint()
+                        .also { it.color = 0xff693cff.toInt() }
+                    val circle = FixedPixelCircle(selectedSample.toLatLong(), 10f, p, null)
+                    mapView.addLayer(circle)
+                    holder.highlightCircle = circle
+                }
             }
         },
         onRelease = { mapView ->
@@ -175,4 +161,39 @@ internal fun WorkoutMap(
         },
         modifier = modifier.clipToBounds(),
     )
+}
+
+@Composable
+private fun getColoringStrategy(trackStyle: String) = when (trackStyle) {
+    "purple_rain" -> GradientColoringStrategy.fromPattern(
+        GradientColoringStrategy.PATTERN_PURPLE,
+        true
+    )
+
+    "pink_mist" -> GradientColoringStrategy.fromPattern(
+        GradientColoringStrategy.PATTERN_PINK,
+        false
+    )
+
+    "rainbow_warrior" -> GradientColoringStrategy.fromPattern(
+        GradientColoringStrategy.PATTERN_MAP,
+        true
+    )
+
+    "height_map" -> GradientColoringStrategy.fromPattern(
+        GradientColoringStrategy.PATTERN_HEIGHT_MAP,
+        true
+    )
+
+    "bright_night" -> GradientColoringStrategy.fromPattern(
+        GradientColoringStrategy.PATTERN_BRIGHT,
+        false
+    )
+
+    "mondriaan" -> GradientColoringStrategy.fromPattern(
+        GradientColoringStrategy.PATTERN_YELLOW_RED_BLUE,
+        false
+    )
+
+    else -> SimpleColoringStrategy(MaterialTheme.colorScheme.primary.toArgb())
 }
