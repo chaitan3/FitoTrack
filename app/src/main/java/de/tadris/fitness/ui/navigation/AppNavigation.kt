@@ -39,8 +39,8 @@ import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
 import de.tadris.fitness.ui.statistics.StatisticsActivity
-import de.tadris.fitness.ui.workout.EnterWorkoutScreen
 import de.tadris.fitness.ui.workout.ShareWorkoutScreen
+import de.tadris.fitness.ui.workout.enter.EnterWorkoutScreen
 import de.tadris.fitness.ui.workout.show.DiagramType
 import de.tadris.fitness.ui.workout.show.EditWorkoutStartEndScreen
 import de.tadris.fitness.ui.workout.show.ShowWorkoutFullscreenMapScreen

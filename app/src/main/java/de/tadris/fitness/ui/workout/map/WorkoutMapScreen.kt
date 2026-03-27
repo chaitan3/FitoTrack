@@ -17,9 +17,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.workout.show
+package de.tadris.fitness.ui.workout.map
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,6 +60,8 @@ import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.ui.workout.diagram.ConverterManager
+import de.tadris.fitness.ui.workout.show.ShowWorkoutViewModel
+import de.tadris.fitness.ui.workout.show.WorkoutUiState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 
 /** State passed into the optional [bottomContent] slot of [WorkoutMapScreen]. */
@@ -93,7 +96,7 @@ internal fun WorkoutMapScreen(
         factory = viewModelFactory {
             initializer {
                 ShowWorkoutViewModel(
-                    context.applicationContext as android.app.Application,
+                    context.applicationContext as Application,
                     id,
                 )
             }

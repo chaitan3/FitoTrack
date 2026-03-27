@@ -83,6 +83,8 @@ import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
 import de.tadris.fitness.ui.workout.diagram.HeightConverter
 import de.tadris.fitness.ui.workout.diagram.IntensityConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
+import de.tadris.fitness.ui.workout.diagram.WorkoutDiagram
+import de.tadris.fitness.ui.workout.map.WorkoutMap
 import de.tadris.fitness.util.sections.SectionListModel
 import de.tadris.fitness.util.sections.SectionListPresenter
 import de.tadris.fitness.util.sections.SectionListView

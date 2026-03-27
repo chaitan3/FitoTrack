@@ -20,6 +20,7 @@
 package de.tadris.fitness.ui.workout.show
 
 import androidx.compose.runtime.Composable
+import de.tadris.fitness.ui.workout.map.WorkoutMapScreen
 
 @Composable
 fun ShowWorkoutFullscreenMapScreen(id: Long, onBack: () -> Unit) {

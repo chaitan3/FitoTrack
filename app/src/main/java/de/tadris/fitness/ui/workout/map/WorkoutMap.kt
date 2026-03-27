@@ -17,8 +17,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.workout.show
+package de.tadris.fitness.ui.workout.map
 
+import android.R
 import android.graphics.Color
 import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.MaterialTheme
@@ -85,7 +86,7 @@ internal fun WorkoutMap(
             factory = { ctx ->
                 val mapView = MapManager(activity).setupMap()
 
-                val primaryColor = ThemeUtils.resolveThemeColor(ctx, android.R.attr.colorPrimary)
+                val primaryColor = ThemeUtils.resolveThemeColor(ctx, R.attr.colorPrimary)
                 val workoutLayer =
                     WorkoutLayer(
                         data.samples,

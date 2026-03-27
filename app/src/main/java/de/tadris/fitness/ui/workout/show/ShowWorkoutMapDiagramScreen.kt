@@ -48,6 +48,10 @@ import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
 import de.tadris.fitness.ui.workout.diagram.HeightConverter
 import de.tadris.fitness.ui.workout.diagram.SampleConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
+import de.tadris.fitness.ui.workout.diagram.WorkoutDiagram
+import de.tadris.fitness.ui.workout.map.WorkoutMapColoring
+import de.tadris.fitness.ui.workout.map.WorkoutMapContentState
+import de.tadris.fitness.ui.workout.map.WorkoutMapScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

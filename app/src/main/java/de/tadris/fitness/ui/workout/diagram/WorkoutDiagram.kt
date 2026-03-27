@@ -17,8 +17,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.workout.show
+package de.tadris.fitness.ui.workout.diagram
 
+import android.graphics.Color
 import android.view.MotionEvent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,6 +33,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -44,8 +47,8 @@ import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.stats.StatsDataTypes
-import de.tadris.fitness.ui.workout.diagram.SampleConverter
 import de.tadris.fitness.util.SampleAggregator
+import de.tadris.fitness.util.WorkoutCalculator
 import de.tadris.fitness.util.charts.ChartStyles
 import de.tadris.fitness.util.charts.marker.DisplayValueMarker
 
@@ -298,15 +301,15 @@ private fun buildIntervalBars(
     lineData: LineData,
 ): BarData {
     val yMax = lineData.getDataSetByIndex(0).yMax * 1.05f
-    val barEntries = de.tadris.fitness.util.WorkoutCalculator.getIntervalSetTimesFromWorkout(data)
+    val barEntries = WorkoutCalculator.getIntervalSetTimesFromWorkout(data)
         .map { relativeTime ->
-            com.github.mikephil.charting.data.BarEntry(relativeTime / 1000f / 60f, yMax)
+            BarEntry(relativeTime / 1000f / 60f, yMax)
         }
     if (barEntries.isEmpty()) return BarData()
 
-    val barDataSet = com.github.mikephil.charting.data.BarDataSet(barEntries, "")
+    val barDataSet = BarDataSet(barEntries, "")
     barDataSet.barBorderWidth = 3f
-    barDataSet.color = android.graphics.Color.GRAY
+    barDataSet.color = Color.GRAY
     val barData = BarData(barDataSet)
     barData.barWidth = 0.01f
     barData.setDrawValues(false)

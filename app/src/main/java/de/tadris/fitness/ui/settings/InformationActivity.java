@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.workout;
+package de.tadris.fitness.ui.settings;
 
 import android.util.TypedValue;
 import android.view.View;

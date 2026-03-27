@@ -76,8 +76,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import de.tadris.fitness.R
 import de.tadris.fitness.aggregation.WorkoutInformation
-import de.tadris.fitness.ui.workout.show.WorkoutMap
-import de.tadris.fitness.ui.workout.show.WorkoutMapColoring
+import de.tadris.fitness.ui.workout.map.WorkoutMap
+import de.tadris.fitness.ui.workout.map.WorkoutMapColoring
 import de.tadris.fitness.util.Icon as WorkoutIcon
 
 private val gradientDark = Color(0xAF03031B)
