@@ -88,6 +88,10 @@ class ShowWorkoutViewModel(
         }
     }
 
+    fun refresh() {
+        loadWorkout()
+    }
+
     fun deleteWorkout(onDeleted: () -> Unit) {
         val current = _uiState.value as? WorkoutUiState.Success ?: return
         viewModelScope.launch {

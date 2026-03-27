@@ -51,7 +51,6 @@ import de.tadris.fitness.util.charts.marker.DisplayValueMarker
 
 private class WorkoutDiagramHolder {
     var chart: CombinedChart? = null
-    var currentExternalHighlight: RouteSample? = null
 }
 
 /** Single-converter overload — backward-compatible with existing usages. */
@@ -63,7 +62,6 @@ internal fun WorkoutDiagram(
     modifier: Modifier = Modifier,
     interactive: Boolean = false,
     onSelectionChanged: ((RouteSample?) -> Unit)? = null,
-    externalHighlight: RouteSample? = null,
     onClick: (() -> Unit)? = null,
 ) = WorkoutDiagram(
     converters = listOf(converter),
@@ -72,7 +70,6 @@ internal fun WorkoutDiagram(
     modifier = modifier,
     interactive = interactive,
     onSelectionChanged = onSelectionChanged,
-    externalHighlight = externalHighlight,
     onClick = onClick,
 )
 
@@ -86,7 +83,6 @@ internal fun WorkoutDiagram(
     interactive: Boolean = false,
     showIntervals: Boolean = false,
     onSelectionChanged: ((RouteSample?) -> Unit)? = null,
-    externalHighlight: RouteSample? = null,
     onClick: (() -> Unit)? = null,
 ) {
     require(converters.isNotEmpty())
@@ -188,22 +184,6 @@ internal fun WorkoutDiagram(
                 showIntervals,
                 visibleRange
             )
-
-            if (interactive) {
-                val h = holder.currentExternalHighlight
-                if (h != externalHighlight) {
-                    holder.currentExternalHighlight = externalHighlight
-                    if (externalHighlight != null) {
-                        val dataIndex = externalHighlight.relativeTime / 1000f / 60f
-                        val highlight = Highlight(dataIndex, 0f, -1)
-                        highlight.dataIndex = 0
-                        chart.highlightValue(highlight)
-                        chart.centerViewTo(dataIndex, 0f, YAxis.AxisDependency.LEFT)
-                    } else {
-                        chart.highlightValue(null)
-                    }
-                }
-            }
         },
         modifier = modifier,
     )

@@ -198,6 +198,11 @@ public class WorkoutLayer extends Layer {
         }
     }
 
+    public void setFallbackColoringStrategy(ColoringStrategy strategy) {
+        this.fallbackColoringStrategy = strategy;
+        requestRedraw();
+    }
+
     public void setColoringStrategy(WorkoutData workout, ColoringStrategy coloringStrategy) {
         this.coloringStrategy = coloringStrategy;
         refreshColoringMinMax(workout);

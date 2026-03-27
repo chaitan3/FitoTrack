@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -58,16 +59,11 @@ import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.ui.workout.diagram.ConverterManager
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 
 /** State passed into the optional [bottomContent] slot of [WorkoutMapScreen]. */
 internal class WorkoutMapContentState(
     val data: WorkoutData,
-    val selectedSample: RouteSample?,
     val onSampleSelected: (RouteSample?) -> Unit,
     val onColoringChange: (WorkoutMapColoring) -> Unit,
     val converterManager: ConverterManager,
@@ -156,7 +152,6 @@ private fun WorkoutMapContent(
     var coloring by remember { mutableStateOf(initialColoring) }
     var selectedSample by remember { mutableStateOf<RouteSample?>(null) }
     var showColoringMenu by remember { mutableStateOf(false) }
-    val hazeState = rememberHazeState()
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     Scaffold(
@@ -191,10 +186,9 @@ private fun WorkoutMapContent(
                         }
                     }
                 },
-                modifier = Modifier.hazeEffect(hazeState, HazeMaterials.ultraThin()),
             )
         },
-    ) { _ ->
+    ) { padding ->
         if (bottomContent == null) {
             WorkoutMap(
                 data = data,
@@ -205,12 +199,11 @@ private fun WorkoutMapContent(
                 onSelectionChanged = { selectedSample = it },
                 modifier = Modifier
                     .fillMaxSize()
-                    .hazeSource(hazeState),
+                    .padding(top = padding.calculateTopPadding()),
             )
         } else {
             val contentState = WorkoutMapContentState(
                 data = data,
-                selectedSample = selectedSample,
                 onSampleSelected = { selectedSample = it },
                 onColoringChange = { coloring = it },
                 converterManager = converterManager,
@@ -225,10 +218,14 @@ private fun WorkoutMapContent(
                     onSelectionChanged = { selectedSample = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.55f)
-                        .hazeSource(hazeState),
+                        .padding(top = padding.calculateTopPadding())
+                        .weight(0.55f),
                 )
-                bottomContent(contentState)
+                Box(Modifier
+                    .fillMaxWidth()
+                    .weight(0.45f)) {
+                    bottomContent(contentState)
+                }
             }
         }
     }

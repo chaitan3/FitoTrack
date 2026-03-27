@@ -52,6 +52,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +65,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -74,7 +78,6 @@ import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.theme.spacing
-import de.tadris.fitness.ui.workout.EditWorkoutStartEndActivity
 import de.tadris.fitness.ui.workout.EnterWorkoutActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutActivity
 import de.tadris.fitness.ui.workout.WorkoutActivity
@@ -97,6 +100,7 @@ fun ShowWorkoutScreen(
     onResumeWorkout: (Workout) -> Unit,
     onShowFullscreenMap: (Long) -> Unit = {},
     onShowDiagram: (Long, DiagramType) -> Unit = { _, _ -> },
+    onEditStartEnd: (Long) -> Unit = {},
 ) {
     val context = LocalContext.current
     val vm: ShowWorkoutViewModel = viewModel(
@@ -111,6 +115,13 @@ fun ShowWorkoutScreen(
         }
     )
     val state by vm.uiState.collectAsState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            vm.refresh()
+        }
+    }
 
     when (val s = state) {
         is WorkoutUiState.Loading -> Box(
@@ -135,6 +146,7 @@ fun ShowWorkoutScreen(
             onResumeWorkout = { onResumeWorkout(s.workout) },
             onShowFullscreenMap = { onShowFullscreenMap(s.workout.id) },
             onShowDiagram = { diagramType -> onShowDiagram(s.workout.id, diagramType) },
+            onEditStartEnd = { onEditStartEnd(s.workout.id) },
         )
     }
 }
@@ -149,6 +161,7 @@ private fun ShowWorkoutContent(
     onResumeWorkout: () -> Unit,
     onShowFullscreenMap: () -> Unit = {},
     onShowDiagram: (DiagramType) -> Unit = {},
+    onEditStartEnd: () -> Unit = {},
 ) {
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -235,10 +248,7 @@ private fun ShowWorkoutContent(
                                 text = { Text(stringResource(R.string.editWorkoutStartEnd)) },
                                 onClick = {
                                     showMenu = false
-                                    context.startActivity(
-                                        Intent(context, EditWorkoutStartEndActivity::class.java)
-                                            .putExtra(WorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                                    )
+                                    onEditStartEnd()
                                 }
                             )
                             DropdownMenuItem(

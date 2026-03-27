@@ -37,6 +37,7 @@ import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
 import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.workout.show.DiagramType
+import de.tadris.fitness.ui.workout.show.EditWorkoutStartEndScreen
 import de.tadris.fitness.ui.workout.show.ShowWorkoutFullscreenMapScreen
 import de.tadris.fitness.ui.workout.show.ShowWorkoutMapDiagramScreen
 import de.tadris.fitness.ui.workout.show.ShowWorkoutScreen
@@ -54,6 +55,9 @@ sealed interface Route {
 
     @Serializable
     data class ShowWorkoutMapDiagram(val id: Long, val diagramType: DiagramType) : Route
+
+    @Serializable
+    data class EditWorkoutStartEnd(val id: Long) : Route
 }
 
 @Composable
@@ -104,6 +108,13 @@ fun AppNavigation(
                 onBack = { navController.popBackStack() },
             )
         }
+        composable<Route.EditWorkoutStartEnd> { backStackEntry ->
+            EditWorkoutStartEndScreen(
+                id = backStackEntry.toRoute<Route.EditWorkoutStartEnd>().id,
+                onBack = { navController.popBackStack() },
+                onWorkoutModified = { navController.popBackStack() },
+            )
+        }
         composable<Route.ShowWorkout> { backStackEntry ->
             ShowWorkoutScreen(
                 id = backStackEntry.toRoute<Route.ShowWorkout>().id,
@@ -113,6 +124,9 @@ fun AppNavigation(
                 },
                 onShowDiagram = { workoutId, diagramType ->
                     navController.navigate(Route.ShowWorkoutMapDiagram(workoutId, diagramType))
+                },
+                onEditStartEnd = { workoutId ->
+                    navController.navigate(Route.EditWorkoutStartEnd(workoutId))
                 },
                 onResumeWorkout = { workout ->
                     val dao = Instance.getInstance(context).db.workoutDao()

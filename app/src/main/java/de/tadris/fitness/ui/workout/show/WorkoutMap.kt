@@ -45,6 +45,7 @@ import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.MapPosition
 import org.mapsforge.core.util.LatLongUtils
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
+import org.mapsforge.map.android.view.MapView
 import org.mapsforge.map.layer.overlay.FixedPixelCircle
 import kotlin.math.max
 import kotlin.math.min
@@ -71,6 +72,7 @@ internal fun WorkoutMap(
     coloring: WorkoutMapColoring = WorkoutMapColoring.FollowPreference,
     selectedSample: RouteSample? = null,
     onSelectionChanged: ((RouteSample?) -> Unit)? = null,
+    onMapUpdate: ((MapView) -> Unit)? = null,
 ) {
     val activity = LocalActivity.current ?: return
     val holder = remember { WorkoutMapHolder() }
@@ -154,6 +156,7 @@ internal fun WorkoutMap(
                     holder.highlightCircle = circle
                 }
             }
+            onMapUpdate?.invoke(mapView)
         },
         onRelease = { mapView ->
             mapView.destroyAll()

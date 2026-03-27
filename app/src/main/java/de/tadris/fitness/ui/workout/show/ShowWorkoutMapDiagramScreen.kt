@@ -141,7 +141,6 @@ private fun DiagramPanel(
             interactive = true,
             showIntervals = showIntervals,
             onSelectionChanged = state.onSampleSelected,
-            externalHighlight = state.selectedSample,
             modifier = Modifier.fillMaxSize(),
         )
     }
