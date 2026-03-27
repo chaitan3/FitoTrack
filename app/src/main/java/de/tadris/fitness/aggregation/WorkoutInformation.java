@@ -24,9 +24,6 @@ import androidx.annotation.StringRes;
 import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.util.unit.UnitUtils;
 
-/**
- * general note: this could also be used to display the data in the MapWorkoutActivity.
- */
 public interface WorkoutInformation {
 
     @StringRes
