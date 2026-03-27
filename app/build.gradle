@@ -103,6 +103,8 @@ dependencies {
 
     // UI
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'dev.chrisbanes.haze:haze:1.7.2'
+    implementation("dev.chrisbanes.haze:haze-materials:1.7.2")
 
     // Compose
     def composeBom = platform('androidx.compose:compose-bom:2026.03.00')
