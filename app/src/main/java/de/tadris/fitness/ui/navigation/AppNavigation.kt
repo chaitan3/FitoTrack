@@ -22,6 +22,7 @@ package de.tadris.fitness.ui.navigation
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,6 +33,8 @@ import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingStateHolder
+import de.tadris.fitness.ui.ImportHandler
+import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
@@ -70,9 +73,11 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     onRecord: () -> Unit,
     onRecordLast: (WorkoutType) -> Unit,
-    onImport: () -> Unit,
 ) {
     val context = LocalContext.current
+    val importVm: ImportViewModel = viewModel()
+
+    ImportHandler(vm = importVm)
 
     NavHost(navController = navController, startDestination = Route.Dashboard) {
         composable<Route.Dashboard> {
@@ -89,7 +94,7 @@ fun AppNavigation(
                 onRecord = onRecord,
                 onRecordLast = onRecordLast,
                 onEnterWorkout = { navController.navigate(Route.EnterWorkout()) },
-                onImport = onImport,
+                onImport = { importVm.requestImport() },
                 onSettings = {
                     context.startActivity(Intent(context, FitoTrackSettingsActivity::class.java))
                 },
