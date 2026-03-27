@@ -119,8 +119,6 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var firstStart by BooleanSharedPreference("firstStart", true)
 
-    var useNfcStart by BooleanSharedPreference("nfcStart", false)
-
     var autoStartDelay by IntSharedPreference(
         "autoStartDelayPeriod",
         AutoStartWorkout.DEFAULT_DELAY_S

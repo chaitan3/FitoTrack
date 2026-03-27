@@ -38,7 +38,6 @@ import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog
 import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog.AutoStartModeSelectListener
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog.AutoTimeoutSelectListener
-import de.tadris.fitness.util.NfcAdapterHelper
 import de.tadris.fitness.util.NumberPickerUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -59,22 +58,6 @@ class RecordingSettingsFragment : FitoTrackSettingFragment(), AutoStartModeSelec
         instance = Instance.getInstance(context)
         preferences = Instance.getInstance(requireContext()).userPreferences
         addPreferencesFromResource(R.xml.preferences_recording)
-
-        // modify NFC option
-        if (!NfcAdapterHelper.isNfcPresent(requireContext())) { // disable the NFC option if the device doesn't support NFC
-            findPreference<Preference>("nfcStart")!!.isEnabled = false
-        } else {
-            // ask the user to enable NFC in device settings when they want to use it in the app
-            // but NFC is globally disabled
-            findPreference<Preference>("nfcStart")!!.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { _: Preference?, newValue: Any ->
-                    if (newValue as Boolean && !NfcAdapterHelper.isNfcEnabled(requireContext())) {
-                        NfcAdapterHelper.createNfcEnableDialog(requireContext()).show()
-                        return@OnPreferenceChangeListener false // do NOT use NFC yet, user first needs to enable it in device settings
-                    }
-                    true
-                }
-        }
         disableSpeechConfig()
         checkTTS()
         findPreference<Preference>("intervals")!!.onPreferenceClickListener =

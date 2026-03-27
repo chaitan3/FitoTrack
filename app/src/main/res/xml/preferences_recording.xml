@@ -20,13 +20,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreference
-        android:id="@+id/nfcStart"
-        android:defaultValue="false"
-        android:key="nfcStart"
-        android:summary="@string/nfcStartSummary"
-        android:title="@string/nfcStartTitle" />
-
     <Preference
         android:id="@+id/autoStartModeConfig"
         android:key="autoStartModeConfig"
