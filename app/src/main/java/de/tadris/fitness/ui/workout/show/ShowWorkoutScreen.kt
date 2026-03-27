@@ -77,10 +77,8 @@ import de.tadris.fitness.ui.theme.spacing
 import de.tadris.fitness.ui.workout.EditWorkoutStartEndActivity
 import de.tadris.fitness.ui.workout.EnterWorkoutActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutActivity
-import de.tadris.fitness.ui.workout.ShowWorkoutFullscreenMapActivity
 import de.tadris.fitness.ui.workout.ShowWorkoutMapDiagramActivity
 import de.tadris.fitness.ui.workout.WorkoutActivity
-import de.tadris.fitness.ui.workout.WorkoutActivity.WORKOUT_ID_EXTRA
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
 import de.tadris.fitness.ui.workout.diagram.HeartRateConverter
 import de.tadris.fitness.ui.workout.diagram.HeightConverter
@@ -98,6 +96,7 @@ fun ShowWorkoutScreen(
     id: Long,
     onBack: () -> Unit,
     onResumeWorkout: (Workout) -> Unit,
+    onShowFullscreenMap: (Long) -> Unit = {},
 ) {
     val context = LocalContext.current
     val vm: ShowWorkoutViewModel = viewModel(
@@ -134,6 +133,7 @@ fun ShowWorkoutScreen(
             onUpdateComment = { vm.updateComment(it) },
             onDelete = { vm.deleteWorkout(onBack) },
             onResumeWorkout = { onResumeWorkout(s.workout) },
+            onShowFullscreenMap = { onShowFullscreenMap(s.workout.id) },
         )
     }
 }
@@ -146,6 +146,7 @@ private fun ShowWorkoutContent(
     onUpdateComment: (String) -> Unit,
     onDelete: () -> Unit,
     onResumeWorkout: () -> Unit,
+    onShowFullscreenMap: () -> Unit = {},
 ) {
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -337,12 +338,7 @@ private fun ShowWorkoutContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(MaterialTheme.spacing.mapHeight)
-                        .clickable {
-                            val intent =
-                                Intent(context, ShowWorkoutFullscreenMapActivity::class.java)
-                            intent.putExtra(WORKOUT_ID_EXTRA, workout.id)
-                            activity?.startActivity(intent)
-                        }
+                        .clickable { onShowFullscreenMap() }
                 )
             }
 

@@ -27,25 +27,45 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.viewinterop.AndroidView
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.map.GradientColoringStrategy
 import de.tadris.fitness.map.MapManager
 import de.tadris.fitness.map.SimpleColoringStrategy
 import de.tadris.fitness.map.WorkoutLayer
+import de.tadris.fitness.ui.workout.diagram.SampleConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
 import de.tadris.fitness.util.ThemeUtils
+import de.tadris.fitness.util.WorkoutCalculator
 import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.MapPosition
 import org.mapsforge.core.util.LatLongUtils
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.layer.overlay.FixedPixelCircle
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sqrt
 
+internal sealed class WorkoutMapColoring {
+    data object FollowPreference : WorkoutMapColoring()
+    data object None : WorkoutMapColoring()
+    data class Custom(val converter: SampleConverter) : WorkoutMapColoring()
+}
 
 @Composable
 internal fun WorkoutMap(
     data: WorkoutData,
     modifier: Modifier = Modifier,
+    showPauses: Boolean = false,
+    clickable: Boolean = false,
+    coloring: WorkoutMapColoring = WorkoutMapColoring.FollowPreference,
 ) {
     val activity = LocalActivity.current ?: return
+    val holder = androidx.compose.runtime.remember {
+        object {
+            var layer: WorkoutLayer? = null
+        }
+    }
+
     AndroidView(
         factory = { ctx ->
             val mapView = MapManager(activity).setupMap()
@@ -95,8 +115,11 @@ internal fun WorkoutMap(
             val primaryColor = ThemeUtils.resolveThemeColor(ctx, android.R.attr.colorPrimary)
             val workoutLayer =
                 WorkoutLayer(data.samples, SimpleColoringStrategy(primaryColor), coloringStrategy)
+            holder.layer = workoutLayer
 
-            if (instance.userPreferences.trackStyleMode == de.tadris.fitness.data.preferences.UserPreferences.STYLE_USAGE_ALWAYS) {
+            if (coloring == WorkoutMapColoring.FollowPreference &&
+                instance.userPreferences.trackStyleMode == UserPreferences.STYLE_USAGE_ALWAYS
+            ) {
                 workoutLayer.setSampleConverter(data, SpeedConverter(ctx))
             }
 
@@ -115,7 +138,19 @@ internal fun WorkoutMap(
             }, 500)
 
             mapView.alpha = 0f
-            mapView.isClickable = false
+            mapView.isClickable = clickable
+
+            if (showPauses) {
+                val pBlue =
+                    AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.BLUE }
+                for (pauseLocation in WorkoutCalculator.getPausesFromWorkout(data)) {
+                    val radius =
+                        min(10f, max(2f, sqrt(pauseLocation.pause.duration / 1000.0).toFloat()))
+                    mapView.addLayer(
+                        FixedPixelCircle(pauseLocation.location, radius, pBlue, null)
+                    )
+                }
+            }
 
             val pGreen =
                 AndroidGraphicFactory.INSTANCE.createPaint().also { it.color = Color.GREEN }
@@ -125,6 +160,14 @@ internal fun WorkoutMap(
             mapView.addLayer(FixedPixelCircle(data.samples.last().toLatLong(), 10f, pRed, null))
 
             mapView
+        },
+        update = { _ ->
+            val layer = holder.layer ?: return@AndroidView
+            when (coloring) {
+                WorkoutMapColoring.FollowPreference -> {}
+                WorkoutMapColoring.None -> layer.setSampleConverter(data, null)
+                is WorkoutMapColoring.Custom -> layer.setSampleConverter(data, coloring.converter)
+            }
         },
         onRelease = { mapView ->
             mapView.destroyAll()
