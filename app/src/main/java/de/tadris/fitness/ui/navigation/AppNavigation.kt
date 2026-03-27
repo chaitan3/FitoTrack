@@ -36,6 +36,7 @@ import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
 import de.tadris.fitness.ui.statistics.StatisticsActivity
+import de.tadris.fitness.ui.workout.EnterWorkoutScreen
 import de.tadris.fitness.ui.workout.show.DiagramType
 import de.tadris.fitness.ui.workout.show.EditWorkoutStartEndScreen
 import de.tadris.fitness.ui.workout.show.ShowWorkoutFullscreenMapScreen
@@ -58,6 +59,10 @@ sealed interface Route {
 
     @Serializable
     data class EditWorkoutStartEnd(val id: Long) : Route
+
+    /** id == 0L means create new workout, non-zero means edit existing */
+    @Serializable
+    data class EnterWorkout(val id: Long = 0L) : Route
 }
 
 @Composable
@@ -65,7 +70,6 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     onRecord: () -> Unit,
     onRecordLast: (WorkoutType) -> Unit,
-    onEnterWorkout: () -> Unit,
     onImport: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -84,7 +88,7 @@ fun AppNavigation(
                 },
                 onRecord = onRecord,
                 onRecordLast = onRecordLast,
-                onEnterWorkout = onEnterWorkout,
+                onEnterWorkout = { navController.navigate(Route.EnterWorkout()) },
                 onImport = onImport,
                 onSettings = {
                     context.startActivity(Intent(context, FitoTrackSettingsActivity::class.java))
@@ -115,6 +119,17 @@ fun AppNavigation(
                 onWorkoutModified = { navController.popBackStack() },
             )
         }
+        composable<Route.EnterWorkout> { backStackEntry ->
+            EnterWorkoutScreen(
+                id = backStackEntry.toRoute<Route.EnterWorkout>().id,
+                onBack = { navController.popBackStack() },
+                onSaved = { workoutId ->
+                    navController.navigate(Route.ShowWorkout(workoutId)) {
+                        popUpTo(Route.Dashboard)
+                    }
+                },
+            )
+        }
         composable<Route.ShowWorkout> { backStackEntry ->
             ShowWorkoutScreen(
                 id = backStackEntry.toRoute<Route.ShowWorkout>().id,
@@ -127,6 +142,9 @@ fun AppNavigation(
                 },
                 onEditStartEnd = { workoutId ->
                     navController.navigate(Route.EditWorkoutStartEnd(workoutId))
+                },
+                onEditWorkout = { workoutId ->
+                    navController.navigate(Route.EnterWorkout(workoutId))
                 },
                 onResumeWorkout = { workout ->
                     val dao = Instance.getInstance(context).db.workoutDao()

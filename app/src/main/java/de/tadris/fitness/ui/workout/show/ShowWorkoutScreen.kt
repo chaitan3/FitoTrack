@@ -78,7 +78,6 @@ import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.theme.spacing
-import de.tadris.fitness.ui.workout.EnterWorkoutActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutActivity
 import de.tadris.fitness.ui.workout.WorkoutActivity
 import de.tadris.fitness.ui.workout.diagram.FrequencyConverter
@@ -101,6 +100,7 @@ fun ShowWorkoutScreen(
     onShowFullscreenMap: (Long) -> Unit = {},
     onShowDiagram: (Long, DiagramType) -> Unit = { _, _ -> },
     onEditStartEnd: (Long) -> Unit = {},
+    onEditWorkout: (Long) -> Unit = {},
 ) {
     val context = LocalContext.current
     val vm: ShowWorkoutViewModel = viewModel(
@@ -147,6 +147,7 @@ fun ShowWorkoutScreen(
             onShowFullscreenMap = { onShowFullscreenMap(s.workout.id) },
             onShowDiagram = { diagramType -> onShowDiagram(s.workout.id, diagramType) },
             onEditStartEnd = { onEditStartEnd(s.workout.id) },
+            onEditWorkout = { onEditWorkout(s.workout.id) },
         )
     }
 }
@@ -162,6 +163,7 @@ private fun ShowWorkoutContent(
     onShowFullscreenMap: () -> Unit = {},
     onShowDiagram: (DiagramType) -> Unit = {},
     onEditStartEnd: () -> Unit = {},
+    onEditWorkout: () -> Unit = {},
 ) {
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -216,13 +218,7 @@ private fun ShowWorkoutContent(
                         }
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.editWorkout)) },
-                            onClick = {
-                                showMenu = false
-                                context.startActivity(
-                                    Intent(context, EnterWorkoutActivity::class.java)
-                                        .putExtra(EnterWorkoutActivity.WORKOUT_ID_EXTRA, workout.id)
-                                )
-                            }
+                            onClick = { showMenu = false; onEditWorkout() }
                         )
                         if (data.hasRouteData) {
                             DropdownMenuItem(

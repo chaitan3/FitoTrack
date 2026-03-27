@@ -43,7 +43,6 @@ import de.tadris.fitness.ui.dialog.ThreadSafeProgressDialogController
 import de.tadris.fitness.ui.navigation.AppNavigation
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.theme.FitoTrackTheme
-import de.tadris.fitness.ui.workout.EnterWorkoutActivity
 import de.tadris.fitness.util.PermissionUtils
 import de.tadris.fitness.util.io.general.IOHelper
 
@@ -61,7 +60,6 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(
                     onRecord = { showWorkoutSelection() },
                     onRecordLast = { workoutType -> startRecording(workoutType) },
-                    onEnterWorkout = { startEnterWorkoutActivity() },
                     onImport = { showImportDialog() },
                 )
             }
@@ -82,11 +80,6 @@ class MainActivity : ComponentActivity() {
         intent.action = RecordWorkoutActivity.LAUNCH_ACTION
         intent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType)
         startActivity(intent)
-    }
-
-    private fun startEnterWorkoutActivity() {
-        val intent = Intent(this, EnterWorkoutActivity::class.java)
-        Handler().postDelayed({ startActivity(intent) }, 300)
     }
 
     private fun showImportDialog() {
