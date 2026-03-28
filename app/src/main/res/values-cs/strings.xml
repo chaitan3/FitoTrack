@@ -545,4 +545,6 @@
     <string name="removedOAuthToken">Token OAuth odstraněn</string>
     <string name="saveChangesQuestion">Uložit změny?</string>
     <string name="saveChangesQuestionMessage">Opravdu chcete uložit změny?</string>
+    <string name="language">Jazyk</string>
+    <string name="restorePreparing">Příprava</string>
 </resources>
