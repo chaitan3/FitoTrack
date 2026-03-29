@@ -32,6 +32,8 @@ import de.tadris.fitness.ui.FitoTrackActivity;
 
 public class FitoTrackSettingsActivity extends FitoTrackActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
+    public static final String EXTRA_FRAGMENT = "de.tadris.fitness.EXTRA_FRAGMENT";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +43,17 @@ public class FitoTrackSettingsActivity extends FitoTrackActivity implements Pref
         setTitle(R.string.settings);
 
         if (savedInstanceState == null) {
+            String fragmentClassName = getIntent().getStringExtra(EXTRA_FRAGMENT);
+            Fragment fragment;
+            if (fragmentClassName != null) {
+                fragment = getSupportFragmentManager().getFragmentFactory().instantiate(
+                        getClassLoader(), fragmentClassName);
+            } else {
+                fragment = new MainSettingsFragment();
+            }
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings_container, new MainSettingsFragment())
+                    .replace(R.id.settings_container, fragment)
                     .commit();
         }
     }

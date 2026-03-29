@@ -37,7 +37,8 @@ import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
-import de.tadris.fitness.ui.settings.FitoTrackSettingsActivity
+import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
+import de.tadris.fitness.ui.settings.SettingsScreen
 import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutScreen
 import de.tadris.fitness.ui.workout.enter.EnterWorkoutScreen
@@ -70,6 +71,12 @@ sealed interface Route {
 
     @Serializable
     data class ShareWorkout(val id: Long) : Route
+
+    @Serializable
+    data object Settings : Route
+
+    @Serializable
+    data object InterfaceSettings : Route
 }
 
 @Composable
@@ -100,7 +107,7 @@ fun AppNavigation(
                 onEnterWorkout = { navController.navigate(Route.EnterWorkout()) },
                 onImport = { importVm.requestImport() },
                 onSettings = {
-                    context.startActivity(Intent(context, FitoTrackSettingsActivity::class.java))
+                    navController.navigate(Route.Settings)
                 },
                 onStatistics = {
                     context.startActivity(Intent(context, StatisticsActivity::class.java))
@@ -143,6 +150,11 @@ fun AppNavigation(
                         popUpTo(Route.Dashboard)
                     }
                 },
+            )
+        }
+        composable<Route.Settings> {
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
             )
         }
         composable<Route.ShowWorkout> { backStackEntry ->
