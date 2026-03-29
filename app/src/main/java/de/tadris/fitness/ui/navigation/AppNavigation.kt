@@ -155,6 +155,14 @@ fun AppNavigation(
         composable<Route.Settings> {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
+                onNavigateToInterfaceSettings = {
+                    navController.navigate(Route.InterfaceSettings)
+                },
+            )
+        }
+        composable<Route.InterfaceSettings> {
+            InterfaceSettingsScreen(
+                onBack = { navController.popBackStack() },
             )
         }
         composable<Route.ShowWorkout> { backStackEntry ->
