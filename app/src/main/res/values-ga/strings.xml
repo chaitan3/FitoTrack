@@ -557,4 +557,7 @@
     <string name="removedOAuthToken">Baineadh OAuth Token</string>
     <string name="saveChangesQuestion">Sábháil na hathruithe?</string>
     <string name="saveChangesQuestionMessage">An bhfuil tú cinnte gur mhaith leat na hathruithe a shábháil?</string>
+    <string name="workoutNumber">Líon na seisiún aclaíochta</string>
+    <string name="language">Teanga</string>
+    <string name="restorePreparing">Ag ullmhú</string>
 </resources>
