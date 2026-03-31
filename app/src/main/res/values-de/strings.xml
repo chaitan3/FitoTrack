@@ -350,7 +350,7 @@
     <string name="chooseMapHint">Bitte eine Kartendatei auswählen</string>
     <string name="exportTargetDirectory">Verzeichnis</string>
     <string name="autoBackupTitle">Automatische Sicherungen</string>
-    <string name="workoutGPXExportTitle">Workout als GPX-Export</string>
+    <string name="workoutGPXExportTitle">GPX-Export von Workouts</string>
     <string name="unknown">Unbekannt</string>
     <string name="hintConfigureExportTargets">Füge Ziele hinzu, wohin die Dateien exportiert werden sollen.</string>
     <string name="deleteExportTargetConfirmation">Dieses Export-Ziel wirklich entfernen\?</string>
@@ -549,4 +549,5 @@
     <string name="saveChangesQuestionMessage">Möchtest du die Änderungen wirklich speichern?</string>
     <string name="saveChangesQuestion">Änderungen speichern?</string>
     <string name="language">Sprache</string>
+    <string name="restorePreparing">Vorbereiten</string>
 </resources>
