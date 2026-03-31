@@ -27,22 +27,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
 
@@ -124,6 +132,81 @@ fun ListPreferenceItem(
             },
         )
     }
+}
+
+/**
+ * A dialog with a labelled slider and an editable text field that stay in sync.
+ * [initialValue], [valueRange], and the [onConfirm] callback all work in display units —
+ * callers are responsible for converting to/from stored units.
+ */
+@Composable
+fun SliderPickerDialog(
+    title: String,
+    initialValue: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    unit: String,
+    onDismiss: () -> Unit,
+    onConfirm: (Float) -> Unit,
+) {
+    var sliderValue by remember { mutableFloatStateOf(initialValue) }
+    var textValue by remember {
+        mutableStateOf(TextFieldValue(text = Math.round(initialValue).toString()))
+    }
+
+    fun syncTextFromSlider(value: Float) {
+        val rounded = Math.round(value).toString()
+        textValue = TextFieldValue(text = rounded, selection = TextRange(rounded.length))
+    }
+
+    fun syncSliderFromText(text: String) {
+        text.toFloatOrNull()?.let { sliderValue = it.coerceIn(valueRange) }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                OutlinedTextField(
+                    value = textValue,
+                    onValueChange = { new ->
+                        textValue = new
+                        syncSliderFromText(new.text)
+                    },
+                    modifier = Modifier.onFocusChanged { focus ->
+                        if (focus.isFocused) {
+                            textValue = textValue.copy(
+                                selection = TextRange(0, textValue.text.length)
+                            )
+                        }
+                    },
+                    suffix = { Text(unit) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                )
+                Slider(
+                    value = sliderValue,
+                    onValueChange = { new ->
+                        sliderValue = new
+                        syncTextFromSlider(new)
+                    },
+                    valueRange = valueRange,
+                    steps = (valueRange.endInclusive - valueRange.start).toInt() - 1,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(sliderValue) }) {
+                Text(stringResource(R.string.okay))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 @Composable

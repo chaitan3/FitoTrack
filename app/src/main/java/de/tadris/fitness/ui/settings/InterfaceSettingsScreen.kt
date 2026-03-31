@@ -26,20 +26,14 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,12 +41,9 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.documentfile.provider.DocumentFile
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
@@ -353,11 +344,14 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
     }
 
     if (showWeightDialog) {
-        WeightPickerDialog(
-            currentWeightKg = weightKg,
-            unitSystem = unitSystem,
+        SliderPickerDialog(
+            title = stringResource(R.string.pref_weight),
+            initialValue = unitSystem.getWeightFromKilogram(weightKg.toDouble()).toFloat(),
+            valueRange = unitSystem.getWeightFromKilogram(20.0).toFloat()..unitSystem.getWeightFromKilogram(400.0).toFloat(),
+            unit = unitSystem.weightUnit,
             onDismiss = { showWeightDialog = false },
-            onConfirm = { kilograms ->
+            onConfirm = { displayValue ->
+                val kilograms = Math.round(unitSystem.getKilogramFromUnit(displayValue.toDouble())).toInt()
                 sharedPrefs.edit().putInt("weight", kilograms).apply()
                 weightKg = kilograms
                 showWeightDialog = false
@@ -366,108 +360,18 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
     }
 
     if (showStepLengthDialog) {
-        StepLengthPickerDialog(
-            currentStepLengthMeters = stepLengthMeters,
-            unitSystem = unitSystem,
+        SliderPickerDialog(
+            title = stringResource(R.string.pref_step_length),
+            initialValue = unitSystem.getDistanceFromCentimeters((stepLengthMeters * 100).toDouble()).toFloat(),
+            valueRange = unitSystem.getDistanceFromCentimeters(50.0).toFloat()..unitSystem.getDistanceFromCentimeters(150.0).toFloat(),
+            unit = unitSystem.reallyShortDistanceUnit,
             onDismiss = { showStepLengthDialog = false },
-            onConfirm = { meters ->
+            onConfirm = { displayValue ->
+                val meters = (unitSystem.getCentimetersFromReallyShortDistance(displayValue.toDouble()) / 100).toFloat()
                 prefs.stepLength = meters
                 stepLengthMeters = meters
                 showStepLengthDialog = false
             },
         )
     }
-}
-
-@Composable
-private fun WeightPickerDialog(
-    currentWeightKg: Int,
-    unitSystem: de.tadris.fitness.util.unit.DistanceUnitSystem,
-    onDismiss: () -> Unit,
-    onConfirm: (Int) -> Unit,
-) {
-    val minWeight = unitSystem.getWeightFromKilogram(20.0).toFloat()
-    val maxWeight = unitSystem.getWeightFromKilogram(400.0).toFloat()
-    val initial = unitSystem.getWeightFromKilogram(currentWeightKg.toDouble()).toFloat()
-    var sliderValue by remember { mutableFloatStateOf(initial) }
-    val unit = unitSystem.weightUnit
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.pref_weight)) },
-        text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "${Math.round(sliderValue)} $unit",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                )
-                Slider(
-                    value = sliderValue,
-                    onValueChange = { sliderValue = it },
-                    valueRange = minWeight..maxWeight,
-                    steps = (maxWeight - minWeight).toInt() - 1,
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                onConfirm(Math.round(unitSystem.getKilogramFromUnit(sliderValue.toDouble())).toInt())
-            }) {
-                Text(stringResource(R.string.okay))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        },
-    )
-}
-
-@Composable
-private fun StepLengthPickerDialog(
-    currentStepLengthMeters: Float,
-    unitSystem: de.tadris.fitness.util.unit.DistanceUnitSystem,
-    onDismiss: () -> Unit,
-    onConfirm: (Float) -> Unit,
-) {
-    val minStep = unitSystem.getDistanceFromCentimeters(50.0).toFloat()
-    val maxStep = unitSystem.getDistanceFromCentimeters(150.0).toFloat()
-    val initial = unitSystem.getDistanceFromCentimeters((currentStepLengthMeters * 100).toDouble()).toFloat()
-    var sliderValue by remember { mutableFloatStateOf(initial) }
-    val unit = unitSystem.reallyShortDistanceUnit
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.pref_step_length)) },
-        text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "${Math.round(sliderValue)} $unit",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(bottom = 16.dp),
-                )
-                Slider(
-                    value = sliderValue,
-                    onValueChange = { sliderValue = it },
-                    valueRange = minStep..maxStep,
-                    steps = (maxStep - minStep).toInt() - 1,
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                val meters = (unitSystem.getCentimetersFromReallyShortDistance(sliderValue.toDouble()) / 100).toFloat()
-                onConfirm(meters)
-            }) {
-                Text(stringResource(R.string.okay))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        },
-    )
 }
