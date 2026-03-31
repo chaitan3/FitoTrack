@@ -516,7 +516,7 @@
     <string name="exportTargetDirectory">Directory</string>
     <string name="exportTargetHttpPost">HTTP POST request</string>
     <string name="autoBackupTitle">Automatic backups</string>
-    <string name="workoutGPXExportTitle">Workout GPX exports</string>
+    <string name="workoutGPXExportTitle">GPX export of workouts</string>
     <string name="hintConfigureExportTargets">Add targets files should be exported to.</string>
     <string name="deleteExportTargetConfirmation">Delete this export target\?</string>
     <string name="autoExportWorkoutsSummary">Export newly recorded workouts</string>
