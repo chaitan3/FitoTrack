@@ -21,10 +21,11 @@ package de.tadris.fitness.ui.settings
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,7 +53,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.os.LocaleListCompat
 import androidx.documentfile.provider.DocumentFile
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
@@ -68,17 +68,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
     // Refresh unit system so conversions are up-to-date
     remember { instance.distanceUnitUtils.setUnit(); true }
     val unitSystem = remember { instance.distanceUnitUtils.distanceUnitSystem }
-
-    // --- Language state ---
-    val languageValues = stringArrayResource(R.array.pref_language_values)
-    val languageEntries = stringArrayResource(R.array.pref_languages)
-    val currentLocaleTag = AppCompatDelegate.getApplicationLocales().toLanguageTags()
-    val initialLanguage = if (currentLocaleTag.isEmpty()) {
-        "1"
-    } else {
-        languageValues.firstOrNull { currentLocaleTag.startsWith(it) } ?: "1"
-    }
-    var language by remember { mutableStateOf(initialLanguage) }
 
     // --- Unit system ---
     var unitSystemId by remember { mutableStateOf(prefs.distanceUnitSystemId) }
@@ -137,25 +126,20 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
 
             // ===== General section =====
 
-            // 1. Language
-            item {
-                ListPreferenceItem(
-                    title = stringResource(R.string.language),
-                    entries = languageEntries,
-                    entryValues = languageValues,
-                    selectedValue = language,
-                    onValueChange = { value ->
-                        language = value
-                        sharedPrefs.edit().putString("language", value).apply()
-                        if (value == "1") {
-                            AppCompatDelegate.setApplicationLocales(LocaleListCompat.create())
-                        } else {
-                            AppCompatDelegate.setApplicationLocales(
-                                LocaleListCompat.forLanguageTags(value)
+            // 1. Language (API 33+ only — system per-app language picker)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                item {
+                    ClickableSettingsItem(
+                        title = stringResource(R.string.language),
+                        onClick = {
+                            context.startActivity(
+                                Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                                    data = Uri.parse("package:${context.packageName}")
+                                }
                             )
-                        }
-                    },
-                )
+                        },
+                    )
+                }
             }
 
             // 2. Unit System
