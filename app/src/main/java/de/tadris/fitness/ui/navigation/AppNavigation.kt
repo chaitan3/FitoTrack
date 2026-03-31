@@ -37,6 +37,7 @@ import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
+import de.tadris.fitness.ui.settings.BackupSettingsScreen
 import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
 import de.tadris.fitness.ui.settings.RecordingSettingsScreen
 import de.tadris.fitness.ui.settings.SettingsScreen
@@ -85,6 +86,9 @@ sealed interface Route {
 
     @Serializable
     data object VoiceAnnouncementsSettings : Route
+
+    @Serializable
+    data object BackupSettings : Route
 }
 
 @Composable
@@ -169,6 +173,14 @@ fun AppNavigation(
                 onNavigateToRecordingSettings = {
                     navController.navigate(Route.RecordingSettings)
                 },
+                onNavigateToBackupSettings = {
+                    navController.navigate(Route.BackupSettings)
+                },
+            )
+        }
+        composable<Route.BackupSettings> {
+            BackupSettingsScreen(
+                onBack = { navController.popBackStack() },
             )
         }
         composable<Route.InterfaceSettings> {

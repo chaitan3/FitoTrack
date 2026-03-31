@@ -40,6 +40,7 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onNavigateToInterfaceSettings: () -> Unit = {},
     onNavigateToRecordingSettings: () -> Unit = {},
+    onNavigateToBackupSettings: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -92,7 +93,7 @@ fun SettingsScreen(
                 ClickableSettingsItem(
                     title = stringResource(R.string.preferencesBackupTitle),
                     supporting = stringResource(R.string.preferencesBackupSummary),
-                    onClick = { openFragment(BackupSettingsFragment::class.java) },
+                    onClick = onNavigateToBackupSettings,
                 )
             }
             item {
