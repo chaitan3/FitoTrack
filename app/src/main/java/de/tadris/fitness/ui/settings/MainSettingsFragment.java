@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import de.tadris.fitness.R;
+import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesActivity;
 
 public class MainSettingsFragment extends FitoTrackSettingFragment {
 

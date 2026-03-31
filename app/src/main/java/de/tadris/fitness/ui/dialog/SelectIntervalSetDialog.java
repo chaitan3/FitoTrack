@@ -27,7 +27,7 @@ import android.widget.ArrayAdapter;
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
 import de.tadris.fitness.data.IntervalSet;
-import de.tadris.fitness.ui.settings.ManageIntervalSetsActivity;
+import de.tadris.fitness.ui.settings.interval.ManageIntervalSetsActivity;
 
 public class SelectIntervalSetDialog {
 

@@ -33,6 +33,7 @@ import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog.AutoTimeoutSelectListener
+import de.tadris.fitness.ui.settings.interval.ManageIntervalSetsActivity
 import de.tadris.fitness.util.NumberPickerUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

@@ -92,10 +92,10 @@
         </activity>
 
         <activity
-            android:name=".ui.settings.DebugPressureActivity"
+            android:name=".ui.settings.debug.DebugPressureActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.settings.SensorDebugActivity"
+            android:name=".ui.settings.debug.SensorDebugActivity"
             android:exported="false" />
         <activity
             android:name=".ui.ImportGpxActivity"
@@ -116,15 +116,15 @@
                 <data android:mimeType="application/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.settings.ConfigureExportTargetsActivity" />
+        <activity android:name=".ui.settings.export.ConfigureExportTargetsActivity" />
         <activity android:name=".ui.settings.DownloadMapsActivity" />
         <activity android:name=".ui.record.RecordIndoorWorkoutActivity" />
-        <activity android:name=".ui.settings.EditWorkoutTypeActivity" />
-        <activity android:name=".ui.settings.ManageWorkoutTypesActivity" />
+        <activity android:name=".ui.settings.workout_type.EditWorkoutTypeActivity" />
+        <activity android:name=".ui.settings.workout_type.ManageWorkoutTypesActivity" />
         <activity android:name=".ui.ShareFileActivity" />
         <activity android:name=".ui.settings.AboutActivity" />
-        <activity android:name=".ui.settings.EditIntervalSetActivity" />
-        <activity android:name=".ui.settings.ManageIntervalSetsActivity" />
+        <activity android:name=".ui.settings.interval.EditIntervalSetActivity" />
+        <activity android:name=".ui.settings.interval.ManageIntervalSetsActivity" />
         <activity android:name=".ui.settings.FitoTrackSettingsActivity" />
         <activity
             android:name=".osm.OAuthAuthentication"

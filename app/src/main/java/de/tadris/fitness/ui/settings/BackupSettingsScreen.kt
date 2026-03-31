@@ -59,6 +59,7 @@ import de.tadris.fitness.R
 import de.tadris.fitness.export.BackupReader
 import de.tadris.fitness.export.BackupWriter
 import de.tadris.fitness.ui.ShareFileActivity
+import de.tadris.fitness.ui.settings.export.ConfigureExportTargetsActivity
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.PermissionUtils
 import de.tadris.fitness.util.autoexport.AutoExportPlanner

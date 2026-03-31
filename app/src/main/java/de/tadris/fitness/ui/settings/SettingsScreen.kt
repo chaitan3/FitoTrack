@@ -33,6 +33,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import de.tadris.fitness.R
+import de.tadris.fitness.ui.settings.debug.DebugSettingsFragment
+import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

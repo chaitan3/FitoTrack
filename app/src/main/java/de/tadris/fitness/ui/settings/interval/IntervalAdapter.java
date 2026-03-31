@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.settings;
+package de.tadris.fitness.ui.settings.interval;
 
 import android.content.Context;
 import android.view.LayoutInflater;

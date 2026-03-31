@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.settings;
+package de.tadris.fitness.ui.settings.workout_type;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -35,6 +35,7 @@ import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.ui.dialog.IconPickerDialog;
+import de.tadris.fitness.ui.settings.InformationActivity;
 import de.tadris.fitness.util.Icon;
 import de.tadris.fitness.util.unit.DistanceUnitUtils;
 

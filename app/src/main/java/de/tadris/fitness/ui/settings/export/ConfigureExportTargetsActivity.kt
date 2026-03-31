@@ -1,22 +1,4 @@
-/*
- * Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
- *
- * This file is part of FitoTrack
- *
- * FitoTrack is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     FitoTrack is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package de.tadris.fitness.ui.settings
+package de.tadris.fitness.ui.settings.export
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -31,11 +13,7 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.ExportTargetConfiguration
 import de.tadris.fitness.ui.FitoTrackActivity
-import de.tadris.fitness.ui.adapter.ExportTargetConfigurationAdapter
-import de.tadris.fitness.ui.adapter.ExportTargetConfigurationAdapter.ExportTargetAdapterListener
-import de.tadris.fitness.ui.dialog.ConfigureHttpPostDialog
-import de.tadris.fitness.ui.dialog.SelectExportTargetTypeDialog
-import de.tadris.fitness.ui.dialog.SelectExportTargetTypeDialog.ExportTargetTypeSelectListener
+import de.tadris.fitness.ui.settings.export.ConfigureHttpPostDialog
 import de.tadris.fitness.util.autoexport.AutoExportPlanner
 import de.tadris.fitness.util.autoexport.source.ExportSource
 import de.tadris.fitness.util.autoexport.target.DirectoryTarget
@@ -43,7 +21,8 @@ import de.tadris.fitness.util.autoexport.target.ExportTarget
 import de.tadris.fitness.util.autoexport.target.HTTPPostTarget
 
 class ConfigureExportTargetsActivity : FitoTrackActivity(),
-    ExportTargetAdapterListener, ExportTargetTypeSelectListener {
+    ExportTargetConfigurationAdapter.ExportTargetAdapterListener,
+    SelectExportTargetTypeDialog.ExportTargetTypeSelectListener {
 
     companion object {
         const val EXTRA_SOURCE = "source"
@@ -68,7 +47,7 @@ class ConfigureExportTargetsActivity : FitoTrackActivity(),
             finish()
             return
         }
-        setTitle(ExportSource.getTitle(exportSourceId))
+        setTitle(ExportSource.Companion.getTitle(exportSourceId))
         setupActionBar()
         recyclerView = findViewById(R.id.exportTargetsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -89,7 +68,7 @@ class ConfigureExportTargetsActivity : FitoTrackActivity(),
         recyclerView.adapter = adapter
         hintText.visibility = if (configurations.isEmpty()) View.VISIBLE else View.GONE
         explanationText.visibility = if (configurations.isEmpty()) View.GONE else View.VISIBLE
-        explanationText.text = getString(ExportSource.getExplanation(exportSourceId))
+        explanationText.text = getString(ExportSource.Companion.getExplanation(exportSourceId))
     }
 
     private fun showAddDialog() {
@@ -125,7 +104,7 @@ class ConfigureExportTargetsActivity : FitoTrackActivity(),
     private fun saveDirectoryTarget(uri: Uri) {
         val configuration = ExportTargetConfiguration()
         configuration.source = exportSourceId
-        configuration.type = ExportTarget.TARGET_TYPE_DIRECTORY
+        configuration.type = ExportTarget.Companion.TARGET_TYPE_DIRECTORY
         configuration.data = uri.toString()
         configuration.insert()
     }
@@ -136,7 +115,7 @@ class ConfigureExportTargetsActivity : FitoTrackActivity(),
         ConfigureHttpPostDialog(this) { url ->
             val configuration = ExportTargetConfiguration()
             configuration.source = exportSourceId
-            configuration.type = ExportTarget.TARGET_TYPE_HTTP_POST
+            configuration.type = ExportTarget.Companion.TARGET_TYPE_HTTP_POST
             configuration.data = url
             configuration.insert()
         }
@@ -164,7 +143,7 @@ class ConfigureExportTargetsActivity : FitoTrackActivity(),
     }
 
     private fun onConfigurationChanged() {
-        if (exportSourceId == ExportSource.EXPORT_SOURCE_BACKUP) {
+        if (exportSourceId == ExportSource.Companion.EXPORT_SOURCE_BACKUP) {
             AutoExportPlanner(this).planAutoBackup()
         }
         loadData()

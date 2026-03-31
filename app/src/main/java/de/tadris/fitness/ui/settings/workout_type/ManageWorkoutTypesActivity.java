@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.settings;
+package de.tadris.fitness.ui.settings.workout_type;
 
 import android.content.Intent;
 import android.os.Bundle;

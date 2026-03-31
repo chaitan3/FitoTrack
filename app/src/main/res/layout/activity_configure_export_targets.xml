@@ -22,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.settings.ConfigureExportTargetsActivity">
+    tools:context=".ui.settings.export.ConfigureExportTargetsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

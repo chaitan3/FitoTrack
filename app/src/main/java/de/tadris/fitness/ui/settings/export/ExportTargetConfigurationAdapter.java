@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.adapter;
+package de.tadris.fitness.ui.settings.export;
 
 import android.view.LayoutInflater;
 import android.view.View;

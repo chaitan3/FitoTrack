@@ -34,7 +34,7 @@ import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.ui.adapter.WorkoutTypeAdapter;
-import de.tadris.fitness.ui.settings.EditWorkoutTypeActivity;
+import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeActivity;
 import de.tadris.fitness.util.Icon;
 
 public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAdapterListener {

@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.tadris.fitness.ui.settings
+package de.tadris.fitness.ui.settings.debug
 
 import android.content.Intent
 import android.os.Bundle
@@ -26,6 +26,7 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.ShareFileActivity
+import de.tadris.fitness.ui.settings.FitoTrackSettingFragment
 import de.tadris.fitness.util.DataManager
 import org.apache.commons.io.FileUtils
 import java.io.File
