@@ -39,6 +39,7 @@ import de.tadris.fitness.R
 fun SettingsScreen(
     onBack: () -> Unit,
     onNavigateToInterfaceSettings: () -> Unit = {},
+    onNavigateToRecordingSettings: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -76,7 +77,7 @@ fun SettingsScreen(
                 ClickableSettingsItem(
                     title = stringResource(R.string.preferencesRecordingTitle),
                     supporting = stringResource(R.string.preferencesRecordingSummary),
-                    onClick = { openFragment(RecordingSettingsFragment::class.java) },
+                    onClick = onNavigateToRecordingSettings,
                 )
             }
             item {

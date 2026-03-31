@@ -38,6 +38,7 @@ import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
+import de.tadris.fitness.ui.settings.RecordingSettingsScreen
 import de.tadris.fitness.ui.settings.SettingsScreen
 import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutScreen
@@ -77,6 +78,9 @@ sealed interface Route {
 
     @Serializable
     data object InterfaceSettings : Route
+
+    @Serializable
+    data object RecordingSettings : Route
 }
 
 @Composable
@@ -158,10 +162,18 @@ fun AppNavigation(
                 onNavigateToInterfaceSettings = {
                     navController.navigate(Route.InterfaceSettings)
                 },
+                onNavigateToRecordingSettings = {
+                    navController.navigate(Route.RecordingSettings)
+                },
             )
         }
         composable<Route.InterfaceSettings> {
             InterfaceSettingsScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<Route.RecordingSettings> {
+            RecordingSettingsScreen(
                 onBack = { navController.popBackStack() },
             )
         }

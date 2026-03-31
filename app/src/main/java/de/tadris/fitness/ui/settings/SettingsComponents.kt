@@ -22,6 +22,7 @@ package de.tadris.fitness.ui.settings
 import kotlin.math.exp
 import kotlin.math.ln
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.Switch
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -60,12 +62,32 @@ import de.tadris.fitness.R
 fun ClickableSettingsItem(
     title: String,
     supporting: String? = null,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     ListItem(
         headlineContent = { Text(title) },
         supportingContent = supporting?.let { { Text(it) } },
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier
+            .clickable(enabled = enabled, onClick = onClick)
+            .alpha(if (enabled) 1f else 0.38f),
+    )
+}
+
+@Composable
+fun SwitchSettingsItem(
+    title: String,
+    supporting: String? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    ListItem(
+        headlineContent = { Text(title) },
+        supportingContent = supporting?.let { { Text(it) } },
+        trailingContent = {
+            Switch(checked = checked, onCheckedChange = onCheckedChange)
+        },
+        modifier = Modifier.clickable { onCheckedChange(!checked) },
     )
 }
 

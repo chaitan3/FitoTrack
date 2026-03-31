@@ -115,9 +115,7 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
     ) { padding ->
         LazyColumn(contentPadding = padding) {
 
-            // ===== General section =====
-
-            // 1. Language (API 33+ only — system per-app language picker)
+            // Language (API 33+ only — system per-app language picker)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 item {
                     ClickableSettingsItem(
@@ -133,7 +131,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 }
             }
 
-            // 2. Unit System
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.pref_unit_system),
@@ -147,7 +144,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 3. Weight
             item {
                 val displayWeight = Math.round(unitSystem.getWeightFromKilogram(weightKg.toDouble()))
                 val weightUnit = unitSystem.weightUnit
@@ -158,7 +154,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 4. Step Length
             item {
                 val displayStepLength = Math.round(unitSystem.getDistanceFromCentimeters((stepLengthMeters * 100).toDouble()))
                 val stepUnit = unitSystem.reallyShortDistanceUnit
@@ -169,12 +164,10 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // ===== Map category =====
             item {
                 SettingsCategory(title = stringResource(R.string.preferencesCategoryMap))
             }
 
-            // 5. Map Style
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.mapStyle),
@@ -188,7 +181,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 6. Track Style Usage
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.prefTrackStyleUsageTitle),
@@ -202,7 +194,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 7. Track Style
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.trackStyle),
@@ -216,7 +207,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 8. Offline Map Directory
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.pref_map_directory),
@@ -225,7 +215,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 9. Render Style (legacy fragment)
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.pref_render_theme_style),
@@ -241,7 +230,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 10. Download Maps
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.downloadMapsTitle),
@@ -265,12 +253,10 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // ===== Appearance category =====
             item {
                 SettingsCategory(title = stringResource(R.string.preferencesCategoryAppearance))
             }
 
-            // 11. Theme
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.theme),
@@ -285,7 +271,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 12. Date Format
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.preferenceDateFormat),
@@ -299,7 +284,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 13. Time Format
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.preferenceTimeFormat),
@@ -313,7 +297,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 14. Week Start
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.preferenceFirstDayOfWeek),
@@ -327,7 +310,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                 )
             }
 
-            // 15. Energy Unit
             item {
                 ListPreferenceItem(
                     title = stringResource(R.string.pref_energy_unit),
