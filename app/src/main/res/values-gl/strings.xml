@@ -449,7 +449,7 @@
     <string name="rainbow_warrior">Arco da Vella</string>
     <string name="height_map">Mapa de altitude</string>
     <string name="bright_night">Noite Brillante</string>
-    <string name="mondriaan">Mondriaan DC</string>
+    <string name="mondriaan">Mondriaan</string>
     <string name="system_theme">Sistema</string>
     <string name="light_theme">Claro</string>
     <string name="dark_theme">Escuro</string>
@@ -535,4 +535,6 @@
     <string name="removedOAuthToken">Eliminouse o Token OAuth</string>
     <string name="saveChangesQuestion">Gardar os cambios?</string>
     <string name="saveChangesQuestionMessage">Tes certeza de querer cambiar os cambios?</string>
+    <string name="language">Idioma</string>
+    <string name="restorePreparing">Preparando</string>
 </resources>
