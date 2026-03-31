@@ -116,7 +116,6 @@
                 <data android:mimeType="application/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.settings.export.ConfigureExportTargetsActivity" />
         <activity android:name=".ui.settings.DownloadMapsActivity" />
         <activity android:name=".ui.record.RecordIndoorWorkoutActivity" />
         <activity android:name=".ui.settings.workout_type.EditWorkoutTypeActivity" />

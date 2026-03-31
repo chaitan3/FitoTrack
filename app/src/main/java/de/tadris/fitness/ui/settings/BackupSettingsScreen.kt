@@ -59,7 +59,6 @@ import de.tadris.fitness.R
 import de.tadris.fitness.export.BackupReader
 import de.tadris.fitness.export.BackupWriter
 import de.tadris.fitness.ui.ShareFileActivity
-import de.tadris.fitness.ui.settings.export.ConfigureExportTargetsActivity
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.PermissionUtils
 import de.tadris.fitness.util.autoexport.AutoExportPlanner
@@ -71,7 +70,10 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackupSettingsScreen(onBack: () -> Unit) {
+fun BackupSettingsScreen(
+    onBack: () -> Unit,
+    onNavigateToConfigureExportTargets: (String) -> Unit = {},
+) {
     val context = LocalContext.current
     val handler = remember { Handler(Looper.getMainLooper()) }
     val sharedPrefs = remember { Instance.getInstance(context).userPreferences.preferences }
@@ -216,24 +218,14 @@ fun BackupSettingsScreen(onBack: () -> Unit) {
                 ClickableSettingsItem(
                     title = stringResource(R.string.workoutGPXExportTitle),
                     supporting = stringResource(R.string.autoExportWorkoutsSummary),
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, ConfigureExportTargetsActivity::class.java)
-                                .putExtra(ConfigureExportTargetsActivity.EXTRA_SOURCE, ExportSource.EXPORT_SOURCE_WORKOUT_GPX)
-                        )
-                    },
+                    onClick = { onNavigateToConfigureExportTargets(ExportSource.EXPORT_SOURCE_WORKOUT_GPX) },
                 )
             }
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.autoExportBackupTitle),
                     supporting = stringResource(R.string.autoExportBackupSummary),
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, ConfigureExportTargetsActivity::class.java)
-                                .putExtra(ConfigureExportTargetsActivity.EXTRA_SOURCE, ExportSource.EXPORT_SOURCE_BACKUP)
-                        )
-                    },
+                    onClick = { onNavigateToConfigureExportTargets(ExportSource.EXPORT_SOURCE_BACKUP) },
                 )
             }
             item {

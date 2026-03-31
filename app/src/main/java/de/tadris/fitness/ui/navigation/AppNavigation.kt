@@ -38,6 +38,7 @@ import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordWorkoutActivity
 import de.tadris.fitness.ui.settings.BackupSettingsScreen
+import de.tadris.fitness.ui.settings.ConfigureExportTargetsScreen
 import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
 import de.tadris.fitness.ui.settings.RecordingSettingsScreen
 import de.tadris.fitness.ui.settings.SettingsScreen
@@ -89,6 +90,9 @@ sealed interface Route {
 
     @Serializable
     data object BackupSettings : Route
+
+    @Serializable
+    data class ConfigureExportTargets(val sourceId: String) : Route
 }
 
 @Composable
@@ -180,6 +184,15 @@ fun AppNavigation(
         }
         composable<Route.BackupSettings> {
             BackupSettingsScreen(
+                onBack = { navController.popBackStack() },
+                onNavigateToConfigureExportTargets = { sourceId ->
+                    navController.navigate(Route.ConfigureExportTargets(sourceId))
+                },
+            )
+        }
+        composable<Route.ConfigureExportTargets> { backStackEntry ->
+            ConfigureExportTargetsScreen(
+                sourceId = backStackEntry.toRoute<Route.ConfigureExportTargets>().sourceId,
                 onBack = { navController.popBackStack() },
             )
         }
