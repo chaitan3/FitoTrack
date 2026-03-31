@@ -104,6 +104,8 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var energyUnit by StringSharedPreference("energyUnit", "kcal")
 
+    var themeSetting by StringSharedPreference("themeSetting", "0")
+
     var showOnLockScreen by BooleanSharedPreference("showOnLockScreen", false)
 
     var showWorkoutZoomControls by BooleanSharedPreference("showWorkoutZoomControls", true)

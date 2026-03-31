@@ -78,7 +78,7 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
     var offlineMapDir by remember { mutableStateOf(prefs.offlineMapDirectoryName ?: "") }
 
     // --- Appearance ---
-    var themeSetting by remember { mutableStateOf(sharedPrefs.getString("themeSetting", "0") ?: "0") }
+    var themeSetting by remember { mutableStateOf(prefs.themeSetting) }
     var dateFormat by remember { mutableStateOf(prefs.dateFormatSetting) }
     var timeFormat by remember { mutableStateOf(prefs.timeFormatSetting) }
     var firstDayOfWeek by remember { mutableStateOf(sharedPrefs.getString("firstDayOfWeek", "system") ?: "system") }
@@ -279,7 +279,7 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                     selectedValue = themeSetting,
                     onValueChange = { value ->
                         themeSetting = value
-                        sharedPrefs.edit().putString("themeSetting", value).apply()
+                        prefs.themeSetting = value
                         Toast.makeText(context, R.string.hintRestart, Toast.LENGTH_LONG).show()
                     },
                 )

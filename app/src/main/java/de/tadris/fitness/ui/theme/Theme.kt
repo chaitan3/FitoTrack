@@ -27,8 +27,10 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import de.tadris.fitness.Instance
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -272,11 +274,18 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun FitoTrackTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable() () -> Unit
 ) {
+  val context = LocalContext.current
+  val themeSetting = remember { Instance.getInstance(context).userPreferences.themeSetting }
+  val darkTheme = when (themeSetting) {
+      "1" -> true
+      "2" -> false
+      else -> isSystemInDarkTheme()
+  }
+
   val colorScheme = when {
       dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
           val context = LocalContext.current

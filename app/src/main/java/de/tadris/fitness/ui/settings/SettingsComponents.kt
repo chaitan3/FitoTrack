@@ -19,6 +19,8 @@
 
 package de.tadris.fitness.ui.settings
 
+import kotlin.math.exp
+import kotlin.math.ln
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -135,9 +137,11 @@ fun ListPreferenceItem(
 }
 
 /**
- * A dialog with a labelled slider and an editable text field that stay in sync.
+ * A dialog with a logarithmic slider and an editable text field that stay in sync.
  * [initialValue], [valueRange], and the [onConfirm] callback all work in display units —
  * callers are responsible for converting to/from stored units.
+ *
+ * The slider position is mapped logarithmically so that low values have finer control.
  */
 @Composable
 fun SliderPickerDialog(
@@ -148,18 +152,24 @@ fun SliderPickerDialog(
     onDismiss: () -> Unit,
     onConfirm: (Float) -> Unit,
 ) {
-    var sliderValue by remember { mutableFloatStateOf(initialValue) }
+    val lnMin = ln(valueRange.start)
+    val lnMax = ln(valueRange.endInclusive)
+
+    fun toDisplay(pos: Float): Float = exp(lnMin + pos * (lnMax - lnMin))
+    fun toPos(value: Float): Float = ((ln(value) - lnMin) / (lnMax - lnMin)).coerceIn(0f, 1f)
+
+    var sliderPos by remember { mutableFloatStateOf(toPos(initialValue)) }
     var textValue by remember {
         mutableStateOf(TextFieldValue(text = Math.round(initialValue).toString()))
     }
 
-    fun syncTextFromSlider(value: Float) {
-        val rounded = Math.round(value).toString()
+    fun syncTextFromSlider(pos: Float) {
+        val rounded = Math.round(toDisplay(pos)).toString()
         textValue = TextFieldValue(text = rounded, selection = TextRange(rounded.length))
     }
 
     fun syncSliderFromText(text: String) {
-        text.toFloatOrNull()?.let { sliderValue = it.coerceIn(valueRange) }
+        text.toFloatOrNull()?.coerceIn(valueRange)?.let { sliderPos = toPos(it) }
     }
 
     AlertDialog(
@@ -185,19 +195,18 @@ fun SliderPickerDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
                 Slider(
-                    value = sliderValue,
+                    value = sliderPos,
                     onValueChange = { new ->
-                        sliderValue = new
+                        sliderPos = new
                         syncTextFromSlider(new)
                     },
-                    valueRange = valueRange,
-                    steps = (valueRange.endInclusive - valueRange.start).toInt() - 1,
+                    valueRange = 0f..1f,
                     modifier = Modifier.padding(top = 8.dp),
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(sliderValue) }) {
+            TextButton(onClick = { onConfirm(toDisplay(sliderPos)) }) {
                 Text(stringResource(R.string.okay))
             }
         },
