@@ -217,21 +217,6 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
 
             item {
                 ClickableSettingsItem(
-                    title = stringResource(R.string.pref_render_theme_style),
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, FitoTrackSettingsActivity::class.java)
-                                .putExtra(
-                                    FitoTrackSettingsActivity.EXTRA_FRAGMENT,
-                                    XmlThemeStyleSettingFragment::class.java.name
-                                )
-                        )
-                    },
-                )
-            }
-
-            item {
-                ClickableSettingsItem(
                     title = stringResource(R.string.downloadMapsTitle),
                     onClick = {
                         val mapDir = prefs.offlineMapDirectoryName

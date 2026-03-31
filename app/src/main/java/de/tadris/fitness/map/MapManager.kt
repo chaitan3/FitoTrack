@@ -22,7 +22,6 @@ import android.app.Activity
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import de.tadris.fitness.Instance
-import de.tadris.fitness.map.FitoTrackRenderThemeMenuCallback.RenderThemeMenuListener
 import de.tadris.fitness.map.tilesource.HumanitarianTileSource
 import de.tadris.fitness.map.tilesource.MapnikTileSource
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
@@ -50,8 +49,6 @@ class MapManager(private val activity: Activity) {
 
     private lateinit var mapView: MapView
     private lateinit var tileCache: TileCache
-
-    private var styleMenuListener: RenderThemeMenuListener? = null
 
     fun setupMap(): MapView {
         mapView = MapView(activity)
@@ -140,7 +137,6 @@ class MapManager(private val activity: Activity) {
         if (theme == null) {
             theme = InternalRenderTheme.DEFAULT
         }
-        theme.menuCallback = FitoTrackRenderThemeMenuCallback(activity, styleMenuListener)
 
         val renderLayer = TileRendererLayer(
             tileCache,
@@ -201,10 +197,6 @@ class MapManager(private val activity: Activity) {
         val directoryPath = userPreferences.offlineMapDirectoryName ?: return null
         val mapDirectoryUri = Uri.parse(directoryPath)
         return DocumentFile.fromTreeUri(activity, mapDirectoryUri)
-    }
-
-    fun setStyleMenuListener(styleMenuListener: RenderThemeMenuListener?) {
-        this.styleMenuListener = styleMenuListener
     }
 
     private fun sync(action: () -> Unit) {
