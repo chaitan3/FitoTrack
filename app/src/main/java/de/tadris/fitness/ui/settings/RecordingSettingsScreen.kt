@@ -61,7 +61,10 @@ import org.greenrobot.eventbus.ThreadMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordingSettingsScreen(onBack: () -> Unit) {
+fun RecordingSettingsScreen(
+    onBack: () -> Unit,
+    onNavigateToVoiceAnnouncements: () -> Unit = {},
+) {
     val context = LocalContext.current
     val prefs = remember { Instance.getInstance(context).userPreferences }
 
@@ -183,15 +186,7 @@ fun RecordingSettingsScreen(onBack: () -> Unit) {
                     supporting = if (ttsAvailable) stringResource(R.string.pref_voice_announcements_summary)
                                  else stringResource(R.string.ttsNotAvailable),
                     enabled = ttsAvailable,
-                    onClick = {
-                        context.startActivity(
-                            Intent(context, FitoTrackSettingsActivity::class.java)
-                                .putExtra(
-                                    FitoTrackSettingsActivity.EXTRA_FRAGMENT,
-                                    VoiceAnnouncementsSettingsFragment::class.java.name,
-                                )
-                        )
-                    },
+                    onClick = onNavigateToVoiceAnnouncements,
                 )
             }
             item {
@@ -201,7 +196,12 @@ fun RecordingSettingsScreen(onBack: () -> Unit) {
                                  else stringResource(R.string.ttsNotAvailable),
                     enabled = ttsAvailable,
                     onClick = {
-                        context.startActivity(Intent(context, ManageIntervalSetsActivity::class.java))
+                        context.startActivity(
+                            Intent(
+                                context,
+                                ManageIntervalSetsActivity::class.java
+                            )
+                        )
                     },
                 )
             }

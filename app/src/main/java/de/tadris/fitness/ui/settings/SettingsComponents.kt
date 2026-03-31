@@ -79,15 +79,18 @@ fun SwitchSettingsItem(
     title: String,
     supporting: String? = null,
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit,
 ) {
     ListItem(
         headlineContent = { Text(title) },
         supportingContent = supporting?.let { { Text(it) } },
         trailingContent = {
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
+            Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
         },
-        modifier = Modifier.clickable { onCheckedChange(!checked) },
+        modifier = Modifier
+            .clickable(enabled = enabled) { onCheckedChange(!checked) }
+            .alpha(if (enabled) 1f else 0.38f),
     )
 }
 
