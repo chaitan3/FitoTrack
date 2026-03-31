@@ -554,4 +554,6 @@
     <string name="removedOAuthToken">Usunięto OAuth Token</string>
     <string name="saveChangesQuestion">Czy zapisać zmiany?</string>
     <string name="saveChangesQuestionMessage">Czy na pewno chcesz zapisać zmiany?</string>
+    <string name="language">Język</string>
+    <string name="restorePreparing">Przygotowywanie</string>
 </resources>
