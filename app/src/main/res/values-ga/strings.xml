@@ -463,7 +463,7 @@
     <string name="lowerPaceLimit">Teorainn luas níos ísle</string>
     <string name="ttsBelowTargetSpeed">Rómhall</string>
     <string name="pref_auto_start_mode_title">Mód Uath-Tosaithe</string>
-    <string name="pref_auto_start_mode_on_move">Fan go dtosóidh tú ag bogadh</string>
+    <string name="pref_auto_start_mode_on_move">Ag fanacht leat tosú ag bogadh…</string>
     <string name="pref_auto_start_mode_unknown">Anaithnid (ná húsáid)</string>
     <string name="auto">Carr</string>
     <string name="noColoring">Gan dathú</string>
@@ -504,7 +504,7 @@
     <string name="friday">Dé hAoine</string>
     <string name="exportTargetHttpPost">Iarratas HTTP POST</string>
     <string name="autoBackupTitle">Cúltacaí uathoibríocha</string>
-    <string name="workoutGPXExportTitle">Onnmhairí GPX Workout</string>
+    <string name="workoutGPXExportTitle">Easpórtáil GPX de sheisiúin aclaíochta</string>
     <string name="hintConfigureExportTargets">Ba chóir comhaid spriocanna a chur leis a onnmhairiú chuig.</string>
     <string name="deleteExportTargetConfirmation">Scrios an sprioc easpórtála seo?</string>
     <string name="autoExportWorkoutsSummary">Easpórtáil workouts nua-thaifeadta</string>
