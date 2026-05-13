@@ -47,12 +47,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.util.Icon
 
 @Composable
 fun PreStartBottomSheet(
@@ -64,7 +64,6 @@ fun PreStartBottomSheet(
     onBluetooth: () -> Unit,
     onIntervalSet: () -> Unit,
 ) {
-    val context = LocalContext.current
     val navBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     Column(
@@ -93,9 +92,7 @@ fun PreStartBottomSheet(
             modifier = Modifier.fillMaxWidth(),
         ) {
             // Workout type icon box
-            val iconResId = context.resources.getIdentifier(
-                workoutType.icon, "drawable", context.packageName
-            )
+            val iconResId = Icon.getIcon(workoutType.icon)
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = Color(workoutType.color),
