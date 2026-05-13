@@ -33,11 +33,15 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -330,7 +334,6 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
             recordingState = recordingState,
             hrConnectionState = hrConnectionState,
             voiceFeedbackAvailable = voiceFeedbackAvailable,
-            gpsState = gpsState,
             useAutoPause = instance.userPreferences.useAutoPause,
             onStop = { vm.requestStopConfirmation() },
             onIntervalSet = { vm.requestIntervalSetDialog() },
@@ -359,38 +362,13 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
                 onAbort = { vm.cancelAutoStart(true) }
             )
 
-            Surface(
-                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    if (recordingState == RecordingState.IDLE) {
-                        StartButtonRow(
-                            canStart = canStart,
-                            isAutoStartSupported = vm.isAutoStartSupported,
-                            onStart = { vm.start(StartReason.START_BUTTON) },
-                            onStartImmediate = { vm.start(StartReason.START_BUTTON_IMMEDIATE) },
-                            onStartOnMove = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.ON_MOVE) },
-                            onStartWaitForGps = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.WAIT_FOR_GPS) },
-                            onStartWithDelay = { showCustomDelayDialog = true },
-                        )
-                    } else {
-                        RecordingTimeDisplay(
-                            activeDuration = values.activeDuration,
-                            distanceUnitUtils = instance.distanceUnitUtils,
-                        )
-                    }
-                    InfoSlotsGrid(
-                        slots = infoSlots,
-                        recordingState = recordingState,
-                        onSlotClick = { slot, isLongClick ->
-                            if (recordingState == RecordingState.IDLE || isLongClick) {
-                                vm.requestSelectInfoDialog(slot)
-                            }
-                        }
-                    )
-                }
-            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+                    .size(14.dp)
+                    .background(Color(gpsState.color), shape = CircleShape)
+            )
 
             if (showZoomControls) {
                 MapZoomControls(
@@ -398,6 +376,40 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
                     onFocusGps = { mapController.focusGps() },
                     onZoomIn = { mapController.zoomIn() },
                     onZoomOut = { mapController.zoomOut() },
+                )
+            }
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 2.dp,
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                if (recordingState == RecordingState.IDLE) {
+                    StartButtonRow(
+                        canStart = canStart,
+                        isAutoStartSupported = vm.isAutoStartSupported,
+                        onStart = { vm.start(StartReason.START_BUTTON) },
+                        onStartImmediate = { vm.start(StartReason.START_BUTTON_IMMEDIATE) },
+                        onStartOnMove = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.ON_MOVE) },
+                        onStartWaitForGps = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.WAIT_FOR_GPS) },
+                        onStartWithDelay = { showCustomDelayDialog = true },
+                    )
+                } else {
+                    RecordingTimeDisplay(
+                        activeDuration = values.activeDuration,
+                        distanceUnitUtils = instance.distanceUnitUtils,
+                    )
+                }
+                InfoSlotsGrid(
+                    slots = infoSlots,
+                    recordingState = recordingState,
+                    onSlotClick = { slot, isLongClick ->
+                        if (recordingState == RecordingState.IDLE || isLongClick) {
+                            vm.requestSelectInfoDialog(slot)
+                        }
+                    }
                 )
             }
         }

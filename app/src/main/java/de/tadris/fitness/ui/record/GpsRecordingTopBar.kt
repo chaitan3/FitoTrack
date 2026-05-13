@@ -18,13 +18,6 @@
  */
 package de.tadris.fitness.ui.record
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,12 +26,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.component.HeartRateComponent
 
@@ -48,7 +39,6 @@ fun GpsRecordingTopBar(
     recordingState: RecordingState,
     hrConnectionState: HeartRateComponent.HeartRateConnectionState,
     voiceFeedbackAvailable: Boolean,
-    gpsState: GpsState,
     useAutoPause: Boolean,
     onStop: () -> Unit,
     onIntervalSet: () -> Unit,
@@ -68,11 +58,6 @@ fun GpsRecordingTopBar(
                     Icon(painterResource(R.drawable.ic_list), contentDescription = stringResource(R.string.intervalSet))
                 }
             }
-            if (recordingState == RecordingState.IDLE) {
-                IconButton(onClick = { /* show edit hint */ }) {
-                    Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.editDisplayedInformation))
-                }
-            }
             IconButton(onClick = onChooseBluetooth) {
                 HrStatusIcon(hrConnectionState)
             }
@@ -87,12 +72,6 @@ fun GpsRecordingTopBar(
                     )
                 }
             }
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .background(Color(gpsState.color), shape = CircleShape)
-                    .padding(horizontal = 8.dp)
-            )
         }
     )
 }
