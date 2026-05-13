@@ -69,7 +69,7 @@ public class ImportGpxActivity extends FitoTrackActivity {
                 mHandler.post(() -> {
                     dialogController.cancel();
                     Toast.makeText(this, R.string.workoutImported, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, LauncherActivity.class));
+                    startActivity(new Intent(this, MainActivity.class));
                     finish();
                 });
             } catch (Exception e) {

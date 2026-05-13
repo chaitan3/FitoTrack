@@ -88,7 +88,7 @@ import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
 import de.tadris.fitness.recording.information.InformationDisplay
 import de.tadris.fitness.recording.information.RecordingInformation
 import de.tadris.fitness.ui.FitoTrackActivity
-import de.tadris.fitness.ui.LauncherActivity
+import de.tadris.fitness.ui.MainActivity
 import de.tadris.fitness.ui.dialog.AlertDialogWrapper
 import de.tadris.fitness.ui.dialog.ChooseAutoStartDelayDialog
 import de.tadris.fitness.ui.dialog.ChooseAutoStartModeDialog
@@ -883,7 +883,7 @@ abstract class RecordWorkoutActivity : FitoTrackActivity(), IntervalSetSelectLis
             stopService()
 
             this.finish()
-            val launcherIntent = Intent(this, LauncherActivity::class.java)
+            val launcherIntent = Intent(this, MainActivity::class.java)
             launcherIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             this.startActivity(launcherIntent)
         }

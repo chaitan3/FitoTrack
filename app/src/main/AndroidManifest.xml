@@ -82,7 +82,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_main"
+            android:label="@string/app_name"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -145,11 +145,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true" />
-        <activity
-            android:name=".ui.LauncherActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
+<activity
             android:name=".ui.statistics.StatisticsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />

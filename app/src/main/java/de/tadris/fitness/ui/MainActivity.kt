@@ -24,8 +24,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.map.MapManager
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.dialog.SelectWorkoutTypeDialog
 import de.tadris.fitness.ui.navigation.AppNavigation
@@ -34,17 +39,46 @@ import de.tadris.fitness.ui.theme.FitoTrackTheme
 
 class MainActivity : ComponentActivity() {
 
+    private val initializer: AppInitializer by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        MapManager.initMapProvider(this)
+
+        splashScreen.setKeepOnScreenCondition { initializer.state.value is InitState.Loading }
+        initializer.start()
 
         setContent {
             FitoTrackTheme {
-                AppNavigation(
-                    onRecord = { showWorkoutSelection() },
-                    onRecordLast = { workoutType -> startRecording(workoutType) },
-                )
+                val state by initializer.state.collectAsStateWithLifecycle()
+                when (val s = state) {
+                    is InitState.Ready -> {
+                        val runningWorkout = s.runningWorkout
+                        if (runningWorkout != null) {
+                            LaunchedEffect(Unit) {
+                                val workoutType = runningWorkout.getWorkoutType(this@MainActivity)
+                                startActivity(
+                                    Intent(this@MainActivity, workoutType.recordingTypeDecoded.recorderActivityClass)
+                                        .putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id)
+                                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                        .setAction(RecordWorkoutActivity.RESUME_ACTION)
+                                )
+                                finish()
+                            }
+                        } else {
+                            AppNavigation(
+                                onRecord = { showWorkoutSelection() },
+                                onRecordLast = { workoutType -> startRecording(workoutType) },
+                            )
+                        }
+                    }
+                    else -> MigrationScreen(
+                        state = s,
+                        onErrorDismiss = { finish() },
+                    )
+                }
             }
         }
     }
