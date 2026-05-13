@@ -126,6 +126,9 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
     private val _showChooseBluetoothDevice = MutableStateFlow(false)
     val showChooseBluetoothDevice: StateFlow<Boolean> = _showChooseBluetoothDevice.asStateFlow()
 
+    private val _currentWorkoutType = MutableStateFlow<WorkoutType?>(null)
+    val currentWorkoutType: StateFlow<WorkoutType?> = _currentWorkoutType.asStateFlow()
+
     private val startedSem = Semaphore(1)
     private var finishGuard = false
 
@@ -150,6 +153,7 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
         initialized = true
 
         this.workoutType = workoutType
+        _currentWorkoutType.value = workoutType
         this.informationDisplay = InformationDisplay(
             RecordingType.findById(workoutType.recordingType),
             getApplication()

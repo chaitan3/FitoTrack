@@ -33,26 +33,19 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -65,11 +58,9 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
 import de.tadris.fitness.recording.StopReason
-import de.tadris.fitness.recording.autostart.AutoStartWorkout
 import de.tadris.fitness.ui.MainActivity
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
 import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog
@@ -264,12 +255,12 @@ class RecordGpsWorkoutActivity : ComponentActivity() {
 
 // ---- Screen ----
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
     val context = LocalContext.current
     val activity = context as? RecordGpsWorkoutActivity
 
+    // State collection
     val recordingState by vm.recordingState.collectAsState()
     val values by vm.values.collectAsState()
     val hrConnectionState by vm.hrConnectionState.collectAsState()
@@ -284,17 +275,13 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
     val routePositions by vm.routePositions.collectAsState()
     val currentPosition by vm.currentPosition.collectAsState()
     val canStart by vm.canStart.collectAsState()
+    val workoutType by vm.currentWorkoutType.collectAsState()
 
     val instance = remember { Instance.getInstance(context) }
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
-    val showZoomControls = remember { instance.userPreferences.showWorkoutZoomControls }
-
     val mapController = remember { RecordingMapController() }
-    var showCustomDelayDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(mapController) {
-        activity?.currentMapController = mapController
-    }
+    LaunchedEffect(mapController) { activity?.currentMapController = mapController }
 
     BackHandler {
         if (recordingState == RecordingState.IDLE) vm.finish()
@@ -310,6 +297,7 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
         }
     }
 
+    // Dialogs
     if (showStopConfirmation) {
         StopConfirmDialog(
             onConfirm = { vm.dismissStopConfirmation(); vm.stop(StopReason.STOP_BUTTON_PRESSED) },
@@ -318,29 +306,18 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
     }
     if (showCommentDialog) {
         CommentDialog(
-            onConfirm = { comment -> vm.onCommentEntered(comment) },
+            onConfirm = { vm.onCommentEntered(it) },
             onDismiss = { vm.onCommentDismissed() }
         )
     }
-    if (showCustomDelayDialog) {
-        CustomDelayDialog(
-            onConfirm = { delayMs -> showCustomDelayDialog = false; vm.beginAutoStart(delayMs) },
-            onDismiss = { showCustomDelayDialog = false }
-        )
+
+    val onBack: () -> Unit = {
+        if (recordingState == RecordingState.IDLE) vm.finish()
+        else vm.requestStopConfirmation()
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        GpsRecordingTopBar(
-            recordingState = recordingState,
-            hrConnectionState = hrConnectionState,
-            voiceFeedbackAvailable = voiceFeedbackAvailable,
-            useAutoPause = instance.userPreferences.useAutoPause,
-            onStop = { vm.requestStopConfirmation() },
-            onIntervalSet = { vm.requestIntervalSetDialog() },
-            onChooseBluetooth = { vm.requestChooseBluetoothDevice() },
-            onTogglePause = { vm.toggleManualPause() },
-        )
-
+        // Map + overlays
         Box(modifier = Modifier.weight(1f)) {
             RecordingMapView(
                 routePositions = routePositions,
@@ -350,66 +327,74 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
                 modifier = Modifier.fillMaxSize(),
             )
 
-            GpsWaitingOverlay(
-                gpsState = gpsState,
+            // Top overlay row (sits at top of Box naturally)
+            RecordingTopOverlay(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
                 recordingState = recordingState,
-                satelliteCount = satelliteCount,
+                gpsState = gpsState,
+                canStart = canStart,
+                hrConnectionState = hrConnectionState,
+                onBack = onBack,
+                onChooseBluetooth = { vm.requestChooseBluetoothDevice() },
             )
 
+            // Bottom-left: GPS info pill
+            GpsInfoPill(
+                gpsState = gpsState,
+                satelliteCount = satelliteCount,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(12.dp),
+            )
+
+            // Bottom-right: map controls
+            MapControlButtons(
+                mapController = mapController,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp),
+            )
+
+            // Auto-start overlay
             AutoStartOverlay(
                 autoStartState = autoStartUiState,
                 distanceUnitUtils = instance.distanceUnitUtils,
                 onAbort = { vm.cancelAutoStart(true) }
             )
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-                    .size(14.dp)
-                    .background(Color(gpsState.color), shape = CircleShape)
-            )
-
-            if (showZoomControls) {
-                MapZoomControls(
-                    modifier = Modifier.align(Alignment.CenterEnd).padding(end = 16.dp),
-                    onFocusGps = { mapController.focusGps() },
-                    onZoomIn = { mapController.zoomIn() },
-                    onZoomOut = { mapController.zoomOut() },
-                )
-            }
         }
 
+        // Bottom sheet panel
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
             color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 2.dp,
+            tonalElevation = 3.dp,
+            shadowElevation = 8.dp,
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                if (recordingState == RecordingState.IDLE) {
-                    StartButtonRow(
+            if (recordingState == RecordingState.IDLE) {
+                workoutType?.let { wt ->
+                    PreStartBottomSheet(
+                        workoutType = wt,
                         canStart = canStart,
-                        isAutoStartSupported = vm.isAutoStartSupported,
+                        voiceFeedbackAvailable = voiceFeedbackAvailable,
+                        useAutoPause = instance.userPreferences.useAutoPause,
                         onStart = { vm.start(StartReason.START_BUTTON) },
-                        onStartImmediate = { vm.start(StartReason.START_BUTTON_IMMEDIATE) },
-                        onStartOnMove = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.ON_MOVE) },
-                        onStartWaitForGps = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.WAIT_FOR_GPS) },
-                        onStartWithDelay = { showCustomDelayDialog = true },
-                    )
-                } else {
-                    RecordingTimeDisplay(
-                        activeDuration = values.activeDuration,
-                        distanceUnitUtils = instance.distanceUnitUtils,
+                        onBluetooth = { vm.requestChooseBluetoothDevice() },
+                        onIntervalSet = { vm.requestIntervalSetDialog() },
                     )
                 }
-                InfoSlotsGrid(
-                    slots = infoSlots,
+            } else {
+                RecordingActiveBottomSheet(
+                    activeDuration = values.activeDuration,
+                    infoSlots = infoSlots,
                     recordingState = recordingState,
+                    distanceUnitUtils = instance.distanceUnitUtils,
+                    onPauseResume = { vm.toggleManualPause() },
+                    onStop = { vm.stop(StopReason.STOP_BUTTON_PRESSED) },
                     onSlotClick = { slot, isLongClick ->
-                        if (recordingState == RecordingState.IDLE || isLongClick) {
-                            vm.requestSelectInfoDialog(slot)
-                        }
-                    }
+                        if (isLongClick) vm.requestSelectInfoDialog(slot)
+                    },
                 )
             }
         }
