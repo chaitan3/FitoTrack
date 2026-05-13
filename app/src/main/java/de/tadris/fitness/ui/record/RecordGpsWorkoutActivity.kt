@@ -33,35 +33,15 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -71,12 +51,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -129,12 +105,10 @@ class RecordGpsWorkoutActivity : ComponentActivity() {
 
         NotificationHelper.requestNotificationPermissionIfNecessary(this)
 
-        // Check location permission
         if (!vm.hasServicePermission()) {
             showLocationPermissionConsent()
         }
 
-        // Observe dialog triggers that need legacy View-based dialogs
         lifecycleScope.launch {
             vm.showIntervalSetDialog.collectLatest { show ->
                 if (show) {
@@ -255,10 +229,6 @@ class RecordGpsWorkoutActivity : ComponentActivity() {
         if (!instance.userPreferences.zoomWithVolumeButtons) {
             return super.onKeyDown(keyCode, event)
         }
-        // The controller is accessed through the composable; we post to the VM instead via state
-        // For simplicity we let the composable handle this via a side-effect triggered by VM state
-        // However the controller is held in the composable's remember block, so we use a companion
-        // object to store the current controller reference.
         val controller = currentMapController
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && controller != null) {
             controller.zoomIn()
@@ -285,9 +255,10 @@ class RecordGpsWorkoutActivity : ComponentActivity() {
         }
     }
 
-    // Holds reference to the current map controller from the composable
     internal var currentMapController: RecordingMapController? = null
 }
+
+// ---- Screen ----
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -315,263 +286,121 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
     val showZoomControls = remember { instance.userPreferences.showWorkoutZoomControls }
 
     val mapController = remember { RecordingMapController() }
+    var showCustomDelayDialog by remember { mutableStateOf(false) }
 
-    // Give the activity a reference to the controller for volume key handling
     LaunchedEffect(mapController) {
         activity?.currentMapController = mapController
     }
 
     BackHandler {
-        if (recordingState == RecordingState.IDLE) {
-            vm.finish()
-        } else {
-            vm.requestStopConfirmation()
-        }
+        if (recordingState == RecordingState.IDLE) vm.finish()
+        else vm.requestStopConfirmation()
     }
 
     LaunchedEffect(shouldFinish) {
         if (shouldFinish) {
-            context.startActivity(
-                Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                }
-            )
+            context.startActivity(Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            })
             activity?.finish()
         }
     }
 
     if (showStopConfirmation) {
         StopConfirmDialog(
-            onConfirm = {
-                vm.dismissStopConfirmation()
-                vm.stop(StopReason.STOP_BUTTON_PRESSED)
-            },
+            onConfirm = { vm.dismissStopConfirmation(); vm.stop(StopReason.STOP_BUTTON_PRESSED) },
             onDismiss = { vm.dismissStopConfirmation() }
         )
     }
-
     if (showCommentDialog) {
         CommentDialog(
             onConfirm = { comment -> vm.onCommentEntered(comment) },
             onDismiss = { vm.onCommentDismissed() }
         )
     }
+    if (showCustomDelayDialog) {
+        CustomDelayDialog(
+            onConfirm = { delayMs -> showCustomDelayDialog = false; vm.beginAutoStart(delayMs) },
+            onDismiss = { showCustomDelayDialog = false }
+        )
+    }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Map
-        RecordingMapView(
-            routePositions = routePositions,
-            currentPosition = currentPosition,
-            primaryColor = primaryColor,
-            controller = mapController,
-            modifier = Modifier.fillMaxSize(),
+    Column(modifier = Modifier.fillMaxSize()) {
+        GpsRecordingTopBar(
+            recordingState = recordingState,
+            hrConnectionState = hrConnectionState,
+            voiceFeedbackAvailable = voiceFeedbackAvailable,
+            gpsState = gpsState,
+            useAutoPause = instance.userPreferences.useAutoPause,
+            onStop = { vm.requestStopConfirmation() },
+            onIntervalSet = { vm.requestIntervalSetDialog() },
+            onChooseBluetooth = { vm.requestChooseBluetoothDevice() },
+            onTogglePause = { vm.toggleManualPause() },
         )
 
-        // Top bar
-        Column(modifier = Modifier.fillMaxWidth()) {
-            TopAppBar(
-                title = { Text(stringResource(R.string.recordWorkout)) },
-                actions = {
-                    // Stop button (only when recording)
-                    if (recordingState != RecordingState.IDLE) {
-                        IconButton(onClick = { vm.requestStopConfirmation() }) {
-                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.stop))
-                        }
-                    }
-                    // Interval set
-                    if (recordingState == RecordingState.IDLE && voiceFeedbackAvailable) {
-                        IconButton(onClick = { vm.requestIntervalSetDialog() }) {
-                            Icon(
-                                painterResource(R.drawable.ic_list),
-                                contentDescription = stringResource(R.string.intervalSet)
-                            )
-                        }
-                    }
-                    // Edit hint
-                    if (recordingState == RecordingState.IDLE) {
-                        IconButton(onClick = { /* show edit hint */ }) {
-                            Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.editDisplayedInformation))
-                        }
-                    }
-                    // HR
-                    IconButton(onClick = { vm.requestChooseBluetoothDevice() }) {
-                        HrStatusIcon(hrConnectionState)
-                    }
-                    // Manual pause
-                    if (!instance.userPreferences.useAutoPause && recordingState != RecordingState.IDLE) {
-                        IconButton(onClick = { vm.toggleManualPause() }) {
-                            Icon(
-                                painterResource(
-                                    if (recordingState == RecordingState.RUNNING)
-                                        R.drawable.ic_pause
-                                    else
-                                        R.drawable.ic_resume
-                                ),
-                                contentDescription = null
-                            )
-                        }
-                    }
-                    // GPS status indicator (colored dot)
-                    val gpsColor = Color(gpsState.color)
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(gpsColor, shape = CircleShape)
-                            .padding(horizontal = 8.dp)
-                    )
-                }
+        Box(modifier = Modifier.weight(1f)) {
+            RecordingMapView(
+                routePositions = routePositions,
+                currentPosition = currentPosition,
+                primaryColor = primaryColor,
+                controller = mapController,
+                modifier = Modifier.fillMaxSize(),
             )
-        }
 
-        // GPS waiting overlay
-        AnimatedVisibility(
-            visible = gpsState == GpsState.SIGNAL_LOST && recordingState == RecordingState.IDLE,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Red.copy(alpha = 0.7f)),
-                contentAlignment = Alignment.Center,
+            GpsWaitingOverlay(
+                gpsState = gpsState,
+                recordingState = recordingState,
+                satelliteCount = satelliteCount,
+            )
+
+            AutoStartOverlay(
+                autoStartState = autoStartUiState,
+                distanceUnitUtils = instance.distanceUnitUtils,
+                onAbort = { vm.cancelAutoStart(true) }
+            )
+
+            Surface(
+                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        painterResource(R.drawable.ic_gps_no_fix),
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(48.dp),
-                    )
-                    Text(
-                        text = stringResource(R.string.waiting_gps),
-                        color = Color.White,
-                    )
-                    Text(
-                        text = pluralStringResource(R.plurals.satelliteCount, satelliteCount, satelliteCount),
-                        color = Color.White,
-                    )
-                }
-            }
-        }
-
-        // AutoStart overlay
-        AutoStartOverlay(
-            autoStartState = autoStartUiState,
-            distanceUnitUtils = instance.distanceUnitUtils,
-            onAbort = {
-                vm.cancelAutoStart(true)
-            }
-        )
-
-        // Bottom panel
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                if (recordingState == RecordingState.IDLE) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Button(
-                            onClick = { vm.start(StartReason.START_BUTTON) },
-                            enabled = canStart,
-                        ) {
-                            Text(stringResource(R.string.start))
-                        }
-
-                        if (vm.isAutoStartSupported) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            var showPopup by remember { mutableStateOf(false) }
-                            Box {
-                                IconButton(onClick = { showPopup = true }) {
-                                    Icon(Icons.Default.MoreVert, contentDescription = null)
-                                }
-                                DropdownMenu(
-                                    expanded = showPopup,
-                                    onDismissRequest = { showPopup = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.popup_auto_start_immediately)) },
-                                        onClick = {
-                                            showPopup = false
-                                            vm.start(StartReason.START_BUTTON_IMMEDIATE)
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.popup_auto_start_on_move)) },
-                                        onClick = {
-                                            showPopup = false
-                                            vm.beginAutoStart(Long.MIN_VALUE, AutoStartWorkout.Mode.ON_MOVE)
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.popup_auto_start_wait_for_gps)) },
-                                        onClick = {
-                                            showPopup = false
-                                            vm.beginAutoStart(Long.MIN_VALUE, AutoStartWorkout.Mode.WAIT_FOR_GPS)
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.popup_auto_start_delay)) },
-                                        onClick = {
-                                            showPopup = false
-                                            vm.beginAutoStart(AutoStartWorkout.DEFAULT_DELAY_S * 1000L)
-                                        }
-                                    )
-                                }
+                Column(modifier = Modifier.padding(16.dp)) {
+                    if (recordingState == RecordingState.IDLE) {
+                        StartButtonRow(
+                            canStart = canStart,
+                            isAutoStartSupported = vm.isAutoStartSupported,
+                            onStart = { vm.start(StartReason.START_BUTTON) },
+                            onStartImmediate = { vm.start(StartReason.START_BUTTON_IMMEDIATE) },
+                            onStartOnMove = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.ON_MOVE) },
+                            onStartWaitForGps = { vm.beginAutoStart(0L, AutoStartWorkout.Mode.WAIT_FOR_GPS) },
+                            onStartWithDelay = { showCustomDelayDialog = true },
+                        )
+                    } else {
+                        RecordingTimeDisplay(
+                            activeDuration = values.activeDuration,
+                            distanceUnitUtils = instance.distanceUnitUtils,
+                        )
+                    }
+                    InfoSlotsGrid(
+                        slots = infoSlots,
+                        recordingState = recordingState,
+                        onSlotClick = { slot, isLongClick ->
+                            if (recordingState == RecordingState.IDLE || isLongClick) {
+                                vm.requestSelectInfoDialog(slot)
                             }
                         }
-                    }
-                } else {
-                    RecordingTimeDisplay(
-                        activeDuration = values.activeDuration,
-                        distanceUnitUtils = instance.distanceUnitUtils,
                     )
                 }
-
-                InfoSlotsGrid(
-                    slots = infoSlots,
-                    recordingState = recordingState,
-                    onSlotClick = { slot, isLongClick ->
-                        if (recordingState == RecordingState.IDLE || isLongClick) {
-                            vm.requestSelectInfoDialog(slot)
-                        }
-                    }
-                )
             }
-        }
 
-        // Map zoom controls
-        if (showZoomControls) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                FloatingActionButton(
-                    onClick = { mapController.focusGps() },
-                    modifier = Modifier.size(48.dp),
-                ) {
-                    Icon(painterResource(R.drawable.ic_gps_fixed), contentDescription = null)
-                }
-                FloatingActionButton(
-                    onClick = { mapController.zoomIn() },
-                    modifier = Modifier.size(48.dp),
-                ) {
-                    Icon(painterResource(R.drawable.ic_map_zoomin), contentDescription = "+")
-                }
-                FloatingActionButton(
-                    onClick = { mapController.zoomOut() },
-                    modifier = Modifier.size(48.dp),
-                ) {
-                    Icon(painterResource(R.drawable.ic_map_zoomout), contentDescription = "-")
-                }
+            if (showZoomControls) {
+                MapZoomControls(
+                    modifier = Modifier.align(Alignment.CenterEnd).padding(end = 16.dp),
+                    onFocusGps = { mapController.focusGps() },
+                    onZoomIn = { mapController.zoomIn() },
+                    onZoomOut = { mapController.zoomOut() },
+                )
             }
         }
     }
 }
+

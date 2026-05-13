@@ -103,7 +103,6 @@ fun RecordingMapView(
     AndroidView(
         factory = { _ ->
             val mapView = MapManager(activity).setupMap()
-            mapView.isClickable = false
 
             val navHandler = NavigationModeHandler(mapView)
             navHandler.init()

@@ -117,7 +117,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.settings.DownloadMapsActivity" />
-        <activity android:name=".ui.record.RecordIndoorWorkoutActivity" />
+        <activity android:name=".ui.record.RecordIndoorWorkoutActivity" android:theme="@style/AppThemeNoActionbar" />
         <activity android:name=".ui.settings.workout_type.EditWorkoutTypeActivity" />
         <activity android:name=".ui.settings.workout_type.ManageWorkoutTypesActivity" />
         <activity android:name=".ui.ShareFileActivity" />
@@ -144,7 +144,8 @@
             android:name=".ui.record.RecordGpsWorkoutActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:showOnLockScreen="true" />
+            android:showOnLockScreen="true"
+            android:theme="@style/AppThemeNoActionbar" />
 <activity
             android:name=".ui.statistics.StatisticsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
