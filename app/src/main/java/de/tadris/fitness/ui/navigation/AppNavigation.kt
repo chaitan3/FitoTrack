@@ -20,6 +20,8 @@
 package de.tadris.fitness.ui.navigation
 
 import android.content.Intent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,7 +38,7 @@ import de.tadris.fitness.recording.RecordingStateHolder
 import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
-import de.tadris.fitness.ui.record.RecordWorkoutActivity
+import de.tadris.fitness.ui.record.RecordingConstants
 import de.tadris.fitness.ui.settings.BackupSettingsScreen
 import de.tadris.fitness.ui.settings.ConfigureExportTargetsScreen
 import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
@@ -106,7 +108,14 @@ fun AppNavigation(
 
     ImportHandler(vm = importVm)
 
-    NavHost(navController = navController, startDestination = Route.Dashboard) {
+    NavHost(
+        navController = navController,
+        startDestination = Route.Dashboard,
+        enterTransition = { slideInHorizontally { it } },
+        exitTransition = { slideOutHorizontally { -it } },
+        popEnterTransition = { slideInHorizontally { -it } },
+        popExitTransition = { slideOutHorizontally { it } },
+    ) {
         composable<Route.Dashboard> {
             DashboardScreen(
                 workoutDao = Instance.getInstance(context).db.workoutDao(),
@@ -249,9 +258,9 @@ fun AppNavigation(
                     val workoutType = workout.getWorkoutType(context)
                     context.startActivity(
                         Intent(context, workoutType.recordingTypeDecoded.recorderActivityClass)
-                            .putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id)
+                            .putExtra(RecordingConstants.WORKOUT_TYPE_EXTRA, workoutType.id)
                             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            .setAction(RecordWorkoutActivity.RESUME_ACTION)
+                            .setAction(RecordingConstants.RESUME_ACTION)
                     )
                 },
             )

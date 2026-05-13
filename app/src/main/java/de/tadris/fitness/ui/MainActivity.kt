@@ -34,7 +34,7 @@ import de.tadris.fitness.map.MapManager
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.dialog.SelectWorkoutTypeDialog
 import de.tadris.fitness.ui.navigation.AppNavigation
-import de.tadris.fitness.ui.record.RecordWorkoutActivity
+import de.tadris.fitness.ui.record.RecordingConstants
 import de.tadris.fitness.ui.theme.FitoTrackTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,9 +61,9 @@ class MainActivity : ComponentActivity() {
                                 val workoutType = runningWorkout.getWorkoutType(this@MainActivity)
                                 startActivity(
                                     Intent(this@MainActivity, workoutType.recordingTypeDecoded.recorderActivityClass)
-                                        .putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType.id)
+                                        .putExtra(RecordingConstants.WORKOUT_TYPE_EXTRA, workoutType.id)
                                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                        .setAction(RecordWorkoutActivity.RESUME_ACTION)
+                                        .setAction(RecordingConstants.RESUME_ACTION)
                                 )
                                 finish()
                             }
@@ -94,8 +94,8 @@ class MainActivity : ComponentActivity() {
 
     private fun startRecording(workoutType: WorkoutType) {
         val intent = Intent(this, workoutType.getRecordingTypeDecoded().recorderActivityClass)
-        intent.action = RecordWorkoutActivity.LAUNCH_ACTION
-        intent.putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, workoutType)
+        intent.action = RecordingConstants.LAUNCH_ACTION
+        intent.putExtra(RecordingConstants.WORKOUT_TYPE_EXTRA, workoutType)
         startActivity(intent)
     }
 }
