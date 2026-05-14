@@ -63,6 +63,7 @@ fun PreStartBottomSheet(
     onStart: () -> Unit,
     onBluetooth: () -> Unit,
     onIntervalSet: () -> Unit,
+    onSettings: () -> Unit,
 ) {
     val navBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
@@ -116,8 +117,7 @@ fun PreStartBottomSheet(
                 )
             }
 
-            // Settings icon (no-op)
-            IconButton(onClick = {}) {
+            IconButton(onClick = onSettings) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = null,

@@ -19,17 +19,12 @@
 package de.tadris.fitness.ui.record
 
 import android.Manifest
-import android.app.AlertDialog
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Bundle
-import android.view.WindowManager
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -37,22 +32,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -62,164 +63,107 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RecordingType
-import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
-import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog
 import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog
-import de.tadris.fitness.ui.theme.FitoTrackTheme
 import de.tadris.fitness.util.NotificationHelper
 import de.tadris.fitness.util.unit.UnitUtils
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
-class RecordIndoorWorkoutActivity : ComponentActivity() {
+@Composable
+fun IndoorRecordingRoute(
+    workoutTypeId: String,
+    isLaunchAction: Boolean,
+    onFinish: () -> Unit,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToIntervalSets: () -> Unit,
+) {
+    val context = LocalContext.current
+    val vm: IndoorRecordingViewModel = viewModel()
 
-    companion object {
-        const val REQUEST_CODE_ACTIVITY_PERMISSION = 12
+    val workoutType = remember(workoutTypeId) {
+        WorkoutTypeManager.getInstance().getWorkoutTypeById(context, workoutTypeId)
     }
 
-    private val vm: IndoorRecordingViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        val workoutType = determineWorkoutType()
-        val isLaunchAction = intent.action == RecordingConstants.LAUNCH_ACTION
-
+    LaunchedEffect(workoutTypeId) {
         vm.init(workoutType, isLaunchAction)
+        NotificationHelper.requestNotificationPermissionIfNecessary(context as Activity)
+    }
 
-        val instance = Instance.getInstance(this)
-        if (instance.userPreferences.showOnLockScreen) {
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
-        }
+    val showOnLockScreen = remember { Instance.getInstance(context).userPreferences.showOnLockScreen }
+    RecordingWindowEffects(showOnLockScreen)
 
-        NotificationHelper.requestNotificationPermissionIfNecessary(this)
+    // Activity recognition permission (Android Q+)
+    val activityPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) vm.restartService()
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !hasActivityPermission()) {
-            showActivityPermissionConsent()
-        }
-
-        lifecycleScope.launch {
-            vm.showIntervalSetDialog.collectLatest { show ->
-                if (show) {
-                    vm.dismissIntervalSetDialog()
-                    SelectIntervalSetDialog(this@RecordIndoorWorkoutActivity) { set ->
-                        vm.onIntervalSetSelected(set)
-                    }.show()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            vm.selectInfoDialogSlot.collectLatest { slot ->
-                if (slot != null) {
-                    val recordingType = RecordingType.findById(workoutType.recordingType)
-                    SelectWorkoutInformationDialog(
-                        this@RecordIndoorWorkoutActivity,
-                        recordingType,
-                        slot
-                    ) { s, info ->
-                        vm.onInfoSlotSelected(s, info)
-                    }.show()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            vm.showChooseBluetoothDevice.collectLatest { show ->
-                if (show) {
-                    try {
-                        ChooseBluetoothDeviceDialog(this@RecordIndoorWorkoutActivity) { device ->
-                            vm.onBtDeviceSelected(device)
-                        }.show()
-                    } catch (_: ChooseBluetoothDeviceDialog.BluetoothNotAvailableException) {
-                        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                        startActivityForResult(enableBtIntent, 13)
+    var showActivityConsentDialog by remember {
+        mutableStateOf(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !vm.hasServicePermission())
+    }
+    if (showActivityConsentDialog) {
+        AlertDialog(
+            onDismissRequest = { showActivityConsentDialog = false; vm.finish() },
+            title = { Text(stringResource(R.string.recordingPermissionNotGrantedTitle)) },
+            text = { Text(stringResource(R.string.recordingActivityPermissionMessage)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showActivityConsentDialog = false
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        activityPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
                     }
-                    vm.dismissChooseBluetoothDevice()
+                }) { Text(stringResource(R.string.actionGrant)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showActivityConsentDialog = false; vm.finish() }) {
+                    Text(stringResource(R.string.cancel))
                 }
             }
-        }
+        )
+    }
 
-        setContent {
-            FitoTrackTheme {
-                IndoorRecordingScreen(vm = vm)
+    // Bluetooth device chooser
+    val showChooseBluetoothDevice by vm.showChooseBluetoothDevice.collectAsState()
+    LaunchedEffect(showChooseBluetoothDevice) {
+        if (!showChooseBluetoothDevice) return@LaunchedEffect
+        val activity = context as? Activity
+        try {
+            activity?.let {
+                ChooseBluetoothDeviceDialog(it) { device -> vm.onBtDeviceSelected(device) }.show()
             }
+        } catch (_: ChooseBluetoothDeviceDialog.BluetoothNotAvailableException) {
+            activity?.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
         }
+        vm.dismissChooseBluetoothDevice()
     }
 
-    private fun determineWorkoutType(): WorkoutType {
-        val workoutType = intent.getSerializableExtra(RecordingConstants.WORKOUT_TYPE_EXTRA)
-        return if (workoutType is WorkoutType) {
-            workoutType
-        } else {
-            val workoutTypeId = intent.getStringExtra(RecordingConstants.WORKOUT_TYPE_EXTRA)
-            WorkoutTypeManager.getInstance().getWorkoutTypeById(this, workoutTypeId)
-        }
+    // Info slot selection dialog
+    val selectInfoSlot by vm.selectInfoDialogSlot.collectAsState()
+    LaunchedEffect(selectInfoSlot) {
+        val slot = selectInfoSlot ?: return@LaunchedEffect
+        val activity = context as? Activity ?: return@LaunchedEffect
+        val recordingType = RecordingType.findById(workoutType.recordingType)
+        SelectWorkoutInformationDialog(activity, recordingType, slot) { s, info ->
+            vm.onInfoSlotSelected(s, info)
+        }.show()
     }
 
-    private fun hasActivityPermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACTIVITY_RECOGNITION
-            ) == PackageManager.PERMISSION_GRANTED
-        } else {
-            true
-        }
-    }
-
-    private fun showActivityPermissionConsent() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.recordingPermissionNotGrantedTitle)
-            .setMessage(R.string.recordingActivityPermissionMessage)
-            .setPositiveButton(R.string.actionGrant) { _, _ ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
-                        REQUEST_CODE_ACTIVITY_PERMISSION
-                    )
-                }
-            }
-            .setNegativeButton(R.string.cancel) { _, _ -> vm.finish() }
-            .setOnCancelListener { vm.finish() }
-            .show()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_ACTIVITY_PERMISSION) {
-            if (hasActivityPermission()) {
-                vm.restartService()
-            } else {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.recordingPermissionNotGrantedTitle)
-                    .setMessage(R.string.recordingActivityPermissionMessage)
-                    .setPositiveButton(R.string.settings) { _, _ ->
-                        val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        val uri = android.net.Uri.fromParts("package", packageName, null)
-                        intent.data = uri
-                        startActivity(intent)
-                    }
-                    .create().show()
-            }
-        }
-    }
+    IndoorRecordingScreen(
+        vm = vm,
+        onFinish = onFinish,
+        onNavigateToSettings = onNavigateToSettings,
+        onNavigateToIntervalSets = onNavigateToIntervalSets,
+    )
 }
 
 @Composable
-fun IndoorRecordingScreen(vm: IndoorRecordingViewModel) {
+fun IndoorRecordingScreen(
+    vm: IndoorRecordingViewModel,
+    onFinish: () -> Unit,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToIntervalSets: () -> Unit,
+) {
     val chartEntries by vm.chartEntries.collectAsState()
     val repetitions by vm.repetitions.collectAsState()
     val workoutType by vm.currentWorkoutType.collectAsState()
@@ -232,6 +176,9 @@ fun IndoorRecordingScreen(vm: IndoorRecordingViewModel) {
 
     RecordingScaffold(
         vm = vm,
+        onFinish = onFinish,
+        onOpenSettings = onNavigateToSettings,
+        onManageIntervalSets = onNavigateToIntervalSets,
         mainContent = {
             IndoorChartContent(
                 title = workoutType?.title.orEmpty(),
@@ -263,9 +210,8 @@ private fun IndoorChartContent(
     Box(
         modifier = modifier
             .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(top = 80.dp), // clear the top overlay row (back + status + HR pills)
+            .padding(top = 80.dp),
     ) {
-        // Chart fills the padded area
         AndroidView(
             factory = { ctx ->
                 LineChart(ctx).apply {
@@ -326,7 +272,6 @@ private fun IndoorChartContent(
             modifier = Modifier.fillMaxSize(),
         )
 
-        // Repetition count + label centered over the chart
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,

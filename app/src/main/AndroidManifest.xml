@@ -83,6 +83,7 @@
             android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -117,11 +118,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.settings.DownloadMapsActivity" />
-        <activity android:name=".ui.record.RecordIndoorWorkoutActivity" android:theme="@style/AppThemeNoActionbar" />
-
         <activity android:name=".ui.ShareFileActivity" />
-        <activity android:name=".ui.settings.interval.EditIntervalSetActivity" />
-        <activity android:name=".ui.settings.interval.ManageIntervalSetsActivity" />
+
         <activity
             android:name=".osm.OAuthAuthentication"
             android:exported="true"
@@ -138,12 +136,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.record.RecordGpsWorkoutActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:showOnLockScreen="true"
-            android:theme="@style/AppThemeNoActionbar" />
-<activity
             android:name=".ui.statistics.StatisticsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />

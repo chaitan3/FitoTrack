@@ -20,13 +20,12 @@
 package de.tadris.fitness.data;
 
 import android.app.Activity;
-import de.tadris.fitness.ui.record.RecordGpsWorkoutActivity;
-import de.tadris.fitness.ui.record.RecordIndoorWorkoutActivity;
+import de.tadris.fitness.ui.MainActivity;
 
 public enum RecordingType {
 
-    INDOOR("indoor", RecordIndoorWorkoutActivity.class),
-    GPS("gps", RecordGpsWorkoutActivity.class);
+    INDOOR("indoor", MainActivity.class),
+    GPS("gps", MainActivity.class);
 
     public final String id;
     public final Class<? extends Activity> recorderActivityClass;

@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import de.tadris.fitness.Instance
+import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.recording.RecorderService
@@ -38,7 +39,8 @@ import de.tadris.fitness.recording.RecordingStateHolder
 import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
-import de.tadris.fitness.ui.record.RecordingConstants
+import de.tadris.fitness.ui.record.GpsRecordingRoute
+import de.tadris.fitness.ui.record.IndoorRecordingRoute
 import de.tadris.fitness.ui.settings.AboutScreen
 import de.tadris.fitness.ui.settings.BackupSettingsScreen
 import de.tadris.fitness.ui.settings.ConfigureExportTargetsScreen
@@ -47,6 +49,8 @@ import de.tadris.fitness.ui.settings.RecordingSettingsScreen
 import de.tadris.fitness.ui.settings.SettingsScreen
 import de.tadris.fitness.ui.settings.VoiceAnnouncementsSettingsScreen
 import de.tadris.fitness.ui.settings.debug.DebugSettingsScreen
+import de.tadris.fitness.ui.settings.interval.EditIntervalSetScreen
+import de.tadris.fitness.ui.settings.interval.ManageIntervalSetsScreen
 import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeScreen
 import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesScreen
 import de.tadris.fitness.ui.statistics.StatisticsActivity
@@ -104,6 +108,12 @@ sealed interface Route {
     data object About : Route
 
     @Serializable
+    data object ManageIntervalSets : Route
+
+    @Serializable
+    data class EditIntervalSet(val setId: Long) : Route
+
+    @Serializable
     data object DebugSettings : Route
 
     @Serializable
@@ -112,6 +122,12 @@ sealed interface Route {
     /** typeId == "" means create new workout type */
     @Serializable
     data class EditWorkoutType(val typeId: String = "") : Route
+
+    @Serializable
+    data class RecordGpsWorkout(val workoutTypeId: String, val isLaunchAction: Boolean) : Route
+
+    @Serializable
+    data class RecordIndoorWorkout(val workoutTypeId: String, val isLaunchAction: Boolean) : Route
 }
 
 @Composable
@@ -253,6 +269,21 @@ fun AppNavigation(
                 onNavigateToVoiceAnnouncements = {
                     navController.navigate(Route.VoiceAnnouncementsSettings)
                 },
+                onNavigateToIntervalSets = {
+                    navController.navigate(Route.ManageIntervalSets)
+                },
+            )
+        }
+        composable<Route.ManageIntervalSets> {
+            ManageIntervalSetsScreen(
+                onBack = { navController.popBackStack() },
+                onEditSet = { setId -> navController.navigate(Route.EditIntervalSet(setId)) },
+            )
+        }
+        composable<Route.EditIntervalSet> { backStackEntry ->
+            EditIntervalSetScreen(
+                setId = backStackEntry.toRoute<Route.EditIntervalSet>().setId,
+                onBack = { navController.popBackStack() },
             )
         }
         composable<Route.VoiceAnnouncementsSettings> {
@@ -272,6 +303,26 @@ fun AppNavigation(
             EditWorkoutTypeScreen(
                 typeId = backStackEntry.toRoute<Route.EditWorkoutType>().typeId,
                 onBack = { navController.popBackStack() },
+            )
+        }
+        composable<Route.RecordGpsWorkout> { backStackEntry ->
+            val route = backStackEntry.toRoute<Route.RecordGpsWorkout>()
+            GpsRecordingRoute(
+                workoutTypeId = route.workoutTypeId,
+                isLaunchAction = route.isLaunchAction,
+                onFinish = { navController.popBackStack() },
+                onNavigateToSettings = { navController.navigate(Route.Settings) },
+                onNavigateToIntervalSets = { navController.navigate(Route.ManageIntervalSets) },
+            )
+        }
+        composable<Route.RecordIndoorWorkout> { backStackEntry ->
+            val route = backStackEntry.toRoute<Route.RecordIndoorWorkout>()
+            IndoorRecordingRoute(
+                workoutTypeId = route.workoutTypeId,
+                isLaunchAction = route.isLaunchAction,
+                onFinish = { navController.popBackStack() },
+                onNavigateToSettings = { navController.navigate(Route.Settings) },
+                onNavigateToIntervalSets = { navController.navigate(Route.ManageIntervalSets) },
             )
         }
         composable<Route.ShowWorkout> { backStackEntry ->
@@ -307,12 +358,12 @@ fun AppNavigation(
                     dao.updateWorkout(workout.copy(end = RecordingStateHolder.RUNNING_WORKOUT_END_TIME))
                     context.startForegroundService(Intent(context, RecorderService::class.java))
                     val workoutType = workout.getWorkoutType(context)
-                    context.startActivity(
-                        Intent(context, workoutType.recordingTypeDecoded.recorderActivityClass)
-                            .putExtra(RecordingConstants.WORKOUT_TYPE_EXTRA, workoutType.id)
-                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            .setAction(RecordingConstants.RESUME_ACTION)
-                    )
+                    val route = if (RecordingType.findById(workoutType.recordingType) == RecordingType.GPS) {
+                        Route.RecordGpsWorkout(workoutType.id, false)
+                    } else {
+                        Route.RecordIndoorWorkout(workoutType.id, false)
+                    }
+                    navController.navigate(route)
                 },
             )
         }

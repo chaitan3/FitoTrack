@@ -55,7 +55,6 @@ import de.tadris.fitness.R
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog
-import de.tadris.fitness.ui.settings.interval.ManageIntervalSetsActivity
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -65,6 +64,7 @@ import org.greenrobot.eventbus.ThreadMode
 fun RecordingSettingsScreen(
     onBack: () -> Unit,
     onNavigateToVoiceAnnouncements: () -> Unit = {},
+    onNavigateToIntervalSets: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val prefs = remember { Instance.getInstance(context).userPreferences }
@@ -196,14 +196,7 @@ fun RecordingSettingsScreen(
                     supporting = if (ttsAvailable) stringResource(R.string.manageIntervalsSummary)
                                  else stringResource(R.string.ttsNotAvailable),
                     enabled = ttsAvailable,
-                    onClick = {
-                        context.startActivity(
-                            Intent(
-                                context,
-                                ManageIntervalSetsActivity::class.java
-                            )
-                        )
-                    },
+                    onClick = onNavigateToIntervalSets,
                 )
             }
             item {
