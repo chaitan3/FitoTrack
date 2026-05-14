@@ -42,6 +42,7 @@ import de.tadris.fitness.recording.actions.WorkoutActionResume
 import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.actions.WorkoutActionStart
 import de.tadris.fitness.recording.actions.WorkoutActionStop
+import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.autostart.AutoStartAnnouncements
 import de.tadris.fitness.recording.autostart.AutoStartSoundFeedback
@@ -352,7 +353,7 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             BluetoothDevicePreferences.DEVICE_HEART_RATE,
             device.address
         )
-        restartService()
+        EventBus.getDefault().post(ReconnectBluetoothDeviceEvent)
         _showChooseBluetoothDevice.value = false
     }
 
