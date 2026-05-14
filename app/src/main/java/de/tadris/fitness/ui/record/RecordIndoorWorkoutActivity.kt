@@ -30,12 +30,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +47,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -257,21 +260,12 @@ private fun IndoorChartContent(
     intensityLabel: String,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.padding(top = 96.dp), // clear the top overlay row
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = modifier
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(top = 80.dp), // clear the top overlay row (back + status + HR pills)
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Text(
-            text = repetitions.toString(),
-            style = MaterialTheme.typography.displayMedium,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
+        // Chart fills the padded area
         AndroidView(
             factory = { ctx ->
                 LineChart(ctx).apply {
@@ -329,10 +323,25 @@ private fun IndoorChartContent(
                 chart.data = lineData
                 chart.invalidate()
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxSize(),
         )
+
+        // Repetition count + label centered over the chart
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = repetitions.toString(),
+                fontSize = 120.sp,
+                fontWeight = FontWeight.Light,
+                lineHeight = 120.sp,
+            )
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }

@@ -62,6 +62,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.tadris.fitness.R
@@ -93,6 +94,8 @@ fun RecordingActiveBottomSheet(
             text = "ELAPSED",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
         )
 
         // Time display
@@ -100,6 +103,8 @@ fun RecordingActiveBottomSheet(
             text = distanceUnitUtils.getHourMinuteSecondTime(activeDuration),
             fontSize = 48.sp,
             fontWeight = FontWeight.Light,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
         )
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
