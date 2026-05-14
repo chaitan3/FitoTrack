@@ -62,12 +62,14 @@ import de.tadris.fitness.R
 fun ClickableSettingsItem(
     title: String,
     supporting: String? = null,
+    icon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     ListItem(
         headlineContent = { Text(title) },
         supportingContent = supporting?.let { { Text(it) } },
+        leadingContent = icon,
         modifier = Modifier
             .clickable(enabled = enabled, onClick = onClick)
             .alpha(if (enabled) 1f else 0.38f),

@@ -120,10 +120,8 @@
         <activity android:name=".ui.record.RecordIndoorWorkoutActivity" android:theme="@style/AppThemeNoActionbar" />
 
         <activity android:name=".ui.ShareFileActivity" />
-        <activity android:name=".ui.settings.AboutActivity" />
         <activity android:name=".ui.settings.interval.EditIntervalSetActivity" />
         <activity android:name=".ui.settings.interval.ManageIntervalSetsActivity" />
-        <activity android:name=".ui.settings.FitoTrackSettingsActivity" />
         <activity
             android:name=".osm.OAuthAuthentication"
             android:exported="true"

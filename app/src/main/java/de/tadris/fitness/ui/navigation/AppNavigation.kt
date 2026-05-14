@@ -39,12 +39,14 @@ import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
 import de.tadris.fitness.ui.record.RecordingConstants
+import de.tadris.fitness.ui.settings.AboutScreen
 import de.tadris.fitness.ui.settings.BackupSettingsScreen
 import de.tadris.fitness.ui.settings.ConfigureExportTargetsScreen
 import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
 import de.tadris.fitness.ui.settings.RecordingSettingsScreen
 import de.tadris.fitness.ui.settings.SettingsScreen
 import de.tadris.fitness.ui.settings.VoiceAnnouncementsSettingsScreen
+import de.tadris.fitness.ui.settings.debug.DebugSettingsScreen
 import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeScreen
 import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesScreen
 import de.tadris.fitness.ui.statistics.StatisticsActivity
@@ -97,6 +99,12 @@ sealed interface Route {
 
     @Serializable
     data class ConfigureExportTargets(val sourceId: String) : Route
+
+    @Serializable
+    data object About : Route
+
+    @Serializable
+    data object DebugSettings : Route
 
     @Serializable
     data object ManageWorkoutTypes : Route
@@ -202,6 +210,22 @@ fun AppNavigation(
                 onNavigateToWorkoutTypes = {
                     navController.navigate(Route.ManageWorkoutTypes)
                 },
+                onNavigateToDebugSettings = {
+                    navController.navigate(Route.DebugSettings)
+                },
+                onNavigateToAbout = {
+                    navController.navigate(Route.About)
+                },
+            )
+        }
+        composable<Route.About> {
+            AboutScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<Route.DebugSettings> {
+            DebugSettingsScreen(
+                onBack = { navController.popBackStack() },
             )
         }
         composable<Route.BackupSettings> {

@@ -79,6 +79,24 @@ interface WorkoutDao {
     @Query("SELECT * FROM workout WHERE id = :id")
     fun getWorkoutById(id: Long): Workout?
 
+    @Query("SELECT COUNT(*) FROM workout")
+    fun countWorkouts(): Long
+
+    @Query("SELECT COUNT(*) FROM route_sample")
+    fun countRouteSamples(): Long
+
+    @Query("SELECT COUNT(*) FROM repetition_sample")
+    fun countRepetitionSamples(): Long
+
+    @Query("SELECT COUNT(*) FROM heart_rate_sample")
+    fun countHeartRateSamples(): Long
+
+    @Query("SELECT COUNT(*) FROM workout_event")
+    fun countWorkoutEvents(): Long
+
+    @Query("SELECT COUNT(*) FROM workout_pause")
+    fun countWorkoutPauses(): Long
+
 
     @Transaction
     fun insertWorkoutData(data: WorkoutData){

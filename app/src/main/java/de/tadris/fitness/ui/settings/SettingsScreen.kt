@@ -19,7 +19,6 @@
 
 package de.tadris.fitness.ui.settings
 
-import android.content.Intent
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -30,10 +29,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import de.tadris.fitness.R
-import de.tadris.fitness.ui.settings.debug.DebugSettingsFragment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,16 +40,9 @@ fun SettingsScreen(
     onNavigateToRecordingSettings: () -> Unit = {},
     onNavigateToBackupSettings: () -> Unit = {},
     onNavigateToWorkoutTypes: () -> Unit = {},
+    onNavigateToDebugSettings: () -> Unit = {},
+    onNavigateToAbout: () -> Unit = {},
 ) {
-    val context = LocalContext.current
-
-    fun openFragment(fragmentClass: Class<*>) {
-        context.startActivity(
-            Intent(context, FitoTrackSettingsActivity::class.java)
-                .putExtra(FitoTrackSettingsActivity.EXTRA_FRAGMENT, fragmentClass.name)
-        )
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,15 +89,13 @@ fun SettingsScreen(
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.preferencesDebugTitle),
-                    onClick = { openFragment(DebugSettingsFragment::class.java) },
+                    onClick = onNavigateToDebugSettings,
                 )
             }
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.aboutTitle),
-                    onClick = {
-                        context.startActivity(Intent(context, AboutActivity::class.java))
-                    },
+                    onClick = onNavigateToAbout,
                 )
             }
         }
