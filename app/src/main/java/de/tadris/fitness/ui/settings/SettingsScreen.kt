@@ -34,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import de.tadris.fitness.R
 import de.tadris.fitness.ui.settings.debug.DebugSettingsFragment
-import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +42,7 @@ fun SettingsScreen(
     onNavigateToInterfaceSettings: () -> Unit = {},
     onNavigateToRecordingSettings: () -> Unit = {},
     onNavigateToBackupSettings: () -> Unit = {},
+    onNavigateToWorkoutTypes: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -86,9 +86,7 @@ fun SettingsScreen(
             item {
                 ClickableSettingsItem(
                     title = stringResource(R.string.customWorkoutTypesTitle),
-                    onClick = {
-                        context.startActivity(Intent(context, ManageWorkoutTypesActivity::class.java))
-                    },
+                    onClick = onNavigateToWorkoutTypes,
                 )
             }
             item {

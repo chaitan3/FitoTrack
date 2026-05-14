@@ -45,6 +45,8 @@ import de.tadris.fitness.ui.settings.InterfaceSettingsScreen
 import de.tadris.fitness.ui.settings.RecordingSettingsScreen
 import de.tadris.fitness.ui.settings.SettingsScreen
 import de.tadris.fitness.ui.settings.VoiceAnnouncementsSettingsScreen
+import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeScreen
+import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesScreen
 import de.tadris.fitness.ui.statistics.StatisticsActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutScreen
 import de.tadris.fitness.ui.workout.enter.EnterWorkoutScreen
@@ -95,6 +97,13 @@ sealed interface Route {
 
     @Serializable
     data class ConfigureExportTargets(val sourceId: String) : Route
+
+    @Serializable
+    data object ManageWorkoutTypes : Route
+
+    /** typeId == "" means create new workout type */
+    @Serializable
+    data class EditWorkoutType(val typeId: String = "") : Route
 }
 
 @Composable
@@ -189,6 +198,9 @@ fun AppNavigation(
                 onNavigateToBackupSettings = {
                     navController.navigate(Route.BackupSettings)
                 },
+                onNavigateToWorkoutTypes = {
+                    navController.navigate(Route.ManageWorkoutTypes)
+                },
             )
         }
         composable<Route.BackupSettings> {
@@ -220,6 +232,20 @@ fun AppNavigation(
         }
         composable<Route.VoiceAnnouncementsSettings> {
             VoiceAnnouncementsSettingsScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<Route.ManageWorkoutTypes> {
+            ManageWorkoutTypesScreen(
+                onBack = { navController.popBackStack() },
+                onEditType = { typeId ->
+                    navController.navigate(Route.EditWorkoutType(typeId ?: ""))
+                },
+            )
+        }
+        composable<Route.EditWorkoutType> { backStackEntry ->
+            EditWorkoutTypeScreen(
+                typeId = backStackEntry.toRoute<Route.EditWorkoutType>().typeId,
                 onBack = { navController.popBackStack() },
             )
         }

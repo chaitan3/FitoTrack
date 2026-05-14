@@ -23,7 +23,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesActivity;
+import de.tadris.fitness.ui.settings.workout_type.WorkoutTypeActivity;
 
 public class MainSettingsFragment extends FitoTrackSettingFragment {
 
@@ -32,7 +32,7 @@ public class MainSettingsFragment extends FitoTrackSettingFragment {
         setPreferencesFromResource(R.xml.preferences_main, rootKey);
 
         findPreference("workoutTypeSettings").setOnPreferenceClickListener(preference -> {
-            startActivity(new Intent(requireContext(), ManageWorkoutTypesActivity.class));
+            startActivity(new Intent(requireContext(), WorkoutTypeActivity.class));
             return true;
         });
         findPreference("about").setOnPreferenceClickListener(preference -> {

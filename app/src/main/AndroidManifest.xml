@@ -118,8 +118,7 @@
         </activity>
         <activity android:name=".ui.settings.DownloadMapsActivity" />
         <activity android:name=".ui.record.RecordIndoorWorkoutActivity" android:theme="@style/AppThemeNoActionbar" />
-        <activity android:name=".ui.settings.workout_type.EditWorkoutTypeActivity" />
-        <activity android:name=".ui.settings.workout_type.ManageWorkoutTypesActivity" />
+        <activity android:name=".ui.settings.workout_type.WorkoutTypeActivity" />
         <activity android:name=".ui.ShareFileActivity" />
         <activity android:name=".ui.settings.AboutActivity" />
         <activity android:name=".ui.settings.interval.EditIntervalSetActivity" />

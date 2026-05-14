@@ -254,11 +254,11 @@ private fun ShowWorkoutContent(
                                 text = { Text(stringResource(R.string.share)) },
                                 onClick = { showMenu = false; onShareWorkout() }
                             )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.delete)) },
-                                onClick = { showMenu = false; showDeleteDialog = true }
-                            )
                         }
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.delete)) },
+                            onClick = { showMenu = false; showDeleteDialog = true }
+                        )
                     }
                 }
             )

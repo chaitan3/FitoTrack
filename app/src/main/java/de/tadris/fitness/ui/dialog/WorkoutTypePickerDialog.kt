@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
-import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeActivity
+import de.tadris.fitness.ui.settings.workout_type.WorkoutTypeActivity
 import de.tadris.fitness.util.Icon as WorkoutIcon
 
 @Composable
@@ -69,7 +69,10 @@ fun WorkoutTypePickerDialog(
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         modifier = Modifier.clickable {
                             onDismiss()
-                            context.startActivity(Intent(context, EditWorkoutTypeActivity::class.java))
+                            context.startActivity(
+                                Intent(context, WorkoutTypeActivity::class.java)
+                                    .putExtra(WorkoutTypeActivity.EXTRA_START_CREATE, true)
+                            )
                         },
                     )
                 }

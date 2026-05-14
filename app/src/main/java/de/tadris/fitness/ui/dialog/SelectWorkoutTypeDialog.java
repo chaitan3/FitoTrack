@@ -34,7 +34,7 @@ import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.ui.adapter.WorkoutTypeAdapter;
-import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeActivity;
+import de.tadris.fitness.ui.settings.workout_type.WorkoutTypeActivity;
 import de.tadris.fitness.util.Icon;
 
 public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAdapterListener {
@@ -78,7 +78,9 @@ public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAd
     }
 
     private void openAddCustomWorkoutActivity() {
-        context.startActivity(new Intent(context, EditWorkoutTypeActivity.class));
+        Intent intent = new Intent(context, WorkoutTypeActivity.class);
+        intent.putExtra(WorkoutTypeActivity.EXTRA_START_CREATE, true);
+        context.startActivity(intent);
     }
 
     public interface WorkoutTypeSelectListener {
