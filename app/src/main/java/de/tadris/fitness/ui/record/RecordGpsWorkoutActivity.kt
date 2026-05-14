@@ -33,25 +33,9 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -70,9 +54,6 @@ import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.recording.RecordingState
-import de.tadris.fitness.recording.StartReason
-import de.tadris.fitness.recording.StopReason
-import de.tadris.fitness.ui.MainActivity
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
 import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog
 import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog
@@ -271,65 +252,22 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
     val context = LocalContext.current
     val activity = context as? RecordGpsWorkoutActivity
 
-    // State collection
-    val recordingState by vm.recordingState.collectAsState()
-    val values by vm.values.collectAsState()
-    val hrConnectionState by vm.hrConnectionState.collectAsState()
-    val voiceFeedbackAvailable by vm.voiceFeedbackAvailable.collectAsState()
-    val autoStartUiState by vm.autoStartUiState.collectAsState()
-    val infoSlots by vm.infoSlots.collectAsState()
-    val shouldFinish by vm.shouldFinish.collectAsState()
-    val showCommentDialog by vm.showCommentDialog.collectAsState()
-    val showStopConfirmation by vm.showStopConfirmation.collectAsState()
     val gpsState by vm.gpsState.collectAsState()
     val satelliteCount by vm.satelliteCount.collectAsState()
     val routePositions by vm.routePositions.collectAsState()
     val currentPosition by vm.currentPosition.collectAsState()
     val canStart by vm.canStart.collectAsState()
-    val workoutType by vm.currentWorkoutType.collectAsState()
 
-    val instance = remember { Instance.getInstance(context) }
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
     val mapController = remember { RecordingMapController() }
 
     LaunchedEffect(mapController) { activity?.currentMapController = mapController }
 
-    BackHandler {
-        if (recordingState == RecordingState.IDLE) vm.finish()
-        else vm.requestStopConfirmation()
-    }
-
-    LaunchedEffect(shouldFinish) {
-        if (shouldFinish) {
-            context.startActivity(Intent(context, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            })
-            activity?.finish()
-        }
-    }
-
-    // Dialogs
-    if (showStopConfirmation) {
-        StopConfirmDialog(
-            onConfirm = { vm.dismissStopConfirmation(); vm.stop(StopReason.STOP_BUTTON_PRESSED) },
-            onDismiss = { vm.dismissStopConfirmation() }
-        )
-    }
-    if (showCommentDialog) {
-        CommentDialog(
-            onConfirm = { vm.onCommentEntered(it) },
-            onDismiss = { vm.onCommentDismissed() }
-        )
-    }
-
-    val onBack: () -> Unit = {
-        if (recordingState == RecordingState.IDLE) vm.finish()
-        else vm.requestStopConfirmation()
-    }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Map + overlays
-        Box(modifier = Modifier.weight(1f)) {
+    RecordingScaffold(
+        vm = vm,
+        canStart = canStart,
+        gpsState = gpsState,
+        mainContent = {
             RecordingMapView(
                 routePositions = routePositions,
                 currentPosition = currentPosition,
@@ -337,22 +275,8 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
                 controller = mapController,
                 modifier = Modifier.fillMaxSize(),
             )
-
-            // Top overlay row (sits at top of Box naturally)
-            RecordingTopOverlay(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(12.dp),
-                recordingState = recordingState,
-                gpsState = gpsState,
-                canStart = canStart,
-                hrConnectionState = hrConnectionState,
-                onBack = onBack,
-                onChooseBluetooth = { vm.requestChooseBluetoothDevice() },
-            )
-
-            // Bottom-left: GPS info pill
+        },
+        mapOverlays = {
             GpsInfoPill(
                 gpsState = gpsState,
                 satelliteCount = satelliteCount,
@@ -360,66 +284,13 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
                     .align(Alignment.BottomStart)
                     .padding(12.dp),
             )
-
-            // Bottom-right: map controls
             MapControlButtons(
                 mapController = mapController,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(12.dp),
             )
-
-            // Auto-start overlay
-            AutoStartOverlay(
-                autoStartState = autoStartUiState,
-                distanceUnitUtils = instance.distanceUnitUtils,
-                onAbort = { vm.cancelAutoStart(true) }
-            )
-        }
-
-        // Bottom sheet panel
-        Surface(
-            shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 3.dp,
-            shadowElevation = 8.dp,
-        ) {
-            AnimatedContent(
-                targetState = recordingState == RecordingState.IDLE,
-                transitionSpec = {
-                    val enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { it / 6 }
-                    val exit = fadeOut(tween(200)) + slideOutVertically(tween(200)) { -it / 6 }
-                    enter.togetherWith(exit).using(SizeTransform(clip = true, sizeAnimationSpec = { _, _ -> tween(350) }))
-                },
-                label = "BottomSheet",
-            ) { isIdle ->
-                if (isIdle) {
-                    workoutType?.let { wt ->
-                        PreStartBottomSheet(
-                            workoutType = wt,
-                            canStart = canStart,
-                            voiceFeedbackAvailable = voiceFeedbackAvailable,
-                            useAutoPause = instance.userPreferences.useAutoPause,
-                            onStart = { vm.start(StartReason.START_BUTTON) },
-                            onBluetooth = { vm.requestChooseBluetoothDevice() },
-                            onIntervalSet = { vm.requestIntervalSetDialog() },
-                        )
-                    }
-                } else {
-                    RecordingActiveBottomSheet(
-                        activeDuration = values.activeDuration,
-                        infoSlots = infoSlots,
-                        recordingState = recordingState,
-                        distanceUnitUtils = instance.distanceUnitUtils,
-                        onPauseResume = { vm.toggleManualPause() },
-                        onStop = { vm.stop(StopReason.STOP_BUTTON_PRESSED) },
-                        onSlotClick = { slot, isLongClick ->
-                            if (isLongClick) vm.requestSelectInfoDialog(slot)
-                        },
-                    )
-                }
-            }
-        }
-    }
+        },
+    )
 }
 

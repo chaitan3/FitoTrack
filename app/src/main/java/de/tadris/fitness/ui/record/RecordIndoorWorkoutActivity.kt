@@ -27,41 +27,24 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -78,11 +61,6 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.recording.RecordingState
-import de.tadris.fitness.recording.StartReason
-import de.tadris.fitness.recording.StopReason
-import de.tadris.fitness.recording.autostart.AutoStartWorkout
-import de.tadris.fitness.ui.MainActivity
 import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
 import de.tadris.fitness.ui.dialog.SelectIntervalSetDialog
 import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog
@@ -169,7 +147,7 @@ class RecordIndoorWorkoutActivity : ComponentActivity() {
 
         setContent {
             FitoTrackTheme {
-                IndoorRecordingScreen(vm = vm, workoutType = workoutType)
+                IndoorRecordingScreen(vm = vm)
             }
         }
     }
@@ -237,234 +215,124 @@ class RecordIndoorWorkoutActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IndoorRecordingScreen(vm: IndoorRecordingViewModel, workoutType: WorkoutType) {
-    val context = LocalContext.current
-    val activity = context as? ComponentActivity
-
-    val recordingState by vm.recordingState.collectAsState()
-    val values by vm.values.collectAsState()
-    val hrConnectionState by vm.hrConnectionState.collectAsState()
-    val voiceFeedbackAvailable by vm.voiceFeedbackAvailable.collectAsState()
-    val autoStartUiState by vm.autoStartUiState.collectAsState()
-    val infoSlots by vm.infoSlots.collectAsState()
-    val shouldFinish by vm.shouldFinish.collectAsState()
-    val showCommentDialog by vm.showCommentDialog.collectAsState()
-    val showStopConfirmation by vm.showStopConfirmation.collectAsState()
+fun IndoorRecordingScreen(vm: IndoorRecordingViewModel) {
     val chartEntries by vm.chartEntries.collectAsState()
     val repetitions by vm.repetitions.collectAsState()
+    val workoutType by vm.currentWorkoutType.collectAsState()
 
-    val instance = remember { Instance.getInstance(context) }
     val onBackgroundColor = MaterialTheme.colorScheme.onBackground.toArgb()
-    val frequencyColor = androidx.compose.ui.res.colorResource(R.color.diagramFrequency).toArgb()
-    val intensityColor = androidx.compose.ui.res.colorResource(R.color.diagramIntensity).toArgb()
+    val frequencyColor = colorResource(R.color.diagramFrequency).toArgb()
+    val intensityColor = colorResource(R.color.diagramIntensity).toArgb()
     val frequencyLabel = stringResource(R.string.workoutFrequency)
     val intensityLabel = stringResource(R.string.workoutIntensity)
 
-    BackHandler {
-        if (recordingState == RecordingState.IDLE) {
-            vm.finish()
-        } else {
-            vm.requestStopConfirmation()
-        }
-    }
-
-    LaunchedEffect(shouldFinish) {
-        if (shouldFinish) {
-            context.startActivity(
-                Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                }
-            )
-            activity?.finish()
-        }
-    }
-
-    if (showStopConfirmation) {
-        StopConfirmDialog(
-            onConfirm = {
-                vm.dismissStopConfirmation()
-                vm.stop(StopReason.STOP_BUTTON_PRESSED)
-            },
-            onDismiss = { vm.dismissStopConfirmation() }
-        )
-    }
-
-    if (showCommentDialog) {
-        CommentDialog(
-            onConfirm = { comment -> vm.onCommentEntered(comment) },
-            onDismiss = { vm.onCommentDismissed() }
-        )
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.recordWorkout)) },
-                actions = {
-                    if (recordingState != RecordingState.IDLE) {
-                        IconButton(onClick = { vm.requestStopConfirmation() }) {
-                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.stop))
-                        }
-                    }
-                    if (recordingState == RecordingState.IDLE && voiceFeedbackAvailable) {
-                        IconButton(onClick = { vm.requestIntervalSetDialog() }) {
-                            Icon(painterResource(R.drawable.ic_list), contentDescription = stringResource(R.string.intervalSet))
-                        }
-                    }
-                    if (recordingState == RecordingState.IDLE) {
-                        IconButton(onClick = { /* edit info hint */ }) {
-                            Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.editDisplayedInformation))
-                        }
-                    }
-                    IconButton(onClick = { vm.requestChooseBluetoothDevice() }) {
-                        HrStatusIcon(hrConnectionState)
-                    }
-                    if (!instance.userPreferences.useAutoPause && recordingState != RecordingState.IDLE) {
-                        IconButton(onClick = { vm.toggleManualPause() }) {
-                            Icon(
-                                painterResource(
-                                    if (recordingState == RecordingState.RUNNING) R.drawable.ic_pause else R.drawable.ic_resume
-                                ),
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Column(
+    RecordingScaffold(
+        vm = vm,
+        mainContent = {
+            IndoorChartContent(
+                title = workoutType?.title.orEmpty(),
+                repetitions = repetitions,
+                chartEntries = chartEntries,
+                onBackgroundColor = onBackgroundColor,
+                frequencyColor = frequencyColor,
+                intensityColor = intensityColor,
+                frequencyLabel = frequencyLabel,
+                intensityLabel = intensityLabel,
                 modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                // Exercise name and reps
-                Text(
-                    text = workoutType.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-                Text(
-                    text = repetitions.toString(),
-                    style = MaterialTheme.typography.displayMedium,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Chart
-                AndroidView(
-                    factory = { ctx ->
-                        LineChart(ctx).apply {
-                            isScaleXEnabled = false
-                            isScaleYEnabled = false
-                            axisLeft.textColor = onBackgroundColor
-                            axisRight.textColor = onBackgroundColor
-                            xAxis.textColor = onBackgroundColor
-                            legend.textColor = onBackgroundColor
-                            description.textColor = onBackgroundColor
-                            isHighlightPerDragEnabled = false
-                            isHighlightPerTapEnabled = false
-                            axisLeft.valueFormatter = object : DefaultValueFormatter(1) {
-                                override fun getFormattedValue(value: Float): String {
-                                    return super.getFormattedValue(value) + " " + UnitUtils.unitHertzShort
-                                }
-                            }
-                            xAxis.valueFormatter = object : DefaultValueFormatter(1) {
-                                override fun getFormattedValue(value: Float): String {
-                                    return super.getFormattedValue(value) + " min"
-                                }
-                            }
-                            axisLeft.setDrawGridLines(false)
-                            axisRight.setDrawGridLines(false)
-                            description.text = ""
-                            setNoDataText("")
-                        }
-                    },
-                    update = { chart ->
-                        if (chartEntries.isEmpty()) {
-                            chart.clear()
-                            return@AndroidView
-                        }
-
-                        val freqEntries = chartEntries.map { Entry(it.timeMin, it.frequency) }
-                        val intEntries = chartEntries.filter { it.intensity > 0 }
-                            .map { Entry(it.timeMin, it.intensity) }
-
-                        fun makeDataset(entries: List<Entry>, name: String, color: Int): LineDataSet {
-                            return LineDataSet(entries, name).apply {
-                                this.color = color
-                                valueTextColor = color
-                                setDrawCircles(false)
-                                lineWidth = 4f
-                                highlightLineWidth = 2.5f
-                                mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-                            }
-                        }
-
-                        val freqDataset = makeDataset(freqEntries, frequencyLabel, frequencyColor).apply {
-                            axisDependency = YAxis.AxisDependency.LEFT
-                        }
-                        val intDataset = makeDataset(intEntries, intensityLabel, intensityColor).apply {
-                            axisDependency = YAxis.AxisDependency.RIGHT
-                        }
-
-                        val lineData = LineData().apply {
-                            addDataSet(freqDataset)
-                            addDataSet(intDataset)
-                            setDrawValues(false)
-                        }
-
-                        chart.data = lineData
-                        chart.invalidate()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(horizontal = 16.dp),
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Start button or time display
-                if (recordingState == RecordingState.IDLE) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        Button(onClick = { vm.start(StartReason.START_BUTTON) }) {
-                            Text(stringResource(R.string.start))
-                        }
-                    }
-                } else {
-                    RecordingTimeDisplay(
-                        activeDuration = values.activeDuration,
-                        distanceUnitUtils = instance.distanceUnitUtils,
-                    )
-                }
-
-                InfoSlotsGrid(
-                    slots = infoSlots,
-                    recordingState = recordingState,
-                    onSlotClick = { slot, isLongClick ->
-                        if (recordingState == RecordingState.IDLE || isLongClick) {
-                            vm.requestSelectInfoDialog(slot)
-                        }
-                    }
-                )
-            }
-
-            // AutoStart overlay
-            AutoStartOverlay(
-                autoStartState = autoStartUiState,
-                distanceUnitUtils = instance.distanceUnitUtils,
-                onAbort = { vm.cancelAutoStart(true) }
             )
-        }
+        },
+    )
+}
+
+@Composable
+private fun IndoorChartContent(
+    title: String,
+    repetitions: Int,
+    chartEntries: List<ChartEntry>,
+    onBackgroundColor: Int,
+    frequencyColor: Int,
+    intensityColor: Int,
+    frequencyLabel: String,
+    intensityLabel: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.padding(top = 96.dp), // clear the top overlay row
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Text(
+            text = repetitions.toString(),
+            style = MaterialTheme.typography.displayMedium,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        AndroidView(
+            factory = { ctx ->
+                LineChart(ctx).apply {
+                    isScaleXEnabled = false
+                    isScaleYEnabled = false
+                    axisLeft.textColor = onBackgroundColor
+                    axisRight.textColor = onBackgroundColor
+                    xAxis.textColor = onBackgroundColor
+                    legend.textColor = onBackgroundColor
+                    description.textColor = onBackgroundColor
+                    isHighlightPerDragEnabled = false
+                    isHighlightPerTapEnabled = false
+                    axisLeft.valueFormatter = object : DefaultValueFormatter(1) {
+                        override fun getFormattedValue(value: Float): String =
+                            super.getFormattedValue(value) + " " + UnitUtils.unitHertzShort
+                    }
+                    xAxis.valueFormatter = object : DefaultValueFormatter(1) {
+                        override fun getFormattedValue(value: Float): String =
+                            super.getFormattedValue(value) + " min"
+                    }
+                    axisLeft.setDrawGridLines(false)
+                    axisRight.setDrawGridLines(false)
+                    description.text = ""
+                    setNoDataText("")
+                }
+            },
+            update = { chart ->
+                if (chartEntries.isEmpty()) {
+                    chart.clear()
+                    return@AndroidView
+                }
+                val freqEntries = chartEntries.map { Entry(it.timeMin, it.frequency) }
+                val intEntries = chartEntries.filter { it.intensity > 0 }
+                    .map { Entry(it.timeMin, it.intensity) }
+
+                fun makeDataset(entries: List<Entry>, name: String, color: Int) =
+                    LineDataSet(entries, name).apply {
+                        this.color = color
+                        valueTextColor = color
+                        setDrawCircles(false)
+                        lineWidth = 4f
+                        highlightLineWidth = 2.5f
+                        mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+                    }
+
+                val lineData = LineData().apply {
+                    addDataSet(makeDataset(freqEntries, frequencyLabel, frequencyColor).apply {
+                        axisDependency = YAxis.AxisDependency.LEFT
+                    })
+                    addDataSet(makeDataset(intEntries, intensityLabel, intensityColor).apply {
+                        axisDependency = YAxis.AxisDependency.RIGHT
+                    })
+                    setDrawValues(false)
+                }
+                chart.data = lineData
+                chart.invalidate()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(horizontal = 16.dp),
+        )
     }
 }
