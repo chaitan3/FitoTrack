@@ -72,19 +72,7 @@ fun PreStartBottomSheet(
             .padding(horizontal = 16.dp)
             .padding(bottom = navBottomPadding + 16.dp),
     ) {
-        // Drag handle
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Surface(
-                shape = RoundedCornerShape(50),
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                modifier = Modifier.size(width = 32.dp, height = 4.dp),
-            ) {}
-        }
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Header row
         Row(

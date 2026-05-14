@@ -27,12 +27,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.map.MapManager
 import de.tadris.fitness.osm.OAuthAuthentication
-import de.tadris.fitness.ui.dialog.SelectWorkoutTypeDialog
+import de.tadris.fitness.ui.dialog.WorkoutTypePickerDialog
 import de.tadris.fitness.ui.navigation.AppNavigation
 import de.tadris.fitness.ui.record.RecordingConstants
 import de.tadris.fitness.ui.theme.FitoTrackTheme
@@ -53,6 +57,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             FitoTrackTheme {
                 val state by initializer.state.collectAsStateWithLifecycle()
+                var showWorkoutTypeDialog by remember { mutableStateOf(false) }
+
                 when (val s = state) {
                     is InitState.Ready -> {
                         val runningWorkout = s.runningWorkout
@@ -69,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             }
                         } else {
                             AppNavigation(
-                                onRecord = { showWorkoutSelection() },
+                                onRecord = { showWorkoutTypeDialog = true },
                                 onRecordLast = { workoutType -> startRecording(workoutType) },
                             )
                         }
@@ -79,6 +85,18 @@ class MainActivity : ComponentActivity() {
                         onErrorDismiss = { finish() },
                     )
                 }
+
+                if (showWorkoutTypeDialog) {
+                    val types = remember { WorkoutTypeManager.getInstance().getAllTypesSorted(this) }
+                    WorkoutTypePickerDialog(
+                        types = types,
+                        onDismiss = { showWorkoutTypeDialog = false },
+                        onSelect = { workoutType ->
+                            showWorkoutTypeDialog = false
+                            startRecording(workoutType)
+                        },
+                    )
+                }
             }
         }
     }
@@ -86,10 +104,6 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         OAuthAuthentication.resetCustomTabState(this)
-    }
-
-    private fun showWorkoutSelection() {
-        SelectWorkoutTypeDialog(this) { workoutType: WorkoutType -> startRecording(workoutType) }.show()
     }
 
     private fun startRecording(workoutType: WorkoutType) {

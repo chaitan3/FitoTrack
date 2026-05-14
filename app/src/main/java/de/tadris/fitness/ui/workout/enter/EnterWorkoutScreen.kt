@@ -76,6 +76,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.ui.dialog.WorkoutTypePickerDialog
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import de.tadris.fitness.util.Icon as WorkoutIcon
@@ -229,6 +230,7 @@ private fun EnterWorkoutContent(
         )
     }
 
+
     if (showDateDialog) {
         val start = form.start
         DisposableEffect(Unit) {
@@ -271,36 +273,6 @@ private fun EnterWorkoutContent(
             },
         )
     }
-}
-
-@Composable
-private fun WorkoutTypePickerDialog(
-    types: List<WorkoutType>,
-    onDismiss: () -> Unit,
-    onSelect: (WorkoutType) -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        text = {
-            LazyColumn {
-                items(types) { type ->
-                    ListItem(
-                        leadingContent = {
-                            Icon(
-                                painter = painterResource(WorkoutIcon.getIcon(type.icon)),
-                                contentDescription = null,
-                                tint = Color(type.color),
-                            )
-                        },
-                        headlineContent = { Text(type.title) },
-                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                        modifier = Modifier.clickable { onSelect(type) },
-                    )
-                }
-            }
-        },
-        confirmButton = {},
-    )
 }
 
 @Composable
