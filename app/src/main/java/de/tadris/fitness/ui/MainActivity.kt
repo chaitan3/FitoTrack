@@ -38,8 +38,10 @@ import de.tadris.fitness.map.MapManager
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.ui.dialog.WorkoutTypePickerDialog
 import de.tadris.fitness.ui.navigation.AppNavigation
+import de.tadris.fitness.ui.navigation.Route
 import de.tadris.fitness.ui.record.RecordingConstants
 import de.tadris.fitness.ui.theme.FitoTrackTheme
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
 
@@ -74,27 +76,33 @@ class MainActivity : ComponentActivity() {
                                 finish()
                             }
                         } else {
+                            val navController = rememberNavController()
                             AppNavigation(
+                                navController = navController,
                                 onRecord = { showWorkoutTypeDialog = true },
                                 onRecordLast = { workoutType -> startRecording(workoutType) },
                             )
+
+                            if (showWorkoutTypeDialog) {
+                                val types = remember { WorkoutTypeManager.getInstance().getAllTypesSorted(this) }
+                                WorkoutTypePickerDialog(
+                                    types = types,
+                                    onDismiss = { showWorkoutTypeDialog = false },
+                                    onSelect = { workoutType ->
+                                        showWorkoutTypeDialog = false
+                                        startRecording(workoutType)
+                                    },
+                                    onAddType = {
+                                        showWorkoutTypeDialog = false
+                                        navController.navigate(Route.EditWorkoutType(""))
+                                    },
+                                )
+                            }
                         }
                     }
                     else -> MigrationScreen(
                         state = s,
                         onErrorDismiss = { finish() },
-                    )
-                }
-
-                if (showWorkoutTypeDialog) {
-                    val types = remember { WorkoutTypeManager.getInstance().getAllTypesSorted(this) }
-                    WorkoutTypePickerDialog(
-                        types = types,
-                        onDismiss = { showWorkoutTypeDialog = false },
-                        onSelect = { workoutType ->
-                            showWorkoutTypeDialog = false
-                            startRecording(workoutType)
-                        },
                     )
                 }
             }

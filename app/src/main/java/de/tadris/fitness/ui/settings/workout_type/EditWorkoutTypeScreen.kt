@@ -225,7 +225,7 @@ fun EditWorkoutTypeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.editWorkoutType)) },
+                title = { Text(stringResource(if (isNewType) R.string.addWorkoutType else R.string.editWorkoutType)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)

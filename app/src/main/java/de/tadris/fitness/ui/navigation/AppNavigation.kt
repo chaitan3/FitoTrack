@@ -184,6 +184,7 @@ fun AppNavigation(
                         popUpTo(Route.Dashboard)
                     }
                 },
+                onAddWorkoutType = { navController.navigate(Route.EditWorkoutType("")) },
             )
         }
         composable<Route.Settings> {

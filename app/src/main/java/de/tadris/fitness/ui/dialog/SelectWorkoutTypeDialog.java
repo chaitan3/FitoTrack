@@ -22,24 +22,17 @@ package de.tadris.fitness.ui.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import de.tadris.fitness.R;
-import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.ui.adapter.WorkoutTypeAdapter;
-import de.tadris.fitness.ui.settings.workout_type.WorkoutTypeActivity;
-import de.tadris.fitness.util.Icon;
 
 public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAdapterListener {
-
-    protected static final String ID_ADD = "_add";
 
     private Activity context;
     private WorkoutTypeSelectListener listener;
@@ -50,8 +43,6 @@ public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAd
         this.context = context;
         this.listener = listener;
         this.options = WorkoutTypeManager.getInstance().getAllTypesSorted(context);
-
-        this.options.add(0, new WorkoutType(ID_ADD, context.getString(R.string.workoutTypeAdd), 0, context.getColor(R.color.colorPrimary), Icon.ADD.name, 0, RecordingType.GPS.id));
     }
 
     public void show() {
@@ -70,17 +61,7 @@ public class SelectWorkoutTypeDialog implements WorkoutTypeAdapter.WorkoutTypeAd
     @Override
     public void onItemSelect(int pos, WorkoutType type) {
         dialog.dismiss();
-        if (type.id.equals(ID_ADD)) {
-            openAddCustomWorkoutActivity();
-        } else {
-            listener.onSelectWorkoutType(type);
-        }
-    }
-
-    private void openAddCustomWorkoutActivity() {
-        Intent intent = new Intent(context, WorkoutTypeActivity.class);
-        intent.putExtra(WorkoutTypeActivity.EXTRA_START_CREATE, true);
-        context.startActivity(intent);
+        listener.onSelectWorkoutType(type);
     }
 
     public interface WorkoutTypeSelectListener {

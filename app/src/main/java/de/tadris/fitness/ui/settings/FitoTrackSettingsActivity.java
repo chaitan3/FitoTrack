@@ -44,17 +44,14 @@ public class FitoTrackSettingsActivity extends FitoTrackActivity implements Pref
 
         if (savedInstanceState == null) {
             String fragmentClassName = getIntent().getStringExtra(EXTRA_FRAGMENT);
-            Fragment fragment;
             if (fragmentClassName != null) {
-                fragment = getSupportFragmentManager().getFragmentFactory().instantiate(
+                Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(
                         getClassLoader(), fragmentClassName);
-            } else {
-                fragment = new MainSettingsFragment();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.settings_container, fragment)
+                        .commit();
             }
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.settings_container, fragment)
-                    .commit();
         }
     }
 

@@ -18,7 +18,6 @@
  */
 package de.tadris.fitness.ui.dialog
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,17 +29,13 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
-import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
-import de.tadris.fitness.ui.settings.workout_type.WorkoutTypeActivity
 import de.tadris.fitness.util.Icon as WorkoutIcon
 
 @Composable
@@ -48,9 +43,8 @@ fun WorkoutTypePickerDialog(
     types: List<WorkoutType>,
     onDismiss: () -> Unit,
     onSelect: (WorkoutType) -> Unit,
+    onAddType: () -> Unit,
 ) {
-    val context = LocalContext.current
-
     AlertDialog(
         onDismissRequest = onDismiss,
         text = {
@@ -69,10 +63,7 @@ fun WorkoutTypePickerDialog(
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         modifier = Modifier.clickable {
                             onDismiss()
-                            context.startActivity(
-                                Intent(context, WorkoutTypeActivity::class.java)
-                                    .putExtra(WorkoutTypeActivity.EXTRA_START_CREATE, true)
-                            )
+                            onAddType()
                         },
                     )
                 }

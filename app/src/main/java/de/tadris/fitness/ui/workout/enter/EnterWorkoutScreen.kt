@@ -86,6 +86,7 @@ fun EnterWorkoutScreen(
     id: Long,
     onBack: () -> Unit,
     onSaved: (Long) -> Unit,
+    onAddWorkoutType: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val vm: EnterWorkoutViewModel = viewModel(
@@ -106,7 +107,7 @@ fun EnterWorkoutScreen(
 
     when (val s = state) {
         is EnterWorkoutUiState.Loading -> {}
-        is EnterWorkoutUiState.Ready -> EnterWorkoutContent(state = s, vm = vm, onBack = onBack)
+        is EnterWorkoutUiState.Ready -> EnterWorkoutContent(state = s, vm = vm, onBack = onBack, onAddWorkoutType = onAddWorkoutType)
         is EnterWorkoutUiState.Saved -> {}
     }
 }
@@ -117,6 +118,7 @@ private fun EnterWorkoutContent(
     state: EnterWorkoutUiState.Ready,
     vm: EnterWorkoutViewModel,
     onBack: () -> Unit,
+    onAddWorkoutType: () -> Unit,
 ) {
     val form = state.form
     val context = LocalContext.current
@@ -226,6 +228,10 @@ private fun EnterWorkoutContent(
             onSelect = { type ->
                 vm.setWorkoutType(type)
                 showTypeDialog = false
+            },
+            onAddType = {
+                showTypeDialog = false
+                onAddWorkoutType()
             },
         )
     }

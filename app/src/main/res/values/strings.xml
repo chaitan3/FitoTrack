@@ -372,6 +372,7 @@
     <string name="deleteWorkoutTypeConfirmation">Do you really want to delete this workout type?</string>
     <string name="workoutTypeEditIcon">Icon</string>
     <string name="editWorkoutType">Edit workout type</string>
+    <string name="addWorkoutType">Add workout type</string>
     <string name="pref_map_directory">Offline Map Directory</string>
     <string name="pref_render_theme_style">Render Style</string>
     <string name="preferenceCategoryRenderThemeCategories">Categories</string>
