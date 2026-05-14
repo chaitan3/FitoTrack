@@ -33,6 +33,14 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -376,30 +384,40 @@ fun GpsRecordingScreen(vm: GpsRecordingViewModel) {
             tonalElevation = 3.dp,
             shadowElevation = 8.dp,
         ) {
-            if (recordingState == RecordingState.IDLE) {
-                workoutType?.let { wt ->
-                    PreStartBottomSheet(
-                        workoutType = wt,
-                        canStart = canStart,
-                        voiceFeedbackAvailable = voiceFeedbackAvailable,
-                        useAutoPause = instance.userPreferences.useAutoPause,
-                        onStart = { vm.start(StartReason.START_BUTTON) },
-                        onBluetooth = { vm.requestChooseBluetoothDevice() },
-                        onIntervalSet = { vm.requestIntervalSetDialog() },
+            AnimatedContent(
+                targetState = recordingState == RecordingState.IDLE,
+                transitionSpec = {
+                    val enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { it / 6 }
+                    val exit = fadeOut(tween(200)) + slideOutVertically(tween(200)) { -it / 6 }
+                    enter.togetherWith(exit).using(SizeTransform(clip = true, sizeAnimationSpec = { _, _ -> tween(350) }))
+                },
+                label = "BottomSheet",
+            ) { isIdle ->
+                if (isIdle) {
+                    workoutType?.let { wt ->
+                        PreStartBottomSheet(
+                            workoutType = wt,
+                            canStart = canStart,
+                            voiceFeedbackAvailable = voiceFeedbackAvailable,
+                            useAutoPause = instance.userPreferences.useAutoPause,
+                            onStart = { vm.start(StartReason.START_BUTTON) },
+                            onBluetooth = { vm.requestChooseBluetoothDevice() },
+                            onIntervalSet = { vm.requestIntervalSetDialog() },
+                        )
+                    }
+                } else {
+                    RecordingActiveBottomSheet(
+                        activeDuration = values.activeDuration,
+                        infoSlots = infoSlots,
+                        recordingState = recordingState,
+                        distanceUnitUtils = instance.distanceUnitUtils,
+                        onPauseResume = { vm.toggleManualPause() },
+                        onStop = { vm.stop(StopReason.STOP_BUTTON_PRESSED) },
+                        onSlotClick = { slot, isLongClick ->
+                            if (isLongClick) vm.requestSelectInfoDialog(slot)
+                        },
                     )
                 }
-            } else {
-                RecordingActiveBottomSheet(
-                    activeDuration = values.activeDuration,
-                    infoSlots = infoSlots,
-                    recordingState = recordingState,
-                    distanceUnitUtils = instance.distanceUnitUtils,
-                    onPauseResume = { vm.toggleManualPause() },
-                    onStop = { vm.stop(StopReason.STOP_BUTTON_PRESSED) },
-                    onSlotClick = { slot, isLongClick ->
-                        if (isLongClick) vm.requestSelectInfoDialog(slot)
-                    },
-                )
             }
         }
     }
