@@ -89,7 +89,7 @@ fun RecordingActiveBottomSheet(
 
         // Elapsed label
         Text(
-            text = stringResource(R.string.recording_elapsed),
+            text = stringResource(R.string.recording_elapsed).uppercase(),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth(),

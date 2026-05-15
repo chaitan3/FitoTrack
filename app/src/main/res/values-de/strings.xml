@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
   ~
@@ -332,6 +333,7 @@
     <string name="actionImport">Importieren</string>
     <string name="actionImportMultiple">Mehrere importieren</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack benötigt die Standortberechtigung, um deine Bewegung während deines Workouts zu erfassen. FitoTrack sammelt auch Standortdaten, während die App im Hintergrund läuft oder der Bildschirm ausgeschaltet ist, um deine Workouts aufzuzeichnen. Standortdaten bleiben immer auf dem Handy, solgang du nicht eindeutig zugestimmt hast, sie zu teilen.</string>
+    <string name="addWorkoutType">Workout-Typen hinzufügen</string>
     <string name="pref_map_directory">Lokales Kartenverzeichnis</string>
     <string name="pref_render_theme_style">Renderstil</string>
     <string name="preferenceCategoryRenderThemeCategories">Kategorien</string>
@@ -362,6 +364,7 @@
     <string name="autoStartCountdownMsg">Workout startet in</string>
     <string name="workoutAutoStarted">Workout automatisch gestartet</string>
     <string name="popup_auto_start_delay">Mit anderem Countdown</string>
+    <string name="autoStartDelaySeconds">Verzögerung in Sekunden</string>
     <string name="popup_auto_start">Mit eingestelltem Countdown</string>
     <string name="popup_auto_start_immediately">Sofort starten</string>
     <string name="popup_auto_start_on_move">Sobald ich mich bewege</string>
@@ -547,5 +550,25 @@
     <string name="removedOAuthToken">OAuth-Token entfernt</string>
     <string name="removeOAuthToken">OAuth-Token entfernen</string>
     <string name="saveChangesQuestionMessage">Möchtest du die Änderungen wirklich speichern?</string>
+    <string name="language">Sprache</string>
     <string name="saveChangesQuestion">Änderungen speichern?</string>
+    <string name="restorePreparing">Vorbereiten</string>
+    <string name="actionBack">Zurück</string>
+    <string name="more">Mehr</string>
+    <string name="recording_elapsed">Dauer</string>
+    <string name="recording_pause">Pausieren</string>
+    <string name="recording_resume">Fortsetzen</string>
+    <string name="recording_pair_sensor">Sensor koppeln</string>
+    <string name="recording_intervals">Intervalle</string>
+    <string name="recording_status_recording">Wird aufgezeichnet</string>
+    <string name="recording_status_paused_auto">Pausiert · automatisch</string>
+    <string name="recording_status_paused_manual">Pausiert · manuell</string>
+    <string name="recording_status_stopped">Gestoppt</string>
+    <string name="recording_status_ready">Bereit zum Starten</string>
+    <string name="recording_status_gps_weak">Schwaches GPS...</string>
+    <string name="recording_status_gps_searching">Suche GPS...</string>
+    <string name="recording_waiting_gps_start_anyway">Warte auf GPT — trotzdem starten?</string>
+    <string name="recording_gps_accurate">GPS · genau</string>
+    <string name="recording_gps_weak">%d sat · schwach</string>
+    <string name="recording_gps_searching">%d set · suchen</string>
 </resources>
