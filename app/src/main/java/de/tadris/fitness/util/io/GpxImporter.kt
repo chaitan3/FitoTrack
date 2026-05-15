@@ -20,11 +20,11 @@ package de.tadris.fitness.util.io
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import com.github.sisyphsu.dateparser.DateParserUtils
 import de.tadris.fitness.data.HeartRateSample
 import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.util.dateparser.DateParserUtils
 import de.tadris.fitness.util.gpx.Gpx
 import de.tadris.fitness.util.gpx.Track
 import de.tadris.fitness.util.io.general.IWorkoutImporter

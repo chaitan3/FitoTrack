@@ -44,15 +44,15 @@ public class GpxImporterTest {
         WorkoutData workoutData = importResult.workouts.get(0);
 
         // Main test is that above method runs without error, additionally perform some checks:
-        Assert.assertEquals("Comment", workoutData.workout.comment);
-        Assert.assertEquals(WorkoutTypeManager.WORKOUT_TYPE_ID_WALKING, workoutData.workout.workoutTypeId);
-        Assert.assertEquals(9, workoutData.samples.size());
-        Assert.assertEquals(748.058296766, workoutData.samples.get(0).elevation, 0.001);
-        Assert.assertEquals(0.72999995946, workoutData.samples.get(6).speed, 0.001);
-        Assert.assertEquals(35.24767770, workoutData.samples.get(7).latitude, 0.001);
-        Assert.assertEquals(24.16795774, workoutData.samples.get(8).longitude, 0.001);
-        Assert.assertEquals(1, workoutData.samples.get(1).heartRate);
-        Assert.assertEquals(8, workoutData.samples.get(8).heartRate);
+        Assert.assertEquals("Comment", workoutData.getWorkout().getComment());
+        Assert.assertEquals(WorkoutTypeManager.WORKOUT_TYPE_ID_WALKING, workoutData.getWorkout().getWorkoutTypeId());
+        Assert.assertEquals(9, workoutData.getSamples().size());
+        Assert.assertEquals(748.058296766, workoutData.getSamples().get(0).getElevation(), 0.001);
+        Assert.assertEquals(0.72999995946, workoutData.getSamples().get(6).getSpeed(), 0.001);
+        Assert.assertEquals(35.24767770, workoutData.getSamples().get(7).getLatitude(), 0.001);
+        Assert.assertEquals(24.16795774, workoutData.getSamples().get(8).getLongitude(), 0.001);
+        Assert.assertEquals(1, workoutData.getHeartRateSamples().get(0).getHeartRate());
+        Assert.assertEquals(8, workoutData.getHeartRateSamples().get(7).getHeartRate());
     }
 
     @Test
@@ -61,11 +61,11 @@ public class GpxImporterTest {
         WorkoutData workoutData = importResult.workouts.get(0);
 
         // Main test is that above method runs without error, additionally perform some checks:
-        Assert.assertEquals(workoutData.workout.comment, "...");
-        Assert.assertEquals(workoutData.samples.size(), 10);
-        Assert.assertEquals(workoutData.samples.get(0).elevation, 152.5, 0.001);
-        Assert.assertEquals(workoutData.samples.get(7).latitude, 30.232106, 0.001);
-        Assert.assertEquals(workoutData.samples.get(9).longitude, 10.534532, 0.001);
+        Assert.assertEquals("...", workoutData.getWorkout().getComment());
+        Assert.assertEquals(10, workoutData.getSamples().size());
+        Assert.assertEquals(152.5, workoutData.getSamples().get(0).getElevation(), 0.001);
+        Assert.assertEquals(30.232106, workoutData.getSamples().get(7).getLatitude(), 0.001);
+        Assert.assertEquals(10.534532, workoutData.getSamples().get(9).getLongitude(), 0.001);
     }
 
     @Test
@@ -73,9 +73,9 @@ public class GpxImporterTest {
         IWorkoutImporter.WorkoutImportResult importResult = importer.readWorkouts(new ByteArrayInputStream(runtasticGpx.getBytes()));
         WorkoutData workoutData = importResult.workouts.get(0);
 
-        Assert.assertEquals("runtastic_20160215_0843", workoutData.workout.comment);
-        Assert.assertEquals("", workoutData.workout.workoutTypeId);
-        Assert.assertEquals(10, workoutData.samples.size());
+        Assert.assertEquals("runtastic_20160215_0843", workoutData.getWorkout().getComment());
+        Assert.assertEquals("", workoutData.getWorkout().getWorkoutTypeId());
+        Assert.assertEquals(10, workoutData.getSamples().size());
         //TrackSegment / samples not tested cause its similar to other imports
     }
 
@@ -84,9 +84,9 @@ public class GpxImporterTest {
         IWorkoutImporter.WorkoutImportResult importResult = importer.readWorkouts(new ByteArrayInputStream(komootGpx.getBytes()));
         WorkoutData workoutData = importResult.workouts.get(0);
 
-        Assert.assertEquals("NameOfTrack", workoutData.workout.comment);
-        Assert.assertEquals("", workoutData.workout.workoutTypeId);
-        Assert.assertEquals(10, workoutData.samples.size());
+        Assert.assertEquals("NameOfTrack", workoutData.getWorkout().getComment());
+        Assert.assertEquals("", workoutData.getWorkout().getWorkoutTypeId());
+        Assert.assertEquals(10, workoutData.getSamples().size());
         //TrackSegment / samples not tested cause its similar to other imports
     }
 
