@@ -139,8 +139,8 @@ dependencies {
     implementation 'com.github.scribejava:scribejava-apis:8.3.3'
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2'
 
-    // Parsing date strings in GPX-files
-    implementation 'com.github.sisyphsu:dateparser:1.0.11'
+    // Parsing date strings in GPX-files (dateparser source inlined in util/dateparser, see NOTICE.md)
+    implementation 'com.github.sisyphsu:retree:1.0.4'
 
     // Bluetooth Low Energy (e.g. for heart rate support)
     implementation 'no.nordicsemi.android:ble:2.2.4'
