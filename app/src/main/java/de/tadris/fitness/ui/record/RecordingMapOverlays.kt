@@ -21,7 +21,6 @@ package de.tadris.fitness.ui.record
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -38,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.GpsState
@@ -93,19 +93,20 @@ fun StatusPill(
 ) {
     val (dotColor, label) = when {
         recordingState == RecordingState.RUNNING ->
-            Color(0xFF4CAF50) to "Recording · Running"
+            Color(0xFF4CAF50) to stringResource(R.string.recording_status_recording)
         recordingState == RecordingState.AUTO_PAUSE ->
-            Color(0xFFFF9800) to "Paused · automatic"
+            Color(0xFFFF9800) to stringResource(R.string.recording_status_paused_auto)
         recordingState == RecordingState.MANUAL_PAUSE ->
-            Color(0xFFFF9800) to "Paused · manual"
-        recordingState != RecordingState.IDLE ->
-            Color(0xFFF44336) to "Stopped"
+            Color(0xFFFF9800) to stringResource(R.string.recording_status_paused_manual)
+
+        recordingState == RecordingState.STOPPED ->
+            Color(0xFFF44336) to stringResource(R.string.recording_status_stopped)
         canStart ->
-            Color(0xFF4CAF50) to "Ready to start"
+            Color(0xFF4CAF50) to stringResource(R.string.recording_status_ready)
         gpsState == GpsState.SIGNAL_BAD ->
-            Color(0xFFFF9800) to "Weak GPS…"
+            Color(0xFFFF9800) to stringResource(R.string.recording_status_gps_weak)
         else ->
-            Color(0xFFFF9800) to "GPS searching…"
+            Color(0xFFFF9800) to stringResource(R.string.recording_status_gps_searching)
     }
 
     Surface(
@@ -139,11 +140,23 @@ fun GpsInfoPill(
 ) {
     val (iconRes, tintColor, label) = when (gpsState) {
         GpsState.SIGNAL_GOOD ->
-            Triple(R.drawable.ic_gps_fixed, Color(0xFF4CAF50), "GPS · accurate")
+            Triple(
+                R.drawable.ic_gps_fixed,
+                Color(0xFF4CAF50),
+                stringResource(R.string.recording_gps_accurate)
+            )
         GpsState.SIGNAL_BAD ->
-            Triple(R.drawable.ic_gps_fixed, Color(0xFFFF9800), "$satelliteCount sat · weak")
+            Triple(
+                R.drawable.ic_gps_fixed,
+                Color(0xFFFF9800),
+                stringResource(R.string.recording_gps_weak, satelliteCount)
+            )
         else ->
-            Triple(R.drawable.ic_gps_no_fix, Color(0xFF9E9E9E), "$satelliteCount sat · searching")
+            Triple(
+                R.drawable.ic_gps_no_fix,
+                Color(0xFF9E9E9E),
+                stringResource(R.string.recording_gps_searching, satelliteCount)
+            )
     }
 
     Surface(

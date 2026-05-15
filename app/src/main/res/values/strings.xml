@@ -565,4 +565,21 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="actionBack">Back</string>
     <string name="more">More</string>
+
+    <string name="recording_elapsed">ELAPSED</string>
+    <string name="recording_pause">Pause</string>
+    <string name="recording_resume">Resume</string>
+    <string name="recording_pair_sensor">Pair sensor</string>
+    <string name="recording_intervals">Intervals</string>
+    <string name="recording_status_recording">Recording</string>
+    <string name="recording_status_paused_auto">Paused · automatic</string>
+    <string name="recording_status_paused_manual">Paused · manual</string>
+    <string name="recording_status_stopped">Stopped</string>
+    <string name="recording_status_ready">Ready to start</string>
+    <string name="recording_status_gps_weak">Weak GPS…</string>
+    <string name="recording_status_gps_searching">GPS searching…</string>
+    <string name="recording_waiting_gps_start_anyway">Waiting for GPS lock — start anyway?</string>
+    <string name="recording_gps_accurate">GPS · accurate</string>
+    <string name="recording_gps_weak">%d sat · weak</string>
+    <string name="recording_gps_searching">%d sat · searching</string>
 </resources>

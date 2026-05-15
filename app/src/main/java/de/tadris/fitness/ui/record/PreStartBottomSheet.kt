@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
@@ -132,7 +133,7 @@ fun PreStartBottomSheet(
         ) {
             AssistChip(
                 onClick = onBluetooth,
-                label = { Text("Pair sensor") },
+                label = { Text(stringResource(R.string.recording_pair_sensor)) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_bluetooth),
@@ -143,7 +144,7 @@ fun PreStartBottomSheet(
             )
             AssistChip(
                 onClick = onIntervalSet,
-                label = { Text("Intervals") },
+                label = { Text(stringResource(R.string.recording_intervals)) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_list),
@@ -159,7 +160,7 @@ fun PreStartBottomSheet(
         // GPS hint text (shown when GPS is not ready)
         if (!canStart) {
             Text(
-                text = "Waiting for GPS lock — start anyway?",
+                text = stringResource(R.string.recording_waiting_gps_start_anyway),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

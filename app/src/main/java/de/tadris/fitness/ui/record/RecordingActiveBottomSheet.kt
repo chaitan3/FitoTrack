@@ -89,7 +89,7 @@ fun RecordingActiveBottomSheet(
 
         // Elapsed label
         Text(
-            text = "ELAPSED",
+            text = stringResource(R.string.recording_elapsed),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth(),
@@ -146,7 +146,9 @@ fun RecordingActiveBottomSheet(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (recordingState == RecordingState.MANUAL_PAUSE) "Resume" else "Pause",
+                    text = if (recordingState == RecordingState.MANUAL_PAUSE) stringResource(R.string.recording_resume) else stringResource(
+                        R.string.recording_pause
+                    ),
                     style = MaterialTheme.typography.labelSmall,
                 )
             }
