@@ -116,7 +116,7 @@ class RecorderServiceActions(private val service: RecorderService) {
     }
 
     fun pause(isAutomatic: Boolean) {
-        if (state == RecordingState.RUNNING) {
+        if (state == RecordingState.RUNNING || (!isAutomatic && state == RecordingState.AUTO_PAUSE)) {
             log(TAG, "Pause, isAutomatic=$isAutomatic")
             state = if (isAutomatic) {
                 RecordingState.AUTO_PAUSE

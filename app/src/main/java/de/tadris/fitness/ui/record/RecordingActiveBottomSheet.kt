@@ -39,8 +39,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -137,10 +135,10 @@ fun RecordingActiveBottomSheet(
                     containerColor = MaterialTheme.colorScheme.primary,
                 ) {
                     Icon(
-                        painter = if (recordingState == RecordingState.RUNNING) {
-                            painterResource(R.drawable.ic_pause)
-                        } else {
+                        painter = if (recordingState == RecordingState.MANUAL_PAUSE) {
                             painterResource(R.drawable.ic_resume)
+                        } else {
+                            painterResource(R.drawable.ic_pause)
                         },
                         contentDescription = null,
                         modifier = Modifier.size(32.dp),
@@ -148,7 +146,7 @@ fun RecordingActiveBottomSheet(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (recordingState == RecordingState.RUNNING) "Pause" else "Resume",
+                    text = if (recordingState == RecordingState.MANUAL_PAUSE) "Resume" else "Pause",
                     style = MaterialTheme.typography.labelSmall,
                 )
             }
