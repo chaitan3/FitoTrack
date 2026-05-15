@@ -105,6 +105,13 @@ public class Instance {
         WorkoutLogger.log(TAG, "Checking for unfinished workout. Result=" + (workout != null));
         if (workout == null) return;
 
+        if (workout.getStart() == -1) {
+            // Workout was never started (app was killed while on idle recording screen)
+            db.workoutDao().deleteWorkout(workout);
+            WorkoutLogger.log(TAG, "Deleted unstarted workout");
+            return;
+        }
+
         WorkoutType type = WorkoutTypeManager.getInstance().getWorkoutTypeById(context, workout.getWorkoutTypeId());
         boolean isGps = RecordingType.findById(type.recordingType) == RecordingType.GPS;
         boolean hasPermission;

@@ -19,8 +19,6 @@
 
 package de.tadris.fitness.ui.settings
 
-import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +52,6 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.announcement.TTSController
 import de.tadris.fitness.recording.event.TTSReadyEvent
-import de.tadris.fitness.ui.dialog.ChooseAutoTimeoutDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -94,6 +91,7 @@ fun RecordingSettingsScreen(
     var askForComment by remember { mutableStateOf(prefs.askForComment) }
     var intervalsIncludePauses by remember { mutableStateOf(prefs.intervalsIncludePauses) }
     var showSpeedDialog by remember { mutableStateOf(false) }
+    var showTimeoutDialog by remember { mutableStateOf(false) }
 
     val autoTimeoutLabel = if (autoTimeout == 0) {
         stringResource(R.string.notimeout)
@@ -126,16 +124,7 @@ fun RecordingSettingsScreen(
                 ClickableSettingsItem(
                     title = stringResource(R.string.intervalAutoTimeoutTraining),
                     supporting = autoTimeoutLabel,
-                    onClick = {
-                        ChooseAutoTimeoutDialog(
-                            context as Activity,
-                            { timeoutM ->
-                                prefs.autoTimeout = timeoutM
-                                autoTimeout = timeoutM
-                            },
-                            autoTimeout,
-                        ).show()
-                    },
+                    onClick = { showTimeoutDialog = true },
                 )
             }
             item {
@@ -210,6 +199,18 @@ fun RecordingSettingsScreen(
         }
     }
 
+    if (showTimeoutDialog) {
+        AutoTimeoutPickerDialog(
+            initialTimeoutM = autoTimeout,
+            onDismiss = { showTimeoutDialog = false },
+            onConfirm = { timeoutM ->
+                prefs.autoTimeout = timeoutM
+                autoTimeout = timeoutM
+                showTimeoutDialog = false
+            },
+        )
+    }
+
     if (showSpeedDialog) {
         AveragedSpeedDialog(
             initialUseAverage = prefs.useAverageForCurrentSpeed,
@@ -222,6 +223,49 @@ fun RecordingSettingsScreen(
             },
         )
     }
+}
+
+@Composable
+private fun AutoTimeoutPickerDialog(
+    initialTimeoutM: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int) -> Unit,
+) {
+    var timeout by remember { mutableStateOf(initialTimeoutM.toFloat()) }
+    val timeoutInt = (timeout / 5).toInt() * 5
+    val label = if (timeoutInt == 0) stringResource(R.string.notimeout)
+    else "$timeoutInt ${stringResource(R.string.timeMinuteShort)}"
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.pref_auto_timeout_title)) },
+        text = {
+            Column {
+                Text(
+                    text = label,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .align(Alignment.CenterHorizontally),
+                )
+                Slider(
+                    value = timeout,
+                    onValueChange = { timeout = it },
+                    valueRange = 0f..60f,
+                    steps = 11,
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(timeoutInt) }) {
+                Text(stringResource(R.string.okay))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 @Composable
@@ -252,7 +296,9 @@ private fun AveragedSpeedDialog(
                 if (useAverage) {
                     Text(
                         text = pluralStringResource(R.plurals.seconds, seconds.toInt(), seconds.toInt()),
-                        modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .align(Alignment.CenterHorizontally),
                     )
                     Slider(
                         value = seconds,
