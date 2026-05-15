@@ -18,6 +18,7 @@
  */
 package de.tadris.fitness.ui.record
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,8 +45,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -158,17 +161,17 @@ fun PreStartBottomSheet(
         Spacer(modifier = Modifier.height(24.dp))
 
         // GPS hint text (shown when GPS is not ready)
-        if (!canStart) {
-            Text(
-                text = stringResource(R.string.recording_waiting_gps_start_anyway),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-            )
-        }
+        val gpsHintAlpha by animateFloatAsState(if (canStart) 0f else 1f)
+        Text(
+            text = stringResource(R.string.recording_waiting_gps_start_anyway),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .alpha(gpsHintAlpha),
+        )
 
         // Start button
         Button(
