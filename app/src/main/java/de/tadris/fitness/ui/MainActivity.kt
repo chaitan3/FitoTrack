@@ -37,8 +37,8 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.map.MapManager
-import de.tadris.fitness.osm.OAuthAuthentication
+import de.tadris.fitness.ui.map.MapManager
+import de.tadris.fitness.util.osm.OAuthAuthentication
 import de.tadris.fitness.ui.components.WorkoutTypePickerDialog
 import de.tadris.fitness.ui.navigation.AppNavigation
 import de.tadris.fitness.ui.navigation.Route

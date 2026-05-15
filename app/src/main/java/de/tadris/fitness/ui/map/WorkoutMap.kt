@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.workout.map
+package de.tadris.fitness.ui.map
 
 import android.R
 import android.graphics.Color
@@ -36,10 +36,6 @@ import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutCalculator
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
-import de.tadris.fitness.map.GradientColoringStrategy
-import de.tadris.fitness.map.MapManager
-import de.tadris.fitness.map.SimpleColoringStrategy
-import de.tadris.fitness.map.WorkoutLayer
 import de.tadris.fitness.ui.workout.diagram.SampleConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
 import de.tadris.fitness.util.ThemeUtils

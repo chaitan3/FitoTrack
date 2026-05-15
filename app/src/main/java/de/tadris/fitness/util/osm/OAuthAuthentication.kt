@@ -17,9 +17,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.osm
+package de.tadris.fitness.util.osm
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -69,7 +68,7 @@ class OAuthAuthentication : FitoTrackActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferences = this.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+        preferences = this.getSharedPreferences("osm_oauth", MODE_PRIVATE)
 
         val token = preferences.getString("accessToken", null)
         if (token == null) {
@@ -86,12 +85,12 @@ class OAuthAuthentication : FitoTrackActivity() {
                         putBoolean("showingCustomTab", true)
                     }
                 } else {
-                    setResult(Activity.RESULT_CANCELED)
+                    setResult(RESULT_CANCELED)
                     finish()
                 }
             }
         } else {
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
             finishAndReset()
         }
     }
@@ -171,7 +170,7 @@ class OAuthAuthentication : FitoTrackActivity() {
         private const val TAG = "OAuthAuthentication"
 
         fun clearAccessToken(ctx: Context) {
-            val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+            val preferences = ctx.getSharedPreferences("osm_oauth", MODE_PRIVATE)
             preferences.edit {
                 remove("accessToken")
                 putBoolean("authenticated", false)
@@ -181,12 +180,12 @@ class OAuthAuthentication : FitoTrackActivity() {
         }
 
         fun getAccessToken(ctx: Context): String? {
-            val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+            val preferences = ctx.getSharedPreferences("osm_oauth", MODE_PRIVATE)
             return preferences.getString("accessToken", null)
         }
 
         fun resetCustomTabState(ctx: Context) {
-            val preferences = ctx.getSharedPreferences("osm_oauth", Context.MODE_PRIVATE)
+            val preferences = ctx.getSharedPreferences("osm_oauth", MODE_PRIVATE)
             preferences.edit {
                 putBoolean("showingCustomTab", false)
             }

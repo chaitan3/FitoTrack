@@ -17,13 +17,32 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.map;
+package de.tadris.fitness.util.osm;
 
-public interface ColoringStrategy {
+import de.tadris.fitness.data.RouteSample;
+import de.westnordost.osmapi.map.data.LatLon;
 
-    void setMin(double value);
+class GpsTraceLatLong implements LatLon {
 
-    void setMax(double value);
+    private final double latitude;
+    private final double longitude;
 
-    int getColor(double value);
+    private GpsTraceLatLong(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public GpsTraceLatLong(RouteSample sample) {
+        this(sample.getLatitude(), sample.getLongitude());
+    }
+
+    @Override
+    public double getLatitude() {
+        return latitude;
+    }
+
+    @Override
+    public double getLongitude() {
+        return longitude;
+    }
 }

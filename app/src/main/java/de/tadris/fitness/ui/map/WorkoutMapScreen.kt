@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui.workout.map
+package de.tadris.fitness.ui.map
 
 import android.annotation.SuppressLint
 import android.app.Application

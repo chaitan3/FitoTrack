@@ -17,32 +17,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.osm;
+package de.tadris.fitness.ui.map.tilesource;
 
-import de.tadris.fitness.data.RouteSample;
-import de.westnordost.osmapi.map.data.LatLon;
+import org.mapsforge.map.layer.download.tilesource.AbstractTileSource;
 
-class GpsTraceLatLong implements LatLon {
+public abstract class FitoTrackTileSource extends AbstractTileSource {
 
-    private final double latitude;
-    private final double longitude;
-
-    private GpsTraceLatLong(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public GpsTraceLatLong(RouteSample sample) {
-        this(sample.getLatitude(), sample.getLongitude());
+    FitoTrackTileSource(String[] hostNames, int port) {
+        super(hostNames, port);
     }
 
     @Override
-    public double getLatitude() {
-        return latitude;
+    public boolean hasAlpha() {
+        return false;
     }
 
-    @Override
-    public double getLongitude() {
-        return longitude;
-    }
+    public abstract String getName();
 }

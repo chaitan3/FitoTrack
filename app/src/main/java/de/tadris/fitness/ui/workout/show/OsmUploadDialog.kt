@@ -53,8 +53,8 @@ import androidx.compose.ui.unit.dp
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.Workout
-import de.tadris.fitness.osm.OAuthAuthentication
-import de.tadris.fitness.osm.OsmTraceUploader
+import de.tadris.fitness.util.osm.OAuthAuthentication
+import de.tadris.fitness.util.osm.OsmTraceUploader
 import de.tadris.fitness.ui.theme.spacing
 import de.westnordost.osmapi.common.errors.OsmAuthorizationException
 import de.westnordost.osmapi.traces.GpsTraceDetails

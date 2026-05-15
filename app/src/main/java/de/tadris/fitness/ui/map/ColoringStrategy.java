@@ -17,13 +17,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.map;
+package de.tadris.fitness.ui.map;
 
-import de.tadris.fitness.data.RouteSample;
+public interface ColoringStrategy {
 
-public interface MapSampleSelectionListener {
-    /**
-     * @param sample The sample changed or @null if the selection was removed
-     */
-    void onMapSelectionChanged(RouteSample sample);
+    void setMin(double value);
+
+    void setMax(double value);
+
+    int getColor(double value);
 }

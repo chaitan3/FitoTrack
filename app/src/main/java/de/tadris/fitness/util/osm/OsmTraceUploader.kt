@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.osm
+package de.tadris.fitness.util.osm
 
 import android.util.Log
 import de.tadris.fitness.data.RouteSample

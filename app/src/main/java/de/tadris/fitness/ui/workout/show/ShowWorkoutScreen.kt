@@ -76,7 +76,7 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.data.preferences.UserMeasurements
-import de.tadris.fitness.osm.OAuthAuthentication
+import de.tadris.fitness.util.osm.OAuthAuthentication
 import de.tadris.fitness.ui.sections.SectionListModel
 import de.tadris.fitness.ui.sections.SectionListPresenter
 import de.tadris.fitness.ui.sections.SectionListView
@@ -87,7 +87,7 @@ import de.tadris.fitness.ui.workout.diagram.HeightConverter
 import de.tadris.fitness.ui.workout.diagram.IntensityConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
 import de.tadris.fitness.ui.workout.diagram.WorkoutDiagram
-import de.tadris.fitness.ui.workout.map.WorkoutMap
+import de.tadris.fitness.ui.map.WorkoutMap
 import de.tadris.fitness.util.unit.UnitUtils
 import java.util.Date
 import kotlin.math.roundToInt

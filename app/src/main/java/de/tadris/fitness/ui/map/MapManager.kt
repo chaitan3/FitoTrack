@@ -16,14 +16,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.tadris.fitness.map
+package de.tadris.fitness.ui.map
 
 import android.app.Activity
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import de.tadris.fitness.Instance
-import de.tadris.fitness.map.tilesource.HumanitarianTileSource
-import de.tadris.fitness.map.tilesource.MapnikTileSource
+import de.tadris.fitness.ui.map.tilesource.HumanitarianTileSource
+import de.tadris.fitness.ui.map.tilesource.MapnikTileSource
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.android.rendertheme.ContentRenderTheme
 import org.mapsforge.map.android.util.AndroidUtil

@@ -56,10 +56,10 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutCutter
 import de.tadris.fitness.data.WorkoutData
-import de.tadris.fitness.map.SimpleColoringStrategy
-import de.tadris.fitness.map.WorkoutLayer
-import de.tadris.fitness.ui.workout.map.WorkoutMap
-import de.tadris.fitness.ui.workout.map.WorkoutMapColoring
+import de.tadris.fitness.ui.map.SimpleColoringStrategy
+import de.tadris.fitness.ui.map.WorkoutLayer
+import de.tadris.fitness.ui.map.WorkoutMap
+import de.tadris.fitness.ui.map.WorkoutMapColoring
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi

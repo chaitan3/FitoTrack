@@ -41,7 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.osm.OAuthAuthentication
+import de.tadris.fitness.util.osm.OAuthAuthentication
 import de.tadris.fitness.ui.ShareFileActivity
 import de.tadris.fitness.ui.settings.ClickableSettingsItem
 import de.tadris.fitness.ui.settings.SettingsCategory

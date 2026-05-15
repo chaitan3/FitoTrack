@@ -17,20 +17,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.map.tilesource;
+package de.tadris.fitness.ui.map;
 
-import org.mapsforge.map.layer.download.tilesource.AbstractTileSource;
+import de.tadris.fitness.data.RouteSample;
 
-public abstract class FitoTrackTileSource extends AbstractTileSource {
-
-    FitoTrackTileSource(String[] hostNames, int port) {
-        super(hostNames, port);
-    }
-
-    @Override
-    public boolean hasAlpha() {
-        return false;
-    }
-
-    public abstract String getName();
+public interface MapSampleSelectionListener {
+    /**
+     * @param sample The sample changed or @null if the selection was removed
+     */
+    void onMapSelectionChanged(RouteSample sample);
 }
