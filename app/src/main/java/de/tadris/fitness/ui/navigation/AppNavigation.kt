@@ -310,7 +310,7 @@ fun AppNavigation(
                 workoutTypeId = route.workoutTypeId,
                 isLaunchAction = route.isLaunchAction,
                 onFinish = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(Route.Settings) },
+                onNavigateToSettings = { navController.navigate(Route.RecordingSettings) },
                 onNavigateToIntervalSets = { navController.navigate(Route.ManageIntervalSets) },
             )
         }
@@ -320,7 +320,7 @@ fun AppNavigation(
                 workoutTypeId = route.workoutTypeId,
                 isLaunchAction = route.isLaunchAction,
                 onFinish = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(Route.Settings) },
+                onNavigateToSettings = { navController.navigate(Route.RecordingSettings) },
                 onNavigateToIntervalSets = { navController.navigate(Route.ManageIntervalSets) },
             )
         }
