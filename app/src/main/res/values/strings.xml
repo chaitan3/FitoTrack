@@ -568,6 +568,7 @@
     <string name="recording_elapsed">Duration</string>
     <string name="recording_pause">Pause</string>
     <string name="recording_resume">Resume</string>
+    <string name="recording_hold_to_stop">Long press to stop the workout</string>
     <string name="recording_pair_sensor">Pair sensor</string>
     <string name="recording_intervals">Intervals</string>
     <string name="recording_status_recording">Recording</string>

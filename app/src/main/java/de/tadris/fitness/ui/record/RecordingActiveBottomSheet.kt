@@ -46,23 +46,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.widget.Toast
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.util.unit.DistanceUnitUtils
@@ -128,9 +136,10 @@ fun RecordingActiveBottomSheet(
             Box(modifier = Modifier.size(64.dp))
 
             // Center: Pause/Resume FAB
+            val haptic = LocalHapticFeedback.current
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 FloatingActionButton(
-                    onClick = onPauseResume,
+                    onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onPauseResume() },
                     modifier = Modifier.size(72.dp),
                     containerColor = MaterialTheme.colorScheme.primary,
                 ) {
@@ -164,9 +173,21 @@ fun HoldToStopButton(onStop: () -> Unit) {
     val progress = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
     val currentOnStop by rememberUpdatedState(onStop)
+    val haptic = LocalHapticFeedback.current
+    var pressing by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     val errorColor = MaterialTheme.colorScheme.error
     val errorContainerColor = MaterialTheme.colorScheme.errorContainer
     val onErrorContainerColor = MaterialTheme.colorScheme.onErrorContainer
+
+    LaunchedEffect(pressing) {
+        if (pressing) {
+            while (true) {
+                delay(400)
+                haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+            }
+        }
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
@@ -175,16 +196,22 @@ fun HoldToStopButton(onStop: () -> Unit) {
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onPress = {
+                            pressing = true
                             val job = scope.launch {
                                 progress.animateTo(
                                     1f,
                                     animationSpec = tween(2000, easing = LinearEasing),
                                 )
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 currentOnStop()
                             }
                             tryAwaitRelease()
+                            pressing = false
                             if (job.isActive) {
                                 job.cancel()
+                                if (progress.value < 0.3f) {
+                                    Toast.makeText(context, R.string.recording_hold_to_stop, Toast.LENGTH_SHORT).show()
+                                }
                                 scope.launch {
                                     progress.animateTo(0f, animationSpec = tween(200))
                                 }
