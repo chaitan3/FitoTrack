@@ -18,6 +18,11 @@
  */
 package de.tadris.fitness.ui.record
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -186,19 +191,26 @@ fun GpsInfoPill(
 @Composable
 fun MapControlButtons(
     mapController: RecordingMapController,
+    isMapMoved: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
     ) {
-        MapPillButton(
-            onClick = { mapController.focusGps() },
+        AnimatedVisibility(
+            visible = isMapMoved,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut(),
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_gps_fixed),
-                contentDescription = null,
-            )
+            MapPillButton(
+                onClick = { mapController.focusGps() },
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_gps_fixed),
+                    contentDescription = null,
+                )
+            }
         }
     }
 }

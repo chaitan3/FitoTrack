@@ -159,8 +159,6 @@ public class NavigationModeHandler implements View.OnTouchListener, View.OnClick
     }
 
     private boolean distanceThresholdExceeds() {
-        assert (navigationModeListener != null);
-
         if (currentGpsPosition == null) {
             return false;
         }

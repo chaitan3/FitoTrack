@@ -32,6 +32,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import de.tadris.fitness.R
 import de.tadris.fitness.map.MapManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.mapsforge.core.graphics.Style
 import org.mapsforge.core.model.LatLong
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory
@@ -43,6 +46,13 @@ import org.mapsforge.map.layer.overlay.Polyline
 class RecordingMapController {
     internal var mapView: MapView? = null
     internal var navigationModeHandler: NavigationModeHandler? = null
+
+    private val _navigationMode = MutableStateFlow(NavigationModeHandler.NavigationMode.Automatic)
+    val navigationMode: StateFlow<NavigationModeHandler.NavigationMode> = _navigationMode.asStateFlow()
+
+    internal fun updateNavigationMode(mode: NavigationModeHandler.NavigationMode) {
+        _navigationMode.value = mode
+    }
 
     fun zoomIn() {
         mapView?.model?.mapViewPosition?.zoomIn()
@@ -106,6 +116,8 @@ fun RecordingMapView(
 
             val navHandler = NavigationModeHandler(mapView)
             navHandler.init()
+            navHandler.setNavigationModeListener { mode -> controller.updateNavigationMode(mode) }
+            mapView.setOnTouchListener(navHandler)
 
             controller.mapView = mapView
             controller.navigationModeHandler = navHandler

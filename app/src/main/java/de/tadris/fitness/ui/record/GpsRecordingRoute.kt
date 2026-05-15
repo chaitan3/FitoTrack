@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import de.tadris.fitness.ui.record.NavigationModeHandler.NavigationMode
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -194,6 +195,7 @@ fun GpsRecordingScreen(
 
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
     val mapController = remember { RecordingMapController() }
+    val navigationMode by mapController.navigationMode.collectAsState()
 
     DisposableEffect(mapController) {
         MapControllerHolder.controller = mapController
@@ -226,6 +228,7 @@ fun GpsRecordingScreen(
             )
             MapControlButtons(
                 mapController = mapController,
+                isMapMoved = navigationMode == NavigationMode.Manual,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(12.dp),
