@@ -181,7 +181,9 @@ internal fun WorkoutMap(
             },
             onRelease = { mapView ->
                 mapView.destroyAll()
-                AndroidGraphicFactory.clearResourceMemoryCache()
+                // Do not call AndroidGraphicFactory.clearResourceMemoryCache() here —
+                // destroyAll() only interrupts the rendering thread, so it may still be
+                // mid-draw on a cached bitmap when we recycle it, causing a SIGABRT.
             },
             modifier = modifier.clipToBounds(),
         )

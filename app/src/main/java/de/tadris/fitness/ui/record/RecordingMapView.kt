@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mapsforge.core.graphics.Style
 import org.mapsforge.core.model.LatLong
-import org.mapsforge.map.android.graphics.AndroidGraphicFactory
 import org.mapsforge.map.android.view.MapView
 import org.mapsforge.map.layer.download.TileDownloadLayer
 import org.mapsforge.map.layer.overlay.FixedPixelCircle
@@ -169,7 +168,6 @@ fun RecordingMapView(
             controller.mapView = null
             controller.navigationModeHandler = null
             mapView.destroyAll()
-            AndroidGraphicFactory.clearResourceMemoryCache()
         },
         modifier = modifier.clipToBounds(),
     )
