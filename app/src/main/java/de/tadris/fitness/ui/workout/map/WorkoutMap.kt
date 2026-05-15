@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.WorkoutCalculator
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.map.GradientColoringStrategy
@@ -42,7 +43,6 @@ import de.tadris.fitness.map.WorkoutLayer
 import de.tadris.fitness.ui.workout.diagram.SampleConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
 import de.tadris.fitness.util.ThemeUtils
-import de.tadris.fitness.util.WorkoutCalculator
 import org.mapsforge.core.model.BoundingBox
 import org.mapsforge.core.model.MapPosition
 import org.mapsforge.core.util.LatLongUtils

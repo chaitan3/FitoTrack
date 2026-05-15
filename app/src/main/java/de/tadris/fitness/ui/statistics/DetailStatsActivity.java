@@ -42,16 +42,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.aggregation.AggregationSpan;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.stats.NoDataException;
 import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.stats.StatsProvider;
 import de.tadris.fitness.stats.WorkoutProperty;
+import de.tadris.fitness.stats.aggregation.AggregationSpan;
 import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.util.charts.ChartStyles;
-import de.tadris.fitness.util.charts.DataSetStyles;
+import de.tadris.fitness.ui.charts.ChartStyles;
+import de.tadris.fitness.ui.charts.DataSetStyles;
 
 public class DetailStatsActivity extends FitoTrackActivity {
 

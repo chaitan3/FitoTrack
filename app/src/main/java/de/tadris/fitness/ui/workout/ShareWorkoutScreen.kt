@@ -75,7 +75,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import de.tadris.fitness.R
-import de.tadris.fitness.aggregation.WorkoutInformation
+import de.tadris.fitness.stats.aggregation.WorkoutInformation
 import de.tadris.fitness.ui.workout.map.WorkoutMap
 import de.tadris.fitness.ui.workout.map.WorkoutMapColoring
 import de.tadris.fitness.util.Icon as WorkoutIcon

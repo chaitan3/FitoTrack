@@ -20,8 +20,8 @@ package de.tadris.fitness.data
 
 import android.content.Context
 import de.tadris.fitness.Instance
+import de.tadris.fitness.data.calorie.CalorieCalculator
 import de.tadris.fitness.data.preferences.UserMeasurements.Companion.from
-import de.tadris.fitness.util.calorie.CalorieCalculator
 import java.util.Calendar
 import java.util.UUID
 import kotlin.math.roundToInt

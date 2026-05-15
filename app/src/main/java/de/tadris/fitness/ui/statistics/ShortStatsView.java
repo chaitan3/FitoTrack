@@ -27,7 +27,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.ui.adapter.ShortStatsAdapter;
 
 public class ShortStatsView extends ConstraintLayout {
     ViewPager2 myViewPager2;

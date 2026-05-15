@@ -30,7 +30,7 @@ import java.io.InputStream;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
-import de.tadris.fitness.util.io.general.IOHelper;
+import de.tadris.fitness.util.export.IOHelper;
 
 public class ImportGpxActivity extends FitoTrackActivity {
 

@@ -36,10 +36,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.autoexport.source.WorkoutGpxExportSource
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.PermissionUtils
-import de.tadris.fitness.util.autoexport.source.WorkoutGpxExportSource
-import de.tadris.fitness.util.io.general.IOHelper
+import de.tadris.fitness.util.export.IOHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

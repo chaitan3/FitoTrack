@@ -68,9 +68,9 @@ import androidx.compose.ui.unit.dp
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.ExportTargetConfiguration
-import de.tadris.fitness.util.autoexport.AutoExportPlanner
-import de.tadris.fitness.util.autoexport.source.ExportSource
-import de.tadris.fitness.util.autoexport.target.ExportTarget
+import de.tadris.fitness.data.autoexport.AutoExportPlanner
+import de.tadris.fitness.data.autoexport.source.ExportSource
+import de.tadris.fitness.data.autoexport.target.ExportTarget
 import de.tadris.fitness.util.isUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

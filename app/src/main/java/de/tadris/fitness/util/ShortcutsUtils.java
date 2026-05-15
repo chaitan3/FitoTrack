@@ -36,8 +36,8 @@ import java.util.List;
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
+import de.tadris.fitness.ui.charts.BitmapHelper;
 import de.tadris.fitness.ui.record.RecordingConstants;
-import de.tadris.fitness.util.charts.BitmapHelper;
 
 public class ShortcutsUtils {
     private static final String TAG = "ShortcutsUtils";

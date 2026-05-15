@@ -27,14 +27,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <de.tadris.fitness.ui.statistics.WorkoutTypeSelection
+        <de.tadris.fitness.ui.statistics.workout_type_picker.WorkoutTypeSelection
             android:id="@+id/stats_explore_type_selector"
             style="@style/statsBar"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center_horizontal">
 
-        </de.tadris.fitness.ui.statistics.WorkoutTypeSelection>
+        </de.tadris.fitness.ui.statistics.workout_type_picker.WorkoutTypeSelection>
 
         <de.tadris.fitness.ui.statistics.TimeSpanSelection
             android:id="@+id/time_span_selection"

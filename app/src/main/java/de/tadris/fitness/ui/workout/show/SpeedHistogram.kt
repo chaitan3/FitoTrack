@@ -30,11 +30,11 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.stats.StatsProvider
-import de.tadris.fitness.util.charts.ChartStyles
-import de.tadris.fitness.util.charts.formatter.SpeedFormatter
-import de.tadris.fitness.util.charts.formatter.TimeFormatter
-import de.tadris.fitness.util.charts.marker.DisplayValueMarker
-import de.tadris.fitness.util.sections.SectionListModel
+import de.tadris.fitness.ui.charts.ChartStyles
+import de.tadris.fitness.ui.charts.formatter.SpeedFormatter
+import de.tadris.fitness.ui.charts.formatter.TimeFormatter
+import de.tadris.fitness.ui.charts.marker.DisplayValueMarker
+import de.tadris.fitness.ui.sections.SectionListModel
 import java.util.concurrent.TimeUnit
 
 @Composable

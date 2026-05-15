@@ -32,6 +32,7 @@ import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.Workout;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
+import de.tadris.fitness.data.autoexport.AutoExportPlanner;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.util.DataManager;
@@ -40,7 +41,6 @@ import de.tadris.fitness.util.PermissionUtils;
 import de.tadris.fitness.util.ShortcutsUtils;
 import de.tadris.fitness.util.UserDateTimeUtils;
 import de.tadris.fitness.util.WorkoutLogger;
-import de.tadris.fitness.util.autoexport.AutoExportPlanner;
 import de.tadris.fitness.util.unit.DistanceUnitUtils;
 import de.tadris.fitness.util.unit.EnergyUnitUtils;
 

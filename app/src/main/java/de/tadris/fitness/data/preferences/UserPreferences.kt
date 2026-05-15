@@ -25,11 +25,11 @@ import android.preference.PreferenceManager
 import androidx.collection.ArraySet
 import androidx.core.content.edit
 import de.tadris.fitness.BuildConfig
-import de.tadris.fitness.aggregation.AggregationSpan
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.recording.autostart.AutoStartWorkout
+import de.tadris.fitness.stats.aggregation.AggregationSpan
 import java.util.Calendar
 
 class UserPreferences(private val context: Context) : PreferenceProvider {

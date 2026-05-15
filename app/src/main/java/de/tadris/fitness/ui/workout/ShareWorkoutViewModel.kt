@@ -26,13 +26,13 @@ import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import de.tadris.fitness.Instance
-import de.tadris.fitness.aggregation.WorkoutInformation
-import de.tadris.fitness.aggregation.WorkoutInformationManager
-import de.tadris.fitness.aggregation.information.Hidden
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.WorkoutType
+import de.tadris.fitness.stats.aggregation.WorkoutInformation
+import de.tadris.fitness.stats.aggregation.WorkoutInformationManager
+import de.tadris.fitness.stats.aggregation.information.Hidden
 import de.tadris.fitness.util.DataManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

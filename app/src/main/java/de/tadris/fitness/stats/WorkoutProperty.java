@@ -33,10 +33,10 @@ import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.util.charts.ChartStyles;
-import de.tadris.fitness.util.charts.formatter.DistanceFormatter;
-import de.tadris.fitness.util.charts.formatter.FractionedDateFormatter;
-import de.tadris.fitness.util.charts.formatter.TimeFormatter;
+import de.tadris.fitness.ui.charts.ChartStyles;
+import de.tadris.fitness.ui.charts.formatter.DistanceFormatter;
+import de.tadris.fitness.ui.charts.formatter.FractionedDateFormatter;
+import de.tadris.fitness.ui.charts.formatter.TimeFormatter;
 
 public enum WorkoutProperty {
     NUMBER(0, WorkoutPropertyType.BASE, R.string.workoutCount),

@@ -23,7 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import de.tadris.fitness.util.autoexport.target.ExportTarget;
+import de.tadris.fitness.data.autoexport.source.ExportSource;
+import de.tadris.fitness.data.autoexport.target.ExportTarget;
 
 @Entity(tableName = "export_target_config")
 public class ExportTargetConfiguration {
@@ -34,7 +35,7 @@ public class ExportTargetConfiguration {
     /**
      * Specifies what data to export e.g. Backup or GPX files
      *
-     * @see de.tadris.fitness.util.autoexport.source.ExportSource
+     * @see ExportSource
      */
     public String source;
 

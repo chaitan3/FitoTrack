@@ -35,8 +35,8 @@ import de.tadris.fitness.stats.NoDataException;
 import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.stats.StatsProvider;
 import de.tadris.fitness.ui.FitoTrackActivity;
+import de.tadris.fitness.ui.charts.ChartStyles;
 import de.tadris.fitness.ui.statistics.TimeSpanSelection;
-import de.tadris.fitness.util.charts.ChartStyles;
 
 public class StatsOverviewFragment extends StatsFragment {
     StatsProvider statsProvider;

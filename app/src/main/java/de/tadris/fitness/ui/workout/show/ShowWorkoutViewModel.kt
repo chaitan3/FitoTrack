@@ -25,8 +25,8 @@ import androidx.lifecycle.viewModelScope
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.CalculatedValues
 import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutCalculator
 import de.tadris.fitness.data.WorkoutData
-import de.tadris.fitness.util.WorkoutCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

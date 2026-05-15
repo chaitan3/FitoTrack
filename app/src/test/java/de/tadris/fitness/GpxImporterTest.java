@@ -27,8 +27,8 @@ import java.io.IOException;
 
 import de.tadris.fitness.data.WorkoutData;
 import de.tadris.fitness.data.WorkoutTypeManager;
-import de.tadris.fitness.util.io.GpxImporter;
-import de.tadris.fitness.util.io.general.IWorkoutImporter;
+import de.tadris.fitness.util.export.IWorkoutImporter;
+import de.tadris.fitness.util.export.gpx.GpxImporter;
 
 public class GpxImporterTest {
     GpxImporter importer = new GpxImporter();

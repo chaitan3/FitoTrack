@@ -53,8 +53,6 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.ui.dialog.ChooseBluetoothDeviceDialog
-import de.tadris.fitness.ui.dialog.SelectWorkoutInformationDialog
 import de.tadris.fitness.util.NotificationHelper
 
 @Composable

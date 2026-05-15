@@ -56,16 +56,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.export.BackupReader
-import de.tadris.fitness.export.BackupWriter
+import de.tadris.fitness.data.autoexport.AutoExportPlanner
+import de.tadris.fitness.data.autoexport.source.BackupExportSource
+import de.tadris.fitness.data.autoexport.source.ExportSource
+import de.tadris.fitness.data.backup.BackupReader
+import de.tadris.fitness.data.backup.BackupWriter
 import de.tadris.fitness.ui.ShareFileActivity
 import de.tadris.fitness.util.DataManager
 import de.tadris.fitness.util.PermissionUtils
-import de.tadris.fitness.util.autoexport.AutoExportPlanner
-import de.tadris.fitness.util.autoexport.source.BackupExportSource
-import de.tadris.fitness.util.autoexport.source.ExportSource
-import de.tadris.fitness.util.io.GpxExporter
-import de.tadris.fitness.util.io.MassExporter
+import de.tadris.fitness.util.export.MassExporter
+import de.tadris.fitness.util.export.gpx.GpxExporter
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)

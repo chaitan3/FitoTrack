@@ -44,13 +44,13 @@ import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.SampleAggregator
 import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutCalculator
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.stats.StatsDataTypes
-import de.tadris.fitness.util.SampleAggregator
-import de.tadris.fitness.util.WorkoutCalculator
-import de.tadris.fitness.util.charts.ChartStyles
-import de.tadris.fitness.util.charts.marker.DisplayValueMarker
+import de.tadris.fitness.ui.charts.ChartStyles
+import de.tadris.fitness.ui.charts.marker.DisplayValueMarker
 
 private class WorkoutDiagramHolder {
     var chart: CombinedChart? = null
