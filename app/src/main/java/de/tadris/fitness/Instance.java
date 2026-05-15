@@ -19,17 +19,24 @@
 
 package de.tadris.fitness;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import de.tadris.fitness.data.AppDatabase;
+import de.tadris.fitness.data.RecordingType;
+import de.tadris.fitness.data.Workout;
+import de.tadris.fitness.data.WorkoutType;
+import de.tadris.fitness.data.WorkoutTypeManager;
 import de.tadris.fitness.data.preferences.UserPreferences;
 import de.tadris.fitness.recording.RecorderService;
 import de.tadris.fitness.util.DataManager;
 import de.tadris.fitness.util.FitoTrackThemes;
+import de.tadris.fitness.util.PermissionUtils;
 import de.tadris.fitness.util.ShortcutsUtils;
 import de.tadris.fitness.util.UserDateTimeUtils;
 import de.tadris.fitness.util.WorkoutLogger;
@@ -94,11 +101,22 @@ public class Instance {
 
     // Checks if a workout was recorded before app exit and resume it in that case
     private void checkUnfinishedRecording(Context context) {
-        boolean hasUnfinishedWorkout = db.workoutDao().findRunningWorkout() != null;
-        WorkoutLogger.log(TAG, "Checking for unfinished workout. Result=" + hasUnfinishedWorkout);
-        if (hasUnfinishedWorkout) {
-            Intent intent = new Intent(context, RecorderService.class);
-            context.startForegroundService(intent);
+        Workout workout = db.workoutDao().findRunningWorkout();
+        WorkoutLogger.log(TAG, "Checking for unfinished workout. Result=" + (workout != null));
+        if (workout == null) return;
+
+        WorkoutType type = WorkoutTypeManager.getInstance().getWorkoutTypeById(context, workout.getWorkoutTypeId());
+        boolean isGps = RecordingType.findById(type.recordingType) == RecordingType.GPS;
+        boolean hasPermission;
+        if (isGps) {
+            hasPermission = PermissionUtils.checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    || PermissionUtils.checkPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
+        } else {
+            hasPermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                    || PermissionUtils.checkPermission(context, Manifest.permission.ACTIVITY_RECOGNITION);
+        }
+        if (hasPermission) {
+            context.startForegroundService(new Intent(context, RecorderService.class));
         }
     }
 

@@ -20,6 +20,7 @@ package de.tadris.fitness.recording
 
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -139,7 +140,16 @@ class RecorderService : Service() {
 
         initializeWatchdog()
         val notification = notificationComponent!!.getNotification()
-        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val serviceType = if (stateHolder.recordingType == RecordingType.GPS) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+            } else {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
+            }
+            startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification, serviceType)
+        } else {
+            startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
+        }
 
         return START_STICKY
     }

@@ -34,7 +34,6 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.data.WorkoutType
-import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.RecordingStateHolder
 import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
@@ -356,7 +355,6 @@ fun AppNavigation(
                         )
                     )
                     dao.updateWorkout(workout.copy(end = RecordingStateHolder.RUNNING_WORKOUT_END_TIME))
-                    context.startForegroundService(Intent(context, RecorderService::class.java))
                     val workoutType = workout.getWorkoutType(context)
                     val route = if (RecordingType.findById(workoutType.recordingType) == RecordingType.GPS) {
                         Route.RecordGpsWorkout(workoutType.id, false)

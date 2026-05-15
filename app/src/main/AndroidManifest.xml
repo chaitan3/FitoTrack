@@ -156,7 +156,7 @@
 
         <service
             android:name=".recording.RecorderService"
-            android:foregroundServiceType="location" />
+            android:foregroundServiceType="location|health" />
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
