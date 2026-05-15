@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -172,6 +173,10 @@ fun IndoorRecordingScreen(
     val frequencyLabel = stringResource(R.string.workoutFrequency)
     val intensityLabel = stringResource(R.string.workoutIntensity)
 
+    val repetitionsLabel = workoutType?.let {
+        LocalResources.current.getQuantityString(it.repeatingExerciseName, repetitions)
+    }.orEmpty()
+
     RecordingScaffold(
         vm = vm,
         onFinish = onFinish,
@@ -179,7 +184,7 @@ fun IndoorRecordingScreen(
         onManageIntervalSets = onNavigateToIntervalSets,
         mainContent = {
             IndoorChartContent(
-                title = workoutType?.title.orEmpty(),
+                repetitionsLabel = repetitionsLabel,
                 repetitions = repetitions,
                 chartEntries = chartEntries,
                 onBackgroundColor = onBackgroundColor,
@@ -195,7 +200,7 @@ fun IndoorRecordingScreen(
 
 @Composable
 private fun IndoorChartContent(
-    title: String,
+    repetitionsLabel: String,
     repetitions: Int,
     chartEntries: List<ChartEntry>,
     onBackgroundColor: Int,
@@ -281,7 +286,7 @@ private fun IndoorChartContent(
                 lineHeight = 120.sp,
             )
             Text(
-                text = title,
+                text = repetitionsLabel,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
