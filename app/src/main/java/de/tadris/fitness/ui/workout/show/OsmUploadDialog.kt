@@ -19,14 +19,15 @@
 
 package de.tadris.fitness.ui.workout.show
 
-import android.app.Activity
-import android.os.Handler
-import android.os.Looper
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -40,6 +41,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,7 +56,9 @@ import de.tadris.fitness.data.Workout
 import de.tadris.fitness.osm.OAuthAuthentication
 import de.tadris.fitness.osm.OsmTraceUploader
 import de.tadris.fitness.ui.theme.spacing
+import de.westnordost.osmapi.common.errors.OsmAuthorizationException
 import de.westnordost.osmapi.traces.GpsTraceDetails
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +68,7 @@ internal fun OsmUploadDialog(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val activity = context as? Activity
+    val scope = rememberCoroutineScope()
 
     val visibilityOptions = listOf(
         stringResource(R.string.identifiable_visibility) to GpsTraceDetails.Visibility.IDENTIFIABLE,
@@ -76,83 +81,129 @@ internal fun OsmUploadDialog(
     var cut by rememberSaveable { mutableStateOf(true) }
     var visibilityIndex by rememberSaveable { mutableIntStateOf(0) }
     var visibilityExpanded by rememberSaveable { mutableStateOf(false) }
+    var uploading by remember { mutableStateOf(false) }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!uploading) onDismiss() },
         title = { Text(stringResource(R.string.actionUploadToOSM)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.defaultFull)) {
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it; descriptionError = false },
-                    label = { Text(stringResource(R.string.description)) },
-                    placeholder = { Text(stringResource(R.string.enterDescription)) },
-                    isError = descriptionError,
-                    supportingText = if (descriptionError) {
-                        { Text(stringResource(R.string.enterDescription)) }
-                    } else null,
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                ExposedDropdownMenuBox(
-                    expanded = visibilityExpanded,
-                    onExpandedChange = { visibilityExpanded = it },
+            if (uploading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.defaultFull)) {
                     OutlinedTextField(
-                        value = visibilityOptions[visibilityIndex].first,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text(stringResource(R.string.trackVisibilityPref)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(visibilityExpanded) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = description,
+                        onValueChange = { description = it; descriptionError = false },
+                        label = { Text(stringResource(R.string.description)) },
+                        placeholder = { Text(stringResource(R.string.enterDescription)) },
+                        isError = descriptionError,
+                        supportingText = if (descriptionError) {
+                            { Text(stringResource(R.string.enterDescription)) }
+                        } else null,
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                    ExposedDropdownMenu(
+
+                    ExposedDropdownMenuBox(
                         expanded = visibilityExpanded,
-                        onDismissRequest = { visibilityExpanded = false },
+                        onExpandedChange = { visibilityExpanded = it },
                     ) {
-                        visibilityOptions.forEachIndexed { index, (label, _) ->
-                            DropdownMenuItem(
-                                text = { Text(label) },
-                                onClick = { visibilityIndex = index; visibilityExpanded = false },
-                            )
+                        OutlinedTextField(
+                            value = visibilityOptions[visibilityIndex].first,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text(stringResource(R.string.trackVisibilityPref)) },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(
+                                    visibilityExpanded
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        )
+                        ExposedDropdownMenu(
+                            expanded = visibilityExpanded,
+                            onDismissRequest = { visibilityExpanded = false },
+                        ) {
+                            visibilityOptions.forEachIndexed { index, (label, _) ->
+                                DropdownMenuItem(
+                                    text = { Text(label) },
+                                    onClick = {
+                                        visibilityIndex = index; visibilityExpanded = false
+                                    },
+                                )
+                            }
                         }
                     }
-                }
 
-                CheckboxRow(
-                    checked = cut,
-                    onCheckedChange = { cut = it },
-                    label = stringResource(R.string.cut),
-                )
+                    CheckboxRow(
+                        checked = cut,
+                        onCheckedChange = { cut = it },
+                        label = stringResource(R.string.cut),
+                    )
+                }
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                if (description.trim().length <= 2) {
-                    descriptionError = true
-                    return@TextButton
-                }
-                val token = OAuthAuthentication.getAccessToken(context)
-                if (activity != null) {
-                    OsmTraceUploader(
-                        activity,
-                        Handler(Looper.getMainLooper()),
-                        workout,
-                        samples,
-                        visibilityOptions[visibilityIndex].second,
-                        token,
-                        cut,
-                        description.trim(),
-                    ).upload()
-                }
-                onDismiss()
-            }) { Text(stringResource(R.string.upload)) }
+            TextButton(
+                enabled = !uploading,
+                onClick = {
+                    if (description.trim().length <= 2) {
+                        descriptionError = true
+                        return@TextButton
+                    }
+                    val token = OAuthAuthentication.getAccessToken(context)
+                    if (token == null) {
+                        Toast.makeText(
+                            context,
+                            R.string.uploadFailedOsmNotAuthorized,
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@TextButton
+                    }
+                    uploading = true
+                    scope.launch {
+                        try {
+                            OsmTraceUploader(
+                                workout,
+                                samples,
+                                visibilityOptions[visibilityIndex].second,
+                                token,
+                                cut,
+                                description.trim(),
+                            ).upload()
+                            Toast.makeText(context, R.string.uploadSuccessful, Toast.LENGTH_LONG)
+                                .show()
+                            onDismiss()
+                        } catch (e: OsmAuthorizationException) {
+                            OAuthAuthentication.clearAccessToken(context)
+                            Toast.makeText(
+                                context,
+                                R.string.uploadFailedOsmNotAuthorized,
+                                Toast.LENGTH_LONG
+                            ).show()
+                            uploading = false
+                        } catch (e: Exception) {
+                            Toast.makeText(context, R.string.uploadFailed, Toast.LENGTH_LONG).show()
+                            uploading = false
+                        }
+                    }
+                },
+            ) { Text(stringResource(R.string.upload)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+            TextButton(
+                enabled = !uploading,
+                onClick = onDismiss,
+            ) { Text(stringResource(R.string.cancel)) }
         },
     )
 }
