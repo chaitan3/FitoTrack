@@ -21,6 +21,7 @@ package de.tadris.fitness.ui.dashboard
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.CardDefaults
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
@@ -77,6 +79,7 @@ internal fun WorkoutListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(CardDefaults.shape)
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         Row(
