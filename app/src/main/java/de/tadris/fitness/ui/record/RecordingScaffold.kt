@@ -36,22 +36,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.Instance
-import de.tadris.fitness.data.IntervalSet
 import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
@@ -144,7 +140,7 @@ fun RecordingScaffold(
         }
 
         Surface(
-            shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+            shape = RectangleShape,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 3.dp,
             shadowElevation = 8.dp,
