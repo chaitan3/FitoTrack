@@ -214,7 +214,7 @@ private fun WorkoutMapContent(
             Column(Modifier.fillMaxSize()) {
                 WorkoutMap(
                     data = data,
-                    showPauses = true,
+                    showPauses = false,
                     clickable = true,
                     coloring = coloring,
                     selectedSample = selectedSample,
