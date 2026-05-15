@@ -38,6 +38,7 @@ import de.tadris.fitness.recording.component.GpsComponent
 import de.tadris.fitness.recording.component.GpsSampleComponent
 import de.tadris.fitness.recording.component.GpsStateComponent
 import de.tadris.fitness.recording.component.HeartRateComponent
+import de.tadris.fitness.recording.component.HeartRateSampleComponent
 import de.tadris.fitness.recording.component.PressureComponent
 import de.tadris.fitness.recording.component.RecorderServiceComponent
 import de.tadris.fitness.recording.component.RepetitionSampleComponent
@@ -197,6 +198,7 @@ class RecorderService : Service() {
         }
         startComponent(AnnouncementComponent())
         startComponent(HeartRateComponent())
+        startComponent(HeartRateSampleComponent())
     }
 
     private fun startComponent(component: RecorderServiceComponent) {
