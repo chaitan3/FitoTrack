@@ -319,7 +319,7 @@ private fun ShowWorkoutContent(
                     stringResource(R.string.workoutRepetitions),
                     workout.repetitions.toString(),
                     stringResource(R.string.workoutSets),
-                    sets.size.toString()
+                    (state.data.pauses.size + 1).toString()
                 )
                 if (workout.workoutTypeId == WorkoutTypeManager.WORKOUT_TYPE_ID_TREADMILL) {
                     val measurements = UserMeasurements.from(context)
