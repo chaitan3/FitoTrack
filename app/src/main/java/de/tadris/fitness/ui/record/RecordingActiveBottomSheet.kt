@@ -18,6 +18,7 @@
  */
 package de.tadris.fitness.ui.record
 
+import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -53,7 +54,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -70,10 +70,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import android.widget.Toast
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.util.unit.DistanceUnitUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -183,7 +183,7 @@ fun HoldToStopButton(onStop: () -> Unit) {
     LaunchedEffect(pressing) {
         if (pressing) {
             while (true) {
-                delay(400)
+                delay(100)
                 haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
             }
         }
@@ -210,7 +210,11 @@ fun HoldToStopButton(onStop: () -> Unit) {
                             if (job.isActive) {
                                 job.cancel()
                                 if (progress.value < 0.3f) {
-                                    Toast.makeText(context, R.string.recording_hold_to_stop, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        R.string.recording_hold_to_stop,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                                 scope.launch {
                                     progress.animateTo(0f, animationSpec = tween(200))
