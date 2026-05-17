@@ -126,7 +126,7 @@
     <string name="setPreferencesTitle">Izmjenite postavke</string>
     <string name="backup">Sigurnosna kopija</string>
     <string name="restore">Vrati</string>
-    <string name="importBackupMessage">PAŽNJA: Sve postojeće datoteke unutar aplikacije bit će obrisane. Ako ne želite da se to dogodi, napravite još jednu sigurnosnu kopiju. Jeste li sigurni da želite vratiti sigurnosnu kopiju\?</string>
+    <string name="importBackupMessage">Napravite sigurnosnu kopiju trenutnih podataka ako ih želite zadržati. Želite li sada obnoviti prethodnu sigurnosnu kopiju?</string>
     <string name="chooseBackupFile">Odaberite datoteku sigurnosne kopije</string>
     <string name="loadingFile">Učitavanje datoteke</string>
     <string name="finished">Završeno</string>
