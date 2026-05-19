@@ -284,6 +284,7 @@ private fun IndoorChartContent(
                 fontSize = 120.sp,
                 fontWeight = FontWeight.Light,
                 lineHeight = 120.sp,
+                color = MaterialTheme.colorScheme.onBackground,
             )
             Text(
                 text = repetitionsLabel,

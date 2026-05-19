@@ -139,6 +139,7 @@ private fun DiagramPanel(
                 },
                 modifier = Modifier.padding(start = 4.dp),
                 maxLines = 1,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
 
