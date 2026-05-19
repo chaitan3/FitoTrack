@@ -208,7 +208,6 @@ private fun EnterWorkoutContent(
                 value = form.comment,
                 onValueChange = { vm.setComment(it) },
                 label = { Text(stringResource(R.string.comment)) },
-                singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)

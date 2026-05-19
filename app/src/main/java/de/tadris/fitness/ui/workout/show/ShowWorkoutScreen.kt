@@ -513,7 +513,6 @@ private fun ShowWorkoutContent(
                 OutlinedTextField(
                     value = commentText,
                     onValueChange = { commentText = it },
-                    singleLine = true,
                 )
             },
             confirmButton = {

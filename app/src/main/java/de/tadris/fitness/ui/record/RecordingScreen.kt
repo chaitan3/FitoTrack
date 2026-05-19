@@ -236,7 +236,6 @@ fun CommentDialog(onConfirm: (String) -> Unit, onDismiss: () -> Unit) {
             OutlinedTextField(
                 value = comment,
                 onValueChange = { comment = it },
-                singleLine = true,
             )
         },
         confirmButton = {
