@@ -170,6 +170,7 @@ fun GpsRecordingRoute(
         SelectWorkoutInformationDialog(activity, recordingType, slot) { s, info ->
             vm.onInfoSlotSelected(s, info)
         }.show()
+        vm.dismissSelectInfoDialog()
     }
 
     GpsRecordingScreen(

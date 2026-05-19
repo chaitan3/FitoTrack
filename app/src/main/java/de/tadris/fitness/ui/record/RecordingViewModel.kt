@@ -369,6 +369,10 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
         _selectInfoDialogSlot.value = slot
     }
 
+    fun dismissSelectInfoDialog() {
+        _selectInfoDialogSlot.value = null
+    }
+
     fun requestStopConfirmation() {
         _showStopConfirmation.value = true
     }

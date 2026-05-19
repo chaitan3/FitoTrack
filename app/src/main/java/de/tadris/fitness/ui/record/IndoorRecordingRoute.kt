@@ -146,6 +146,7 @@ fun IndoorRecordingRoute(
         SelectWorkoutInformationDialog(activity, recordingType, slot) { s, info ->
             vm.onInfoSlotSelected(s, info)
         }.show()
+        vm.dismissSelectInfoDialog()
     }
 
     IndoorRecordingScreen(
