@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { initializer.state.value is InitState.Loading }
         initializer.start()
 
+        val isNewLaunch = savedInstanceState == null
+
         setContent {
             FitoTrackTheme {
                 val state by initializer.state.collectAsStateWithLifecycle()
@@ -96,7 +98,9 @@ class MainActivity : ComponentActivity() {
                         }
 
                         // Handle intents from notification tap or shortcuts
+                        // Only on fresh launch — intent persists across config changes (e.g. rotation)
                         LaunchedEffect(Unit) {
+                            if (!isNewLaunch) return@LaunchedEffect
                             val action = intent.action
                             val workoutTypeId = intent.getStringExtra(RecordingConstants.WORKOUT_TYPE_EXTRA)
                             if ((action == RecordingConstants.LAUNCH_ACTION || action == RecordingConstants.RESUME_ACTION) && workoutTypeId != null) {
