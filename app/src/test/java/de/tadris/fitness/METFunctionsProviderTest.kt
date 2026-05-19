@@ -19,8 +19,8 @@
 
 package de.tadris.fitness
 
+import de.tadris.fitness.data.calorie.METFunctionsProvider
 import de.tadris.fitness.data.preferences.UserMeasurements
-import de.tadris.fitness.util.calorie.METFunctionsProvider
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

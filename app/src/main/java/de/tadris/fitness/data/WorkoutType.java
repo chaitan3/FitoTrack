@@ -106,7 +106,7 @@ public class WorkoutType implements Serializable {
 
     @Ignore
     @JsonIgnore
-    public RecordingType getRecordingType() {
+    public RecordingType getRecordingTypeDecoded() {
         return RecordingType.findById(this.recordingType);
     }
 

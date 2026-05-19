@@ -29,7 +29,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.ui.adapter.StatisticsAdapter;
 
 public class StatisticsActivity extends FitoTrackActivity {
 

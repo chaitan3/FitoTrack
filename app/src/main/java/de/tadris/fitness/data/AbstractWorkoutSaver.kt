@@ -21,8 +21,8 @@ package de.tadris.fitness.data
 
 import android.content.Context
 import de.tadris.fitness.Instance
+import de.tadris.fitness.data.calorie.CalorieCalculator
 import de.tadris.fitness.recording.component.AutoPauseComponent
-import de.tadris.fitness.util.calorie.CalorieCalculator
 
 abstract class AbstractWorkoutSaver(
     protected val context: Context,

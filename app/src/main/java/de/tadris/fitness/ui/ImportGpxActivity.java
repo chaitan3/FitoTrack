@@ -30,7 +30,7 @@ import java.io.InputStream;
 
 import de.tadris.fitness.R;
 import de.tadris.fitness.ui.dialog.ProgressDialogController;
-import de.tadris.fitness.util.io.general.IOHelper;
+import de.tadris.fitness.util.export.IOHelper;
 
 public class ImportGpxActivity extends FitoTrackActivity {
 
@@ -69,7 +69,7 @@ public class ImportGpxActivity extends FitoTrackActivity {
                 mHandler.post(() -> {
                     dialogController.cancel();
                     Toast.makeText(this, R.string.workoutImported, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, LauncherActivity.class));
+                    startActivity(new Intent(this, MainActivity.class));
                     finish();
                 });
             } catch (Exception e) {

@@ -92,6 +92,11 @@ public class HRManager extends BleManager {
         close();
     }
 
+    public void reconnect() {
+        stop();
+        start();
+    }
+
     @NonNull
     @Override
     protected HeartRateManagerCallback getGattCallback() {

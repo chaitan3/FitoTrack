@@ -42,12 +42,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import de.tadris.fitness.Instance;
-import de.tadris.fitness.aggregation.AggregationSpan;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
-import de.tadris.fitness.util.charts.DataSetStyles;
-import de.tadris.fitness.util.charts.formatter.DayTimeFormatter;
-import de.tadris.fitness.util.charts.formatter.TimeFormatter;
+import de.tadris.fitness.stats.aggregation.AggregationSpan;
+import de.tadris.fitness.ui.charts.DataSetStyles;
+import de.tadris.fitness.ui.charts.formatter.DayTimeFormatter;
+import de.tadris.fitness.ui.charts.formatter.TimeFormatter;
 
 public class StatsProvider {
     Context ctx;

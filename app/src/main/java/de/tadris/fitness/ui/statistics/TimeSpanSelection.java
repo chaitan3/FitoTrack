@@ -43,8 +43,8 @@ import java.util.GregorianCalendar;
 
 import de.tadris.fitness.Instance;
 import de.tadris.fitness.R;
-import de.tadris.fitness.aggregation.AggregationSpan;
 import de.tadris.fitness.data.preferences.UserPreferences;
+import de.tadris.fitness.stats.aggregation.AggregationSpan;
 import de.tadris.fitness.util.ThemeUtils;
 
 public class TimeSpanSelection extends LinearLayout {

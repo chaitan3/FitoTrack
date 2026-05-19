@@ -112,7 +112,13 @@ public class HRBatteryManager {
         if (gatt != null) {
             gatt.disconnect();
             gatt.close();
+            gatt = null;
         }
+    }
+
+    public void reconnect() {
+        stop();
+        start();
     }
 
     public boolean isConnectionPossible() {

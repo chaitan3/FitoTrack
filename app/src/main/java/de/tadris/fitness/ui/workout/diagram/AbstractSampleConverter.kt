@@ -25,7 +25,7 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.util.charts.formatter.TimeFormatter
+import de.tadris.fitness.ui.charts.formatter.TimeFormatter
 import java.util.concurrent.TimeUnit
 
 abstract class AbstractSampleConverter(@JvmField protected val context: Context) : SampleConverter {

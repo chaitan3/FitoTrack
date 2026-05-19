@@ -36,8 +36,8 @@ import java.util.List;
 import de.tadris.fitness.data.RecordingType;
 import de.tadris.fitness.data.WorkoutType;
 import de.tadris.fitness.data.WorkoutTypeManager;
-import de.tadris.fitness.ui.record.RecordWorkoutActivity;
-import de.tadris.fitness.util.charts.BitmapHelper;
+import de.tadris.fitness.ui.charts.BitmapHelper;
+import de.tadris.fitness.ui.record.RecordingConstants;
 
 public class ShortcutsUtils {
     private static final String TAG = "ShortcutsUtils";
@@ -56,8 +56,8 @@ public class ShortcutsUtils {
 
             Intent intent = new Intent(context,
                      RecordingType.findById(activity.id).recorderActivityClass)
-                        .setAction(RecordWorkoutActivity.LAUNCH_ACTION)
-                        .putExtra(RecordWorkoutActivity.WORKOUT_TYPE_EXTRA, activity.id);
+                        .setAction(RecordingConstants.LAUNCH_ACTION)
+                        .putExtra(RecordingConstants.WORKOUT_TYPE_EXTRA, activity.id);
 
             ImageView iconView = new ImageView(context);
             iconView.setImageIcon(

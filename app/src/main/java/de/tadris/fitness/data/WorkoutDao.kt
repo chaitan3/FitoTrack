@@ -24,6 +24,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkoutDao {
@@ -61,7 +62,10 @@ interface WorkoutDao {
     fun getAllHeartRateSamplesOfWorkout(workoutId: Long): Array<HeartRateSample>
 
     @Query("SELECT * FROM workout ORDER BY start DESC")
-    fun getWorkouts(): Array<Workout>
+    fun getWorkouts(): List<Workout>
+
+    @Query("select * from workout order by start desc")
+    fun getWorkoutsFlow(): Flow<List<Workout>>
 
     @Query("SELECT * FROM workout ORDER BY start DESC LIMIT 1")
     fun getLastWorkout(): Workout?
@@ -69,17 +73,29 @@ interface WorkoutDao {
     @Query("SELECT * FROM workout WHERE workoutTypeId = :type ORDER BY start DESC LIMIT 1")
     fun getLastWorkoutByType(type: String): Workout?
 
-    @Query("SELECT * FROM workout ORDER BY start ASC")
-    fun getAllWorkoutsHistorically(): Array<Workout>
-
-    @Query("SELECT * FROM workout WHERE workoutTypeId = :workoutType ORDER BY start ASC ")
-    fun getWorkoutsHistorically(workoutType: String?): Array<Workout>
-
     @Query("SELECT * FROM workout WHERE start = :start")
     fun getWorkoutByStart(start: Long): Workout?
 
     @Query("SELECT * FROM workout WHERE id = :id")
     fun getWorkoutById(id: Long): Workout?
+
+    @Query("SELECT COUNT(*) FROM workout")
+    fun countWorkouts(): Long
+
+    @Query("SELECT COUNT(*) FROM route_sample")
+    fun countRouteSamples(): Long
+
+    @Query("SELECT COUNT(*) FROM repetition_sample")
+    fun countRepetitionSamples(): Long
+
+    @Query("SELECT COUNT(*) FROM heart_rate_sample")
+    fun countHeartRateSamples(): Long
+
+    @Query("SELECT COUNT(*) FROM workout_event")
+    fun countWorkoutEvents(): Long
+
+    @Query("SELECT COUNT(*) FROM workout_pause")
+    fun countWorkoutPauses(): Long
 
 
     @Transaction

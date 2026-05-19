@@ -20,6 +20,7 @@ package de.tadris.fitness.recording
 
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -37,6 +38,7 @@ import de.tadris.fitness.recording.component.GpsComponent
 import de.tadris.fitness.recording.component.GpsSampleComponent
 import de.tadris.fitness.recording.component.GpsStateComponent
 import de.tadris.fitness.recording.component.HeartRateComponent
+import de.tadris.fitness.recording.component.HeartRateSampleComponent
 import de.tadris.fitness.recording.component.PressureComponent
 import de.tadris.fitness.recording.component.RecorderServiceComponent
 import de.tadris.fitness.recording.component.RepetitionSampleComponent
@@ -139,7 +141,16 @@ class RecorderService : Service() {
 
         initializeWatchdog()
         val notification = notificationComponent!!.getNotification()
-        startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val serviceType = if (stateHolder.recordingType == RecordingType.GPS) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+            } else {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
+            }
+            startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification, serviceType)
+        } else {
+            startForeground(ServiceNotificationComponent.NOTIFICATION_ID, notification)
+        }
 
         return START_STICKY
     }
@@ -187,6 +198,7 @@ class RecorderService : Service() {
         }
         startComponent(AnnouncementComponent())
         startComponent(HeartRateComponent())
+        startComponent(HeartRateSampleComponent())
     }
 
     private fun startComponent(component: RecorderServiceComponent) {

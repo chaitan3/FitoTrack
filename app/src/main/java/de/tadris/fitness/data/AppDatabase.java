@@ -56,15 +56,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ExportTargetDao exportTargetDao();
 
-    @Nullable
-    public Workout getWorkoutByStart(long start) {
-        return workoutDao().getWorkoutByStart(start);
-    }
-
-    public List<Workout> getAllWorkouts() {
-        return Arrays.asList(workoutDao().getWorkouts());
-    }
-
     public long getLastWorkoutTimeByType(String type) {
         Workout workout = workoutDao().getLastWorkoutByType(type);
         if (workout != null) {

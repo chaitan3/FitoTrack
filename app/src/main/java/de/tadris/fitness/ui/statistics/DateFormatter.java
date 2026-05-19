@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import de.tadris.fitness.aggregation.AggregationSpan;
+import de.tadris.fitness.stats.aggregation.AggregationSpan;
 
 /**
  * Converts an aggregation span to a string.

@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <de.tadris.fitness.ui.statistics.WorkoutTypeSelection
+    <de.tadris.fitness.ui.statistics.workout_type_picker.WorkoutTypeSelection
         android:id="@+id/stats_history_workout_type_selector"
         style="@style/statsBar"
         android:gravity="center_horizontal" />

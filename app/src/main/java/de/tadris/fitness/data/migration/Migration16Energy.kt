@@ -22,7 +22,7 @@ package de.tadris.fitness.data.migration
 import android.content.Context
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.WorkoutData
-import de.tadris.fitness.util.calorie.CalorieCalculator
+import de.tadris.fitness.data.calorie.CalorieCalculator
 
 class Migration16Energy(context: Context, listener: MigrationListener) :
     Migration(context, listener) {

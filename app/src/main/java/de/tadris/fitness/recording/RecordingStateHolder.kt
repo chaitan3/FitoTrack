@@ -44,9 +44,10 @@ class RecordingStateHolder {
             field = value
             if (oldValue.isPause() && !value.isPause()) {
                 pauseDuration += timeSinceLastStateChange
-            }
-            if (!oldValue.isPause() && value.isPause()) {
+            } else if (!oldValue.isPause() && value.isPause()) {
                 activeDuration += timeSinceLastStateChange
+            } else if (oldValue.isPause() && value.isPause()) {
+                pauseDuration += timeSinceLastStateChange
             }
 
             lastStateChange = System.currentTimeMillis()

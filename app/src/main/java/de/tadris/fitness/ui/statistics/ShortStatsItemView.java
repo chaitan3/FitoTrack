@@ -39,7 +39,7 @@ import de.tadris.fitness.stats.StatsDataTypes;
 import de.tadris.fitness.stats.StatsProvider;
 import de.tadris.fitness.stats.WorkoutProperty;
 import de.tadris.fitness.ui.FitoTrackActivity;
-import de.tadris.fitness.util.charts.ChartStyles;
+import de.tadris.fitness.ui.charts.ChartStyles;
 
 public class ShortStatsItemView extends LinearLayout {
     BarChart chart;

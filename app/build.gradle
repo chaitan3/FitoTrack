@@ -17,8 +17,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id('com.android.application')
+    id('kotlin-android')
+    id('org.jetbrains.kotlin.plugin.compose')
+    id('org.jetbrains.kotlin.plugin.serialization')
+}
 
 allprojects {
     dependencies {
@@ -49,14 +53,17 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
+    buildFeatures {
+        compose true
+    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = '11'
     }
     lint {
         abortOnError false
@@ -80,23 +87,41 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.documentfile:documentfile:1.1.0'
     implementation "androidx.core:core-ktx:1.17.0"
     implementation 'androidx.viewpager2:viewpager2:1.1.0'
 
     // Maps
-    def mapsforge_version = "0.25.0"
-    implementation "org.mapsforge:mapsforge-core:$mapsforge_version"
-    implementation "org.mapsforge:mapsforge-map:$mapsforge_version"
-    implementation "org.mapsforge:mapsforge-map-reader:$mapsforge_version"
-    implementation "org.mapsforge:mapsforge-themes:$mapsforge_version"
-    implementation "org.mapsforge:mapsforge-map-android:$mapsforge_version"
+    def mapsforge_version = "0.27.0"
+    implementation "com.github.mapsforge.mapsforge:mapsforge-core:$mapsforge_version"
+    implementation "com.github.mapsforge.mapsforge:mapsforge-map:$mapsforge_version"
+    implementation "com.github.mapsforge.mapsforge:mapsforge-map-reader:$mapsforge_version"
+    implementation "com.github.mapsforge.mapsforge:mapsforge-themes:$mapsforge_version"
+    implementation "com.github.mapsforge.mapsforge:mapsforge-map-android:$mapsforge_version"
     implementation 'com.caverock:androidsvg:1.4'
 
     // UI
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'dev.chrisbanes.haze:haze:1.7.2'
+    implementation("dev.chrisbanes.haze:haze-materials:1.7.2")
+
+    // Compose
+    def composeBom = platform('androidx.compose:compose-bom:2026.03.00')
+    implementation composeBom
+    androidTestImplementation composeBom
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    implementation 'androidx.compose.runtime:runtime'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-core'
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.10.0'
+    implementation 'androidx.activity:activity-compose:1.13.0'
+    implementation 'androidx.navigation:navigation-compose:2.9.8'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
     // XML
     implementation 'stax:stax-api:1.0.1'
@@ -106,17 +131,16 @@ dependencies {
     implementation 'xmlpull:xmlpull:1.1.3.1'
 
     // File Utils
-
     implementation 'commons-io:commons-io:2.21.0'
 
     // Upload to OSM
     implementation 'de.westnordost:osmapi-traces:3.2'
+    // OAuth2.0
+    implementation 'com.github.scribejava:scribejava-apis:8.3.3'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2'
 
-    // Parsing date strings in GPX-files
-    implementation 'com.github.sisyphsu:dateparser:1.0.11'
-
-    // About Screen
-    implementation 'com.github.medyo:android-about-page:1.3'
+    // Parsing date strings in GPX-files (dateparser source inlined in util/dateparser, see NOTICE.md)
+    implementation 'com.github.sisyphsu:retree:1.0.4'
 
     // Bluetooth Low Energy (e.g. for heart rate support)
     implementation 'no.nordicsemi.android:ble:2.2.4'
@@ -130,9 +154,12 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
 
     // Android Work Manager
-    def work_version = "2.11.1"
+    def work_version = "2.11.2"
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    // New Splash screen API
+    implementation 'androidx.core:core-splashscreen:1.2.0'
 
     // support for the new language APIs
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
@@ -140,15 +167,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
-    implementation 'com.edmodo:rangebar:1.0.0'
-
-
-    // New Splash screen API
-    implementation 'androidx.core:core-splashscreen:1.2.0'
-
-    // OAuth2.0
-    implementation 'com.github.scribejava:scribejava-apis:8.3.3'
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2'
 
     configurations {
         all*.exclude group: 'xmlpull', module: 'xmlpull'

@@ -28,6 +28,9 @@ import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
 import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
+import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import de.tadris.fitness.recording.heart_rate.HRBatteryManager
 import de.tadris.fitness.recording.heart_rate.HRBatteryManager.HRBatteryManagerCallback
 import de.tadris.fitness.recording.heart_rate.HRManager
@@ -54,13 +57,22 @@ class HeartRateComponent : RecorderServiceComponent {
         heartRateBatteryListener = HRBatteryListener()
         hrBatteryManager = HRBatteryManager(service, heartRateBatteryListener)
         hrBatteryManager.start()
+
+        EventBus.getDefault().register(this)
     }
 
     override fun unregister() {
+        EventBus.getDefault().unregister(this)
         hrManager.stop()
         hrBatteryManager.stop()
         heartRateListener.publishState(HeartRateConnectionState.DISCONNECTED)
         heartRateBatteryListener.publishState(HeartRateConnectionState.DISCONNECTED)
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onReconnectBluetoothDevice(@Suppress("UNUSED_PARAMETER") event: ReconnectBluetoothDeviceEvent) {
+        hrManager.reconnect()
+        hrBatteryManager.reconnect()
     }
 
     private class HeartRateListener : HRManagerCallback, ConnectionObserver {
