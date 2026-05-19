@@ -44,15 +44,16 @@ public enum WorkoutProperty {
     END(2, WorkoutPropertyType.BASE, R.string.workoutEndTime),
     DURATION(3, WorkoutPropertyType.BASE, R.string.workoutDuration),
     PAUSE_DURATION(4, WorkoutPropertyType.BASE, R.string.workoutPauseDuration),
-    CALORIE(7, WorkoutPropertyType.BASE, R.string.workoutBurnedEnergy),
+    CALORIE(5, WorkoutPropertyType.BASE, R.string.workoutBurnedEnergy),
 
     // GPS Workout
-    LENGTH(8, WorkoutPropertyType.GPS, R.string.workoutDistance),
-    AVG_SPEED(9, WorkoutPropertyType.GPS, R.string.workoutAvgSpeedShort),
-    AVG_PACE(11, WorkoutPropertyType.GPS, R.string.workoutPace),
+    LENGTH(6, WorkoutPropertyType.GPS, R.string.workoutDistance),
+    AVG_SPEED(7, WorkoutPropertyType.GPS, R.string.workoutAvgSpeedShort),
+    AVG_PACE(8, WorkoutPropertyType.GPS, R.string.workoutPace),
 
     // Indoor Workout
-    AVG_FREQUENCY(14, WorkoutPropertyType.INDOOR, R.string.workoutFrequency);
+    AVG_FREQUENCY(9, WorkoutPropertyType.INDOOR, R.string.workoutFrequency),
+    REPETITIONS(10, WorkoutPropertyType.INDOOR, R.string.workoutRepetitions);
 
     private final int id;
 
@@ -86,7 +87,7 @@ public enum WorkoutProperty {
         throw new IllegalArgumentException("Cannot find WorkoutProperty with id " + id);
     }
 
-    private static final List<WorkoutProperty> summable = Arrays.asList(NUMBER, DURATION, PAUSE_DURATION, CALORIE, LENGTH);
+    private static final List<WorkoutProperty> summable = Arrays.asList(NUMBER, DURATION, PAUSE_DURATION, CALORIE, LENGTH, REPETITIONS);
 
     public boolean summable() {
         return summable.contains(this);
@@ -131,6 +132,7 @@ public enum WorkoutProperty {
 
             case CALORIE:
             case AVG_FREQUENCY:
+            case REPETITIONS:
             default:
                 return new DefaultValueFormatter(2);
         }
@@ -157,6 +159,7 @@ public enum WorkoutProperty {
             case NUMBER:
             case CALORIE:
             case AVG_FREQUENCY:
+            case REPETITIONS:
             default:
                 return "";
         }

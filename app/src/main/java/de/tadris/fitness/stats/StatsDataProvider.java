@@ -64,14 +64,13 @@ public class StatsDataProvider {
             if ((timeSpan == null) || timeSpan.contains(workout.getStart())) {
                 WorkoutType type = workout.getWorkoutType(context);
                 if (workoutTypes.contains(type)) { // in separate if cause getWorkoutType is sometimes costly
-                    if (requestedProperty.getType().canBeApplied(workout)) { // check if property can provide data for workout
-                        try {
-                            double val = getPropertyValue(requestedProperty, workout);
-                            data.add(new StatsDataTypes.DataPoint(type, workout.getId(), workout.getStart(), val));
-                        } catch (Exception e) {
-                            // This should never happen, cause it is checked by the if clauses above
-                            e.printStackTrace();
-                        }
+                    // check if property can provide data for workout
+                    try {
+                        double val = getPropertyValue(requestedProperty, workout);
+                        data.add(new StatsDataTypes.DataPoint(type, workout.getId(), workout.getStart(), val));
+                    } catch (Exception e) {
+                        // This should never happen, cause it is checked by the if clauses above
+                        e.printStackTrace();
                     }
                 }
             }
@@ -130,6 +129,8 @@ public class StatsDataProvider {
         switch (property) {
             case AVG_FREQUENCY:
                 return workout.getAverageFrequency();
+            case REPETITIONS:
+                return workout.getRepetitions();
             default:
                 throw new Exception("Property is no Indoor Property");
         }

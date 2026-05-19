@@ -19,30 +19,8 @@
 
 package de.tadris.fitness.stats;
 
-import de.tadris.fitness.data.Workout;
-
 public enum WorkoutPropertyType {
-    BASE {
-        @Override
-        public boolean canBeApplied(Workout workout) {
-            return true;
-        }
-    }, // Applies to all workouts
-    GPS {
-        @Override
-        public boolean canBeApplied(Workout workout) {
-            return true; // TODO
-        }
-    },
-    INDOOR {
-        @Override
-        public boolean canBeApplied(Workout workout) {
-            return true; // TODO
-        }
-    },
-
-    ;
-
-    public abstract boolean canBeApplied(Workout workout);
-
+    BASE,
+    GPS,
+    INDOOR,
 }
