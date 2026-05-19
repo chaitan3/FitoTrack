@@ -17,108 +17,68 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tadris.fitness.ui;
+package de.tadris.fitness.ui
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.enableEdgeToEdge
+import androidx.annotation.AttrRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import de.tadris.fitness.Instance
+import de.tadris.fitness.R
+import de.tadris.fitness.util.PermissionUtils
+import de.tadris.fitness.util.ThemeUtils
 
-import androidx.annotation.AttrRes;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+abstract class FitoTrackActivity : AppCompatActivity() {
 
-import de.tadris.fitness.Instance;
-import de.tadris.fitness.R;
-import de.tadris.fitness.util.PermissionUtils;
-import de.tadris.fitness.util.ThemeUtils;
-
-abstract public class FitoTrackActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTheme(Instance.getInstance(this).themes.getDefaultTheme());
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTheme(Instance.getInstance(this).themes.defaultTheme)
+        enableEdgeToEdge()
     }
 
-    public int getThemePrimaryColor() {
-        return getThemeColor(android.R.attr.colorPrimary);
+    fun getThemePrimaryColor(): Int = getThemeColor(android.R.attr.colorPrimary)
+
+    fun getThemeTextColor(): Int = getThemeColor(android.R.attr.textColorPrimary)
+
+    protected fun getThemeColor(@AttrRes colorRes: Int): Int =
+        ThemeUtils.resolveThemeColor(this, colorRes)
+
+    protected fun showErrorDialog(
+        e: Exception,
+        @StringRes title: Int,
+        @StringRes message: Int,
+        listener: Runnable?,
+    ) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(getString(message) + "\n\n" + e.message)
+            .setPositiveButton(R.string.okay) { _, _ -> listener?.run() }
+            .setOnDismissListener { listener?.run() }
+            .create().show()
     }
 
-    protected int getThemePrimaryDarkColor() {
-        return getThemeColor(android.R.attr.colorPrimaryDark);
-    }
-
-    public int getThemeTextColor() {
-        return getThemeColor(android.R.attr.textColorPrimary);
-    }
-
-    protected int getThemeTextColorInverse() {
-        return (0xffffffff - getThemeTextColor()) | 0xff000000;
-    }
-
-    protected int getThemeColor(@AttrRes int colorRes) {
-        return ThemeUtils.resolveThemeColor(this, colorRes);
-    }
-
-    protected void showErrorDialog(Exception e, @StringRes int title, @StringRes int message) {
-        showErrorDialog(e, title, message, null);
-    }
-
-    protected void showErrorDialog(Exception e, @StringRes int title, @StringRes int message, @Nullable Runnable listener) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(getString(message) + "\n\n" + e.getMessage())
-                .setPositiveButton(R.string.okay, (dialog, which) -> {
-                    if (listener != null) listener.run();
-                })
-                .setOnDismissListener(dialog -> {
-                    if (listener != null) listener.run();
-                })
-                .create().show();
-    }
-
-    protected void requestStoragePermissions() {
-        if (!hasStoragePermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10);
+    protected fun setupActionBar() {
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
         }
     }
 
-    protected boolean hasStoragePermission() {
-        return PermissionUtils.checkStoragePermissions(this, true);
-    }
-
-    protected void requestKeyboard(View v) {
-        v.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
         }
+        return super.onOptionsItemSelected(item)
     }
-
-    protected void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
