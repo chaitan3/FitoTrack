@@ -554,4 +554,25 @@
     <string name="saveChangesQuestionMessage">Czy na pewno chcesz zapisać zmiany?</string>
     <string name="language">Język</string>
     <string name="restorePreparing">Przygotowywanie</string>
+    <string name="addWorkoutType">Dodaj typ treningu</string>
+    <string name="autoStartDelaySeconds">Opóźnienie w sekundach</string>
+    <string name="actionBack">Wstecz</string>
+    <string name="more">Więcej</string>
+    <string name="recording_elapsed">Czas trwania</string>
+    <string name="recording_pause">Wstrzymaj</string>
+    <string name="recording_resume">Wznów</string>
+    <string name="recording_hold_to_stop">Naciśnij długo, aby zatrzymać trening</string>
+    <string name="recording_pair_sensor">Sparuj czujnik</string>
+    <string name="recording_intervals">Interwały</string>
+    <string name="recording_status_recording">Nagrywanie</string>
+    <string name="recording_status_paused_auto">Wstrzymane · automatycznie</string>
+    <string name="recording_status_paused_manual">Wstrzymane · ręcznie</string>
+    <string name="recording_status_stopped">Zatrzymane</string>
+    <string name="recording_status_ready">Gotowe do rozpoczęcia</string>
+    <string name="recording_status_gps_weak">Słaby GPS…</string>
+    <string name="recording_status_gps_searching">Wyszukiwanie GPS…</string>
+    <string name="recording_waiting_gps_start_anyway">Oczekiwanie na ustalenie pozycji GPS — rozpocząć mimo to?</string>
+    <string name="recording_gps_accurate">GPS · dokładny</string>
+    <string name="recording_gps_weak">%d sat. · słaby</string>
+    <string name="recording_gps_searching">%d sat. · wyszukiwanie</string>
 </resources>
