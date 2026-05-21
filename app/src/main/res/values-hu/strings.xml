@@ -533,4 +533,25 @@
     <string name="saveChangesQuestionMessage">Valóban el szeretné menteni a változtatásokat?</string>
     <string name="language">Nyelv</string>
     <string name="restorePreparing">Felkészülés</string>
+    <string name="addWorkoutType">Edzéstípus hozzáadása</string>
+    <string name="autoStartDelaySeconds">Késleltetés másodpercben</string>
+    <string name="actionBack">Vissza</string>
+    <string name="more">Több</string>
+    <string name="recording_elapsed">Időtartam</string>
+    <string name="recording_pause">Szüneteltetés</string>
+    <string name="recording_resume">Folytatás</string>
+    <string name="recording_hold_to_stop">Nyomja hosszan az edzés leállításához</string>
+    <string name="recording_pair_sensor">Érzékelő párosítása</string>
+    <string name="recording_intervals">Intervallumok</string>
+    <string name="recording_status_recording">Rögzítés</string>
+    <string name="recording_status_paused_auto">Szüneteltetve · automatikus</string>
+    <string name="recording_status_paused_manual">Szüneteltetve · kézi</string>
+    <string name="recording_status_stopped">Leállítva</string>
+    <string name="recording_status_ready">Indításra kész</string>
+    <string name="recording_status_gps_weak">Gyenge GPS…</string>
+    <string name="recording_status_gps_searching">GPS keresése…</string>
+    <string name="recording_waiting_gps_start_anyway">Várakozás a GPS zárolására — mindenképp elkezdi?</string>
+    <string name="recording_gps_accurate">GPS · pontos</string>
+    <string name="recording_gps_weak">%d műhold · gyenge</string>
+    <string name="recording_gps_searching">%d műhold · keresés</string>
 </resources>
