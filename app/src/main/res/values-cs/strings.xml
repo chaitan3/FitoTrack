@@ -545,4 +545,25 @@
     <string name="saveChangesQuestionMessage">Opravdu chcete uložit změny?</string>
     <string name="language">Jazyk</string>
     <string name="restorePreparing">Příprava</string>
+    <string name="addWorkoutType">Přidat typ cvičení</string>
+    <string name="autoStartDelaySeconds">Zpoždění v sekundách</string>
+    <string name="actionBack">Zpět</string>
+    <string name="more">Více</string>
+    <string name="recording_elapsed">Trvání</string>
+    <string name="recording_pause">Pozastavit</string>
+    <string name="recording_resume">Pokračovat</string>
+    <string name="recording_hold_to_stop">Dlouze podržte pro pozastavení cvičení</string>
+    <string name="recording_pair_sensor">Párovat senzor</string>
+    <string name="recording_intervals">Intervaly</string>
+    <string name="recording_status_recording">Záznam</string>
+    <string name="recording_status_paused_auto">Pozastaveno · automaticky</string>
+    <string name="recording_status_paused_manual">Pozastaveno · ručně</string>
+    <string name="recording_status_stopped">Zastaveno</string>
+    <string name="recording_status_ready">Připraven začít</string>
+    <string name="recording_status_gps_weak">Slabý signál GPS…</string>
+    <string name="recording_status_gps_searching">Vyhledávání GPS…</string>
+    <string name="recording_waiting_gps_start_anyway">Čekání na zámek GPS – chcete přesto začít?</string>
+    <string name="recording_gps_accurate">GPS · přesné</string>
+    <string name="recording_gps_weak">%d sat. · slabý</string>
+    <string name="recording_gps_searching">%d sat. · hledání</string>
 </resources>
