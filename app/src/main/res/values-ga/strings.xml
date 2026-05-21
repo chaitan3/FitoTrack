@@ -179,7 +179,7 @@
     <string name="workoutTime">Am</string>
     <string name="workoutDate">Dáta</string>
     <string name="workoutDuration">Fad ama</string>
-    <string name="workoutDistance">Fad</string>
+    <string name="workoutDistance">Achar</string>
     <string name="workoutRepetitions">Athrá</string>
     <string name="workoutCurrentFrequency">Minicíocht Reatha</string>
     <string name="workoutMaxFrequency">Minicíocht Uasta</string>
@@ -558,4 +558,25 @@
     <string name="workoutNumber">Líon na seisiún aclaíochta</string>
     <string name="language">Teanga</string>
     <string name="restorePreparing">Ag ullmhú</string>
+    <string name="addWorkoutType">Cuir cineál aclaíochta leis</string>
+    <string name="autoStartDelaySeconds">Moill i soicindí</string>
+    <string name="actionBack">Ar ais</string>
+    <string name="more">Tuilleadh</string>
+    <string name="recording_elapsed">Fad</string>
+    <string name="recording_pause">Sos</string>
+    <string name="recording_resume">Atosú</string>
+    <string name="recording_hold_to_stop">Brúigh go fada chun an cleachtadh a stopadh</string>
+    <string name="recording_pair_sensor">Braiteoir péireála</string>
+    <string name="recording_intervals">Eatraimh</string>
+    <string name="recording_status_recording">Taifeadadh</string>
+    <string name="recording_status_paused_auto">Ar sos · uathoibríoch</string>
+    <string name="recording_status_paused_manual">Ar sos · lámhleabhar</string>
+    <string name="recording_status_stopped">Stoptha</string>
+    <string name="recording_status_ready">Réidh le tosú</string>
+    <string name="recording_status_gps_weak">GPS lag…</string>
+    <string name="recording_status_gps_searching">Cuardach GPS…</string>
+    <string name="recording_waiting_gps_start_anyway">Ag fanacht le glasáil GPS — tosú ar aon nós?</string>
+    <string name="recording_gps_accurate">GPS · cruinn</string>
+    <string name="recording_gps_weak">%d satailít · lag</string>
+    <string name="recording_gps_searching">%d satailít · ag cuardach</string>
 </resources>
