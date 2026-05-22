@@ -196,7 +196,7 @@
     <string name="preferencesUserInterfaceSummary">Az alkalmazás személyre szabása</string>
     <string name="avgSpeedInMotion">Átlagsebesség (mozgásban)</string>
     <string name="unitMetersPerSecond">Méter per másodperc</string>
-    <string name="workoutNumber">Edzések száma</string>
+    <string name="workoutNumber">Edzésszám</string>
     <string name="intervalSetSelected">Intervallumsorozat kiválasztva</string>
     <string name="cannotFindWorkout">Nem található edzés</string>
     <string name="selectIntervalSet">Intervallumsorozat kiválasztása</string>
@@ -306,7 +306,7 @@
     <string name="hintManageWorkoutTypes">Kattintson a pluszra az egyéni edzéstípusok hozzáadásához.</string>
     <string name="workoutTypeAdd">Hozzáadás</string>
     <string name="pref_auto_start_mode_unknown">Ismeretlen (ne használja)</string>
-    <string name="pref_auto_start_mode_on_move">Várakozás, amíg elkezd mozogni</string>
+    <string name="pref_auto_start_mode_on_move">Várakozás, amíg elkezd mozogni…</string>
     <string name="pref_auto_start_mode_wait_for_gps">Várakozás a pontos helyzetre</string>
     <string name="pref_auto_start_mode_instant">Indítás azonnal</string>
     <string name="pref_auto_start_mode_title">Automatikus indítás módja</string>
@@ -470,7 +470,7 @@
     <string name="exportTargetDirectory">Könyvtár</string>
     <string name="exportTargetHttpPost">HTTP POST kérés</string>
     <string name="autoBackupTitle">Automatikus biztonsági mentések</string>
-    <string name="workoutGPXExportTitle">Edzés GPX exportálásai</string>
+    <string name="workoutGPXExportTitle">Edzések GPX-exportálása</string>
     <string name="hintConfigureExportTargets">Célfájlok hozzáadása, amelyekbe exportálni kell.</string>
     <string name="deleteExportTargetConfirmation">Törli ezt az exportálási célt\?</string>
     <string name="autoExportWorkoutsSummary">Újonnan rögzített edzések exportálása</string>
@@ -531,4 +531,6 @@
     <string name="removedOAuthToken">OAuth-token eltávolítva</string>
     <string name="saveChangesQuestion">Menti a változtatásokat?</string>
     <string name="saveChangesQuestionMessage">Valóban el szeretné menteni a változtatásokat?</string>
+    <string name="language">Nyelv</string>
+    <string name="restorePreparing">Felkészülés</string>
 </resources>
