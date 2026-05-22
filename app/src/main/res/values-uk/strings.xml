@@ -476,9 +476,7 @@
     <string name="invalidNumberFormat">Некоректний формат числа.</string>
     <string name="fileNotFound">Файл не знайдено</string>
     <string name="stats_history_title">Історія</string>
-    <string name="showWorkoutZoomControlsTitle">Масштабування та панорамування</string>
     <string name="workoutDistanceSum">Сума відстаней</string>
-    <string name="showWorkoutZoomControlsSummary">Увімкніть елементи керування масштабуванням і панорамуванням на карті під час запису GPS-тренувань</string>
     <string name="trackable_visibility">Відстежується</string>
     <string name="kcal_unit">ккал</string>
     <string name="always_mode">Завжди</string>

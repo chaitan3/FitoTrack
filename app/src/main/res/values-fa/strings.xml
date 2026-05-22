@@ -297,8 +297,6 @@
     <string name="monthYear">ماه / سال</string>
     <string name="workoutAvgDistance">میانگین مسافت</string>
     <string name="workoutDistanceSum">مجموع مسافت</string>
-    <string name="showWorkoutZoomControlsSummary">هنگام ضبط تمرینات GPS، کنترل‌های بزرگنمایی و حرکت در نقشه را فعال کنید</string>
-    <string name="showWorkoutZoomControlsTitle">بزرگنمایی و حرکت</string>
     <string name="zoomWithVolumeButtonsSummary">کلید های افزایش و کاهش صدا، بزرگ‌نمایی و کوچک‌نمایی را کنترل می‌کند</string>
     <string name="zoomWithVolumeButtonsTitle">بزرگنمایی با کلید های کنترل صدا</string>
     <string name="hidden">پنهان</string>

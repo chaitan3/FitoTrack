@@ -481,8 +481,6 @@
     <string name="system_default">Domyślny systemowy</string>
     <string name="saturday">Sobota</string>
     <string name="unitHeartRateSensorBattery">%</string>
-    <string name="showWorkoutZoomControlsSummary">Włączaj sterowanie powiększaniem i przesuwaniem na mapie podczas nagrywania treningów z GPS-em</string>
-    <string name="showWorkoutZoomControlsTitle">Powiększanie i przesuwanie</string>
     <string name="autoBackupTitle">Automatyczne kopie zapasowe</string>
     <string name="workoutGPXExportTitle">Eksportowanie treningów do GPX</string>
     <string name="deleteExportTargetConfirmation">Czy na pewno chcesz usunąć to miejsce eksportu\?</string>

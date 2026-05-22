@@ -86,7 +86,6 @@ fun RecordingSettingsScreen(
     var autoPause by remember { mutableStateOf(prefs.useAutoPause) }
     var autoTimeout by remember { mutableStateOf(prefs.autoTimeout) }
     var showOnLockScreen by remember { mutableStateOf(prefs.showOnLockScreen) }
-    var showZoomControls by remember { mutableStateOf(prefs.showWorkoutZoomControls) }
     var zoomWithVolume by remember { mutableStateOf(prefs.zoomWithVolumeButtons) }
     var askForComment by remember { mutableStateOf(prefs.askForComment) }
     var intervalsIncludePauses by remember { mutableStateOf(prefs.intervalsIncludePauses) }
@@ -140,14 +139,6 @@ fun RecordingSettingsScreen(
                     title = stringResource(R.string.preferenceCurrentSpeedAverageTimeTitle),
                     supporting = stringResource(R.string.preferenceCurrentSpeedAverageTimeSummary),
                     onClick = { showSpeedDialog = true },
-                )
-            }
-            item {
-                SwitchSettingsItem(
-                    title = stringResource(R.string.showWorkoutZoomControlsTitle),
-                    supporting = stringResource(R.string.showWorkoutZoomControlsSummary),
-                    checked = showZoomControls,
-                    onCheckedChange = { showZoomControls = it; prefs.showWorkoutZoomControls = it },
                 )
             }
             item {

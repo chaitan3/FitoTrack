@@ -290,7 +290,6 @@
     <string name="intervalAutoStartDelayTraining">Auto Tosaigh Workout Moill</string>
     <string name="customAutoStartDelay">Eile</string>
     <string name="popup_auto_start_wait_for_gps">Nuair a bhíonn suíomh GPS beacht</string>
-    <string name="showWorkoutZoomControlsTitle">Zúmáil agus panning</string>
     <string name="hidden">Folaithe</string>
     <string name="mondriaan">MondrianName</string>
     <string name="sunday">Dé Domhnaigh</string>
@@ -476,7 +475,6 @@
     <string name="histogram">Histeagram</string>
     <string name="details">Sonraí</string>
     <string name="monthYear">Mí / Bliain</string>
-    <string name="showWorkoutZoomControlsSummary">Cumasaigh rialtáin súmáil agus pan sa léarscáil agus workouts GPS á dtaifeadadh</string>
     <string name="zoomWithVolumeButtonsSummary">Líon suas agus síos rialuithe zúmáil isteach agus amach</string>
     <string name="identifiable_visibility">Inaitheanta</string>
     <string name="trackable_visibility">Inrianaithe</string>

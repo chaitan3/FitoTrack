@@ -517,11 +517,9 @@
     <string name="histogram">Histogram</string>
     <string name="details">Detaljer</string>
     <string name="monthYear">Måned / År</string>
-    <string name="showWorkoutZoomControlsTitle">Zoom og pan</string>
     <string name="hidden">Skjult</string>
     <string name="workoutAvgDistance">Gennemsnits Distance</string>
     <string name="workoutDistanceSum">Distance sum</string>
-    <string name="showWorkoutZoomControlsSummary">Aktiver zoom og pan kontrol på kortet mens GPS træning bliver optaget</string>
     <string name="sunday">Søndag</string>
     <string name="configureHttpPostRequest">Konfigurer HTTP POST request</string>
     <string name="httpUrl">URL</string>

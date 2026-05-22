@@ -420,7 +420,6 @@
     <string name="pref_announcements_pace_control_summary">当低于或高于指定速度时发出警告</string>
     <string name="monthYear">月份 / 年份</string>
     <string name="workoutDistanceSum">距离总和</string>
-    <string name="showWorkoutZoomControlsTitle">缩放和平移</string>
     <string name="height_map">高度图</string>
     <string name="mondriaan">蒙德里安</string>
     <string name="light_theme">浅色</string>
@@ -467,7 +466,6 @@
     <string name="stats_overview_title">概述</string>
     <string name="histogram">直方图</string>
     <string name="details">详细信息</string>
-    <string name="showWorkoutZoomControlsSummary">在记录 GPS 锻炼时启用地图的缩放和平移控件</string>
     <string name="zoomWithVolumeButtonsTitle">使用音量按钮缩放</string>
     <string name="private_visibility">私密</string>
     <string name="joule_unit">焦耳</string>

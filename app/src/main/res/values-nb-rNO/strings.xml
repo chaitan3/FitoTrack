@@ -459,8 +459,6 @@
     <string name="dark_theme">Mørk</string>
     <string name="metric_unit_system">Metrisk</string>
     <string name="unitHeartRateSensorBattery">%</string>
-    <string name="showWorkoutZoomControlsSummary">Skru på forstørrelse og panoreringskontroller for kartet ved opptak av GPS-treningsøkter</string>
-    <string name="showWorkoutZoomControlsTitle">Forstørrelse og panorering</string>
     <string name="identifiable_visibility">Identifiserbar</string>
     <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitært
 \nRent kart, men noen ganger utilgjengelig</string>

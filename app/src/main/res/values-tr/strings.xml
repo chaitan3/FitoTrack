@@ -468,8 +468,6 @@
     <string name="tuesday">Salı</string>
     <string name="wednesday">Çarşamba</string>
     <string name="friday">Cuma</string>
-    <string name="showWorkoutZoomControlsSummary">GPS egzersizlerini kaydederken haritada yakınlaştırma ve kaydırma denetimlerini etkinleştirin</string>
-    <string name="showWorkoutZoomControlsTitle">Yakınlaştırma ve kaydırma</string>
     <string name="exportTargetDirectory">Dizin</string>
     <string name="autoBackupTitle">Otomatik yedeklemeler</string>
     <string name="workoutGPXExportTitle">Egzersiz GPX dışa aktarmaları</string>

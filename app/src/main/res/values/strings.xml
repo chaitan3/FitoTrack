@@ -470,10 +470,10 @@
     <string name="monthYear">Month / Year</string>
     <string name="workoutAvgDistance">Average Distance</string>
     <string name="workoutDistanceSum">Distance sum</string>
-    <string name="showWorkoutZoomControlsSummary">Enable zoom and pan controls in the map while recording GPS workouts</string>
-    <string name="showWorkoutZoomControlsTitle">Zooming and panning</string>
-    <string name="zoomWithVolumeButtonsSummary">Volume up and down controls zooming in and out</string>
+<string name="zoomWithVolumeButtonsSummary">Volume up and down controls zooming in and out</string>
     <string name="zoomWithVolumeButtonsTitle">Zoom with volume buttons</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
     <string name="hidden">Hidden</string>
     <!-- strings for string arrays -->
     <string name="identifiable_visibility">Identifiable</string>

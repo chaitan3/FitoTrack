@@ -482,8 +482,6 @@
     <string name="pref_auto_start_mode_unknown">Neznáme (nepoužívať)</string>
     <string name="auto">Automatické</string>
     <string name="stats_explore_title">Preskúmať</string>
-    <string name="showWorkoutZoomControlsSummary">Povoliť ovládanie priblíženia a posunu po mape pri GPS zázname cvičenia</string>
-    <string name="showWorkoutZoomControlsTitle">Približovanie a posúvanie</string>
     <string name="trackable_visibility">Sledovateľné</string>
     <string name="kcal_unit">kcal</string>
     <string name="workoutAvgDistance">Priemerná vzdialenosť</string>

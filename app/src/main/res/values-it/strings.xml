@@ -461,8 +461,6 @@
     <string name="monthYear">Mese / Anno</string>
     <string name="workoutAvgDistance">Distanza Media</string>
     <string name="workoutDistanceSum">Distanza totale</string>
-    <string name="showWorkoutZoomControlsSummary">Abilita lo zoom e panoramica nella mappa durante la registrazione degli allenamenti</string>
-    <string name="showWorkoutZoomControlsTitle">Zoom e panoramica</string>
     <string name="zoomWithVolumeButtonsSummary">I tasti del volume controllano lo zoom</string>
     <string name="hidden">Nascosto</string>
     <string name="identifiable_visibility">Identificabile</string>

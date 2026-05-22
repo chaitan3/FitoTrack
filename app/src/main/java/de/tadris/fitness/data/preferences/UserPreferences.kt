@@ -108,8 +108,6 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var showOnLockScreen by BooleanSharedPreference("showOnLockScreen", false)
 
-    var showWorkoutZoomControls by BooleanSharedPreference("showWorkoutZoomControls", true)
-
     var zoomWithVolumeButtons by BooleanSharedPreference("zoomWithVolumeButtons", true)
 
     var askForComment by BooleanSharedPreference(ASK_FOR_COMMENT, DEFAULT_ASK_FOR_COMMENT)

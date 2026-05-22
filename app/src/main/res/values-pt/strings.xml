@@ -469,7 +469,6 @@
     <string name="noColoring">Sem coloração</string>
     <string name="pref_announcements_pace_control_summary">Avisar quando estiver abaixo ou acima de uma velocidade especificada</string>
     <string name="invalidNumberFormat">Formato de número inválido.</string>
-    <string name="showWorkoutZoomControlsTitle">Zoom e panorâmica</string>
     <string name="fileNotFound">Ficheiro não encontrado</string>
     <string name="always_track_style">Sempre</string>
     <string name="mondriaan">Mondriaan</string>
@@ -507,7 +506,6 @@
     <string name="monthYear">Mês / Ano</string>
     <string name="workoutAvgDistance">Distância média</string>
     <string name="workoutDistanceSum">Soma das distâncias</string>
-    <string name="showWorkoutZoomControlsSummary">Ativar controles de zoom e de panorâmica no mapa enquanto grava exercícios de GPS</string>
     <string name="intervalAutoStartModeTraining">Modo de início automático de exercício</string>
     <string name="debugShareLogsTitle">Compartilhar logs</string>
     <string name="show_sum">Mostrar soma</string>

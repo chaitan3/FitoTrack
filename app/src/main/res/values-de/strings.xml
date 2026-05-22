@@ -503,8 +503,6 @@
     <string name="configureHttpPostRequest">HTTP POST Anfrage konfigurieren</string>
     <string name="httpUrl">URL</string>
     <string name="enterValidUrl">Gib eine gültige HTTP-URL ein</string>
-    <string name="showWorkoutZoomControlsSummary">Zoomen und Verschieben der Karte beim Aufnehmen von GPS-Workouts aktivieren</string>
-    <string name="showWorkoutZoomControlsTitle">Zoomen und Verschieben</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="preferencesDebugTitle">Debuggen</string>
     <string name="debugShareLogsTitle">Protokolle teilen</string>

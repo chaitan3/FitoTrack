@@ -446,11 +446,9 @@
     <string name="friday">Péntek</string>
     <string name="heartRateSensorBattery">Érzékelő akkumulátora</string>
     <string name="unitHeartRateSensorBattery">%</string>
-    <string name="showWorkoutZoomControlsSummary">Nagyítás és pásztázás vezérlők engedélyezése a térképen a GPS edzések rögzítése közben</string>
     <string name="hidden">Rejtett</string>
     <string name="autoExportBackupTitle">Automatikus alkalmazás biztonsági mentések</string>
     <string name="configureHttpPostRequest">HTTP POST kérés beállítása</string>
-    <string name="showWorkoutZoomControlsTitle">Nagyítás és pásztázás</string>
     <string name="kcal_unit">kcal</string>
     <string name="joule_unit">Joule</string>
     <string name="mapnik_default_osm_mapstyle">Mapnik\nAlapértelmezett OSM térképstílus</string>

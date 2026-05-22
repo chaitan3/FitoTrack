@@ -475,8 +475,6 @@
     <string name="monthYear">மாதம் / ஆண்டு</string>
     <string name="workoutAvgDistance">சராசரி தூரம்</string>
     <string name="workoutDistanceSum">தூர தொகை</string>
-    <string name="showWorkoutZoomControlsSummary">சி.பி.எச் உடற்பயிற்சிகளையும் பதிவு செய்யும் போது வரைபடத்தில் சூம் மற்றும் பான் கட்டுப்பாடுகளை இயக்கவும்</string>
-    <string name="showWorkoutZoomControlsTitle">பெரிதாக்குதல் மற்றும் பனிங்</string>
     <string name="zoomWithVolumeButtonsSummary">தொகுதி மேல் மற்றும் கீழ் கட்டுப்பாடுகள் உள்ளேயும் வெளியேயும் பெரிதாக்குகின்றன</string>
     <string name="identifiable_visibility">அடையாளம் காணக்கூடிய</string>
     <string name="trackable_visibility">கண்காணிக்கக்கூடியது</string>

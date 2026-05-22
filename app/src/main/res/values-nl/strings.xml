@@ -451,7 +451,6 @@
     <string name="stats_overview_title">Overzicht</string>
     <string name="histogram">Histogram</string>
     <string name="workoutAvgDistance">Gemiddelde afstand</string>
-    <string name="showWorkoutZoomControlsSummary">Zoom- en pan-hulpmiddelen op kaart inschakelen tijdens opname GPS-training</string>
     <string name="zoomWithVolumeButtonsSummary">Volume omhoog en omlaag bedient zoom in/uit</string>
     <string name="trackable_visibility">Volgbaar</string>
     <string name="private_visibility">Privé</string>
@@ -504,7 +503,6 @@
     <string name="workoutAvgDurationLong">Gemiddelde tijdsduur</string>
     <string name="workoutDurationSum">Totaal van tijdsduur</string>
     <string name="workoutPauseDurationSum">Totaal van pauzes</string>
-    <string name="showWorkoutZoomControlsTitle">Zoomen en pannen</string>
     <string name="show_sum">Totaal weergeven</string>
     <string name="workoutTypePullUps">Pullups</string>
     <string name="stats_explore_title">Verkennen</string>

@@ -497,7 +497,6 @@
     <string name="pref_announcements_pace_control_summary">Upozornit, pokud je pod nebo nad zadanou rychlostí</string>
     <string name="invalidNumberFormat">Nesprávný formát čísla.</string>
     <string name="hidden">Skryté</string>
-    <string name="showWorkoutZoomControlsTitle">Přibližování a posouvání</string>
     <string name="identifiable_visibility">Identifikovatelné</string>
     <string name="trackable_visibility">Sledovatelné</string>
     <string name="imperial_with_meters_unit_system">Imperiální s metry</string>
@@ -529,7 +528,6 @@
     <string name="statistics">Statistiky</string>
     <string name="workoutAvgDistance">Průměrná vzdálenost</string>
     <string name="workoutDistanceSum">Celková vzdálenost</string>
-    <string name="showWorkoutZoomControlsSummary">Povolit ovládání přiblížení a posunu v mapě při nahrávání GPS cvičení</string>
     <string name="wednesday">Středa</string>
     <string name="autoExportWorkoutExplanation">Po nahrání nového cvičení se zde uloží export GPX:</string>
     <plurals name="workoutPullUp">

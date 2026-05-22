@@ -453,8 +453,6 @@
     <string name="thursday">Четверг</string>
     <string name="wednesday">Среда</string>
     <string name="friday">Пятница</string>
-    <string name="showWorkoutZoomControlsSummary">Включить управление масштабированием и перемещением карты во время записи GPS-тренировок</string>
-    <string name="showWorkoutZoomControlsTitle">Масштабирование и перемещение</string>
     <string name="trackable_visibility">Отслеживаемый</string>
     <string name="private_visibility">Личный</string>
     <string name="kcal_unit">ккал</string>

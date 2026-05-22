@@ -467,8 +467,6 @@
     <string name="thursday">Xoves</string>
     <string name="wednesday">Mércores</string>
     <string name="heartRateSensorBattery">Sensor da batería</string>
-    <string name="showWorkoutZoomControlsSummary">Permitir zoom e desprazamento no mapa mentras grava actividades GPS</string>
-    <string name="showWorkoutZoomControlsTitle">Zoom e desprazamento</string>
     <string name="exportTargetDirectory">Directorio</string>
     <string name="exportTargetHttpPost">Solicitude HTTP POST</string>
     <string name="workoutGPXExportTitle">Exportación a GPX das actividades</string>

@@ -405,7 +405,6 @@
     <string name="trackStyle">Estilo de pista</string>
     <string name="preferenceFirstDayOfWeek">Inicio de la semana</string>
     <string name="edit_interval">Editar intervalo</string>
-    <string name="showWorkoutZoomControlsSummary">Habilite los controles de zoom y panorámica en el mapa mientras graba entrenamientos GPS</string>
     <string name="workoutTypeTreadmill">Caminadora</string>
     <string name="pref_render_theme_style">Estilo de renderizado</string>
     <string name="hidden">Oculto</string>
@@ -463,7 +462,6 @@
     <string name="pref_step_length">Longitud del paso</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="unitHertzLong">Hercios</string>
-    <string name="showWorkoutZoomControlsTitle">Zoom y panorámica</string>
     <string name="mapnik_default_osm_mapstyle">Mapnik
 \nPredeterminado de OSM</string>
     <string name="bright_night">Noche brillante</string>

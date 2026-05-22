@@ -476,7 +476,6 @@
     <string name="selectExportTarget">Pasirinkti eksportavimo vietą</string>
     <string name="httpUrl">URL</string>
     <string name="preferencesDebugTitle">Derinimas</string>
-    <string name="showWorkoutZoomControlsSummary">Įgalinti priartinimo ir paslinkimo valdiklius žemėlapyje įrašinėjant GPS treniruotes</string>
     <string name="always_mode">Visada</string>
     <string name="only_on_headphones_mode">Kai prijungtos ausinės</string>
     <string name="hidden">Paslėpta</string>
@@ -512,7 +511,6 @@
     <string name="debugShareLogsSummary">Bendrinkite žurnalus, kuriuose yra naudingų duomenų, kad galėtume rasti klaidas treniruočių įrašymo priemonėje. Paprastai juose nėra vietos duomenų.</string>
     <string name="takeBackups3">Kas trečią dieną</string>
     <string name="zoomWithVolumeButtonsTitle">Priartinimas su garso mygtukais</string>
-    <string name="showWorkoutZoomControlsTitle">Priartinimas ir slinkimas</string>
     <string name="workoutCount">Treniruočių skaičius</string>
     <string name="massExportGpxTitle">Eksportuoti visas treniruotes kaip GPX</string>
     <string name="stats_explore_title">Naršyti</string>

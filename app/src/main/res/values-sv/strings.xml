@@ -496,12 +496,10 @@
     <string name="takeBackups14">Varanan vecka</string>
     <string name="purple_rain">Lila regn</string>
     <string name="pink_mist">Rosa dimma</string>
-    <string name="showWorkoutZoomControlsTitle">Zoomning och panorering</string>
     <plurals name="workoutPullUp">
         <item quantity="one">Armhävning</item>
         <item quantity="other">Armhävningar</item>
     </plurals>
-    <string name="showWorkoutZoomControlsSummary">Aktivera zoomning och panoreringskontroller på kartan medans GPS-träningarna spelas in</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="workoutTypePullUps">Armhävningar</string>
     <string name="rainbow_warrior">Regnbågskrigare</string>

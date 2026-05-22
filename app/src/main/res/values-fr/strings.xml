@@ -459,8 +459,6 @@
 \nFichier carte local avec un thème rendu localement</string>
     <string name="sunday">Dimanche</string>
     <string name="unitHeartRateSensorBattery">%</string>
-    <string name="showWorkoutZoomControlsSummary">Activer le zoom et le déplacement de la carte lors de l\'enregistrement GPS des entrainements</string>
-    <string name="showWorkoutZoomControlsTitle">Zoom et déplacement</string>
     <string name="thursday">Jeudi</string>
     <string name="monday">Lundi</string>
     <string name="tuesday">Mardi</string>

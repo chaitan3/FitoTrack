@@ -212,6 +212,18 @@ fun MapControlButtons(
                 )
             }
         }
+        MapPillButton(onClick = { mapController.zoomIn() }) {
+            Icon(
+                painter = painterResource(R.drawable.ic_map_zoomin),
+                contentDescription = stringResource(R.string.zoom_in),
+            )
+        }
+        MapPillButton(onClick = { mapController.zoomOut() }) {
+            Icon(
+                painter = painterResource(R.drawable.ic_map_zoomout),
+                contentDescription = stringResource(R.string.zoom_out),
+            )
+        }
     }
 }
 
