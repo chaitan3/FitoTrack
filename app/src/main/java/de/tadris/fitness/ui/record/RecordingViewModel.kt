@@ -21,7 +21,6 @@ package de.tadris.fitness.ui.record
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Intent
-import android.media.AudioManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -43,13 +42,9 @@ import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.actions.WorkoutActionStart
 import de.tadris.fitness.recording.actions.WorkoutActionStop
 import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
-import de.tadris.fitness.recording.announcement.TTSController
-import de.tadris.fitness.recording.autostart.AutoStartAnnouncements
-import de.tadris.fitness.recording.autostart.AutoStartSoundFeedback
-import de.tadris.fitness.recording.autostart.AutoStartVibratorFeedback
-import de.tadris.fitness.recording.autostart.AutoStartWorkout
-import de.tadris.fitness.recording.autostart.DefaultMovementDetector
-import de.tadris.fitness.recording.autostart.MovementDetector
+import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
+import de.tadris.fitness.recording.autostart.AutoStartStateEvent
+import de.tadris.fitness.recording.autostart.WorkoutAutoStartedEvent
 import de.tadris.fitness.recording.component.AnnouncementComponent
 import de.tadris.fitness.recording.component.HeartRateComponent
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
@@ -60,8 +55,6 @@ import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
 import de.tadris.fitness.recording.information.InformationDisplay
 import de.tadris.fitness.recording.information.RecordingInformation
 import de.tadris.fitness.util.BluetoothDevicePreferences
-import de.tadris.fitness.util.ToneGeneratorController
-import de.tadris.fitness.util.VibratorController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -133,20 +126,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
     private val startedSem = Semaphore(1)
     private var finishGuard = false
 
-    private lateinit var movementDetector: MovementDetector
-    protected lateinit var autoStartWorkout: AutoStartWorkout
-    private var vibratorController: VibratorController? = null
-    private lateinit var autoStartVibratorFeedback: AutoStartVibratorFeedback
-    private var toneGeneratorController: ToneGeneratorController? = null
-    private lateinit var autoStartSoundFeedback: AutoStartSoundFeedback
-    private var autoStartAnnouncements: AutoStartAnnouncements? = null
-    private var ttsController: TTSController? = null
-
-    private var _isAutoStartSupported = false
-    val isAutoStartSupported: Boolean get() = _isAutoStartSupported
-
-    val lastAutoStartConfig: AutoStartWorkout.Config get() = autoStartWorkout.lastStartConfig
-
     private val mainHandler = Handler(Looper.getMainLooper())
 
     fun init(workoutType: WorkoutType) {
@@ -159,28 +138,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             RecordingType.findById(workoutType.recordingType),
             getApplication()
         )
-
-        ttsController = TTSController(getApplication(), TAG)
-        movementDetector = DefaultMovementDetector()
-        autoStartWorkout = AutoStartWorkout(movementDetector)
-        movementDetector.registerTo(EventBus.getDefault())
-        movementDetector.start()
-
-        vibratorController = VibratorController(getApplication())
-        autoStartVibratorFeedback = AutoStartVibratorFeedback(vibratorController)
-        autoStartVibratorFeedback.registerTo(EventBus.getDefault())
-
-        toneGeneratorController = ToneGeneratorController(getApplication(), AudioManager.STREAM_NOTIFICATION)
-        autoStartSoundFeedback = AutoStartSoundFeedback(toneGeneratorController, instance)
-        autoStartSoundFeedback.registerTo(EventBus.getDefault())
-
-        autoStartAnnouncements = AutoStartAnnouncements(getApplication(), instance, ttsController)
-        autoStartAnnouncements!!.registerTo(EventBus.getDefault())
-
-        _isAutoStartSupported = autoStartWorkout.registerTo(EventBus.getDefault())
-        if (!_isAutoStartSupported) {
-            Log.e(TAG, "init: Failed to setup auto start helper, not using auto start")
-        }
 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
@@ -254,13 +211,13 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             Log.w(TAG, "Cannot start the workout, already started.")
             return
         }
-        cancelAutoStart(false)
+        EventBus.getDefault().post(AutoStartCancelEvent)
         EventBus.getDefault().post(WorkoutActionStart(reason))
     }
 
     fun stop(reason: StopReason) {
         startedSem.release()
-        cancelAutoStart(true)
+        EventBus.getDefault().post(AutoStartCancelEvent)
 
         val current = AggregatedRecordingValuesEvent.getCurrent()
         EventBus.getDefault().post(WorkoutActionStop(reason))
@@ -300,24 +257,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
         } else if (state == RecordingState.MANUAL_PAUSE) {
             EventBus.getDefault().post(WorkoutActionResume)
         }
-    }
-
-    fun beginAutoStart(delayMs: Long, mode: AutoStartWorkout.Mode? = null) {
-        val config = when {
-            mode == null -> AutoStartWorkout.Config(delayMs)
-            delayMs == Long.MIN_VALUE -> AutoStartWorkout.Config(mode)
-            else -> AutoStartWorkout.Config(delayMs, mode)
-        }
-        EventBus.getDefault().post(AutoStartWorkout.BeginEvent(config))
-    }
-
-    fun cancelAutoStart(userReq: Boolean) {
-        EventBus.getDefault().post(
-            AutoStartWorkout.AbortEvent(
-                if (userReq) AutoStartWorkout.AbortEvent.Reason.USER_REQ
-                else AutoStartWorkout.AbortEvent.Reason.STARTED
-            )
-        )
     }
 
     fun onIntervalSetSelected(set: IntervalSet) {
@@ -420,35 +359,19 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
         mainHandler.post { finish() }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onAutoStartWorkoutStateChange(e: AutoStartWorkout.StateChangeEvent) {
-        when (e.newState) {
-            AutoStartWorkout.State.COUNTDOWN -> {
-                val cd = autoStartWorkout.countdownMs
-                _autoStartUiState.value = AutoStartUiState.Countdown(cd, (cd / 1000).toInt())
-            }
-            AutoStartWorkout.State.WAITING_FOR_GPS -> {
-                _autoStartUiState.value = AutoStartUiState.WaitingForGps
-            }
-            AutoStartWorkout.State.WAITING_FOR_MOVE -> {
-                _autoStartUiState.value = AutoStartUiState.WaitingForMove
-            }
-            AutoStartWorkout.State.AUTO_START_REQUESTED -> {
-                start(StartReason.AUTO_START)
-                showToast(de.tadris.fitness.R.string.workoutAutoStarted)
-                _autoStartUiState.value = AutoStartUiState.Idle
-            }
-            AutoStartWorkout.State.ABORTED_BY_USER,
-            AutoStartWorkout.State.ABORTED_ALREADY_STARTED -> {
-                _autoStartUiState.value = AutoStartUiState.Idle
-            }
-            else -> {}
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onAutoStartState(e: AutoStartStateEvent) {
+        _autoStartUiState.value = when (val s = e.state) {
+            is AutoStartStateEvent.State.Idle -> AutoStartUiState.Idle
+            is AutoStartStateEvent.State.Countdown -> AutoStartUiState.Countdown(s.remainingMs, s.remainingS)
+            is AutoStartStateEvent.State.WaitingForGps -> AutoStartUiState.WaitingForGps
+            is AutoStartStateEvent.State.WaitingForMove -> AutoStartUiState.WaitingForMove
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCountdownChange(e: AutoStartWorkout.CountdownChangeEvent) {
-        _autoStartUiState.value = AutoStartUiState.Countdown(e.countdownMs, e.countdownS)
+    fun onWorkoutAutoStarted(e: WorkoutAutoStartedEvent) {
+        showToast(de.tadris.fitness.R.string.workoutAutoStarted)
     }
 
     // ---- Info slots ----
@@ -473,17 +396,7 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
 
     override fun onCleared() {
         super.onCleared()
-        cancelAutoStart(true)
-
-        movementDetector.stop()
-        movementDetector.unregisterFromBus()
-        autoStartWorkout.unregisterFromBus()
-        autoStartVibratorFeedback.unregisterFromBus()
-        autoStartSoundFeedback.unregisterFromBus()
-        autoStartAnnouncements?.unregisterFromBus()
-
-        ttsController?.destroyWhenDone()
-
+        EventBus.getDefault().post(AutoStartCancelEvent)
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }

@@ -31,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import de.tadris.fitness.R
-import de.tadris.fitness.recording.autostart.AutoStartWorkout
 
 @Composable
 fun CustomDelayDialog(onConfirm: (Long) -> Unit, onDismiss: () -> Unit) {
@@ -51,7 +50,7 @@ fun CustomDelayDialog(onConfirm: (Long) -> Unit, onDismiss: () -> Unit) {
         confirmButton = {
             TextButton(
                 onClick = {
-                    val seconds = input.toLongOrNull() ?: AutoStartWorkout.DEFAULT_DELAY_S.toLong()
+                    val seconds = input.toLongOrNull() ?: 20L
                     onConfirm(seconds * 1000L)
                 },
                 enabled = input.isNotEmpty(),

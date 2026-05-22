@@ -54,6 +54,7 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutTypeManager
+import de.tadris.fitness.recording.autostart.AutoStartMode
 import de.tadris.fitness.util.NotificationHelper
 
 @Composable
@@ -198,6 +199,15 @@ fun GpsRecordingScreen(
     val mapController = remember { RecordingMapController() }
     val navigationMode by mapController.navigationMode.collectAsState()
 
+    var showCustomDelayDialog by remember { mutableStateOf(false) }
+
+    if (showCustomDelayDialog) {
+        CustomDelayDialog(
+            onConfirm = { ms -> showCustomDelayDialog = false; vm.beginAutoStart(AutoStartMode.INSTANT, ms) },
+            onDismiss = { showCustomDelayDialog = false },
+        )
+    }
+
     DisposableEffect(mapController) {
         MapControllerHolder.controller = mapController
         onDispose { MapControllerHolder.controller = null }
@@ -210,6 +220,9 @@ fun GpsRecordingScreen(
         onFinish = onFinish,
         onOpenSettings = onNavigateToSettings,
         onManageIntervalSets = onNavigateToIntervalSets,
+        onAutoStartCustomDelay = { showCustomDelayDialog = true },
+        onAutoStartWaitForGps = { vm.beginAutoStart(AutoStartMode.WAIT_FOR_GPS) },
+        onAutoStartOnMove = { vm.beginAutoStart(AutoStartMode.ON_MOVE) },
         mainContent = {
             RecordingMapView(
                 routePositions = routePositions,

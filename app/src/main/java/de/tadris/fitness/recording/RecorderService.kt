@@ -29,6 +29,8 @@ import de.tadris.fitness.BuildConfig
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutTypeManager
+import de.tadris.fitness.recording.autostart.AutoStartComponent
+import de.tadris.fitness.recording.autostart.AutoStartStateEvent
 import de.tadris.fitness.recording.component.AnnouncementComponent
 import de.tadris.fitness.recording.component.AutoPauseComponent
 import de.tadris.fitness.recording.component.AutoStopComponent
@@ -170,6 +172,7 @@ class RecorderService : Service() {
 
         EventBus.getDefault().postSticky(AggregatedRecordingValuesEvent.EMPTY)
         EventBus.getDefault().postSticky(RecordingStateChangeEvent.EMPTY)
+        EventBus.getDefault().postSticky(AutoStartStateEvent.IDLE)
 
         stopForeground(true)
         super.onDestroy()
@@ -185,6 +188,7 @@ class RecorderService : Service() {
         startComponent(AutoStopComponent())
         startComponent(TemporaryAggregationComponent())
         if (type == RecordingType.GPS) {
+            startComponent(AutoStartComponent())
             startComponent(GpsComponent())
             startComponent(GpsSampleComponent())
             startComponent(GpsStateComponent())

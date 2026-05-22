@@ -28,7 +28,6 @@ import de.tadris.fitness.BuildConfig
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.recording.autostart.AutoStartWorkout
 import de.tadris.fitness.stats.aggregation.AggregationSpan
 import java.util.Calendar
 
@@ -123,9 +122,6 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var useAutoPause by BooleanSharedPreference("autoPause", true)
 
-    val isAutoStartCountdownAnnouncementsEnabled
-            by BooleanSharedPreference("announcement_countdown", true)
-
     var useAverageForCurrentSpeed
             by BooleanSharedPreference("useAverageForCurrentSpeed", false)
 
@@ -190,9 +186,7 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
         get() = UserMeasurements(userWeight, stepLength)
 
     companion object {
-        // kept as constants because they are referenced externally
         private const val FIRST_DAY_OF_WEEK_VARIABLE = "firstDayOfWeek"
-        private const val AUTO_START_MODE_VARIABLE = "autoStartMode"
         const val STEP_LENGTH: String = "stepLength"
         const val STATISTICS_AGGREGATION_SPAN: String = "statisticsAggregationSpan"
         const val STATISTICS_SELECTED_TYPES: String = "statisticsSelectedTypes"
@@ -200,7 +194,6 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
         const val VOICE_ANNOUNCEMENTS_INTERVAL_DISTANCE: String = "spokenUpdateDistancePeriod2"
         const val ASK_FOR_COMMENT: String = "askForComment"
         const val DEFAULT_ASK_FOR_COMMENT: Boolean = true
-        val DEFAULT_AUTO_START_MODE: String = AutoStartWorkout.Mode.getDefault().toString()
 
         const val STYLE_USAGE_ALWAYS: String = "always"
         const val STYLE_USAGE_DIAGRAM: String = "diagram"

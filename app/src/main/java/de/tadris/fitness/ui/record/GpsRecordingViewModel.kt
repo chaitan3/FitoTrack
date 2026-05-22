@@ -28,6 +28,8 @@ import androidx.lifecycle.viewModelScope
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecordingState
+import de.tadris.fitness.recording.autostart.AutoStartMode
+import de.tadris.fitness.recording.autostart.AutoStartRequestEvent
 import de.tadris.fitness.recording.component.GpsComponent
 import de.tadris.fitness.recording.event.LocationChangeEvent
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent
@@ -39,6 +41,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.mapsforge.core.model.LatLong
@@ -107,6 +110,10 @@ class GpsRecordingViewModel(application: Application) : RecordingViewModel(appli
 
     fun dismissNoGpsDialog() {
         _showNoGpsDialog.value = false
+    }
+
+    fun beginAutoStart(mode: AutoStartMode, delayMs: Long = 0L) {
+        EventBus.getDefault().post(AutoStartRequestEvent(mode, delayMs))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

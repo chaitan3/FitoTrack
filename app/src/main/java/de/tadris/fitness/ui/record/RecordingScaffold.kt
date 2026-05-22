@@ -51,6 +51,8 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
+import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
+import org.greenrobot.eventbus.EventBus
 import de.tadris.fitness.recording.StopReason
 
 @Composable
@@ -61,6 +63,9 @@ fun RecordingScaffold(
     onFinish: () -> Unit = {},
     onOpenSettings: () -> Unit = {},
     onManageIntervalSets: () -> Unit = {},
+    onAutoStartCustomDelay: (() -> Unit)? = null,
+    onAutoStartWaitForGps: (() -> Unit)? = null,
+    onAutoStartOnMove: (() -> Unit)? = null,
     mainContent: @Composable BoxScope.() -> Unit,
     mapOverlays: @Composable BoxScope.() -> Unit = {},
 ) {
@@ -135,7 +140,7 @@ fun RecordingScaffold(
             AutoStartOverlay(
                 autoStartState = autoStartUiState,
                 distanceUnitUtils = instance.distanceUnitUtils,
-                onAbort = { vm.cancelAutoStart(true) }
+                onAbort = { EventBus.getDefault().post(AutoStartCancelEvent) }
             )
         }
 
@@ -162,6 +167,9 @@ fun RecordingScaffold(
                             voiceFeedbackAvailable = voiceFeedbackAvailable,
                             useAutoPause = instance.userPreferences.useAutoPause,
                             onStart = { vm.start(StartReason.START_BUTTON) },
+                            onAutoStartCustomDelay = onAutoStartCustomDelay,
+                            onAutoStartWaitForGps = onAutoStartWaitForGps,
+                            onAutoStartOnMove = onAutoStartOnMove,
                             onBluetooth = { vm.requestChooseBluetoothDevice() },
                             onIntervalSet = { vm.requestIntervalSetDialog() },
                             onSettings = onOpenSettings,

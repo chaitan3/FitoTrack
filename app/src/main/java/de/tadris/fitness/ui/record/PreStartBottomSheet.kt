@@ -36,9 +36,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +49,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -67,6 +73,9 @@ fun PreStartBottomSheet(
     voiceFeedbackAvailable: Boolean,
     useAutoPause: Boolean,
     onStart: () -> Unit,
+    onAutoStartCustomDelay: (() -> Unit)? = null,
+    onAutoStartWaitForGps: (() -> Unit)? = null,
+    onAutoStartOnMove: (() -> Unit)? = null,
     onBluetooth: () -> Unit,
     onIntervalSet: () -> Unit,
     onSettings: () -> Unit,
@@ -176,32 +185,73 @@ fun PreStartBottomSheet(
                 .alpha(gpsHintAlpha),
         )
 
-        // Start button
-        Button(
-            onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onStart() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(28.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(workoutType.color),
-            ),
+        // Start button row
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Button(
+                onClick = { haptic.performHapticFeedback(HapticFeedbackType.LongPress); onStart() },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(workoutType.color),
+                ),
             ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Start ${workoutType.title}",
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium,
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Start ${workoutType.title}",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                }
+            }
+            val showTimerButton = onAutoStartCustomDelay != null || onAutoStartWaitForGps != null || onAutoStartOnMove != null
+            if (showTimerButton) {
+                var menuExpanded by remember { mutableStateOf(false) }
+                Box {
+                    FilledTonalIconButton(
+                        onClick = { menuExpanded = true },
+                        modifier = Modifier.size(56.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_timer_24),
+                            contentDescription = stringResource(R.string.pref_auto_start_delay_title),
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                    ) {
+                        if (onAutoStartCustomDelay != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.popup_auto_start_delay)) },
+                                onClick = { menuExpanded = false; onAutoStartCustomDelay() },
+                            )
+                        }
+                        if (onAutoStartWaitForGps != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.popup_auto_start_wait_for_gps)) },
+                                onClick = { menuExpanded = false; onAutoStartWaitForGps() },
+                            )
+                        }
+                        if (onAutoStartOnMove != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.popup_auto_start_on_move)) },
+                                onClick = { menuExpanded = false; onAutoStartOnMove() },
+                            )
+                        }
+                    }
+                }
             }
         }
     }
