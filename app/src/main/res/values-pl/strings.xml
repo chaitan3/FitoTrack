@@ -575,4 +575,6 @@
     <string name="recording_gps_accurate">GPS · dokładny</string>
     <string name="recording_gps_weak">%d sat. · słaby</string>
     <string name="recording_gps_searching">%d sat. · wyszukiwanie</string>
+    <string name="zoom_in">Powiększ</string>
+    <string name="zoom_out">Pomniejsz</string>
 </resources>
