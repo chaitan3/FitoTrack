@@ -419,7 +419,7 @@
     <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitární
 \nČistá mapa, ale ne vždy dostupná</string>
     <string name="zoomWithVolumeButtonsSummary">Zvýšení a snížení hlasitosti ovládá přiblížení a oddálení</string>
-    <string name="zoomWithVolumeButtonsTitle">Zoom pomocí tlačítek hlasitosti</string>
+    <string name="zoomWithVolumeButtonsTitle">Přiblížení pomocí tlačítek hlasitosti</string>
     <string name="joule_unit">Joule</string>
     <string name="always_mode">Vždy</string>
     <string name="only_on_headphones_mode">Pouze ve sluchátkách</string>
@@ -566,4 +566,6 @@
     <string name="recording_gps_accurate">GPS · přesné</string>
     <string name="recording_gps_weak">%d sat. · slabý</string>
     <string name="recording_gps_searching">%d sat. · hledání</string>
+    <string name="zoom_in">Přiblížit</string>
+    <string name="zoom_out">Oddálit</string>
 </resources>
