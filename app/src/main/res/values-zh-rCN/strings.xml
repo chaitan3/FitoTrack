@@ -297,7 +297,7 @@
     <string name="stop">停止</string>
     <string name="app_name">FitoTrack</string>
     <string name="pref_auto_start_mode_unknown">未知（不要使用）</string>
-    <string name="pref_auto_start_mode_on_move">等您开始移动</string>
+    <string name="pref_auto_start_mode_on_move">等待您开始移动…</string>
     <string name="pref_auto_start_mode_wait_for_gps">等待精确位置</string>
     <string name="pref_auto_start_mode_instant">立即开始</string>
     <string name="pref_auto_start_mode_title">自动开始模式</string>
@@ -416,7 +416,7 @@
     <string name="editStartEndHelp">在地图或图表上选择一个位置。然后单击箭头之一以选择新的起点或终点。完成后，单击保存图标以应用更改。</string>
     <string name="ttsBelowTargetSpeed">太慢</string>
     <string name="ttsAboveTargetSpeed">太快</string>
-    <string name="selectColoring">选择着色</string>
+    <string name="selectColoring">选择配色</string>
     <string name="pref_announcements_pace_control_summary">当低于或高于指定速度时发出警告</string>
     <string name="monthYear">月份 / 年份</string>
     <string name="workoutDistanceSum">距离总和</string>
@@ -426,7 +426,7 @@
     <string name="dark_theme">深色</string>
     <string name="system_default">系统默认</string>
     <string name="saturday">星期六</string>
-    <string name="workoutGPXExportTitle">锻炼 GPX 导出</string>
+    <string name="workoutGPXExportTitle">训练记录的 GPX 导出</string>
     <string name="autoExportBackupSummary">自动备份导出</string>
     <string name="takeBackups1">每天</string>
     <string name="takeBackups3">每三天</string>
@@ -519,9 +519,34 @@
     <string name="selectExportTarget">选择导出目标</string>
     <string name="enterValidUrl">输入有效的 HTTP URL</string>
     <plurals name="satelliteCount">
-        <item quantity="other">一个卫星</item>
+        <item quantity="other">一颗卫星</item>
     </plurals>
     <string name="askForComment">请求备注</string>
     <string name="removeOAuthToken">移除 OAuth 令牌</string>
     <string name="removedOAuthToken">已移除 OAuth 令牌</string>
+    <string name="addWorkoutType">添加训练类型</string>
+    <string name="autoStartDelaySeconds">延迟秒数</string>
+    <string name="language">语言</string>
+    <string name="saveChangesQuestion">保存更改？</string>
+    <string name="saveChangesQuestionMessage">是否确实要保存更改？</string>
+    <string name="restorePreparing">准备中</string>
+    <string name="actionBack">返回</string>
+    <string name="more">更多</string>
+    <string name="recording_elapsed">持续时间</string>
+    <string name="recording_pause">暂停</string>
+    <string name="recording_resume">继续</string>
+    <string name="recording_hold_to_stop">长按停止训练</string>
+    <string name="recording_pair_sensor">配对传感器</string>
+    <string name="recording_intervals">间歇训练</string>
+    <string name="recording_status_recording">记录中</string>
+    <string name="recording_status_paused_auto">已暂停 · 自动</string>
+    <string name="recording_status_paused_manual">已暂停 · 手动</string>
+    <string name="recording_status_stopped">已停止</string>
+    <string name="recording_status_ready">准备就绪</string>
+    <string name="recording_status_gps_weak">GPS 信号弱…</string>
+    <string name="recording_status_gps_searching">GPS 搜索中…</string>
+    <string name="recording_waiting_gps_start_anyway">等待 GPS 锁定 — 仍要开始？</string>
+    <string name="recording_gps_accurate">GPS · 精确</string>
+    <string name="recording_gps_weak">%d 颗卫星 · 信号弱</string>
+    <string name="recording_gps_searching">%d 颗卫星 · 搜索中</string>
 </resources>

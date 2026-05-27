@@ -535,4 +535,25 @@
     <string name="saveChangesQuestionMessage">Tes certeza de querer cambiar os cambios?</string>
     <string name="language">Idioma</string>
     <string name="restorePreparing">Preparando</string>
+    <string name="addWorkoutType">Engadir tipo de actividade</string>
+    <string name="autoStartDelaySeconds">Adiamento en segundos</string>
+    <string name="actionBack">Volver</string>
+    <string name="more">Máis</string>
+    <string name="recording_elapsed">Duración</string>
+    <string name="recording_pause">Pausa</string>
+    <string name="recording_resume">Retomar</string>
+    <string name="recording_hold_to_stop">Pulsación longa para deter a actividade</string>
+    <string name="recording_pair_sensor">Emparellar sensor</string>
+    <string name="recording_intervals">Intervalos</string>
+    <string name="recording_status_recording">Gravando</string>
+    <string name="recording_status_paused_auto">En pausa · automática</string>
+    <string name="recording_status_paused_manual">En pausa · manual</string>
+    <string name="recording_status_stopped">Detido</string>
+    <string name="recording_status_ready">Listo para comezar</string>
+    <string name="recording_status_gps_weak">GPS feble…</string>
+    <string name="recording_status_gps_searching">Buscando GPS…</string>
+    <string name="recording_waiting_gps_start_anyway">Agardando a fixar o GPS ― comezar sen agardar?</string>
+    <string name="recording_gps_accurate">GPS · preciso</string>
+    <string name="recording_gps_weak">%d sat · feble</string>
+    <string name="recording_gps_searching">%d sat · buscando</string>
 </resources>
