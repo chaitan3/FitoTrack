@@ -41,7 +41,6 @@ import de.tadris.fitness.recording.actions.WorkoutActionResume
 import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.actions.WorkoutActionStart
 import de.tadris.fitness.recording.actions.WorkoutActionStop
-import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
 import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
 import de.tadris.fitness.recording.autostart.AutoStartStateEvent
 import de.tadris.fitness.recording.autostart.WorkoutAutoStartedEvent
@@ -49,6 +48,7 @@ import de.tadris.fitness.recording.component.AnnouncementComponent
 import de.tadris.fitness.recording.component.HeartRateComponent
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
+import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
 import de.tadris.fitness.recording.event.RecordingStateChangeEvent
 import de.tadris.fitness.recording.event.TTSReadyEvent
 import de.tadris.fitness.recording.event.WorkoutAutoStopEvent
@@ -278,11 +278,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
         if (workout != null) {
             instance.db.workoutDao().updateWorkout(workout.copy(comment = comment))
         }
-        _showCommentDialog.value = false
-        finish()
-    }
-
-    fun onCommentDismissed() {
         _showCommentDialog.value = false
         finish()
     }

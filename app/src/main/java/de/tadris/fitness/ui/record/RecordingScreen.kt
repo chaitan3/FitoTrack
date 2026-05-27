@@ -227,10 +227,10 @@ fun StopConfirmDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun CommentDialog(onConfirm: (String) -> Unit, onDismiss: () -> Unit) {
+fun CommentDialog(onConfirm: (String) -> Unit) {
     var comment by remember { mutableStateOf("") }
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onConfirm(comment) },
         title = { Text(stringResource(R.string.enterComment)) },
         text = {
             OutlinedTextField(
@@ -243,10 +243,5 @@ fun CommentDialog(onConfirm: (String) -> Unit, onDismiss: () -> Unit) {
                 Text(stringResource(R.string.okay))
             }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
     )
 }

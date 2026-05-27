@@ -51,9 +51,9 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.recording.GpsState
 import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.StartReason
+import de.tadris.fitness.recording.StopReason
 import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
 import org.greenrobot.eventbus.EventBus
-import de.tadris.fitness.recording.StopReason
 
 @Composable
 fun RecordingScaffold(
@@ -107,7 +107,6 @@ fun RecordingScaffold(
     if (showCommentDialog) {
         CommentDialog(
             onConfirm = { vm.onCommentEntered(it) },
-            onDismiss = { vm.onCommentDismissed() }
         )
     }
     if (showIntervalSetDialog) {
