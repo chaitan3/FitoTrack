@@ -36,6 +36,7 @@ import de.tadris.fitness.R;
 import de.tadris.fitness.ui.charts.ChartStyles;
 import de.tadris.fitness.ui.charts.formatter.DistanceFormatter;
 import de.tadris.fitness.ui.charts.formatter.FractionedDateFormatter;
+import de.tadris.fitness.ui.charts.formatter.SpeedFormatter;
 import de.tadris.fitness.ui.charts.formatter.TimeFormatter;
 
 public enum WorkoutProperty {
@@ -127,6 +128,7 @@ public enum WorkoutProperty {
                 return StatsProvider.getCorrectTimeFormatter(TimeUnit.MINUTES, (long) value);
 
             case AVG_SPEED:
+                return new SpeedFormatter(Instance.getInstance(ctx).distanceUnitUtils);
             case LENGTH:
                 return new DistanceFormatter(Instance.getInstance(ctx).distanceUnitUtils, (int)value);
 
@@ -150,6 +152,7 @@ public enum WorkoutProperty {
                 return Instance.getInstance(ctx).distanceUnitUtils.getPaceUnit();
 
             case AVG_SPEED:
+                return Instance.getInstance(ctx).distanceUnitUtils.getDistanceUnitSystem().getSpeedUnit();
             case LENGTH:
                 if(value / Instance.getInstance(ctx).distanceUnitUtils.getDistanceUnitSystem().getMetersFromLongDistance(1) > 1)
                     return Instance.getInstance(ctx).distanceUnitUtils.getDistanceUnitSystem().getLongDistanceUnit();
