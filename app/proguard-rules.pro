@@ -24,14 +24,9 @@
 
 -keepattributes *Annotation*
 
-# Optional stax2 validation backends not present at runtime
--dontwarn org.codehaus.stax2.**
--dontwarn org.kxml2.**
-
-# JAXB and java.beans are Java SE APIs absent from Android
--dontwarn javax.xml.bind.**
--dontwarn jakarta.xml.bind.**
--dontwarn java.beans.**
+-keep class javax.xml.stream.** { *; }
+-keep class com.ctc.wstx.** { *; }
+-keep class de.tadris.fitness.util.export.gpx.model.** { *; }
 
 # StAX factory implementation from stax-api is loaded via service loader at runtime
 # by Jackson XmlMapper — R8 would strip it without a direct code reference
@@ -45,3 +40,13 @@
 -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
     <init>(java.lang.Throwable);
 }
+
+-dontwarn aQute.bnd.annotation.spi.ServiceProvider
+-dontwarn com.ctc.wstx.shaded.msv_core.driver.textui.Driver
+-dontwarn jakarta.xml.bind.DatatypeConverter
+-dontwarn java.beans.ConstructorProperties
+-dontwarn java.beans.Transient
+-dontwarn javax.xml.bind.DatatypeConverter
+-dontwarn org.osgi.framework.BundleActivator
+-dontwarn org.osgi.framework.BundleContext
+-dontwarn org.osgi.framework.ServiceRegistration

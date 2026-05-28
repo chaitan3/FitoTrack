@@ -128,6 +128,7 @@ private fun runExport(
             }
             context.startActivity(shareIntent)
         } catch (e: Exception) {
+            e.printStackTrace()
             onError(context.getString(R.string.errorGpxExportFailed))
         } finally {
             onLoading(false)
