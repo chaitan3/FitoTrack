@@ -22,6 +22,8 @@ package de.tadris.fitness.recording.component
 import android.hardware.SensorManager
 import de.tadris.fitness.data.RouteSample
 import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.calorie.CalorieCalculator
+import de.tadris.fitness.data.preferences.UserMeasurements
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
@@ -59,7 +61,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     private var sampleCount = 0
 
-    private val energy get() = 0.0 // joules // TODO
+    private var energy = 0.0
 
     override fun register(service: RecorderService) {
         this.service = service
@@ -88,6 +90,20 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     override fun unregister() {
         EventBus.getDefault().unregister(this)
+    }
+
+    override fun checkSlow() {
+        val duration = service.stateHolder.currentActiveDuration
+        if (duration <= 0) return
+        val avgSpeed = distance / (duration / 1000.0)
+        val calculated = CalorieCalculator(service).calculateEnergy(
+            UserMeasurements.from(service),
+            duration,
+            ascent.toInt(),
+            service.stateHolder.workoutType.id,
+            avgSpeed
+        )
+        energy = maxOf(calculated, energy)
     }
 
     override fun checkFast() {
