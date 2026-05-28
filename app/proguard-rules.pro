@@ -19,7 +19,19 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontobfuscate
+-keepattributes SourceFile,LineNumberTable
+
 -keepattributes *Annotation*
+
+# Optional stax2 validation backends not present at runtime
+-dontwarn org.codehaus.stax2.**
+-dontwarn org.kxml2.**
+
+# JAXB and java.beans are Java SE APIs absent from Android
+-dontwarn javax.xml.bind.**
+-dontwarn jakarta.xml.bind.**
+-dontwarn java.beans.**
 -keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
