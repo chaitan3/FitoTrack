@@ -41,6 +41,7 @@
     <init>(java.lang.Throwable);
 }
 
+-dontwarn org.codehaus.stax2.validation.XMLValidationSchemaFactory$*
 -dontwarn aQute.bnd.annotation.spi.ServiceProvider
 -dontwarn com.ctc.wstx.shaded.msv_core.driver.textui.Driver
 -dontwarn jakarta.xml.bind.DatatypeConverter
