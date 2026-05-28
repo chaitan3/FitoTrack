@@ -93,17 +93,7 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     }
 
     override fun checkSlow() {
-        val duration = service.stateHolder.currentActiveDuration
-        if (duration <= 0) return
-        val avgSpeed = distance / (duration / 1000.0)
-        val calculated = CalorieCalculator(service).calculateEnergy(
-            UserMeasurements.from(service),
-            duration,
-            ascent.toInt(),
-            service.stateHolder.workoutType.id,
-            avgSpeed
-        )
-        energy = maxOf(calculated, energy)
+        recalculateEnergy()
     }
 
     override fun checkFast() {
@@ -209,6 +199,20 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         } else {
             return lastSample?.speed ?: 0.0
         }
+    }
+
+    private fun recalculateEnergy() {
+        val duration = service.stateHolder.currentActiveDuration
+        if (duration <= 0) return
+        val avgSpeed = distance / (duration / 1000.0)
+        val calculated = CalorieCalculator(service).calculateEnergy(
+            UserMeasurements.from(service),
+            duration,
+            ascent.toInt(),
+            service.stateHolder.workoutType.id,
+            avgSpeed
+        )
+        energy = maxOf(calculated, energy)
     }
 
 }
