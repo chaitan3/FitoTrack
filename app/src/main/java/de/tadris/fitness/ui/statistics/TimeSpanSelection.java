@@ -131,8 +131,8 @@ public class TimeSpanSelection extends LinearLayout {
             }
         }
 
-        aggregationSpanArrayAdapter = new ArrayAdapter<String>(getContext(),
-                R.layout.support_simple_spinner_dropdown_item, aggregationSpanStrings) {
+        aggregationSpanArrayAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item, aggregationSpanStrings) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
