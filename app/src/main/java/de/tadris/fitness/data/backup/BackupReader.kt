@@ -119,7 +119,7 @@ class BackupReader(
         database.runInTransaction {
             if (replace) {
                 listener.onStatusChanged(10, context.getString(R.string.restorePreparing))
-                database.clearAllTables() // TODO dont clear local settings like auto export
+                database.clearAllDataTables()
             }
 
             var workoutCount = 0

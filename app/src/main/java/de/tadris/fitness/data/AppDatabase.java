@@ -22,15 +22,11 @@ package de.tadris.fitness.data;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Database(version = 18, entities = {
         Workout.class,
@@ -63,6 +59,21 @@ public abstract class AppDatabase extends RoomDatabase {
         } else {
             return 0;
         }
+    }
+
+    public void clearAllDataTables() {
+        runInTransaction(() -> {
+            SupportSQLiteDatabase db = getOpenHelper().getWritableDatabase();
+            db.execSQL("DELETE FROM heart_rate_sample");
+            db.execSQL("DELETE FROM workout_event");
+            db.execSQL("DELETE FROM repetition_sample");
+            db.execSQL("DELETE FROM route_sample");
+            db.execSQL("DELETE FROM workout_pause");
+            db.execSQL("DELETE FROM interval");
+            db.execSQL("DELETE FROM interval_set");
+            db.execSQL("DELETE FROM workout_type");
+            db.execSQL("DELETE FROM workout");
+        });
     }
 
     public static AppDatabase provideDatabase(Context context) {

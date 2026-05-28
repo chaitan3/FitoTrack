@@ -121,7 +121,7 @@ class LegacyBackupReader(
     }
 
     private fun resetDatabase() {
-        database.clearAllTables()
+        database.clearAllDataTables()
     }
 
     private fun restoreGpsWorkouts(): List<Long> {
