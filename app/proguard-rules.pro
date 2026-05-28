@@ -32,6 +32,10 @@
 -dontwarn javax.xml.bind.**
 -dontwarn jakarta.xml.bind.**
 -dontwarn java.beans.**
+
+# StAX factory implementation from stax-api is loaded via service loader at runtime
+# by Jackson XmlMapper — R8 would strip it without a direct code reference
+-keep class com.bea.xml.stream.** { *; }
 -keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
