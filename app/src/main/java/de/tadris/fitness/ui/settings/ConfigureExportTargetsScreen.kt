@@ -19,7 +19,13 @@
 
 package de.tadris.fitness.ui.settings
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -65,6 +71,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.ExportTargetConfiguration
@@ -88,6 +96,8 @@ fun ConfigureExportTargetsScreen(sourceId: String, onBack: () -> Unit) {
 
     var showSelectTypeDialog by remember { mutableStateOf(false) }
     var showHttpDialog by remember { mutableStateOf(false) }
+    var showLocalNetworkDialog by remember { mutableStateOf(false) }
+    var showLocalNetworkDeniedDialog by remember { mutableStateOf(false) }
     var pendingDelete by remember { mutableStateOf<ExportTargetConfiguration?>(null) }
 
     LaunchedEffect(refreshKey) {
@@ -116,6 +126,19 @@ fun ConfigureExportTargetsScreen(sourceId: String, onBack: () -> Unit) {
         scope.launch(Dispatchers.IO) {
             dao.delete(configuration)
             withContext(Dispatchers.Main) { onConfigurationChanged() }
+        }
+    }
+
+    val localNetworkPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (!granted && Build.VERSION.SDK_INT >= 37 &&
+            !ActivityCompat.shouldShowRequestPermissionRationale(
+                context as Activity,
+                Manifest.permission.ACCESS_LOCAL_NETWORK
+            )
+        ) {
+            showLocalNetworkDeniedDialog = true
         }
     }
 
@@ -216,6 +239,55 @@ fun ConfigureExportTargetsScreen(sourceId: String, onBack: () -> Unit) {
             onConfirm = { url ->
                 showHttpDialog = false
                 insert(ExportTarget.TARGET_TYPE_HTTP_POST, url)
+                if (Build.VERSION.SDK_INT >= 37 &&
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_LOCAL_NETWORK
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    showLocalNetworkDialog = true
+                }
+            },
+        )
+    }
+
+    if (showLocalNetworkDialog) {
+        AlertDialog(
+            onDismissRequest = { showLocalNetworkDialog = false },
+            title = { Text(stringResource(R.string.localNetworkPermissionTitle)) },
+            text = { Text(stringResource(R.string.localNetworkPermissionMessage)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showLocalNetworkDialog = false
+                    localNetworkPermissionLauncher.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
+                }) { Text(stringResource(R.string.okay)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLocalNetworkDialog = false }) {
+                    Text(stringResource(R.string.ignore))
+                }
+            },
+        )
+    }
+
+    if (showLocalNetworkDeniedDialog) {
+        AlertDialog(
+            onDismissRequest = { showLocalNetworkDeniedDialog = false },
+            title = { Text(stringResource(R.string.localNetworkPermissionTitle)) },
+            text = { Text(stringResource(R.string.localNetworkPermissionDeniedMessage)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showLocalNetworkDeniedDialog = false
+                    context.startActivity(
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            .setData(Uri.fromParts("package", context.packageName, null))
+                    )
+                }) { Text(stringResource(R.string.openSettings)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLocalNetworkDeniedDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
             },
         )
     }

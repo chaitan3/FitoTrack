@@ -47,8 +47,9 @@ public class AutoExporter extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        readData();
         try {
+            boolean result = readData();
+            if (!result) return Result.failure();
             ExportSource.ExportedFile file = source.provideFile(getApplicationContext());
             target.exportFile(getApplicationContext(), file);
             return Result.success();
@@ -58,10 +59,12 @@ public class AutoExporter extends Worker {
         }
     }
 
-    private void readData() {
+    private boolean readData() {
         Data data = getInputData();
         source = ExportSource.getExportSourceByName(data.getString(DATA_SOURCE_TYPE), data.getString(DATA_SOURCE_DATA));
         ExportTargetConfiguration targetConfiguration = Instance.getInstance(getApplicationContext()).db.exportTargetDao().findById(data.getLong(DATA_TARGET_CONFIG_ID, 0));
+        if (targetConfiguration == null) return false; // target configuration has been deleted
         target = targetConfiguration.getTargetImplementation();
+        return true;
     }
 }

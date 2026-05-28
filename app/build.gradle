@@ -37,8 +37,8 @@ android {
     defaultConfig {
         applicationId "de.tadris.fitness"
         minSdkVersion 26
-        compileSdk 36
-        targetSdkVersion 36
+        compileSdk 37
+        targetSdkVersion 37
         versionCode 1602
         versionName "16.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

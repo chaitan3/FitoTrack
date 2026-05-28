@@ -61,7 +61,7 @@ public class AutoExportPlanner {
                 .setConstraints(configuration.getTargetImplementation().getConstraints())
                 .setInputData(data)
                 .build();
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(String.valueOf(configuration.id), ExistingPeriodicWorkPolicy.REPLACE, workRequest);
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(String.valueOf(configuration.id), ExistingPeriodicWorkPolicy.UPDATE, workRequest);
     }
 
     private void planOneTimeBackupFor(ExportTargetConfiguration configuration) {
