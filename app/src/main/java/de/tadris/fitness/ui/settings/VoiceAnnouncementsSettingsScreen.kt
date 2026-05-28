@@ -86,7 +86,6 @@ private val sections = listOf(
             VoiceAnnouncementPreference("announcement_duration", R.string.workoutDuration, defaultValue = true),
             VoiceAnnouncementPreference("announcement_duration_with_seconds", R.string.workoutDurationPrecisionToSeconds, enabledWhen = "announcement_duration"),
             VoiceAnnouncementPreference("announcement_current_heart_rate", R.string.workoutHeartRate),
-            VoiceAnnouncementPreference("announcement_current_hr_battery_level", R.string.heartRateSensorBattery),
         ),
     ),
     AnnouncementSection(

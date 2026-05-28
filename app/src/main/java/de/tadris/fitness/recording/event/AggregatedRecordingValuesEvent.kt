@@ -36,7 +36,6 @@ data class AggregatedRecordingValuesEvent(
     val energy: Double, // in joule
     val currentSpeed: Double, // in m/s
     val currentHeartRate: Int,
-    val currentHeartRateBattery: Int,
     val currentFrequency: Double,
     val currentIntensity: Double,
     val repetitions: Int,
@@ -50,7 +49,7 @@ data class AggregatedRecordingValuesEvent(
             WorkoutType(),
             RecordingState.IDLE,
             0L, 0L, 0.0, 0.0, 0.0,
-            0.0, 0.0, 0, -1,
+            0.0, 0.0, 0,
             0.0, 0.0, 0, 0
         )
 

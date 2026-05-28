@@ -24,19 +24,15 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.RecorderService
-import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
-import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
 import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import de.tadris.fitness.recording.heart_rate.HRBatteryManager
-import de.tadris.fitness.recording.heart_rate.HRBatteryManager.HRBatteryManagerCallback
 import de.tadris.fitness.recording.heart_rate.HRManager
 import de.tadris.fitness.recording.heart_rate.HRManager.HRManagerCallback
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Heart rate and sensor battery
@@ -44,9 +40,7 @@ import org.greenrobot.eventbus.EventBus
 class HeartRateComponent : RecorderServiceComponent {
 
     private lateinit var hrManager: HRManager
-    private lateinit var hrBatteryManager: HRBatteryManager
     private lateinit var heartRateListener: HeartRateListener
-    private lateinit var heartRateBatteryListener: HRBatteryListener
 
     override fun register(service: RecorderService) {
         heartRateListener = HeartRateListener()
@@ -54,25 +48,18 @@ class HeartRateComponent : RecorderServiceComponent {
         hrManager.setConnectionObserver(heartRateListener)
         hrManager.start()
 
-        heartRateBatteryListener = HRBatteryListener()
-        hrBatteryManager = HRBatteryManager(service, heartRateBatteryListener)
-        hrBatteryManager.start()
-
         EventBus.getDefault().register(this)
     }
 
     override fun unregister() {
         EventBus.getDefault().unregister(this)
         hrManager.stop()
-        hrBatteryManager.stop()
         heartRateListener.publishState(HeartRateConnectionState.DISCONNECTED)
-        heartRateBatteryListener.publishState(HeartRateConnectionState.DISCONNECTED)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onReconnectBluetoothDevice(@Suppress("UNUSED_PARAMETER") event: ReconnectBluetoothDeviceEvent) {
         hrManager.reconnect()
-        hrBatteryManager.reconnect()
     }
 
     private class HeartRateListener : HRManagerCallback, ConnectionObserver {
@@ -103,38 +90,6 @@ class HeartRateComponent : RecorderServiceComponent {
 
         fun publishState(state: HeartRateConnectionState) {
             EventBus.getDefault().postSticky(HeartRateConnectionChangeEvent(state))
-        }
-    }
-
-    private class HRBatteryListener : HRBatteryManagerCallback,
-        ConnectionObserver {
-        override fun onHRBatteryMeasure(event: HRBatteryLevelChangeEvent) {
-            EventBus.getDefault().post(event)
-        }
-
-        override fun onDeviceConnecting(device: BluetoothDevice) {
-            publishState(HeartRateConnectionState.CONNECTING)
-        }
-
-        override fun onDeviceConnected(device: BluetoothDevice) {
-            publishState(HeartRateConnectionState.CONNECTED)
-        }
-
-        override fun onDeviceFailedToConnect(device: BluetoothDevice, reason: Int) {
-            publishState(HeartRateConnectionState.CONNECTION_FAILED)
-        }
-
-        override fun onDeviceReady(device: BluetoothDevice) {
-            publishState(HeartRateConnectionState.CONNECTED)
-        }
-
-        override fun onDeviceDisconnecting(device: BluetoothDevice) {}
-        override fun onDeviceDisconnected(device: BluetoothDevice, reason: Int) {
-            publishState(HeartRateConnectionState.DISCONNECTED)
-        }
-
-        fun publishState(state: HeartRateConnectionState) {
-            EventBus.getDefault().postSticky(HRBatteryLevelConnectionEvent(state))
         }
     }
 

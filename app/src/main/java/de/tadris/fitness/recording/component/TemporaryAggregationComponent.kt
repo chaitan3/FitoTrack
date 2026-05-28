@@ -25,8 +25,6 @@ import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.preferences.UserPreferences
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
-import de.tadris.fitness.recording.event.HRBatteryLevelChangeEvent
-import de.tadris.fitness.recording.event.HRBatteryLevelConnectionEvent
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
 import de.tadris.fitness.recording.event.RepetitionSampleEvent
@@ -39,7 +37,6 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     companion object {
         private const val PRESSURE_ELEVATION_AVERAGE = 0.1
-
     }
 
     private lateinit var service: RecorderService
@@ -56,7 +53,6 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     private var samplesForSpeedAverage = mutableListOf<RouteSample>()
 
     private var lastHeartRate = -1
-    private var lastHRBatteryLevel = -1
     private var currentFrequency = 0.0
     private var currentIntensity = 0.0
     private var repetitions = 0
@@ -101,22 +97,21 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     private fun publishAggregatedValues() {
         EventBus.getDefault().postSticky(
             AggregatedRecordingValuesEvent(
-                service.stateHolder.recordingType,
-                service.stateHolder.workoutType,
-                service.stateHolder.state,
-                service.stateHolder.currentActiveDuration,
-                service.stateHolder.currentPauseDuration,
-                distance,
-                ascent,
-                descent,
-                energy,
-                getCurrentSpeed(),
-                lastHeartRate,
-                lastHRBatteryLevel,
-                currentFrequency,
-                currentIntensity,
-                repetitions,
-                sampleCount
+                recordingType = service.stateHolder.recordingType,
+                workoutType = service.stateHolder.workoutType,
+                currentState = service.stateHolder.state,
+                activeDuration = service.stateHolder.currentActiveDuration,
+                pauseDuration = service.stateHolder.currentPauseDuration,
+                distance = distance,
+                ascent = ascent,
+                descent = descent,
+                energy = energy,
+                currentSpeed = getCurrentSpeed(),
+                currentHeartRate = lastHeartRate,
+                currentFrequency = currentFrequency,
+                currentIntensity = currentIntensity,
+                repetitions = repetitions,
+                sampleCount = sampleCount
             )
         )
     }
@@ -148,19 +143,6 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
         if (event.state != HeartRateComponent.HeartRateConnectionState.CONNECTED) {
             // If heart rate sensor currently not available
             lastHeartRate = -1
-        }
-    }
-
-    @Subscribe
-    fun onHRBatteryChange(event: HRBatteryLevelChangeEvent) {
-        lastHRBatteryLevel = event.batteryLevel
-    }
-
-    @Subscribe
-    fun onHRBatteryConnectionChange(event: HRBatteryLevelConnectionEvent) {
-        if (event.state != HeartRateComponent.HeartRateConnectionState.CONNECTED) {
-            // If heart rate sensor currently not available
-            lastHRBatteryLevel = -1
         }
     }
 
