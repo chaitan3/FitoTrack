@@ -36,12 +36,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -224,7 +224,7 @@ fun PreStartBottomSheet(
                         modifier = Modifier.size(56.dp),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.outline_timer_24),
+                            painter = painterResource(R.drawable.ic_more_horiz),
                             contentDescription = stringResource(R.string.pref_auto_start_delay_title),
                         )
                     }
