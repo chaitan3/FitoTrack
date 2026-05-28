@@ -556,4 +556,6 @@
     <string name="recording_gps_accurate">GPS · preciso</string>
     <string name="recording_gps_weak">%d sat · feble</string>
     <string name="recording_gps_searching">%d sat · buscando</string>
+    <string name="zoom_in">Aumentar</string>
+    <string name="zoom_out">Diminuír</string>
 </resources>
