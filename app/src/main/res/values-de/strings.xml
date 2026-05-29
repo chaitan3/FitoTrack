@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
   ~
@@ -569,4 +568,12 @@
     <string name="recording_gps_accurate">GPS · genau</string>
     <string name="recording_gps_weak">%d sat · schwach</string>
     <string name="recording_gps_searching">%d set · suchen</string>
+    <string name="ignore">Ignorieren</string>
+    <string name="localNetworkPermissionTitle">Lokaler Netzwerkzugriff</string>
+    <string name="localNetworkPermissionMessage">Wenn der eingegebene URL auf einen lokalen Computer in deinem Netwerk verweist, benötigt FitoTrack von Android eine Zugriffsberechtigung. Wenn der URL öffentlich im Internet zugänglich ist, kannst du dies ignorieren.</string>
+    <string name="localNetworkPermissionDeniedMessage">Der lokale Netzwerkzugriff wurde dauerhaft abgelehnt. Öffne die App-Einstellungen, um ihn zu gewähren.</string>
+    <string name="openSettings">Einstellungen öffnen</string>
+    <string name="zoom_in">Hineinzoomen</string>
+    <string name="zoom_out">Herauszoomen</string>
+    <string name="recording_hold_to_stop">Lange drücken, um den Workout anzuhalten</string>
 </resources>
