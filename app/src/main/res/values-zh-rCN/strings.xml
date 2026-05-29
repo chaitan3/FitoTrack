@@ -144,7 +144,7 @@
     <string name="per">每</string>
     <string name="timeSecondsPlural">秒</string>
     <string name="timeSecondsSingular">秒</string>
-    <string name="workoutDiscarded">放弃的锻炼</string>
+    <string name="workoutDiscarded">锻炼已放弃</string>
     <string name="preferenceTimeFormat">时间格式</string>
     <string name="preferenceDateFormat">日期格式</string>
     <string name="preferencesCategoryAppearance">外观</string>
@@ -157,7 +157,7 @@
     <string name="avgSpeedTotalLong">总平均速度</string>
     <string name="avgSpeedTotalShort">平均速度（全程）</string>
     <string name="avgSpeedInMotion">平均速度（运动时）</string>
-    <string name="enterDescription">请输入详细信息</string>
+    <string name="enterDescription">请输入描述</string>
     <string name="hintAddWorkout">请点击加号图标，来记录或导入一次锻炼。</string>
     <string name="currentSpeed">当前速度</string>
     <string name="enterName">请输入名称</string>
@@ -303,14 +303,14 @@
     <string name="pref_auto_start_mode_title">自动开始模式</string>
     <string name="intervalAutoStartModeTraining">自动锻炼开始模式</string>
     <string name="manageAutoStartModeSummary">修改自动锻炼开始的模式</string>
-    <string name="ttsMinuteSecondCountdownAnnouncement"> <xliff:g example="1 minute" id="mins">%1$s</xliff:g> 和 <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> 直至开始 </string>
-    <string name="ttsMinuteCountdownAnnouncement"> <xliff:g example="12 minutes" id="mins">%1$s</xliff:g> 直到开始 </string>
-    <string name="ttsLongSecondCountdownAnnouncement"> <xliff:g example="5 seconds" id="secs">%1$s</xliff:g> 直到开始 </string>
+    <string name="ttsMinuteSecondCountdownAnnouncement">距离开始还有 <xliff:g example="1 minute" id="mins">%1$s</xliff:g> <xliff:g example="7 seconds" id="secs">%2$s</xliff:g></string>
+    <string name="ttsMinuteCountdownAnnouncement">距离开始还有 <xliff:g example="12 minutes" id="mins">%1$s</xliff:g></string>
+    <string name="ttsLongSecondCountdownAnnouncement">距离开始还有 <xliff:g example="5 seconds" id="secs">%1$s</xliff:g></string>
     <plurals name="minutes">
-        <item quantity="other"><xliff:g example="5" id="mins">%1$d</xliff:g> 分</item>
+        <item quantity="other"><xliff:g example="1" id="mins">%1$d</xliff:g> 分钟</item>
     </plurals>
     <plurals name="seconds">
-        <item quantity="other"><xliff:g example="12" id="secs">%1$d</xliff:g> 秒</item>
+        <item quantity="other"><xliff:g example="1" id="secs">%1$d</xliff:g> 秒</item>
     </plurals>
     <string name="scanFailed">扫描失败</string>
     <string name="scanning">正在扫描…</string>
@@ -382,7 +382,7 @@
     <string name="workoutTypeTrampolineJumping">蹦床跳</string>
     <string name="workoutTypeRopeSkipping">跳绳</string>
     <plurals name="workoutStep">
-        <item quantity="other">步</item>
+        <item quantity="other">踏步</item>
     </plurals>
     <string name="workoutTypeTreadmill">跑步 机</string>
     <string name="workoutMaxIntensity">最大强度</string>
@@ -394,7 +394,7 @@
     <string name="workoutSets">组</string>
     <string name="workoutRepetitions">重复次数</string>
     <plurals name="importedWorkouts">
-        <item quantity="other">导入了 %d 条锻炼记录</item>
+        <item quantity="other">已导入 %d 个训练</item>
     </plurals>
     <string name="pref_render_theme_style_info">所选主题没有菜单可用。</string>
     <string name="hintConfigureExportTargets">添加文本导出目标位置。</string>
@@ -519,7 +519,7 @@
     <string name="selectExportTarget">选择导出目标</string>
     <string name="enterValidUrl">输入有效的 HTTP URL</string>
     <plurals name="satelliteCount">
-        <item quantity="other">一颗卫星</item>
+        <item quantity="other">%d 颗卫星</item>
     </plurals>
     <string name="askForComment">请求备注</string>
     <string name="removeOAuthToken">移除 OAuth 令牌</string>
@@ -549,4 +549,11 @@
     <string name="recording_gps_accurate">GPS · 精确</string>
     <string name="recording_gps_weak">%d 颗卫星 · 信号弱</string>
     <string name="recording_gps_searching">%d 颗卫星 · 搜索中</string>
+    <string name="zoom_in">放大</string>
+    <string name="zoom_out">缩小</string>
+    <string name="ignore">忽略</string>
+    <string name="localNetworkPermissionTitle">本地网络访问</string>
+    <string name="localNetworkPermissionMessage">如果输入的网址指向您网络中的本地计算机，FitoTrack 需要获得 Android 的权限才能访问它。如果该网址是公开可用的互联网地址，您可以忽略此权限请求。</string>
+    <string name="localNetworkPermissionDeniedMessage">本地网络访问已被永久拒绝。要授予权限，请打开应用设置。</string>
+    <string name="openSettings">打开设置</string>
 </resources>
