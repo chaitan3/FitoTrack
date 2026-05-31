@@ -193,9 +193,7 @@ class RecorderService : Service() {
             startComponent(GpsSampleComponent())
             startComponent(GpsStateComponent())
             startComponent(PressureComponent())
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                startComponent(GnssComponent())
-            }
+            startComponent(GnssComponent())
         } else {
             startComponent(ExerciseRecognitionComponent())
             startComponent(RepetitionSampleComponent())
@@ -206,24 +204,30 @@ class RecorderService : Service() {
     }
 
     private fun startComponent(component: RecorderServiceComponent) {
-        component.register(this)
-        components.add(component)
-        log(TAG, "Started component " + component.javaClass.getSimpleName())
+        synchronized(components) {
+            component.register(this)
+            components.add(component)
+            log(TAG, "Started component " + component.javaClass.simpleName)
+        }
     }
 
     private fun checkAllComponents(alsoSlow: Boolean) {
-        for (component in components) {
-            component.checkFast()
-            if (alsoSlow) component.checkSlow()
+        synchronized(components) {
+            for (component in components) {
+                component.checkFast()
+                if (alsoSlow) component.checkSlow()
+            }
         }
     }
 
     private fun stopAllComponents() {
-        for (component in components) {
-            component.unregister()
-            log(TAG, "Stopped component " + component.javaClass.getSimpleName())
+        synchronized(components) {
+            for (component in components) {
+                component.unregister()
+                log(TAG, "Stopped component " + component.javaClass.simpleName)
+            }
+            components.clear()
         }
-        components.clear()
     }
 
     private fun initializeWatchdog() {
