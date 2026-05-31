@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,6 +112,7 @@ internal fun WorkoutListItem(
                             text = comment,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Right,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -164,7 +166,7 @@ private fun WorkoutListItemPreview() {
         start = System.currentTimeMillis() - 3_600_000,
         end = System.currentTimeMillis(),
         activeDuration = 3_600_000,
-        comment = "Morning run Morning run Morning runMorning runMorning runMorning runMorning run",
+        comment = "Morning run\n",
         distance = 10_000.0,
         repetitions = 0,
         energy = 1_500_000.0,
