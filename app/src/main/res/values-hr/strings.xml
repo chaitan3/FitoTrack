@@ -16,7 +16,7 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  --><resources>
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="deleteWorkout">Izbriši vježbu</string>
     <string name="continue_">Dalje</string>
     <string name="stopRecordingQuestionMessage">Želite li uistinu zaustaviti snimanje vježbe\?</string>
@@ -80,7 +80,7 @@
     <string name="workoutHeartRate">Puls</string>
     <string name="workoutEnergyConsumption">Potrošnja energije</string>
     <string name="workoutTotalEnergy">Ukupna energija</string>
-    <string name="workoutBurnedEnergy">Utrošena energija</string>
+    <string name="workoutBurnedEnergy">Potrošene kalorije</string>
     <string name="workoutTopSpeed">Maksimalna brzina</string>
     <string name="workoutAvgSpeedLong">Prosječna brzina</string>
     <string name="workoutAvgSpeedShort">Prosječna brzina</string>
@@ -125,7 +125,7 @@
     <string name="setPreferencesMessage">U postavkama možete postaviti željeni mjerni sustav i vašu težinu.</string>
     <string name="setPreferencesTitle">Izmjenite postavke</string>
     <string name="backup">Sigurnosna kopija</string>
-    <string name="restore">Vrati</string>
+    <string name="restore">obnovi</string>
     <string name="importBackupMessage">Napravite sigurnosnu kopiju trenutnih podataka ako ih želite zadržati. Želite li sada obnoviti prethodnu sigurnosnu kopiju?</string>
     <string name="chooseBackupFile">Odaberite datoteku sigurnosne kopije</string>
     <string name="loadingFile">Učitavanje datoteke</string>
@@ -143,4 +143,34 @@
     <string name="delete">Izbriši</string>
     <string name="stop">Stop</string>
     <string name="app_name">FitoTrack</string>
+    <string name="zoom_in">Uvećaj zum</string>
+    <string name="zoom_out">Smanji zum</string>
+    <string name="hidden">Skriveno</string>
+    <string name="zoomWithVolumeButtonsTitle">Zumiraj s gumbovima za glasnoću</string>
+    <string name="zoomWithVolumeButtonsSummary">Kontrole za mijenjanje glasnoće i zumuiranje</string>
+    <string name="fileNotFound">Datoteka nije pronađena</string>
+    <string name="stats_explore_title">Istraži</string>
+    <string name="stats_history_title">Povijest</string>
+    <string name="stats_overview_title">Pregled</string>
+    <string name="histogram">Histogram</string>
+    <string name="details">Detalji</string>
+    <string name="monthYear">Mjesec / Godina</string>
+    <string name="workoutAvgDistance">Prosječna udaljenost</string>
+    <string name="workoutDistanceSum">Suma udaljenosti</string>
+    <string name="selectColoring">Odaberi bojanje</string>
+    <string name="auto">Automatski</string>
+    <string name="noColoring">Bez bojanja</string>
+    <string name="pref_auto_start_mode_unknown">Nepoznato (nemoj koristiti)</string>
+    <string name="ttsLongSecondCountdownAnnouncement"><xliff:g example="5 seconds" id="secs">%1$s</xliff:g> do početka</string>
+    <plurals name="minutes">
+        <item quantity="one"><xliff:g example="1" id="mins">%1$d</xliff:g> minuta</item>
+        <item quantity="few"><xliff:g example="2" id="mins">%1$d</xliff:g> minute</item>
+        <item quantity="other"><xliff:g example="5" id="mins">%1$d</xliff:g> minuta</item>
+    </plurals>
+    <string name="upperPaceLimit">Gornja granica brzine</string>
+    <string name="lowerPaceLimit">Donja granica brzine</string>
+    <string name="ttsBelowTargetSpeed">Pre sporo</string>
+    <string name="ttsAboveTargetSpeed">Pre brzo</string>
+    <string name="ttsMinuteCountdownAnnouncement"><xliff:g example="12 minutes" id="mins">%1$s</xliff:g> do početka</string>
+    <string name="ttsMinuteSecondCountdownAnnouncement"><xliff:g example="1 minute" id="mins">%1$s</xliff:g> i <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> do početka</string>
 </resources>

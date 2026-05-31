@@ -579,4 +579,6 @@
     <string name="recording_gps_accurate">GPS · cruinn</string>
     <string name="recording_gps_weak">%d satailít · lag</string>
     <string name="recording_gps_searching">%d satailít · ag cuardach</string>
+    <string name="zoom_in">Zúmáil isteach</string>
+    <string name="zoom_out">Zúmáil amach</string>
 </resources>
