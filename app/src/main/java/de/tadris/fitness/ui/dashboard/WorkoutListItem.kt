@@ -166,7 +166,7 @@ private fun WorkoutListItemPreview() {
         start = System.currentTimeMillis() - 3_600_000,
         end = System.currentTimeMillis(),
         activeDuration = 3_600_000,
-        comment = "Morning run\n",
+        comment = "Morning run\nSecond line Morning run Morning run Morning run ",
         distance = 10_000.0,
         repetitions = 0,
         energy = 1_500_000.0,
