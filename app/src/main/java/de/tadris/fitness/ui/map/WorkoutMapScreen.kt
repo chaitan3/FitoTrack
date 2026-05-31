@@ -224,9 +224,12 @@ private fun WorkoutMapContent(
                         .padding(top = padding.calculateTopPadding())
                         .weight(0.55f),
                 )
-                Box(Modifier
-                    .fillMaxWidth()
-                    .weight(0.45f)) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(0.45f)
+                        .padding(bottom = padding.calculateBottomPadding())
+                ) {
                     bottomContent(contentState)
                 }
             }
