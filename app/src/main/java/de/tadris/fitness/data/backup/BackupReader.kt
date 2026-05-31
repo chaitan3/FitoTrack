@@ -21,14 +21,15 @@ package de.tadris.fitness.data.backup
 
 import android.content.Context
 import android.net.Uri
+import com.fasterxml.jackson.core.StreamReadFeature
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.jsonMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.AppDatabase
 import de.tadris.fitness.data.WorkoutData
 import de.tadris.fitness.data.backup.model.DataContainer
-import tools.jackson.core.StreamReadFeature
-import tools.jackson.module.kotlin.jsonMapper
-import tools.jackson.module.kotlin.kotlinModule
 import java.io.IOException
 import java.io.InputStream
 import java.util.zip.ZipEntry
@@ -49,6 +50,7 @@ class BackupReader(
         addModule(kotlinModule())
         configure(StreamReadFeature.IGNORE_UNDEFINED, true)
         configure(StreamReadFeature.AUTO_CLOSE_SOURCE, false)
+        disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 
     @Throws(IOException::class, UnsupportedVersionException::class)
