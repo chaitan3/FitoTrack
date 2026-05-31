@@ -581,4 +581,9 @@
     <string name="recording_gps_searching">%d satailít · ag cuardach</string>
     <string name="zoom_in">Zúmáil isteach</string>
     <string name="zoom_out">Zúmáil amach</string>
+    <string name="ignore">Déan neamhaird de</string>
+    <string name="localNetworkPermissionTitle">Rochtain líonra áitiúil</string>
+    <string name="localNetworkPermissionMessage">Má dhíríonn an URL a iontráladh chuig ríomhaire áitiúil i do líonra, teastaíonn cead ó Android ó FitoTrack chun rochtain a fháil air. Más rud é go bhfuil an URL ar fáil go poiblí ar an idirlíon, is féidir leat neamhaird a dhéanamh air seo.</string>
+    <string name="localNetworkPermissionDeniedMessage">Diúltaíodh rochtain ar an líonra áitiúil go buan. Chun é a dheonú, oscail socruithe an aip.</string>
+    <string name="openSettings">Oscail socruithe</string>
 </resources>
