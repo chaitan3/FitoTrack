@@ -28,6 +28,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import de.tadris.fitness.Instance
+import de.tadris.fitness.R
 import de.tadris.fitness.data.IntervalSet
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
@@ -228,8 +229,10 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
                 finish()
             }
         } else {
-            if (current.currentState != RecordingState.IDLE) {
-                showToast(de.tadris.fitness.R.string.workoutDiscarded)
+            if (current.currentState == RecordingState.IDLE) {
+                showToast(R.string.noWorkoutStarted)
+            } else {
+                showToast(R.string.workoutDiscarded)
             }
             EventBus.getDefault().post(WorkoutActionDiscard)
             finish()
@@ -242,7 +245,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             finishGuard = true
             val state = RecordingStateChangeEvent.getCurrent().newState
             if (state == RecordingState.IDLE) {
-                showToast(de.tadris.fitness.R.string.noWorkoutStarted)
                 stop(StopReason.ACTIVITY_DESTROY)
             }
             stopService()
