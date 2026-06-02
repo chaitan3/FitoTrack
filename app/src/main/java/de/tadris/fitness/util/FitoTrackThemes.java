@@ -19,8 +19,8 @@
 
 package de.tadris.fitness.util;
 
+import android.app.UiModeManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.StyleRes;
@@ -69,18 +69,25 @@ public class FitoTrackThemes {
     }
 
     public void updateDarkModeSetting() {
-        int mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-        if (getThemeSetting() == THEME_SETTING_LIGHT) {
-            mode = AppCompatDelegate.MODE_NIGHT_NO;
-        } else if (getThemeSetting() == THEME_SETTING_DARK) {
-            mode = AppCompatDelegate.MODE_NIGHT_YES;
+        int themeSetting = getThemeSetting();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = UiModeManager.MODE_NIGHT_AUTO;
+            if (themeSetting == THEME_SETTING_LIGHT) {
+                uiMode = UiModeManager.MODE_NIGHT_NO;
+            } else if (themeSetting == THEME_SETTING_DARK) {
+                uiMode = UiModeManager.MODE_NIGHT_YES;
+            }
+            uiModeManager.setApplicationNightMode(uiMode);
+        } else {
+            int mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            if (themeSetting == THEME_SETTING_LIGHT) {
+                mode = AppCompatDelegate.MODE_NIGHT_NO;
+            } else if (themeSetting == THEME_SETTING_DARK) {
+                mode = AppCompatDelegate.MODE_NIGHT_YES;
+            }
+            AppCompatDelegate.setDefaultNightMode(mode);
         }
-        AppCompatDelegate.setDefaultNightMode(mode);
-    }
-
-    public boolean isDarkModeEnabled() {
-        int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private int getThemeSetting() {

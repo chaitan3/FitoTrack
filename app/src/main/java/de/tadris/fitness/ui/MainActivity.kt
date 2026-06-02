@@ -21,10 +21,10 @@ package de.tadris.fitness.ui
 
 import android.os.Bundle
 import android.view.KeyEvent
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,16 +37,17 @@ import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
-import de.tadris.fitness.ui.map.MapManager
-import de.tadris.fitness.util.osm.OAuthAuthentication
 import de.tadris.fitness.ui.components.WorkoutTypePickerDialog
+import de.tadris.fitness.ui.map.MapManager
 import de.tadris.fitness.ui.navigation.AppNavigation
 import de.tadris.fitness.ui.navigation.Route
 import de.tadris.fitness.ui.record.MapControllerHolder
 import de.tadris.fitness.ui.record.RecordingConstants
 import de.tadris.fitness.ui.theme.FitoTrackTheme
+import de.tadris.fitness.util.FitoTrackThemes
+import de.tadris.fitness.util.osm.OAuthAuthentication
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_ROUTE = "extra_route"
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity() {
     private val initializer: AppInitializer by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        FitoTrackThemes(this).updateDarkModeSetting()
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

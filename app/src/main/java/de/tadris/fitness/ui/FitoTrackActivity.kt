@@ -19,23 +19,15 @@
 
 package de.tadris.fitness.ui
 
-import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.util.PermissionUtils
 import de.tadris.fitness.util.ThemeUtils
 
 abstract class FitoTrackActivity : AppCompatActivity() {
