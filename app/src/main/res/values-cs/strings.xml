@@ -568,4 +568,9 @@
     <string name="recording_gps_searching">%d sat. · hledání</string>
     <string name="zoom_in">Přiblížit</string>
     <string name="zoom_out">Oddálit</string>
+    <string name="ignore">Ignorovat</string>
+    <string name="localNetworkPermissionTitle">Přístup k místní síti</string>
+    <string name="localNetworkPermissionMessage">Pokud zadaná adresa URL odkazuje na místní počítač ve vaší síti, bude FitoTrack potřebovat oprávnění od systému Android k přístupu k němu. Pokud je adresa veřejně dostupná na internetu, můžete toto ignorovat.</string>
+    <string name="localNetworkPermissionDeniedMessage">Přístup k místní síti byl trvale zamítnut. Pro jeho udělení otevřete nastavení aplikace.</string>
+    <string name="openSettings">Otevřít nastavení</string>
 </resources>
