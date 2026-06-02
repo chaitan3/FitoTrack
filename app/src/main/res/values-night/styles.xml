@@ -33,30 +33,4 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
-    <style name="Running" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimaryRunning</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDarkRunning</item>
-    </style>
-
-    <style name="Bicycling" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimaryBicycling</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDarkBicycling</item>
-    </style>
-
-    <style name="Hiking" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimaryHiking</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDarkHiking</item>
-    </style>
-
-    <style name="Skating" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimarySkating</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDarkSkating</item>
-    </style>
-
-
-    <style name="WaterSports" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimaryWaterSports</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDarkWaterSports</item>
-    </style>
-
 </resources>

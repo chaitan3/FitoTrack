@@ -27,8 +27,6 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import de.tadris.fitness.R;
-import de.tadris.fitness.data.WorkoutType;
-import de.tadris.fitness.data.WorkoutTypeManager;
 
 public class FitoTrackThemes {
 
@@ -45,27 +43,6 @@ public class FitoTrackThemes {
     @StyleRes
     public int getDefaultTheme() {
         return R.style.AppTheme;
-    }
-
-    @StyleRes
-    public int getWorkoutTypeTheme(WorkoutType type) {
-        switch (type.id) {
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING:
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_TREADMILL:
-                return R.style.Running;
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_HIKING:
-                return R.style.Hiking;
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_CYCLING:
-                return R.style.Bicycling;
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_SKATEBOARDING:
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_INLINE_SKATING:
-                return R.style.Skating;
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_ROWING:
-            case WorkoutTypeManager.WORKOUT_TYPE_ID_SWIMMING:
-                return R.style.WaterSports;
-            default:
-                return R.style.AppTheme;
-        }
     }
 
     public void updateDarkModeSetting() {
@@ -92,7 +69,6 @@ public class FitoTrackThemes {
 
     private int getThemeSetting() {
         String setting = PreferenceManager.getDefaultSharedPreferences(context).getString("themeSetting", String.valueOf(THEME_SETTING_LIGHT));
-        assert setting != null;
         return Integer.parseInt(setting);
     }
 
