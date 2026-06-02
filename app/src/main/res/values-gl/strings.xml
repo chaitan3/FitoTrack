@@ -558,4 +558,9 @@
     <string name="recording_gps_searching">%d sat · buscando</string>
     <string name="zoom_in">Aumentar</string>
     <string name="zoom_out">Diminuír</string>
+    <string name="ignore">Ignorar</string>
+    <string name="localNetworkPermissionTitle">Acceso á rede local</string>
+    <string name="localNetworkPermissionMessage">Se o URL escrito corresponde a unha computadora na rede local, FitoTrack precisa o permiso para acceder a ela. Se o URL é público en internet podes ignorar este aviso.</string>
+    <string name="localNetworkPermissionDeniedMessage">Denegouse de xeito permanente o acceso á rede local. Para concedelo, abre os axustes da app.</string>
+    <string name="openSettings">Abrir axustes</string>
 </resources>
