@@ -25,6 +25,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,78 +74,10 @@ class MainActivity : AppCompatActivity() {
         setContent {
             FitoTrackTheme {
                 val state by initializer.state.collectAsStateWithLifecycle()
-                var showWorkoutTypeDialog by remember { mutableStateOf(false) }
 
                 when (val s = state) {
                     is InitState.Ready -> {
-                        val navController = rememberNavController()
-
-                        val navigateToRecord = remember<(WorkoutType, Boolean) -> Unit>(navController) {
-                            { workoutType, isLaunchAction ->
-                                val route = if (RecordingType.findById(workoutType.recordingType) == RecordingType.GPS) {
-                                    Route.RecordGpsWorkout(workoutType.id, isLaunchAction)
-                                } else {
-                                    Route.RecordIndoorWorkout(workoutType.id, isLaunchAction)
-                                }
-                                navController.navigate(route)
-                            }
-                        }
-
-                        // Handle running workout detected at startup (e.g. app killed while recording)
-                        val runningWorkout = s.runningWorkout
-                        if (runningWorkout != null) {
-                            LaunchedEffect(Unit) {
-                                val workoutType = runningWorkout.getWorkoutType(this@MainActivity)
-                                navigateToRecord(workoutType, false)
-                            }
-                        }
-
-                        // Handle intents from notification tap or shortcuts
-                        // Only on fresh launch — intent persists across config changes (e.g. rotation)
-                        LaunchedEffect(Unit) {
-                            if (!isNewLaunch) return@LaunchedEffect
-                            val action = intent.action
-                            val workoutTypeId = intent.getStringExtra(RecordingConstants.WORKOUT_TYPE_EXTRA)
-                            if ((action == RecordingConstants.LAUNCH_ACTION || action == RecordingConstants.RESUME_ACTION) && workoutTypeId != null) {
-                                val workoutType = WorkoutTypeManager.getInstance().getWorkoutTypeById(this@MainActivity, workoutTypeId)
-                                navigateToRecord(workoutType, action == RecordingConstants.LAUNCH_ACTION)
-                            }
-
-                            when (intent.getStringExtra(EXTRA_ROUTE)) {
-                                ROUTE_SETTINGS -> navController.navigate(Route.Settings)
-                                ROUTE_RECORDING_SETTINGS -> {
-                                    navController.navigate(Route.Settings)
-                                    navController.navigate(Route.RecordingSettings)
-                                }
-                                ROUTE_MANAGE_INTERVAL_SETS -> {
-                                    navController.navigate(Route.Settings)
-                                    navController.navigate(Route.RecordingSettings)
-                                    navController.navigate(Route.ManageIntervalSets)
-                                }
-                            }
-                        }
-
-                        AppNavigation(
-                            navController = navController,
-                            onRecord = { showWorkoutTypeDialog = true },
-                            onRecordLast = { workoutType -> navigateToRecord(workoutType, true) },
-                        )
-
-                        if (showWorkoutTypeDialog) {
-                            val types = remember { WorkoutTypeManager.getInstance().getAllTypesSorted(this) }
-                            WorkoutTypePickerDialog(
-                                types = types,
-                                onDismiss = { showWorkoutTypeDialog = false },
-                                onSelect = { workoutType ->
-                                    showWorkoutTypeDialog = false
-                                    navigateToRecord(workoutType, true)
-                                },
-                                onAddType = {
-                                    showWorkoutTypeDialog = false
-                                    navController.navigate(Route.EditWorkoutType(""))
-                                },
-                            )
-                        }
+                        MainContent(s, isNewLaunch)
                     }
                     else -> MigrationScreen(
                         state = s,
@@ -152,6 +85,83 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun MainContent(state: InitState.Ready, isNewLaunch: Boolean) {
+        var showWorkoutTypeDialog by remember { mutableStateOf(false) }
+
+        val navController = rememberNavController()
+
+        val navigateToRecord = remember<(WorkoutType, Boolean) -> Unit>(navController) {
+            { workoutType, isLaunchAction ->
+                val route =
+                    if (RecordingType.findById(workoutType.recordingType) == RecordingType.GPS) {
+                        Route.RecordGpsWorkout(workoutType.id, isLaunchAction)
+                    } else {
+                        Route.RecordIndoorWorkout(workoutType.id, isLaunchAction)
+                    }
+                navController.navigate(route)
+            }
+        }
+
+        // Handle running workout detected at startup (e.g. app killed while recording)
+        val runningWorkout = state.runningWorkout
+        if (runningWorkout != null) {
+            LaunchedEffect(Unit) {
+                val workoutType = runningWorkout.getWorkoutType(this@MainActivity)
+                navigateToRecord(workoutType, false)
+            }
+        }
+
+        // Handle intents from notification tap or shortcuts
+        // Only on fresh launch — intent persists across config changes (e.g. rotation)
+        LaunchedEffect(Unit) {
+            if (!isNewLaunch) return@LaunchedEffect
+            val action = intent.action
+            val workoutTypeId = intent.getStringExtra(RecordingConstants.WORKOUT_TYPE_EXTRA)
+            if ((action == RecordingConstants.LAUNCH_ACTION || action == RecordingConstants.RESUME_ACTION) && workoutTypeId != null) {
+                val workoutType = WorkoutTypeManager.getInstance()
+                    .getWorkoutTypeById(this@MainActivity, workoutTypeId)
+                navigateToRecord(workoutType, action == RecordingConstants.LAUNCH_ACTION)
+            }
+
+            when (intent.getStringExtra(EXTRA_ROUTE)) {
+                ROUTE_SETTINGS -> navController.navigate(Route.Settings)
+                ROUTE_RECORDING_SETTINGS -> {
+                    navController.navigate(Route.Settings)
+                    navController.navigate(Route.RecordingSettings)
+                }
+
+                ROUTE_MANAGE_INTERVAL_SETS -> {
+                    navController.navigate(Route.Settings)
+                    navController.navigate(Route.RecordingSettings)
+                    navController.navigate(Route.ManageIntervalSets)
+                }
+            }
+        }
+
+        AppNavigation(
+            navController = navController,
+            onRecord = { showWorkoutTypeDialog = true },
+            onRecordLast = { workoutType -> navigateToRecord(workoutType, true) },
+        )
+
+        if (showWorkoutTypeDialog) {
+            val types = remember { WorkoutTypeManager.getInstance().getAllTypesSorted(this) }
+            WorkoutTypePickerDialog(
+                types = types,
+                onDismiss = { showWorkoutTypeDialog = false },
+                onSelect = { workoutType ->
+                    showWorkoutTypeDialog = false
+                    navigateToRecord(workoutType, true)
+                },
+                onAddType = {
+                    showWorkoutTypeDialog = false
+                    navController.navigate(Route.EditWorkoutType(""))
+                },
+            )
         }
     }
 
