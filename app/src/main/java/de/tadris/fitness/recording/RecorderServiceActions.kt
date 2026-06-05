@@ -145,7 +145,7 @@ class RecorderServiceActions(private val service: RecorderService) {
         service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
             it.copy(end = System.currentTimeMillis())
         }
-        WorkoutFinalizer(service, service.instance.db.workoutDao(), service.stateHolder.workoutId).finalize()
+        WorkoutFinalizer(service, service.instance.db.workoutDao(), service.stateHolder.workoutId).finalizeWorkout()
         service.stopSelf()
     }
 
