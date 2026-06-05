@@ -93,7 +93,7 @@ class GpsComponent : RecorderServiceComponent, LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        Log.i(TAG, "onLocationChanged: $location") // don't write user location into log file
+        Log.v(TAG, "onLocationChanged: $location") // don't write user location into log file
         lastLocation.set(location)
         EventBus.getDefault().postSticky(LocationChangeEvent(Location(location)))
     }

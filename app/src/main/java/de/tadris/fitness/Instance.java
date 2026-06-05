@@ -61,7 +61,7 @@ public class Instance {
 
     public static Instance getInstance(Context context) {
         if (context == null) {
-            Log.w(TAG, "no Context Provided");
+            Log.v(TAG, "no Context Provided");
         }
         if (instance == null && context != null) {
             instance = new Instance(context);
