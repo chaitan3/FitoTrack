@@ -42,7 +42,6 @@ import de.tadris.fitness.recording.actions.WorkoutActionResume
 import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.actions.WorkoutActionStart
 import de.tadris.fitness.recording.actions.WorkoutActionStop
-import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
 import de.tadris.fitness.recording.autostart.AutoStartStateEvent
 import de.tadris.fitness.recording.autostart.WorkoutAutoStartedEvent
 import de.tadris.fitness.recording.component.AnnouncementComponent
@@ -212,7 +211,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             Log.w(TAG, "Cannot start the workout, already started.")
             return
         }
-        EventBus.getDefault().post(AutoStartCancelEvent)
         EventBus.getDefault().post(WorkoutActionStart(reason))
     }
     
@@ -222,7 +220,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
      */
     fun stop(reason: StopReason) {
         startedSem.release()
-        EventBus.getDefault().post(AutoStartCancelEvent)
 
         val current = AggregatedRecordingValuesEvent.getCurrent()
         EventBus.getDefault().post(WorkoutActionStop(reason))
@@ -400,7 +397,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
 
     override fun onCleared() {
         super.onCleared()
-        EventBus.getDefault().post(AutoStartCancelEvent) // Why do we need to post this just before we unregister?
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }
