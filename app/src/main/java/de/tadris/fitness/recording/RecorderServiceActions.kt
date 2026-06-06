@@ -183,7 +183,6 @@ class RecorderServiceActions(private val service: RecorderService) {
      */
     fun discard(){
         log(TAG, "Discard called")
-        state = RecordingState.STOPPED
         val workout = service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)
         if (workout != null) {
             log(TAG, "Deleting workout from DB")

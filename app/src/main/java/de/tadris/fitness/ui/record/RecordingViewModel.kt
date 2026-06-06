@@ -241,7 +241,7 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
     }
     
     /**
-     * Should be called only after the recording has been stopped. This stops the service and tells the UI it is okay to leave the recording screen.
+     * Should be called only after the recording has been stopped or before it is started. This stops the service and tells the UI to leave the recording screen.
      */
     fun finish() {
         Log.d(TAG, "finish() finishGuard: $finishGuard")

@@ -170,16 +170,15 @@ class RecorderService : Service() {
             wakeLock!!.release()
         }
 
-        EventBus.getDefault().postSticky(AggregatedRecordingValuesEvent.EMPTY)
-        EventBus.getDefault().postSticky(RecordingStateChangeEvent.EMPTY)
-        EventBus.getDefault().postSticky(AutoStartStateEvent.IDLE)
-
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         super.onDestroy()
     }
 
     private fun startRelevantComponents() {
         val type = stateHolder.recordingType
+        EventBus.getDefault().postSticky(AggregatedRecordingValuesEvent.EMPTY)
+        EventBus.getDefault().postSticky(RecordingStateChangeEvent.EMPTY)
+        EventBus.getDefault().postSticky(AutoStartStateEvent.IDLE)
 
         notificationComponent = ServiceNotificationComponent(this)
         startComponent(notificationComponent!!)
