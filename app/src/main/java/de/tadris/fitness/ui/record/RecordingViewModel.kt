@@ -215,7 +215,11 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
         EventBus.getDefault().post(AutoStartCancelEvent)
         EventBus.getDefault().post(WorkoutActionStart(reason))
     }
-
+    
+    /**
+     * Stop recording for a given reason. If nothing has been recorded immediately call finish to
+     * also stop the service and leave the screen.
+     */
     fun stop(reason: StopReason) {
         startedSem.release()
         EventBus.getDefault().post(AutoStartCancelEvent)
@@ -238,9 +242,12 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             finish()
         }
     }
-
-    @Synchronized
+    
+    /**
+     * Should be called only after the recording has been stopped. This stops the service and tells the UI it is okay to leave the recording screen.
+     */
     fun finish() {
+        Log.d(TAG, "finish() finishGuard: $finishGuard")
         if (!finishGuard) {
             finishGuard = true
             val state = RecordingStateChangeEvent.getCurrent().newState
@@ -393,7 +400,7 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
 
     override fun onCleared() {
         super.onCleared()
-        EventBus.getDefault().post(AutoStartCancelEvent)
+        EventBus.getDefault().post(AutoStartCancelEvent) // Why do we need to post this just before we unregister?
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }

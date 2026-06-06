@@ -101,7 +101,7 @@ fun RecordingScaffold(
 
     LaunchedEffect(shouldFinish) {
         if (shouldFinish) {
-            onFinish()
+            onFinish() // Assumed to be the back navigation route operation thing.
         }
     }
 
