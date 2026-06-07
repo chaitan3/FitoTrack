@@ -19,6 +19,7 @@
 
 package de.tadris.fitness.recording
 
+import android.util.Log
 import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.recording.actions.WorkoutActionDiscard
 import de.tadris.fitness.recording.actions.WorkoutActionPause
@@ -31,19 +32,23 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class RecorderServiceActions(private val service: RecorderService) {
-
+    
+    /**
+     * Master state of the workout recording.
+     */
     var state
         get() = service.stateHolder.state
         set(value) {
             val oldState = service.stateHolder.state
             service.stateHolder.state = value
-            EventBus.getDefault().postSticky(
+            val event =
                 RecordingStateChangeEvent(
                     service.stateHolder.workoutId,
                     oldState,
                     value
                 )
-            )
+            Log.d(TAG, ": $event")
+            EventBus.getDefault().postSticky(event)
         }
 
     companion object {
@@ -63,58 +68,78 @@ class RecorderServiceActions(private val service: RecorderService) {
 
     @Subscribe
     fun receiveStart(e: WorkoutActionStart) {
+        Log.d(TAG, "receiveStart $e")
         start(e.reason)
     }
 
     @Subscribe
     fun receiveResume(e: WorkoutActionResume) {
+        Log.d(TAG, "receiveResume $e")
         resume()
     }
 
     @Subscribe
     fun receiveDiscard(e: WorkoutActionDiscard) {
+        Log.d(TAG, "receiveDiscard $e")
         discard()
     }
 
     @Subscribe
     fun receivePause(e: WorkoutActionPause) {
+        Log.d(TAG, "receivePause $e")
         pause(e.isAutomatic)
     }
 
     @Subscribe
     fun receiveStop(e: WorkoutActionStop) {
+        Log.d(TAG, "receiveStop $e")
         stop(e.reason)
     }
 
     fun start(reason: StartReason) {
-        log(TAG, "Called start, reason: ${reason.logMessage}")
+        log(TAG, "Called start, reason: ${reason.logMessage} state: $state")
         if (state == RecordingState.IDLE) {
             log(TAG, "Start")
-            resume()
+            state = RecordingState.RUNNING
             service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
                 it.copy(start = System.currentTimeMillis())
             }
         } else if (state.isPause()) {
             resume()
-        } else check(state == RecordingState.RUNNING) { "Cannot start or resume recording. state = $state" }
+        }
+        // The only state left is STOPPED or RUNNING
+        check(state == RecordingState.RUNNING) { "Cannot start or resume recording. state: $state" }
     }
 
+    private fun insertPause() {
+        Log.d(TAG, "insertPause() from state $state")
+        service.instance.db.workoutDao().insertPause(
+            WorkoutPause(
+                service.stateHolder.workoutId,
+                System.nanoTime(),
+                service.stateHolder.lastStateChange,
+                System.currentTimeMillis(),
+                state == RecordingState.MANUAL_PAUSE || state == RecordingState.STOPPED
+            )
+        )
+    }
+    
+    /**
+     * Resume a started recording. Will not resume a [RecordingState.STOPPED] recording.
+     */
     fun resume() {
         log(TAG, "Called resume")
         if (state.isPause()) {
-            service.instance.db.workoutDao().insertPause(
-                WorkoutPause(
-                    service.stateHolder.workoutId,
-                    System.nanoTime(),
-                    service.stateHolder.lastStateChange,
-                    System.currentTimeMillis(),
-                    state == RecordingState.MANUAL_PAUSE
-                )
-            )
-        }
-        state = RecordingState.RUNNING
+            log(TAG, "resuming from $state")
+            insertPause()
+            state = RecordingState.RUNNING
+        } else
+            assert(false, { "Called resume() before pause() in ReorderServiceActions" })
     }
-
+    
+    /**
+     * Pause a running recording.
+     */
     fun pause(isAutomatic: Boolean) {
         if (state == RecordingState.RUNNING || (!isAutomatic && state == RecordingState.AUTO_PAUSE)) {
             log(TAG, "Pause, isAutomatic=$isAutomatic")
@@ -125,33 +150,39 @@ class RecorderServiceActions(private val service: RecorderService) {
             }
         }
     }
-
+    
+    /**
+     * Stop recording, don't stop the service.
+     */
     fun stop(reason: StopReason) {
-        log(TAG, "Called stop, reason: ${reason.logMessage}")
+        log(TAG, "Called stop, reason: ${reason.logMessage} state: $state")
+        
+        // Should these two special cases be errors? Stopping when already stopped or stopping before starting.
         if (state == RecordingState.STOPPED) {
             log(TAG, "Already stopped")
             return
         }
         if (state == RecordingState.IDLE) {
-            log(TAG, "Was in IDLE, discarding workout")
-            discard()
+            log(TAG, "Was in IDLE, nothing to stop")
             return
         }
 
         log(TAG, "Stopping and finalizing workout...")
-        resume() // Append pause
-        pause(true) // Append last active time
         state = RecordingState.STOPPED
+        insertPause() // Append last active time
+        
         service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
             it.copy(end = System.currentTimeMillis())
         }
         WorkoutFinalizer(service, service.instance.db.workoutDao(), service.stateHolder.workoutId).finalizeWorkout()
-        service.stopSelf()
     }
-
+    
+    /**
+     * Remove the current recording from the database, regardless of its current state.
+     * Does not stop the service.
+     */
     fun discard(){
         log(TAG, "Discard called")
-        state = RecordingState.STOPPED
         val workout = service.instance.db.workoutDao().getWorkoutById(service.stateHolder.workoutId)
         if (workout != null) {
             log(TAG, "Deleting workout from DB")
@@ -159,7 +190,6 @@ class RecorderServiceActions(private val service: RecorderService) {
         } else {
             log(TAG, "Couldn't delete, workout not found ID: ${service.stateHolder.workoutId}")
         }
-        service.stopSelf()
     }
 
 }

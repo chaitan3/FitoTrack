@@ -19,8 +19,19 @@
 
 package de.tadris.fitness.recording
 
+/**
+ * State begins in IDLE and ends in STOPPED. It is intended that a recording cannot be restarted from STOPPED.
+ * Start a new workout if you need to do that.
+ * IDLE ------> RUNNING ------> STOPPED
+ *             /       \
+ *            /         \
+ *      AUTO_PAUSE --- MANUAL_PAUSE
+ */
 enum class RecordingState {
     IDLE, RUNNING, AUTO_PAUSE, MANUAL_PAUSE, STOPPED;
 
     fun isPause() = this == AUTO_PAUSE || this == MANUAL_PAUSE
+    
+    // The name isRunning would have been misleading
+    fun isStartedNotStopped() = this == RUNNING || this.isPause()
 }

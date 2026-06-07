@@ -42,7 +42,6 @@ import de.tadris.fitness.recording.actions.WorkoutActionResume
 import de.tadris.fitness.recording.actions.WorkoutActionSelectIntervalSet
 import de.tadris.fitness.recording.actions.WorkoutActionStart
 import de.tadris.fitness.recording.actions.WorkoutActionStop
-import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
 import de.tadris.fitness.recording.autostart.AutoStartStateEvent
 import de.tadris.fitness.recording.autostart.WorkoutAutoStartedEvent
 import de.tadris.fitness.recording.component.AnnouncementComponent
@@ -129,6 +128,14 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    internal var wasAlreadyRunning = false
+
+    fun init(workoutType: WorkoutType, isLaunchAction: Boolean) {
+        wasAlreadyRunning = !isLaunchAction ||
+                RecordingStateChangeEvent.getCurrent().newState.isStartedNotStopped()
+        init(workoutType)
+    }
+
     fun init(workoutType: WorkoutType) {
         if (initialized) return
         initialized = true
@@ -212,13 +219,15 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             Log.w(TAG, "Cannot start the workout, already started.")
             return
         }
-        EventBus.getDefault().post(AutoStartCancelEvent)
         EventBus.getDefault().post(WorkoutActionStart(reason))
     }
-
+    
+    /**
+     * Stop recording for a given reason. If nothing has been recorded immediately call finish to
+     * also stop the service and leave the screen.
+     */
     fun stop(reason: StopReason) {
         startedSem.release()
-        EventBus.getDefault().post(AutoStartCancelEvent)
 
         val current = AggregatedRecordingValuesEvent.getCurrent()
         EventBus.getDefault().post(WorkoutActionStop(reason))
@@ -238,9 +247,12 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
             finish()
         }
     }
-
-    @Synchronized
+    
+    /**
+     * Should be called only after the recording has been stopped or before it is started. This stops the service and tells the UI to leave the recording screen.
+     */
     fun finish() {
+        Log.d(TAG, "finish() finishGuard: $finishGuard")
         if (!finishGuard) {
             finishGuard = true
             val state = RecordingStateChangeEvent.getCurrent().newState
@@ -393,7 +405,6 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
 
     override fun onCleared() {
         super.onCleared()
-        EventBus.getDefault().post(AutoStartCancelEvent)
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }

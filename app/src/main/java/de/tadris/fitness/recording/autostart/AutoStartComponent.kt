@@ -109,6 +109,14 @@ class AutoStartComponent : RecorderServiceComponent {
             else -> {}
         }
     }
+    
+    /**
+     * If the recording has started this component is no longer required.
+     */
+    @Subscribe
+    fun onStartRecording(e :WorkoutActionStart) {
+        unregister()
+    }
 
     private fun startCountdown(delayMs: Long, mode: AutoStartMode) {
         postState(AutoStartStateEvent.State.Countdown(delayMs, (delayMs / 1000).toInt()))

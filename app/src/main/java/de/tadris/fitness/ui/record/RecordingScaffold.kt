@@ -55,6 +55,11 @@ import de.tadris.fitness.recording.StopReason
 import de.tadris.fitness.recording.autostart.AutoStartCancelEvent
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * @param onFinish Back navigation call
+ * @param onOpenSettings Navigate to settings screen
+ * @param onManageIntervalSets Navigate to edit intervals screen
+ */
 @Composable
 fun RecordingScaffold(
     vm: RecordingViewModel,
@@ -86,21 +91,23 @@ fun RecordingScaffold(
     val instance = remember { Instance.getInstance(context) }
 
     val onBack: () -> Unit = {
-        if (recordingState == RecordingState.IDLE) vm.finish()
-        else vm.requestStopConfirmation()
+        if (recordingState == RecordingState.IDLE)
+            vm.finish()
+        else
+            vm.requestStopConfirmation()
     }
 
     BackHandler(onBack = onBack)
 
     LaunchedEffect(shouldFinish) {
         if (shouldFinish) {
-            onFinish()
+            onFinish() // Assumed to be the back navigation route operation thing.
         }
     }
 
     if (showStopConfirmation) {
         StopConfirmDialog(
-            onConfirm = { vm.dismissStopConfirmation(); vm.stop(StopReason.STOP_BUTTON_PRESSED) },
+            onConfirm = { vm.dismissStopConfirmation(); vm.stop(StopReason.BACK_BUTTON_PRESSED) },
             onDismiss = { vm.dismissStopConfirmation() }
         )
     }
