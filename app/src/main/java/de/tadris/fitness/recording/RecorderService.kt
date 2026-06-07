@@ -176,9 +176,6 @@ class RecorderService : Service() {
 
     private fun startRelevantComponents() {
         val type = stateHolder.recordingType
-        EventBus.getDefault().postSticky(AggregatedRecordingValuesEvent.EMPTY)
-        EventBus.getDefault().postSticky(RecordingStateChangeEvent.EMPTY)
-        EventBus.getDefault().postSticky(AutoStartStateEvent.IDLE)
 
         notificationComponent = ServiceNotificationComponent(this)
         startComponent(notificationComponent!!)

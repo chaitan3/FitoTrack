@@ -70,7 +70,7 @@ class GpsRecordingViewModel(application: Application) : RecordingViewModel(appli
 
     fun init(workoutType: WorkoutType, isLaunchAction: Boolean) {
         wasAlreadyRunning = !isLaunchAction ||
-                RecordingStateChangeEvent.getCurrent().newState != RecordingState.IDLE
+                RecordingStateChangeEvent.getCurrent().newState.isStartedNotStopped()
         super.init(workoutType)
     }
 
