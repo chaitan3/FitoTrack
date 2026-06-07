@@ -128,6 +128,14 @@ abstract class RecordingViewModel(application: Application) : AndroidViewModel(a
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    internal var wasAlreadyRunning = false
+
+    fun init(workoutType: WorkoutType, isLaunchAction: Boolean) {
+        wasAlreadyRunning = !isLaunchAction ||
+                RecordingStateChangeEvent.getCurrent().newState.isStartedNotStopped()
+        init(workoutType)
+    }
+
     fun init(workoutType: WorkoutType) {
         if (initialized) return
         initialized = true

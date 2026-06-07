@@ -50,13 +50,6 @@ class IndoorRecordingViewModel(application: Application) : RecordingViewModel(ap
     val repetitions: StateFlow<Int> = _repetitions.asStateFlow()
 
     private var lastSampleTime = System.currentTimeMillis()
-    private var wasAlreadyRunning = false
-
-    fun init(workoutType: WorkoutType, isLaunchAction: Boolean) {
-        wasAlreadyRunning = !isLaunchAction ||
-                RecordingStateChangeEvent.getCurrent().newState != RecordingState.IDLE
-        super.init(workoutType)
-    }
 
     override fun onServiceStarted() {
         if (wasAlreadyRunning) {

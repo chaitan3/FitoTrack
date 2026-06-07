@@ -66,14 +66,6 @@ class GpsRecordingViewModel(application: Application) : RecordingViewModel(appli
     private val _canStart = MutableStateFlow(false)
     val canStart: StateFlow<Boolean> = _canStart.asStateFlow()
 
-    private var wasAlreadyRunning = false
-
-    fun init(workoutType: WorkoutType, isLaunchAction: Boolean) {
-        wasAlreadyRunning = !isLaunchAction ||
-                RecordingStateChangeEvent.getCurrent().newState.isStartedNotStopped()
-        super.init(workoutType)
-    }
-
     override fun onServiceStarted() {
         checkGpsStatus()
         if (wasAlreadyRunning) {
