@@ -41,7 +41,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -227,8 +227,8 @@ fun StopConfirmDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun CommentDialog(onConfirm: (String) -> Unit) {
-    var comment by remember { mutableStateOf("") }
+fun CommentDialog(onConfirm: (String) -> Unit, existingComment: String = "") {
+    var comment by rememberSaveable() { mutableStateOf(existingComment) }
     AlertDialog(
         onDismissRequest = { onConfirm(comment) },
         title = { Text(stringResource(R.string.enterComment)) },
