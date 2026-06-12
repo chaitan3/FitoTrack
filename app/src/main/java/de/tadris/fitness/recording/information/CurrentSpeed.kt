@@ -21,6 +21,7 @@ package de.tadris.fitness.recording.information
 import android.content.Context
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import kotlin.math.roundToInt
 
 class CurrentSpeed(context: Context) : RecordingInformation(context) {
 
@@ -37,9 +38,8 @@ class CurrentSpeed(context: Context) : RecordingInformation(context) {
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        return getString(R.string.currentSpeed) + ": " + distanceUnitUtils.getSpeed(
-            values.currentSpeed,
-            true
-        ) + "."
+        return getString(R.string.currentSpeed) + ": " +
+                distanceUnitUtils.getSpeedWithoutUnit(values.currentSpeed).roundToInt() + " " +
+                getString(distanceUnitUtils.distanceUnitSystem.speedUnitTitle) + "."
     }
 }

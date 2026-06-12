@@ -21,6 +21,7 @@ package de.tadris.fitness.recording.information
 import android.content.Context
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
+import kotlin.math.roundToInt
 
 class AverageSpeedMotion(context: Context) : RecordingInformation(context) {
 
@@ -37,7 +38,9 @@ class AverageSpeedMotion(context: Context) : RecordingInformation(context) {
     }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
-        val avgSpeed = distanceUnitUtils.getSpeed(values.averageSpeedMotion, true)
-        return getString(R.string.workoutAvgSpeedLong) + ": " + avgSpeed + "."
+        return getString(R.string.workoutAvgSpeedLong) + ": " + distanceUnitUtils.getSpeedWithoutUnit(
+            values.averageSpeedMotion
+        ).roundToInt() + " " +
+                getString(distanceUnitUtils.distanceUnitSystem.speedUnitTitle) + "."
     }
 }
