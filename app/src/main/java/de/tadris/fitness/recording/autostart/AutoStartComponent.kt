@@ -40,7 +40,7 @@ class AutoStartComponent : RecorderServiceComponent {
 
     companion object {
         private const val GPS_GOOD_ACCURACY_M = 30.0
-        private const val MIN_MOVE_DISTANCE_M = 13.0
+        private const val MIN_MOVE_DISTANCE_M = 20.0
     }
 
     // Injected via register() — the service is the DI entry point
@@ -52,7 +52,7 @@ class AutoStartComponent : RecorderServiceComponent {
     // All state is only ever touched from the main thread (ThreadMode.MAIN on all subscribers).
     private var countdownTimer: CountDownTimer? = null
     private var pendingMode: AutoStartMode? = null
-    private var lastLocation: Location? = null
+    private var firstLocation: Location? = null
 
     override fun register(service: RecorderService) {
         this.service = service
@@ -76,7 +76,7 @@ class AutoStartComponent : RecorderServiceComponent {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRequest(e: AutoStartRequestEvent) {
         cancelCountdown()
-        lastLocation = null
+        firstLocation = null
         if (e.delayMs > 0) startCountdown(e.delayMs, e.mode) else proceedWithMode(e.mode)
     }
 
@@ -97,12 +97,11 @@ class AutoStartComponent : RecorderServiceComponent {
                 if (loc.hasAccuracy() && loc.accuracy < GPS_GOOD_ACCURACY_M) triggerStart()
             }
             AutoStartMode.ON_MOVE -> {
-                val prev = lastLocation
-                lastLocation = loc
-                if (prev == null) return
-                val timeDiffMs = (loc.elapsedRealtimeNanos - prev.elapsedRealtimeNanos) / 1_000_000L
-                if (timeDiffMs < RecorderService.MIN_DURATION_DIFF) return
-                val distanceM = GpsComponent.locationToLatLong(prev)
+                if (firstLocation == null) {
+                    firstLocation = loc
+                    return
+                }
+                val distanceM = GpsComponent.locationToLatLong(firstLocation!!)
                     .sphericalDistance(GpsComponent.locationToLatLong(loc))
                 if (distanceM >= MIN_MOVE_DISTANCE_M) triggerStart()
             }
@@ -149,7 +148,7 @@ class AutoStartComponent : RecorderServiceComponent {
             }
             AutoStartMode.ON_MOVE -> {
                 pendingMode = mode
-                lastLocation = null
+                firstLocation = null
                 ttsController.speak(service.getString(R.string.autoStartCountdownMsgMove))
                 postState(AutoStartStateEvent.State.WaitingForMove)
             }
