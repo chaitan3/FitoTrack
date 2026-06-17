@@ -1,0 +1,5 @@
+- Tambahkan Kebijakan Privasi
+- Perbaiki penyimpanan file Ekspor GPX pada Android <10
+- Ubah cara permintaan izin lokasi agar mematuhi aturan baru Google Play
+
+- Terjemahan diperbarui

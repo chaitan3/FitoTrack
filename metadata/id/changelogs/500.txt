@@ -1,0 +1,16 @@
+Fitur baru:
+- Tambahkan workout secara manual (#53)
+- Mode Gelap (#48)
+
+Peningkatan:
+- Koreksi ketinggian
+- Deteksi headset bluetooth (#51)
+- Tampilkan perekaman di layar kunci (#45)
+- Atribusi OpenStreetMap pada layar perekaman (#52)
+
+Perbaikan bug:
+- Nilai kecepatan salah setelah sinyal GPS hilang selama beberapa waktu (#47)
+
+Lokalisasi:
+- Perbarui bahasa Belanda berkat albertheres dan didierm (#57, #58)
+- Perbarui bahasa Hungaria berkat urbalazs (#59)

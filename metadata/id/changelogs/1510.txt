@@ -1,0 +1,6 @@
+- Layar statistik baru, perombakan grafik, dan histogram kecepatan
+- Ekspor massal file GPX
+- Tambahkan berenang sebagai jenis bawaan
+- Banyak peningkatan lainnya :)
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan lengkap

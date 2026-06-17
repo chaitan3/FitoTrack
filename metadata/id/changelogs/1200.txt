@@ -1,0 +1,8 @@
+- Pindai perangkat Bluetooth yang belum dipasangkan
+- Potong workout
+- Pewarnaan track
+- Opsi untuk menghitung kecepatan berdasarkan waktu
+- Pacekeeper yang memberi tahu jika Anda berlari terlalu lambat/terlalu cepat
+- Ubah interval, terima kasih
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan yang lebih rinci

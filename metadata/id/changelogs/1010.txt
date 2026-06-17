@@ -1,0 +1,10 @@
+- Tampilkan titik berhenti (jeda) pada peta layar penuh
+
+- Menambahkan ikon untuk berkuda dan ski
+- Performa lebih baik saat melihat workout yang panjang
+- Impor beberapa workout dipindahkan ke layar utama
+- Impor semua track dari file GPX
+
+- Impor jenis workout dari cadangan dengan benar
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan yang lebih rinci

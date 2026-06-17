@@ -1,0 +1,1 @@
+Versi ini memperbaiki koneksi ke perangkat bluetooth yang belum dipasangkan.

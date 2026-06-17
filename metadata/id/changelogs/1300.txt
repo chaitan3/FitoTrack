@@ -1,0 +1,10 @@
+- Lacak Workout Indoor
+  - saat ini didukung: Treadmill, Push-up, Lompat Tali, dan Lompat Trampolin
+- Dukungan tema render Zip untuk peta offline / kustomisasi
+
+- Terima intent file: Anda sekarang dapat membagikan dan membuka file GPX dari aplikasi lain untuk diimpor
+- Urutkan jenis workout berdasarkan penggunaan terakhir
+- Workout sudah bisa dimulai saat masih "menunggu GPS"
+- lebih banyak peningkatan dan perbaikan bug...
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan yang lebih rinci

@@ -1,0 +1,10 @@
+Baru:
+- Pengumuman suara: secara opsional memberi Anda pembaruan tentang workout saat ini
+
+Peningkatan:
+- Perjelas bahwa komentar workout dapat diubah
+- Tangani autentikasi OSM yang tidak valid
+- Nonaktifkan auto-pause saat tidak ada GPS (mencegah hasil buruk)
+
+Lokalisasi:
+- Terjemahan bahasa Spanyol

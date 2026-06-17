@@ -1,0 +1,4 @@
+- Statistik workout: tampilkan nilai total sebagai batang
+- Statistik workout: buka ringkasan workout saat mengeklik satu workout tunggal
+- Kecepatan rata-rata dalam menit terakhir sebagai informasi suara
+- Perbaiki auto pause yang tidak berfungsi, yang juga menyebabkan banyak noise pada diagram kecepatan dan elevasi

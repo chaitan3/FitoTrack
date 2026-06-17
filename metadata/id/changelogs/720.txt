@@ -1,0 +1,4 @@
+- Semoga perbaikan crash saat mengimpor file GPX pada versi Java yang lebih lama
+- Memperbaiki bug ketinggian dan kalori
+
+- Bahasa Prancis diperbarui

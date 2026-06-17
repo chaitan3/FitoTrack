@@ -1,0 +1,7 @@
+- Impor beberapa workout
+
+- Perbaiki dialog izin yang tampil tidak benar pada Android <10
+- Segarkan workout yang diklik saat kembali ke daftar workout
+- Format dialog pemicu pengumuman dengan benar
+
+- Perbarui terjemahan

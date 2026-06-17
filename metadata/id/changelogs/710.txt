@@ -1,0 +1,5 @@
+- menambahkan aktivitas skateboarding
+- memulihkan workout yang hilang
+- memperbaiki berbagai masalah stabilitas perekaman
+
+silakan lihat repositori proyek di Codeberg untuk perubahan lainnya

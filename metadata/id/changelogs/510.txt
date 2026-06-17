@@ -1,0 +1,3 @@
+Lokalisasi:
+- Perbarui terjemahan bahasa Prancis berkat Amadeous (#62)
+- Perbarui terjemahan bahasa Belanda berkat albertheres (#61)

@@ -1,0 +1,10 @@
+- Auto Start dengan beberapa mode
+- Dukungan peta offline
+
+- Peningkatan stabilitas
+- Filter "Semua" untuk statistik workout
+- Hanya tambahkan tanda "edited" pada workout jika jarak, tanggal, atau durasi diubah
+
+- berbagai perbaikan bug
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan yang lebih rinci

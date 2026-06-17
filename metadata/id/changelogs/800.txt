@@ -1,0 +1,10 @@
+- Ubah Workout: jenis, jarak, durasi
+- Layar Tentang
+- Menambahkan sistem satuan US Customary dengan kaki
+- Pace sebagai informasi yang ditampilkan dan pengumuman suara
+
+- Hapus peta ThunderForest karena lisensi
+- Perbaikan bug / peningkatan stabilitas dan UI/UX
+- Menambahkan bahasa Denmark, memperbarui bahasa Belanda
+
+silakan lihat repositori proyek di Codeberg untuk perubahan lainnya

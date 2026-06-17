@@ -1,0 +1,8 @@
+Baru:
+- Pengukuran ketinggian melalui GPS dan sensor tekanan
+- Tampilkan diagram ketinggian
+- Tampilkan dialog jika GPS dinonaktifkan
+
+Perbaikan:
+- Tombol Kembali di Pengaturan menyebabkan crash pada versi Android yang lebih lama (#20)
+- Perbaiki sistem satuan "Imperial with meters"

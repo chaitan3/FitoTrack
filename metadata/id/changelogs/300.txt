@@ -1,0 +1,8 @@
+Baru:
+- Unggah workout sebagai GPS Track ke OpenStreetMap (#24)
+- Penghentian Workout Otomatis (#23)
+
+Peningkatan:
+- Perbaiki berat imperial (#26)
+- Perilaku peta yang lebih baik pada layar analisis
+- Perhitungan kalori yang lebih baik

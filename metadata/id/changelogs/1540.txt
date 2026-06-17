@@ -1,0 +1,12 @@
+- Ikon aplikasi bertema & launcher shortcut
+- Menambahkan pull-up
+- Statistik di daftar workout disembunyikan saat menggulir ke bawah
+- Gunakan dua angka di belakang koma untuk kecepatan pada ringkasan workout
+- Hitung ulang durasi dan waktu jeda agar durasi konsisten
+- Memperbaiki kegagalan ekspor massal GPX pada nama file duplikat
+- Baca detak jantung dari file GPX dengan benar
+- Gunakan preferensi "hari pertama dalam seminggu" untuk statistik
+- Menambahkan bahasa Ukraina
+
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan lengkap

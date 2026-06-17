@@ -1,0 +1,4 @@
+- Layar untuk membandingkan diagram tinggi/elevasi dan peta
+- Tampilkan overlay jika sinyal GPS belum ditemukan
+- Atur layer peta yang disukai (#15)
+- Percepat impor data

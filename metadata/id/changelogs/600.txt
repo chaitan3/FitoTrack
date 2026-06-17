@@ -1,0 +1,11 @@
+Fitur baru:
+- Tombol mulai untuk workout
+- Pengumuman interval
+- InfoView kustom pada layar perekaman
+- Dukungan Inline Skating sebagai aktivitas
+
+- Tambahkan opsi baru di pengaturan untuk memilih format tanggal dan waktu
+- Ikon yang menunjukkan aktivitas
+- Pengaturan untuk satuan energi (kkal/J) serta perbaikan ejaan satuan jarak dan waktu yang salah
+
+silakan lihat repositori proyek di Codeberg untuk perubahan lainnya

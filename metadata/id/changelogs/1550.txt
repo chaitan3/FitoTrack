@@ -1,0 +1,6 @@
+- Preferensi untuk menonaktifkan dialog komentar saat mengakhiri workout
+- Opsi untuk mengucapkan detik pada pengumuman durasi
+- Pace/Durasi tidak tampil dengan benar pada layar Bagikan
+- Gunakan API splash screen baru
+- Optimalkan untuk Android 14
+- Terjemahan diperbarui

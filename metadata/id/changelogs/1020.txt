@@ -1,0 +1,3 @@
+Pembaruan ini menghadirkan perbaikan untuk bug yang terjadi pada beberapa perangkat sehingga mereka tidak dapat menggunakan FitoTrack karena GPS tidak ditemukan meskipun perangkat mendapatkan sinyal GPS yang baik.
+
+Jika menurut Anda masalah ini masih belum diperbaiki, silakan buka issue di repositori proyek atau kirim email kepada saya. Terima kasih.

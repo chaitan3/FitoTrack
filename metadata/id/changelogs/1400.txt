@@ -1,0 +1,8 @@
+- Ekspor GPX otomatis dan cadangan aplikasi
+- Zoom dan pan pada peta
+- Metrik kustom pada layar berbagi
+- Tampilkan baterai sensor bluetooth jika tersedia
+- Kompres cadangan
+- Perbaikan bug
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan yang lebih rinci

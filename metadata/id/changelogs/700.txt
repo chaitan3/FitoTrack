@@ -1,0 +1,6 @@
+- Statistik workout
+- Impor file GPX
+- Bagi workout menjadi beberapa bagian/lap
+- Gabungkan cadangan ke keadaan saat ini
+
+silakan lihat repositori proyek di Codeberg untuk perubahan lainnya

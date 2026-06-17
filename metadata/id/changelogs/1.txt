@@ -1,0 +1,9 @@
+Rilis pertama
+
+- Rekam workout
+- Daftar workout
+- Tampilkan data workout (peta, diagram kecepatan, energi) + Hapus workout
+- Impor/Ekspor data
+- Ekspor Workout sebagai GPX
+- Ubah satuan
+- Ubah berat badan

@@ -1,0 +1,3 @@
+- Perbaiki crash pada versi Android di bawah Oreo (< 8)
+- Perbaiki crash saat menyimpan workout yang terinterupsi
+- Perbaiki audio focus yang hilang

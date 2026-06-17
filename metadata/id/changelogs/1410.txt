@@ -1,0 +1,7 @@
+Pembaruan ini mencakup banyak perbaikan bug dan peningkatan kecil seperti:
+- Mencoba memperbaiki bug ketika FitoTrack tidak merekam apa pun
+- Logging debug
+- Zoom peta lewat tombol volume kini opsional
+- Perbaiki format GPX
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan lengkap

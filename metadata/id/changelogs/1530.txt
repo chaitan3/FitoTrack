@@ -1,0 +1,4 @@
+- Menargetkan Android 13
+- Konfirmasi penghentian workout
+- Perbaikan bug dan crash berkat @keesj
+- Terjemahan diperbarui

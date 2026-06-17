@@ -1,0 +1,6 @@
+FitoTrack adalah aplikasi seluler untuk mencatat dan melihat workout Anda. Baik Anda berlari, bersepeda, maupun mendaki, FitoTrack akan menampilkan informasi yang paling penting, lengkap dengan diagram dan statistik terperinci. Aplikasi ini open-source dan sepenuhnya bebas iklan.
+
+Fitur:
+* Lacak workout. Pilih jenis olahraga yang ingin Anda lacak lalu mulai berlari, bersepeda, atau mendaki, misalnya. Anda dapat melihat informasi umum tepat di bawah peta pada layar pelacakan.
+* Lihat workout Anda. Lihat informasi umum seperti tanggal, waktu, durasi, jarak, kecepatan, dan pace. Lihat rute Anda di peta. Nilai tingkat performa Anda dari diagram kecepatan.
+* Open-source. Tidak ada iklan maupun pelacakan, dan kode sumbernya terbuka serta dilisensikan di bawah GPLv3.

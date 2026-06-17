@@ -1,0 +1,11 @@
+- Tambahkan pengukuran detak jantung
+- Impor/ekspor detak jantung dari/ke file GPX
+- Lanjutkan workout yang dihentikan
+- Nonaktifkan autopause dan gunakan opsi jeda manual
+- Pengumuman baru: perubahan status workout seperti mulai, jeda, lanjutkan
+
+- Tingkatkan layar grafik
+- Sesuaikan skala peta menurut ukuran layar
+- Jadikan "tampilkan di layar kunci" opsional (dinonaktifkan secara bawaan)
+
+silakan lihat repositori proyek di Codeberg untuk perubahan lainnya

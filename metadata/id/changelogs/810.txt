@@ -1,0 +1,8 @@
+- Tambahkan rowing
+- Menargetkan Android 10
+
+- Perbaiki impor/ekspor GPX pada perangkat Android lama
+- Perbaiki pengumuman suara pace
+- Peningkatan tata letak kecil
+
+- Menambahkan bahasa Rusia awal

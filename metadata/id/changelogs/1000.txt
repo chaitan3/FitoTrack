@@ -1,0 +1,7 @@
+- Jenis workout kustom
+- Bagikan workout sebagai gambar
+- Peningkatan UI/stabilitas
+- Pengumuman "aksi sistem" kini dapat dinonaktifkan
+- Terjemahan diperbarui
+
+silakan lihat repositori proyek di Codeberg untuk daftar perubahan yang lebih rinci

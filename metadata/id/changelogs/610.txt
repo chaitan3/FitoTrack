@@ -1,0 +1,6 @@
+- Pengaturan batas waktu workout
+- Waktu saat ini sebagai informasi TTS
+- File yang diekspor berisi tanggal mulai dan komentar
+- Stabilitas pelacakan yang jauh lebih baik
+
+silakan lihat repositori proyek di Codeberg untuk perubahan lainnya

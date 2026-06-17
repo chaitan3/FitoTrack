@@ -1,0 +1,12 @@
+Peningkatan:
+- Opsi untuk menyimpan cadangan ke penyimpanan internal (#29)
+- Perjelas bahwa komentar workout dapat diubah (#34)
+- Pace dalam format MM’SS” (#36)
+- Pertimbangkan nilai tanjakan saat menghitung kalori (#39)
+
+Perbaikan bug:
+- Bug satuan imperial salah (#42)
+- Daftar workout tidak disegarkan dengan benar (#37)
+
+Bahasa:
+- Terjemahan bahasa Spanyol diperbarui (#43)
