@@ -304,7 +304,7 @@
     <string name="ttsBelowTargetSpeed">För långsamt</string>
     <string name="pref_auto_start_mode_wait_for_gps">Vänta på noggrann position</string>
     <string name="selectColoring">Välj färgsättning</string>
-    <string name="pref_auto_start_mode_on_move">Väntar på att du börjar röra dig</string>
+    <string name="pref_auto_start_mode_on_move">Väntar på att du ska börja röra på dig…</string>
     <string name="cut">Klipp bort de första/sista 300 m</string>
     <string name="pref_announcement_mode">Meddelandeläge</string>
     <string name="exportDataSummary">Detta gör en säkerhetskopia av alla träningspass</string>
@@ -484,7 +484,7 @@
     </plurals>
     <string name="noSensorAvailable">Ingen sensor tillgänglig</string>
     <string name="workoutAvgPauseDuration">Medelpauslängd</string>
-    <string name="workoutPauseDurationSum">Summerad paus tid</string>
+    <string name="workoutPauseDurationSum">Sammanlagd paustid</string>
     <string name="workoutCount">Trängingspass</string>
     <string name="takeBackups7">Varje vecka</string>
     <string name="takeBackups1">Varja dag</string>
@@ -503,7 +503,7 @@
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="workoutTypePullUps">Armhävningar</string>
     <string name="rainbow_warrior">Regnbågskrigare</string>
-    <string name="zoomWithVolumeButtonsSummary">Volym upp och ner kontrollerar in och utzoomning</string>
+    <string name="zoomWithVolumeButtonsSummary">Volym upp och ned kontrollerar in- och utzoomning</string>
     <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitärt
 \nTöm karta, men inte alltid tillgänglig</string>
     <string name="bright_night">Ljus kväll</string>
@@ -512,7 +512,35 @@
     <string name="enterValidUrl">Ange en giltig HTTP-URL</string>
     <string name="httpUrl">URL</string>
     <string name="exportIntervalTitle">Intervall för säkerhetskopiering</string>
-    <string name="autoExportBackupSummary">Exportera säkerhetskopior automatisk</string>
+    <string name="autoExportBackupSummary">Exportera säkerhetskopior automatiskt</string>
     <string name="saveChangesQuestionMessage">Vill du verkligen spara ändringarna?</string>
     <string name="saveChangesQuestion">Spara ändringar?</string>
+    <string name="workoutGPXExportTitle">Exportera träningspass som GPX</string>
+    <string name="addWorkoutType">Lägg till träningsform</string>
+    <string name="autoStartDelaySeconds">Fördröjning i sekunder</string>
+    <string name="zoom_in">Zooma in</string>
+    <string name="zoom_out">Zooma ut</string>
+    <string name="debugPressureSensor">Felsök trycksensor</string>
+    <string name="removeOAuthToken">Ta bort OAuth Token</string>
+    <string name="removedOAuthToken">Tog bort OAuth Token</string>
+    <string name="askForComment">Be om kommentar</string>
+    <string name="recording_elapsed">Varaktighet</string>
+    <string name="autoExportBackupTitle">Automatiska säkerhetskopior av appen</string>
+    <string name="autoExportBackupExplanation">Med det specificerade intervallet kommer en säkerhetskopia exporteras hit:</string>
+    <string name="debugSensorsSummary">Samla in sensordata som skrivs till loggfilen</string>
+    <string name="autoExportWorkoutsSummary">Exportera nyss inspelade träningspass</string>
+    <string name="autoExportWorkoutExplanation">Efter att ett nytt träningspass har spelats in kommer en exporterad GPX-fil sparas här:</string>
+    <string name="askForCommentSummary">Be om att en kommentar lämnas när en inspelning stoppas</string>
+    <string name="language">Språk</string>
+    <string name="restorePreparing">Förbereder</string>
+    <string name="actionBack">Tillbaka</string>
+    <string name="recording_intervals">Intervaller</string>
+    <string name="recording_status_recording">Spelar in</string>
+    <string name="recording_status_paused_auto">Pausad · automatiskt</string>
+    <string name="recording_status_paused_manual">Pausad · manuellt</string>
+    <string name="recording_status_stopped">Stoppad</string>
+    <string name="recording_status_ready">Redo att starta</string>
+    <string name="recording_status_gps_weak">Svag GPS-signal…</string>
+    <string name="recording_status_gps_searching">GPS-sökning…</string>
+    <string name="ignore">Ignorera</string>
 </resources>
