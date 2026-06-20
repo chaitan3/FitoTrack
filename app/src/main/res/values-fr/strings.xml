@@ -543,4 +543,18 @@
     <string name="askForCommentSummary">Demander un commentaire en arrêtant l’enregistrement</string>
     <string name="removeOAuthToken">Supprimer le jeton d\'accès OAuth</string>
     <string name="removedOAuthToken">Suppression du jeton d\'accès OAuth</string>
+    <string name="addWorkoutType">Ajouter un type d\'entraînement</string>
+    <string name="autoStartDelaySeconds">Délai en secondes</string>
+    <string name="zoom_in">Agrandir</string>
+    <string name="zoom_out">Diminuer</string>
+    <string name="language">Langue</string>
+    <string name="saveChangesQuestion">Sauvegarder</string>
+    <string name="saveChangesQuestionMessage">Voulez-vous sauvegarder les modifications ?</string>
+    <string name="actionBack">Précédent</string>
+    <string name="recording_status_paused_auto">En pause - automatique</string>
+    <string name="recording_status_paused_manual">En pause - manuel</string>
+    <string name="recording_status_stopped">Arrêté</string>
+    <string name="recording_status_gps_weak">Signal GPS faible …</string>
+    <string name="recording_status_gps_searching">Recherche du signal GPS…</string>
+    <string name="recording_waiting_gps_start_anyway">Signal GPS non acquis - Démarrer quand même ?</string>
 </resources>
