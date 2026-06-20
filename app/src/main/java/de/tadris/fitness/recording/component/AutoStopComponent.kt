@@ -47,6 +47,7 @@ class AutoStopComponent : LastSampleTimeComponent() {
             log("WorkoutRecorder", "Auto timeout was set to: $autoTimeoutMs")
             service.actions.stop(StopReason.AUTO_STOP)
             EventBus.getDefault().post(WorkoutAutoStopEvent())
+            service.stopSelf()
         }
     }
 
