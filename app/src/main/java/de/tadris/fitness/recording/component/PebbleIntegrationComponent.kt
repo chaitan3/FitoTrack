@@ -45,6 +45,16 @@ class PebbleIntegrationComponent : RecorderServiceComponent {
         private const val KEY_DISTANCE = 10001u
         private const val KEY_HEART_RATE = 10002u
         private const val KEY_WORKOUT_STATE = 10003u
+        private const val KEY_PAUSE_DURATION = 10004u
+        private const val KEY_ASCENT = 10005u
+        private const val KEY_DESCENT = 10006u
+        private const val KEY_ENERGY = 10007u
+        private const val KEY_CURRENT_SPEED = 10008u
+        private const val KEY_CURRENT_FREQUENCY = 10009u
+        private const val KEY_CURRENT_INTENSITY = 10010u
+        private const val KEY_REPETITIONS = 10011u
+        private const val KEY_SAMPLE_COUNT = 10012u
+        private const val KEY_RECORDING_TYPE = 10013u
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -85,7 +95,17 @@ class PebbleIntegrationComponent : RecorderServiceComponent {
             KEY_ELAPSED_TIME to PebbleDictionaryItem.UInt32(elapsedSec),
             KEY_DISTANCE to PebbleDictionaryItem.UInt32(distM),
             KEY_HEART_RATE to PebbleDictionaryItem.Int32(hr),
-            KEY_WORKOUT_STATE to PebbleDictionaryItem.Int32(stateValue)
+            KEY_WORKOUT_STATE to PebbleDictionaryItem.Int32(stateValue),
+            KEY_PAUSE_DURATION to PebbleDictionaryItem.UInt32((event.pauseDuration / 1000).toUInt()),
+            KEY_ASCENT to PebbleDictionaryItem.Int32((event.ascent * 100).toInt()),
+            KEY_DESCENT to PebbleDictionaryItem.Int32((event.descent * 100).toInt()),
+            KEY_ENERGY to PebbleDictionaryItem.UInt32(event.energy.toUInt()),
+            KEY_CURRENT_SPEED to PebbleDictionaryItem.Int32((event.currentSpeed * 100).toInt()),
+            KEY_CURRENT_FREQUENCY to PebbleDictionaryItem.Int32((event.currentFrequency * 100).toInt()),
+            KEY_CURRENT_INTENSITY to PebbleDictionaryItem.Int32((event.currentIntensity * 100).toInt()),
+            KEY_REPETITIONS to PebbleDictionaryItem.Int32(event.repetitions),
+            KEY_SAMPLE_COUNT to PebbleDictionaryItem.UInt32(event.sampleCount.toUInt()),
+            KEY_RECORDING_TYPE to PebbleDictionaryItem.Int32(event.recordingType.ordinal)
         )
 
         scope.launch {
