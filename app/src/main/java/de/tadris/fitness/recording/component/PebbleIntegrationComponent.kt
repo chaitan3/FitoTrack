@@ -41,6 +41,26 @@ class PebbleIntegrationComponent : RecorderServiceComponent {
         private const val TAG = "PebbleIntegration"
         private val APP_UUID = UUID.fromString("b51c1f19-2950-47a8-bc27-1c601109d3a7")
 
+        /**
+         * Pebble AppMessage keys — must match messageKeys array in
+         * fitotrack/package.json (Pebble project).
+         *
+         * Key   Name              Type    Unit/Scaling
+         * 10000 elapsed_time      uint32  seconds (activeDuration / 1000)
+         * 10001 distance          uint32  meters (rounded)
+         * 10002 heart_rate        int32   BPM (-1 = invalid)
+         * 10003 workout_state     int32   0=idle, 1=running, 2=paused, 3=stopped
+         * 10004 pause_duration    uint32  seconds (pauseDuration / 1000)
+         * 10005 ascent            int32   cm (m * 100)
+         * 10006 descent           int32   cm (m * 100)
+         * 10007 energy            uint32  joules
+         * 10008 current_speed     int32   cm/s (m/s * 100)
+         * 10009 current_frequency int32   0.01 Hz (Hz * 100)
+         * 10010 current_intensity int32   0.01% (% * 100)
+         * 10011 repetitions       int32   count
+         * 10012 sample_count      uint32  samples received
+         * 10013 recording_type    int32   0=GPS, 1=INDOOR (RecordingType.ordinal)
+         */
         private const val KEY_ELAPSED_TIME = 10000u
         private const val KEY_DISTANCE = 10001u
         private const val KEY_HEART_RATE = 10002u
