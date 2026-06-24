@@ -1,0 +1,6 @@
+- Major redesign & refactoring
+- New recording screen with larger pause/stop button
+- New dataformat / improved Backup format
+- much more
+
+please see the project repository on Codeberg for a full list of changes
