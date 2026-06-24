@@ -27,6 +27,7 @@
 -keep class javax.xml.stream.** { *; }
 -keep class com.ctc.wstx.** { *; }
 -keep class de.tadris.fitness.util.export.gpx.model.** { *; }
+-keep class de.tadris.fitness.data.** { *; } # this includes several classes used in backup serialization
 
 # StAX factory implementation from stax-api is loaded via service loader at runtime
 # by Jackson XmlMapper — R8 would strip it without a direct code reference
