@@ -80,6 +80,7 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
 
     // --- Appearance ---
     var themeSetting by remember { mutableStateOf(prefs.themeSetting) }
+    var useSystemColors by remember { mutableStateOf(prefs.useSystemColors) }
     var dateFormat by remember { mutableStateOf(prefs.dateFormatSetting) }
     var timeFormat by remember { mutableStateOf(prefs.timeFormatSetting) }
     var firstDayOfWeek by remember { mutableStateOf(sharedPrefs.getString("firstDayOfWeek", "system") ?: "system") }
@@ -255,6 +256,20 @@ fun InterfaceSettingsScreen(onBack: () -> Unit) {
                         Toast.makeText(context, R.string.hintRestart, Toast.LENGTH_LONG).show()
                     },
                 )
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                item {
+                    SwitchSettingsItem(
+                        title = stringResource(R.string.pref_use_system_colors),
+                        checked = useSystemColors,
+                        onCheckedChange = { value ->
+                            useSystemColors = value
+                            prefs.useSystemColors = value
+                            Toast.makeText(context, R.string.hintRestart, Toast.LENGTH_LONG).show()
+                        },
+                    )
+                }
             }
 
             item {

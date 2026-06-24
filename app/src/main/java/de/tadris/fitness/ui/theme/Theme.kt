@@ -274,12 +274,12 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun FitoTrackTheme(
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
     content: @Composable() () -> Unit
 ) {
   val context = LocalContext.current
-  val themeSetting = remember { Instance.getInstance(context).userPreferences.themeSetting }
+  val prefs = remember { Instance.getInstance(context).userPreferences }
+  val themeSetting = remember { prefs.themeSetting }
+  val useSystemColors = remember { prefs.useSystemColors }
   val darkTheme = when (themeSetting) {
       "1" -> true
       "2" -> false
@@ -287,10 +287,10 @@ fun FitoTrackTheme(
   }
 
   val colorScheme = when {
-      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+      useSystemColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
           if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
       }
-      
+
       darkTheme -> darkScheme
       else -> lightScheme
   }

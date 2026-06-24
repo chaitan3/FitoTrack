@@ -105,6 +105,8 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var themeSetting by StringSharedPreference("themeSetting", "0")
 
+    var useSystemColors by BooleanSharedPreference("useSystemColors", false)
+
     var showOnLockScreen by BooleanSharedPreference("showOnLockScreen", false)
 
     var zoomWithVolumeButtons by BooleanSharedPreference("zoomWithVolumeButtons", true)

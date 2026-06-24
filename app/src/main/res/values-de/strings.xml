@@ -149,6 +149,7 @@
     <string name="identifiable_visibility">Identifizierbar</string>
     <string name="trackable_visibility">Verfolgbar</string>
     <string name="private_visibility">Privat</string>
+    <string name="pref_use_system_colors">Dynamische Farben (Material You)</string>
     <string name="system_theme">System</string>
     <string name="light_theme">Hell</string>
     <string name="dark_theme">Dunkel</string>
