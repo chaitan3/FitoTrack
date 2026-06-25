@@ -29,6 +29,7 @@ import de.tadris.fitness.recording.event.HeartRateConnectionChangeEvent
 import de.tadris.fitness.recording.event.ReconnectBluetoothDeviceEvent
 import de.tadris.fitness.recording.heart_rate.HRManager
 import de.tadris.fitness.recording.heart_rate.HRManager.HRManagerCallback
+import de.tadris.fitness.util.WorkoutLogger
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -38,6 +39,10 @@ import org.greenrobot.eventbus.ThreadMode
  * Heart rate and sensor battery
  */
 class HeartRateComponent : RecorderServiceComponent {
+
+    companion object {
+        private const val TAG = "HeartRateComponent"
+    }
 
     private lateinit var hrManager: HRManager
     private lateinit var heartRateListener: HeartRateListener
@@ -68,23 +73,28 @@ class HeartRateComponent : RecorderServiceComponent {
         }
 
         override fun onDeviceConnecting(device: BluetoothDevice) {
+            WorkoutLogger.log(TAG, "Connecting to ${device.address}")
             publishState(HeartRateConnectionState.CONNECTING)
         }
 
         override fun onDeviceConnected(device: BluetoothDevice) {
+            WorkoutLogger.log(TAG, "Connected to ${device.address}")
             publishState(HeartRateConnectionState.CONNECTED)
         }
 
         override fun onDeviceFailedToConnect(device: BluetoothDevice, reason: Int) {
+            WorkoutLogger.log(TAG, "Failed to connect to ${device.address}, reason=$reason")
             publishState(HeartRateConnectionState.CONNECTION_FAILED)
         }
 
         override fun onDeviceReady(device: BluetoothDevice) {
+            WorkoutLogger.log(TAG, "Device ready: ${device.address}")
             publishState(HeartRateConnectionState.CONNECTED)
         }
 
         override fun onDeviceDisconnecting(device: BluetoothDevice) {}
         override fun onDeviceDisconnected(device: BluetoothDevice, reason: Int) {
+            WorkoutLogger.log(TAG, "Disconnected from ${device.address}, reason=$reason")
             publishState(HeartRateConnectionState.DISCONNECTED)
         }
 

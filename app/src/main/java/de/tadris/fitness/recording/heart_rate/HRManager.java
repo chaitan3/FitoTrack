@@ -39,11 +39,13 @@ import java.util.UUID;
 
 import de.tadris.fitness.recording.event.HeartRateChangeEvent;
 import de.tadris.fitness.util.BluetoothDevicePreferences;
+import de.tadris.fitness.util.WorkoutLogger;
 import no.nordicsemi.android.ble.BleManager;
 import no.nordicsemi.android.ble.common.callback.hr.HeartRateMeasurementDataCallback;
 
 public class HRManager extends BleManager {
 
+    private static final String TAG = "HRManager";
     private static final UUID HR_SERVICE_UUID = UUID.fromString("0000180D-0000-1000-8000-00805f9b34fb");
     private static final UUID HEART_RATE_MEASUREMENT_CHARACTERISTIC_UUID = UUID.fromString("00002A37-0000-1000-8000-00805f9b34fb");
 
@@ -61,11 +63,15 @@ public class HRManager extends BleManager {
 
     public void start() {
         if (isConnectionPossible()) {
+            WorkoutLogger.log(TAG, "Connecting to HR sensor: " + getBluetoothAddress());
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(getBluetoothAddress());
             connect(device)
                     .useAutoConnect(true)
                     .retry(3, 100)
                     .enqueue();
+        } else {
+            WorkoutLogger.log(TAG, "HR connection not possible: btAvailable=" + (bluetoothAdapter != null && bluetoothAdapter.isEnabled())
+                    + " addressSet=" + isBluetoothAddressAvailable() + " permission=" + hasPermission());
         }
     }
 
@@ -95,6 +101,7 @@ public class HRManager extends BleManager {
     }
 
     public void reconnect() {
+        WorkoutLogger.log(TAG, "Reconnecting HR sensor");
         disconnect();
         start();
     }
@@ -110,6 +117,7 @@ public class HRManager extends BleManager {
         @Override
         protected void initialize() {
             super.initialize();
+            WorkoutLogger.log(TAG, "Initializing HR notifications");
             setNotificationCallback(heartRateCharacteristic).with(new HeartRateMeasurementDataCallback() {
                 @Override
                 public void onHeartRateMeasurementReceived(
@@ -127,7 +135,8 @@ public class HRManager extends BleManager {
                 }
             });
             enableNotifications(heartRateCharacteristic)
-                    .fail((device, status) -> Log.e("HRManager", "Failed to enable HR notifications, status=" + status))
+                    .done(device -> WorkoutLogger.log(TAG, "HR notifications enabled"))
+                    .fail((device, status) -> WorkoutLogger.log(TAG, "Failed to enable HR notifications, status=" + status))
                     .enqueue();
         }
 
@@ -136,6 +145,9 @@ public class HRManager extends BleManager {
             final BluetoothGattService service = gatt.getService(HR_SERVICE_UUID);
             if (service != null) {
                 heartRateCharacteristic = service.getCharacteristic(HEART_RATE_MEASUREMENT_CHARACTERISTIC_UUID);
+            }
+            if (heartRateCharacteristic == null) {
+                WorkoutLogger.log(TAG, "HR service not found on device");
             }
             return heartRateCharacteristic != null;
         }
