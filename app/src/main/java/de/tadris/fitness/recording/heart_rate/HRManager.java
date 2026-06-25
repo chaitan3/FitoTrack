@@ -28,6 +28,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -93,7 +95,7 @@ public class HRManager extends BleManager {
     }
 
     public void reconnect() {
-        stop();
+        disconnect();
         start();
     }
 
@@ -124,7 +126,9 @@ public class HRManager extends BleManager {
                             rrIntervals));
                 }
             });
-            enableNotifications(heartRateCharacteristic).enqueue();
+            enableNotifications(heartRateCharacteristic)
+                    .fail((device, status) -> Log.e("HRManager", "Failed to enable HR notifications, status=" + status))
+                    .enqueue();
         }
 
         @Override

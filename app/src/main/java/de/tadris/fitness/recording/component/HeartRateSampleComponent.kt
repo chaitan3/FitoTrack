@@ -25,6 +25,7 @@ import de.tadris.fitness.recording.RecordingState
 import de.tadris.fitness.recording.event.HeartRateChangeEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class HeartRateSampleComponent : RecorderServiceComponent {
 
@@ -39,10 +40,9 @@ class HeartRateSampleComponent : RecorderServiceComponent {
         EventBus.getDefault().unregister(this)
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onHeartRateChange(e: HeartRateChangeEvent) {
-        val state = service.stateHolder.state
-        if (state != RecordingState.RUNNING && state != RecordingState.AUTO_PAUSE) return
+        if (service.stateHolder.state != RecordingState.RUNNING) return
 
         val now = System.currentTimeMillis()
         val sample = HeartRateSample(
