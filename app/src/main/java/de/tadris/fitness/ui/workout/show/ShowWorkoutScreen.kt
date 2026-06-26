@@ -21,7 +21,6 @@ package de.tadris.fitness.ui.workout.show
 
 import android.app.Activity
 import android.content.Intent
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -76,7 +75,7 @@ import de.tadris.fitness.R
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.data.preferences.UserMeasurements
-import de.tadris.fitness.util.osm.OAuthAuthentication
+import de.tadris.fitness.ui.map.WorkoutMap
 import de.tadris.fitness.ui.sections.SectionListModel
 import de.tadris.fitness.ui.sections.SectionListPresenter
 import de.tadris.fitness.ui.sections.SectionListView
@@ -87,7 +86,7 @@ import de.tadris.fitness.ui.workout.diagram.HeightConverter
 import de.tadris.fitness.ui.workout.diagram.IntensityConverter
 import de.tadris.fitness.ui.workout.diagram.SpeedConverter
 import de.tadris.fitness.ui.workout.diagram.WorkoutDiagram
-import de.tadris.fitness.ui.map.WorkoutMap
+import de.tadris.fitness.util.osm.OAuthAuthentication
 import de.tadris.fitness.util.unit.UnitUtils
 import java.util.Date
 import kotlin.math.roundToInt
@@ -168,12 +167,10 @@ private fun ShowWorkoutContent(
     onEditWorkout: () -> Unit = {},
     onShareWorkout: () -> Unit = {},
 ) {
-    val activity = LocalActivity.current
     val context = LocalContext.current
     val workout = state.workout
     val data = state.data
     val calculatedValues = state.calculatedValues
-    val sets = state.sets
 
     val instance = remember { Instance.getInstance(context) }
     val distanceUnitUtils = remember { instance.distanceUnitUtils }

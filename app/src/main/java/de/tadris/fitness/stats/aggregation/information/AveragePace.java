@@ -55,7 +55,7 @@ public class AveragePace extends AbstractWorkoutInformation {
 
     @Override
     public String getFormattedValueFromWorkout(Workout workout) {
-        return distanceUnitUtils.getPace(workout.getAverageSpeedActive());
+        return distanceUnitUtils.getPace(workout.getAveragePaceActive());
     }
 
     @Override
