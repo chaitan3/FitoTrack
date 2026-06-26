@@ -19,16 +19,26 @@
 package de.tadris.fitness.recording.information
 
 import android.content.Context
+import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.recording.event.AggregatedRecordingValuesEvent
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class CurrentTime(context: Context) : RecordingInformation(context) {
 
     override val id = "currentTime"
     override val isEnabledByDefault = false
-    override fun canBeDisplayed() = false
+    override fun canBeDisplayed() = true
+
+    override fun getTitle(): String {
+        return getString(R.string.currentTime)
+    }
+
+    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
+        return Instance.getInstance(context).userDateTimeUtils.formatTime(Date())
+    }
 
     override fun getSpokenText(values: AggregatedRecordingValuesEvent): String {
         return getString(R.string.currentTime) + ": " + getSpokenTime(Calendar.getInstance(Locale.getDefault())) + "."
@@ -42,13 +52,5 @@ class CurrentTime(context: Context) : RecordingInformation(context) {
             hours.toString(),
             minutes.toString()
         )
-    }
-
-    override fun getTitle(): String {
-        return ""
-    }
-
-    override fun getDisplayedText(values: AggregatedRecordingValuesEvent): String {
-        return ""
     }
 }
