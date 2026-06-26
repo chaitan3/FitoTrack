@@ -157,17 +157,19 @@ fun PreStartBottomSheet(
                     )
                 },
             )
-            AssistChip(
-                onClick = onIntervalSet,
-                label = { Text(stringResource(R.string.recording_intervals)) },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_list),
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                    )
-                },
-            )
+            if (voiceFeedbackAvailable) {
+                AssistChip(
+                    onClick = onIntervalSet,
+                    label = { Text(stringResource(R.string.recording_intervals)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_list),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                    },
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
