@@ -81,9 +81,9 @@ class PebbleIntegrationComponent : RecorderServiceComponent {
     private var sender: PebbleSender? = null
 
     override fun register(service: RecorderService) {
+        EventBus.getDefault().register(this)
         try {
             sender = DefaultPebbleSender(service)
-            EventBus.getDefault().register(this)
             Log.d(TAG, "PebbleIntegrationComponent registered")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize Pebble sender", e)
@@ -92,9 +92,13 @@ class PebbleIntegrationComponent : RecorderServiceComponent {
 
     override fun unregister() {
         EventBus.getDefault().unregister(this)
-        sender?.close()
-        sender = null
-        scope.cancel()
+        try {
+            sender?.close()
+            sender = null
+            scope.cancel()
+        }catch (e: Exception){
+            Log.e(TAG, "Failed to unregister Pebble sender")
+        }
         Log.d(TAG, "PebbleIntegrationComponent unregistered")
     }
 
