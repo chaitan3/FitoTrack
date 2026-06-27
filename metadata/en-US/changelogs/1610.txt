@@ -1,0 +1,4 @@
+- Added Pebble integration with a companion app for Pebble Watches
+- Hopefully fix a bug in the DB migration introduced in the last version
+- Fix pace formatting on the share screen
+- Fix a potential bug in heart rate tracking (+added logs for further investigation)
