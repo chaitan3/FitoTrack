@@ -39,7 +39,7 @@
     <string name="gpsLost">Сигнал GPS потерян</string>
     <string name="workoutTime">Время</string>
     <string name="workoutDate">Дата</string>
-    <string name="workoutDuration">Продолжительность</string>
+    <string name="workoutDuration">Длительность</string>
     <string name="workoutDistance">Расстояние</string>
     <string name="workoutRoute">Маршрут</string>
     <string name="workoutSpeed">Скорость</string>
@@ -166,7 +166,7 @@
     <string name="deleteIntervalSetMessage">Вы хотите удалить набор интервалов\?</string>
     <string name="deleteIntervalSet">Удалить набор интервалов</string>
     <string name="enterName">Введите название</string>
-    <string name="length_in_minutes">Продолжительность (минуты):</string>
+    <string name="length_in_minutes">Длительность (минуты):</string>
     <string name="interval_name">Название:</string>
     <string name="hintEditIntervalSet">Добавить интервалы, которые будут произнесены.</string>
     <string name="hintManageIntervalSets">Добавить набор интервалов для использования в тренировках.</string>
@@ -207,7 +207,7 @@
     <string name="stopRecordingQuestion">Остановить запись\?</string>
     <string name="noGpsMessage">Пожалуйста, включите GPS для отслеживания тренировки.</string>
     <string name="recordWorkout">Записать тренировку</string>
-    <string name="setDuration">Установить продолжительность</string>
+    <string name="setDuration">Установить длительность</string>
     <string name="importWorkout">Импортировать тренировку</string>
     <string name="enterWorkout">Добавить тренировку</string>
     <string name="unknown">Неизвестно</string>
@@ -230,8 +230,8 @@
     <string name="workoutPace">Темп</string>
     <string name="workoutEndTime">Время окончания</string>
     <string name="workoutStartTime">Время начала</string>
-    <string name="workoutPauseDuration">Продолжительность паузы</string>
-    <string name="errorEnterValidDuration">Введите корректную продолжительность</string>
+    <string name="workoutPauseDuration">Длительность паузы</string>
+    <string name="errorEnterValidDuration">Введите корректную длительность</string>
     <string name="gpsFound">Сигнал GPS найден</string>
     <string name="pref_announcements_content">Содержание оповещений</string>
     <string name="pref_announcements_config_summary">Выберите время и дистанцию между голосовыми оповещениями</string>
@@ -314,8 +314,8 @@
     <string name="intervalAutoStartModeTraining">Режимы автоматического запуска тренировок</string>
     <string name="pref_auto_start_mode_instant">Начинать немедленно</string>
     <string name="popup_auto_start_immediately">Начинать немедленно</string>
-    <string name="pref_auto_start_mode_on_move">Дожидаться начала движения</string>
-    <string name="pref_auto_start_mode_wait_for_gps">Дожидаться точного определения положения</string>
+    <string name="pref_auto_start_mode_on_move">Ожидается начало движения…</string>
+    <string name="pref_auto_start_mode_wait_for_gps">Дожидаться точного определения местоположения</string>
     <string name="customAutoStartDelay">Другое</string>
     <string name="manageAutoStartDelaySummary">Выберите обратный отсчет времени по умолчанию для автоматического начала тренировки</string>
     <string name="alreadyDownloading">Файл уже скачивается</string>
@@ -347,7 +347,7 @@
     <string name="popup_auto_start_on_move">Когда я начинаю движение</string>
     <string name="workoutAutoStarted">Тренировка запущена автоматически</string>
     <string name="autoStartCountdownMsgMove">Начало тренировки после начала движения</string>
-    <string name="autoStartCountdownMsgGps">Начало тренировки после установления местоположения по GPS с достаточной точностью</string>
+    <string name="autoStartCountdownMsgGps">Начало тренировки после определения местоположения по GPS с достаточной точностью</string>
     <string name="autoStartCountdownMsg">Начало тренировки через</string>
     <string name="downloading">Скачивание…</string>
     <string name="chooseMapHint">Пожалуйста, выберите файл карты</string>
@@ -382,7 +382,7 @@
     <string name="lowerPaceLimit">Нижний предел темпа</string>
     <string name="ttsBelowTargetSpeed">Слишком медленно</string>
     <string name="ttsAboveTargetSpeed">Слишком быстро</string>
-    <string name="selectColoring">Выберите окраску</string>
+    <string name="selectColoring">Выбор окраски</string>
     <string name="pref_announcements_pace_control_title">Предупреждения о темпе</string>
     <string name="editWorkoutStartEnd">Подрезка начала/конца</string>
     <string name="preferenceUseAverageForCurrentSpeed">Для расчета текущей скорости использовать среднюю скорость за определенное время вместо последней единичной записи скорости.</string>
@@ -485,7 +485,7 @@
     <string name="autoExportBackupSummary">Автоматический экспорт резервных копий данных</string>
     <string name="takeBackups3">Каждый 3-й день</string>
     <string name="massExportGpxTitle">Экспорт всех тренировок в виде GPX-файлов</string>
-    <string name="debugPressureSensor">Отладка датчика атмосферного давления</string>
+    <string name="debugPressureSensor">Отладка датчика давления</string>
     <string name="workoutCount">Количество тренировок</string>
     <string name="autoExportBackupTitle">Автоматическое резервное копирование данных приложения</string>
     <string name="massExportGpxSummary">Создается ZIP-файл, содержащий все тренировки в виде GPX-файлов</string>
@@ -515,8 +515,8 @@
         <item quantity="many">%d спутников</item>
         <item quantity="other">%d спутников</item>
     </plurals>
-    <string name="workoutAvgDurationLong">Средняя продолжительность</string>
-    <string name="workoutAvgPauseDuration">Средняя продолжительность паузы</string>
+    <string name="workoutAvgDurationLong">Средняя длительность</string>
+    <string name="workoutAvgPauseDuration">Средняя длительность паузы</string>
     <string name="noSensorAvailable">Нет доступного датчика</string>
     <string name="statistics">Статистика</string>
     <string name="stats_history_title">История</string>
@@ -534,8 +534,8 @@
     <string name="workoutDistanceSum">Суммарное расстояние</string>
     <string name="mondriaan">Мондрианский</string>
     <string name="httpUrl">URL</string>
-    <string name="workoutDurationSum">Суммарная продолжительность</string>
-    <string name="workoutPauseDurationSum">Суммарная продолжительность паузы</string>
+    <string name="workoutDurationSum">Суммарная длительность</string>
+    <string name="workoutPauseDurationSum">Суммарная длительность паузы</string>
     <string name="stats_explore_title">Изучение</string>
     <plurals name="workoutPullUp">
         <item quantity="one">Подтягивание</item>
@@ -544,11 +544,41 @@
         <item quantity="other">Подтягиваний</item>
     </plurals>
     <string name="workoutTypePullUps">Подтягивания</string>
-    <string name="workoutDurationPrecisionToSeconds">Продолжительность с точностью до секунд</string>
+    <string name="workoutDurationPrecisionToSeconds">Длительность с точностью до секунд</string>
     <string name="askForComment">Запрос комментария</string>
     <string name="askForCommentSummary">Запрос ввода комментария после остановки записи</string>
     <string name="removeOAuthToken">Удалить OAuth токен</string>
     <string name="removedOAuthToken">OAuth токен удален</string>
     <string name="saveChangesQuestion">Сохранить изменения?</string>
     <string name="saveChangesQuestionMessage">Вы действительно хотите сохранить изменения?</string>
+    <string name="addWorkoutType">Добавить тип тренировки</string>
+    <string name="autoStartDelaySeconds">Задержка в секундах</string>
+    <string name="zoom_in">Приблизить</string>
+    <string name="zoom_out">Отдалить</string>
+    <string name="language">Язык</string>
+    <string name="restorePreparing">Подготовка</string>
+    <string name="actionBack">Назад</string>
+    <string name="more">Еще</string>
+    <string name="recording_elapsed">Длительность</string>
+    <string name="recording_pause">Пауза</string>
+    <string name="recording_resume">Возобновить</string>
+    <string name="recording_hold_to_stop">Долгое нажатие для завершения тренировки</string>
+    <string name="recording_pair_sensor">Подключить датчик</string>
+    <string name="recording_intervals">Интервалы</string>
+    <string name="recording_status_recording">Запись</string>
+    <string name="recording_status_paused_auto">Пауза · автоматическая</string>
+    <string name="recording_status_paused_manual">Пауза · ручная</string>
+    <string name="recording_status_stopped">Остановлено</string>
+    <string name="recording_status_ready">Готово к запуску</string>
+    <string name="recording_status_gps_weak">Слабый сигнал GPS…</string>
+    <string name="recording_status_gps_searching">Поиск GPS…</string>
+    <string name="ignore">Игнорировать</string>
+    <string name="localNetworkPermissionTitle">Доступ к локальной сети</string>
+    <string name="localNetworkPermissionMessage">Если введен адрес компьютера в локальной сети, приложению требуется системное разрешение на доступ к нему. Если введен адрес общедоступного сервиса в интернете, можете игнорировать это.</string>
+    <string name="localNetworkPermissionDeniedMessage">Доступ к локальной сети запрещен. Для предоставления доступа откройте системные настройки приложения.</string>
+    <string name="openSettings">Открыть настройки</string>
+    <string name="recording_waiting_gps_start_anyway">Ожидается соединение с GPS - все равно начать?</string>
+    <string name="recording_gps_accurate">GPS · точно</string>
+    <string name="recording_gps_weak">%d спутн. · слабо</string>
+    <string name="recording_gps_searching">%d спутн. · поиск</string>
 </resources>
