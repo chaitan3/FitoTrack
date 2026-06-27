@@ -330,8 +330,10 @@ class LegacyBackupReader(
                 val endDate = sample.timestamp
                 val startDate = endDate - (sampleDiff - currentDiff)
                 database.workoutDao().insertPause(WorkoutPause(
-                    workout.id, startDate, startDate,
-                    endDate, false
+                    workoutId = workout.id,
+                    startDate = startDate,
+                    endDate = endDate,
+                    userInitiated = false,
                 ))
                 currentDiff = sampleDiff
             }

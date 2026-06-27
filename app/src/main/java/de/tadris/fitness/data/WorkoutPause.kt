@@ -49,8 +49,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class WorkoutPause(
     val workoutId: Long,
-    @PrimaryKey
-    val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val startDate: Long,
     val endDate: Long,
     val userInitiated: Boolean,

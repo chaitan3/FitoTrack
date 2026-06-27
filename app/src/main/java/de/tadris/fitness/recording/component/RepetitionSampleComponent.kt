@@ -72,7 +72,7 @@ class RepetitionSampleComponent : RecorderServiceComponent {
 
         val sample = RepetitionSample(
             service.stateHolder.workoutId,
-            System.nanoTime(),
+            0,
             startTime,
             endTime,
             service.stateHolder.relativeTime,

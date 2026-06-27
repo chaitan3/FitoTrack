@@ -206,7 +206,16 @@ class BackupReader(
 
         // Only import unknown workouts on merge
         if (replace || database.workoutDao().findById(workoutData.workout.id) == null) {
-            database.workoutDao().insertWorkoutData(workoutData)
+            // Reset sample/pause ids to 0 so Room auto-generates them, avoiding conflicts
+            // when merging backups from different devices that share sequential id ranges.
+            val cleanedData = workoutData.copy(
+                samples = workoutData.samples.map { it.copy(id = 0) },
+                pauses = workoutData.pauses.map { it.copy(id = 0) },
+                events = workoutData.events.map { it.copy(id = 0) },
+                repetitionSamples = workoutData.repetitionSamples.map { it.copy(id = 0) },
+                heartRateSamples = workoutData.heartRateSamples.map { it.copy(id = 0) },
+            )
+            database.workoutDao().insertWorkoutData(cleanedData)
         }
     }
 

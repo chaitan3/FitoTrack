@@ -348,7 +348,7 @@ fun AppNavigation(
                     dao.insertPause(
                         WorkoutPause(
                             workout.id,
-                            System.nanoTime(),
+                            0,
                             workout.end,
                             System.currentTimeMillis(),
                             true

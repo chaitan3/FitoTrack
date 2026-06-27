@@ -108,7 +108,6 @@ class GpxImporter : IWorkoutImporter {
     private fun Track.getRouteSamples() = trkseg.asSequence().flatMap { it.trkpt }.map { point ->
         RouteSample(
             workoutId = -1,
-            id = -1,
             timestamp = parseDate(point.time).time,
             relativeTime = -1,
             latitude = point.lat,
@@ -125,7 +124,6 @@ class GpxImporter : IWorkoutImporter {
         return@mapNotNull if(hr > 0){
             HeartRateSample(
                 workoutId = -1,
-                id = -1,
                 timestamp = parseDate(point.time).time,
                 relativeTime = -1,
                 heartRate = hr

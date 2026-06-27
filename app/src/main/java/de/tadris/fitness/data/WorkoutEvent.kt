@@ -42,8 +42,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class WorkoutEvent(
     override val workoutId: Long,
-    @PrimaryKey
-    override val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    override val id: Long = 0,
     override val timestamp: Long,
     override val relativeTime: Long,
     val typeId: String,

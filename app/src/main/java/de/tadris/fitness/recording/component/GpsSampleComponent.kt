@@ -80,7 +80,7 @@ class GpsSampleComponent : RecorderServiceComponent {
 
     private fun createSampleFromLocation(location: Location) = RouteSample(
         service.stateHolder.workoutId,
-        LocationUtils.getTimeFor(location),
+        0,
         LocationUtils.getTimeFor(location),
         service.stateHolder.relativeTime,
         location.latitude,

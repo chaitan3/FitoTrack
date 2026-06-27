@@ -47,7 +47,6 @@ class HeartRateSampleComponent : RecorderServiceComponent {
         val now = System.currentTimeMillis()
         val sample = HeartRateSample(
             workoutId = service.stateHolder.workoutId,
-            id = System.nanoTime(),
             timestamp = now,
             relativeTime = service.stateHolder.relativeTime,
             heartRate = e.heartRate,

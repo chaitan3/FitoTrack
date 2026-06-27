@@ -78,7 +78,7 @@ public class IntervalAnnouncements {
         speak(interval);
         db.workoutDao().insertWorkoutEvent(new WorkoutEvent(
                 service.stateHolder.getWorkoutId(),
-                System.nanoTime(),
+                0,
                 System.currentTimeMillis(),
                 service.stateHolder.getRelativeTime(),
                 WorkoutEvent.TYPE_ID_INTERVAL

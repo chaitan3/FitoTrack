@@ -37,7 +37,9 @@ class Migration16PausesRepetitions(context: Context, listener: MigrationListener
     }
 
     override fun migrate() {
-        val dao = Instance.getInstance(context).db.workoutDao()
+        val db = Instance.getInstance(context).db
+        db.openHelper.writableDatabase.execSQL("DELETE FROM workout_pause")
+        val dao = db.workoutDao()
         val workouts = dao.getWorkouts()
         workouts.forEachIndexed { index, workout ->
             val data = WorkoutData.fromWorkout(dao, workout)
@@ -59,8 +61,10 @@ class Migration16PausesRepetitions(context: Context, listener: MigrationListener
                 val endDate = sample.timestamp
                 val startDate = endDate - (sampleDiff - currentDiff)
                 dao.insertPause(WorkoutPause(
-                    workout.id, startDate, startDate,
-                    endDate, false
+                    workoutId = workout.id,
+                    startDate = startDate,
+                    endDate = endDate,
+                    userInitiated = false,
                 ))
                 currentDiff = sampleDiff
             }

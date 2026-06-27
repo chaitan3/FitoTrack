@@ -116,7 +116,7 @@ class RecorderServiceActions(private val service: RecorderService) {
         service.instance.db.workoutDao().insertPause(
             WorkoutPause(
                 service.stateHolder.workoutId,
-                System.nanoTime(),
+                0,
                 service.stateHolder.lastStateChange,
                 System.currentTimeMillis(),
                 state == RecordingState.MANUAL_PAUSE || state == RecordingState.STOPPED

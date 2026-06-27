@@ -52,8 +52,8 @@ import org.mapsforge.core.model.LatLong
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RouteSample(
     override val workoutId: Long,
-    @PrimaryKey
-    override val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    override val id: Long = 0,
     override val timestamp: Long,
     override val relativeTime: Long,
     val latitude: Double,
