@@ -608,31 +608,31 @@ public abstract class AppDatabase extends RoomDatabase {
 
                             db.execSQL("ALTER TABLE route_sample RENAME TO route_sample_old");
                             db.execSQL("CREATE TABLE route_sample (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp INTEGER NOT NULL, relativeTime INTEGER NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, elevation REAL NOT NULL, elevationMSL REAL NOT NULL, speed REAL NOT NULL, pressure REAL NOT NULL, workoutId INTEGER NOT NULL, FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE)");
-                            db.execSQL("INSERT INTO route_sample SELECT * FROM route_sample_old");
+                            db.execSQL("INSERT INTO route_sample (id, timestamp, relativeTime, latitude, longitude, elevation, elevationMSL, speed, pressure, workoutId) SELECT id, timestamp, relativeTime, latitude, longitude, elevation, elevationMSL, speed, pressure, workoutId FROM route_sample_old");
                             db.execSQL("DROP TABLE route_sample_old");
                             db.execSQL("CREATE INDEX index_route_sample_workoutId ON route_sample (workoutId)");
 
                             db.execSQL("ALTER TABLE workout_pause RENAME TO workout_pause_old");
                             db.execSQL("CREATE TABLE workout_pause (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startDate INTEGER NOT NULL, endDate INTEGER NOT NULL, userInitiated INTEGER NOT NULL, workoutId INTEGER NOT NULL, FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE)");
-                            db.execSQL("INSERT INTO workout_pause SELECT * FROM workout_pause_old");
+                            db.execSQL("INSERT INTO workout_pause (id, startDate, endDate, userInitiated, workoutId) SELECT id, startDate, endDate, userInitiated, workoutId FROM workout_pause_old");
                             db.execSQL("DROP TABLE workout_pause_old");
                             db.execSQL("CREATE INDEX index_workout_pause_workoutId ON workout_pause (workoutId)");
 
                             db.execSQL("ALTER TABLE repetition_sample RENAME TO repetition_sample_old");
                             db.execSQL("CREATE TABLE repetition_sample (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp INTEGER NOT NULL, relativeTime INTEGER NOT NULL, timestampEnd INTEGER NOT NULL, repetitionTypeId INTEGER NOT NULL, repetitions INTEGER NOT NULL, intensity REAL NOT NULL, frequency REAL NOT NULL, workoutId INTEGER NOT NULL, FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE)");
-                            db.execSQL("INSERT INTO repetition_sample SELECT * FROM repetition_sample_old");
+                            db.execSQL("INSERT INTO repetition_sample (id, timestamp, relativeTime, timestampEnd, repetitionTypeId, repetitions, intensity, frequency, workoutId) SELECT id, timestamp, relativeTime, timestampEnd, repetitionTypeId, repetitions, intensity, frequency, workoutId FROM repetition_sample_old");
                             db.execSQL("DROP TABLE repetition_sample_old");
                             db.execSQL("CREATE INDEX index_repetition_sample_workoutId ON repetition_sample (workoutId)");
 
                             db.execSQL("ALTER TABLE heart_rate_sample RENAME TO heart_rate_sample_old");
                             db.execSQL("CREATE TABLE heart_rate_sample (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp INTEGER NOT NULL, relativeTime INTEGER NOT NULL, heartRate INTEGER NOT NULL, workoutId INTEGER NOT NULL, FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE)");
-                            db.execSQL("INSERT INTO heart_rate_sample SELECT * FROM heart_rate_sample_old");
+                            db.execSQL("INSERT INTO heart_rate_sample (id, timestamp, relativeTime, heartRate, workoutId) SELECT id, timestamp, relativeTime, heartRate, workoutId FROM heart_rate_sample_old");
                             db.execSQL("DROP TABLE heart_rate_sample_old");
                             db.execSQL("CREATE INDEX index_heart_rate_sample_workoutId ON heart_rate_sample (workoutId)");
 
                             db.execSQL("ALTER TABLE workout_event RENAME TO workout_event_old");
                             db.execSQL("CREATE TABLE workout_event (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, timestamp INTEGER NOT NULL, relativeTime INTEGER NOT NULL, typeId TEXT NOT NULL, workoutId INTEGER NOT NULL, FOREIGN KEY (workoutId) REFERENCES workout(id) ON DELETE CASCADE)");
-                            db.execSQL("INSERT INTO workout_event SELECT * FROM workout_event_old");
+                            db.execSQL("INSERT INTO workout_event (id, timestamp, relativeTime, typeId, workoutId) SELECT id, timestamp, relativeTime, typeId, workoutId FROM workout_event_old");
                             db.execSQL("DROP TABLE workout_event_old");
                             db.execSQL("CREATE INDEX index_workout_event_workoutId ON workout_event (workoutId)");
 
