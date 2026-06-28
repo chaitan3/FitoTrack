@@ -39,8 +39,8 @@ android {
         minSdkVersion 26
         compileSdk 37
         targetSdkVersion 37
-        versionCode 1610
-        versionName "16.1"
+        versionCode 1620
+        versionName "16.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

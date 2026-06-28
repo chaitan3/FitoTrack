@@ -1,0 +1,1 @@
+- Fix a bug in the DB migration introduced in the last version
