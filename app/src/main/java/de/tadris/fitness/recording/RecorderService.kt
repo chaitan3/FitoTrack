@@ -119,9 +119,17 @@ class RecorderService : Service() {
         log(TAG, "Device: " + Build.PRODUCT + " / " + Build.DEVICE + " / " + Build.MODEL)
     }
 
+    private var initialized = false
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         log(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
+
+        if (initialized) {
+            log(TAG, "onStartCommand called again on existing instance, ignoring setup")
+            return START_STICKY
+        }
+        initialized = true
 
         stateHolder = RecordingStateHolder()
 
