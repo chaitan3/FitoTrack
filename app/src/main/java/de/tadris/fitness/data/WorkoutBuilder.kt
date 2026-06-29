@@ -29,7 +29,7 @@ import kotlin.math.roundToInt
 class WorkoutBuilder(context: Context?) {
     var workoutType: WorkoutType
     var start: Calendar
-    var duration: Long
+    var duration: Long // total duration in millis
     var distance = 500.0 // in meters
     var comment: String? = ""
     private var existingWorkout: Workout? = null
@@ -98,7 +98,7 @@ class WorkoutBuilder(context: Context?) {
                 existingWorkout = workout
                 workoutType = workout.getWorkoutType(context)
                 start.setTimeInMillis(workout.start)
-                duration = workout.activeDuration
+                duration = workout.totalDuration
                 distance = workout.distance
                 comment = workout.comment
 
