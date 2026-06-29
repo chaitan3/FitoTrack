@@ -24,9 +24,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
-import de.tadris.fitness.data.WorkoutBuilder
+import de.tadris.fitness.data.CalculatedValues
+import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
+import de.tadris.fitness.data.calorie.CalorieCalculator
+import de.tadris.fitness.data.preferences.UserMeasurements.Companion.from
 import de.tadris.fitness.util.unit.DistanceUnitSystem
 import de.tadris.fitness.util.unit.UnitUtils
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +38,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import java.util.UUID
+import kotlin.math.roundToInt
 
 data class EnterWorkoutFormState(
     val workoutType: WorkoutType,
@@ -87,14 +92,14 @@ class EnterWorkoutViewModel(
                             snackbarMessage = getApplication<Application>().getString(R.string.cannotFindWorkout),
                         )
                     }
-                    val builder = WorkoutBuilder.fromWorkout(getApplication(), workout)
+                    val start = Calendar.getInstance().also { it.timeInMillis = workout.start }
                     EnterWorkoutUiState.Ready(
                         form = EnterWorkoutFormState(
-                            workoutType = builder.workoutType,
-                            start = builder.start,
-                            durationMillis = builder.duration,
-                            distanceText = formatDistance(builder.distance, unitSystem),
-                            comment = builder.comment ?: "",
+                            workoutType = workout.getWorkoutType(getApplication()),
+                            start = start,
+                            durationMillis = workout.totalDuration,
+                            distanceText = formatDistance(workout.distance, unitSystem),
+                            comment = workout.comment ?: "",
                             isEditMode = true,
                             unitSystem = unitSystem,
                         ),
@@ -183,23 +188,45 @@ class EnterWorkoutViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                val instance = Instance.getInstance(app)
                 val distanceMeters = form.unitSystem.getMetersFromLongDistance(distanceInLongUnit)
+                val existingWorkout = if (form.isEditMode) {
+                    instance.db.workoutDao().getWorkoutById(workoutId)!!
+                } else null
 
-                val builder = if (form.isEditMode) {
-                    val workout =
-                        Instance.getInstance(app).db.workoutDao().getWorkoutById(workoutId)!!
-                    WorkoutBuilder.fromWorkout(app, workout)
+                val pauseDuration = existingWorkout?.pauseDuration ?: 0L
+                val activeDuration = form.durationMillis - pauseDuration
+                val ascent = if (existingWorkout != null) {
+                    CalculatedValues(app, existingWorkout).ascent.roundToInt()
+                } else 0
+                val energy = CalorieCalculator(app).calculateEnergy(
+                    from(app),
+                    activeDuration,
+                    ascent,
+                    form.workoutType.id,
+                    distanceMeters / (activeDuration / 1000.0),
+                )
+
+                val workout = Workout(
+                    id = existingWorkout?.id ?: System.nanoTime(),
+                    uuid = existingWorkout?.uuid ?: UUID.randomUUID().toString(),
+                    start = form.start.timeInMillis,
+                    end = form.start.timeInMillis + form.durationMillis,
+                    activeDuration = activeDuration,
+                    comment = form.comment,
+                    distance = distanceMeters,
+                    repetitions = existingWorkout?.repetitions ?: 0,
+                    energy = energy,
+                    workoutTypeId = form.workoutType.id,
+                    intervalSetUsedId = existingWorkout?.intervalSetUsedId ?: -1,
+                )
+
+                if (existingWorkout != null) {
+                    instance.db.workoutDao().updateWorkout(workout)
                 } else {
-                    WorkoutBuilder(app)
+                    instance.db.workoutDao().insertWorkout(workout)
                 }
 
-                builder.workoutType = form.workoutType
-                builder.start = form.start
-                builder.duration = form.durationMillis
-                builder.distance = distanceMeters
-                builder.comment = form.comment
-
-                val workout = builder.saveWorkout(app)
                 _uiState.value = EnterWorkoutUiState.Saved(workout.id)
             }
         }
