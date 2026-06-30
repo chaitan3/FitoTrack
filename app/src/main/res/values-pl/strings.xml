@@ -582,4 +582,5 @@
     <string name="localNetworkPermissionMessage">Jeśli wprowadzony URL wskazuje na komputer lokalny w Twojej sieci, FitoTrack potrzebuje uprawnienia od Androida, aby uzyskać do niego dostęp. Jeśli URL jest publicznie dostępny w Internecie, możesz to zignorować.</string>
     <string name="localNetworkPermissionDeniedMessage">Dostęp do sieci lokalnej został trwale odrzucony. Aby go przyznać, otwórz ustawienia aplikacji.</string>
     <string name="openSettings">Otwórz ustawienia</string>
+    <string name="pref_use_system_colors">Dynamiczne kolory (Material You)</string>
 </resources>
