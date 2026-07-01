@@ -563,4 +563,5 @@
     <string name="localNetworkPermissionMessage">Se o URL escrito corresponde a unha computadora na rede local, FitoTrack precisa o permiso para acceder a ela. Se o URL é público en internet podes ignorar este aviso.</string>
     <string name="localNetworkPermissionDeniedMessage">Denegouse de xeito permanente o acceso á rede local. Para concedelo, abre os axustes da app.</string>
     <string name="openSettings">Abrir axustes</string>
+    <string name="pref_use_system_colors">Cores dinámicas (Material You)</string>
 </resources>
