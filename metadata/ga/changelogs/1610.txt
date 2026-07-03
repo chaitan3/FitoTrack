@@ -1,0 +1,4 @@
+- Comhtháthú Pebble curtha leis le haip chomhlántach do Pebble Watches
+- Tá súil againn go réiteofar fabht san imirce DB a tugadh isteach sa leagan deireanach
+- Formáidiú luas ar an scáileán comhroinnte socrófar
+- Fabht féideartha i rianú ráta croí socrófar (+logaí curtha leis le haghaidh imscrúdaithe breise)
