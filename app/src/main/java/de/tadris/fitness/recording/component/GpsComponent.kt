@@ -107,8 +107,6 @@ class GpsComponent : RecorderServiceComponent, LocationListener {
     }
 
     // Must be overridden as long as minSDK < Android R
-    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-        WorkoutLogger.log(TAG, "onStatusChanged: $provider -> status $status")
-    }
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) { }
 
 }
