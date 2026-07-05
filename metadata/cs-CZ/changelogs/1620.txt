@@ -1,0 +1,1 @@
+- Oprava chyby v migraci databáze, která se objevila v poslední verzi

@@ -1,0 +1,4 @@
+- Přidána integrace s Pebble prostřednictvím doprovodné aplikace pro hodinky Pebble
+- Opravena (snad) chyba v migraci databáze, která se objevila v poslední verzi
+- Opraveno formátování tempa na obrazovce sdílení
+- Opravena potenciální chyba ve sledování srdeční frekvence (+ přidány záznamy pro další vyšetřování)

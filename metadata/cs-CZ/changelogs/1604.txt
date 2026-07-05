@@ -1,0 +1,6 @@
+- Přepracování vzhledu a refaktoring
+- Nová obrazovka nahrávání s větším tlačítkem pro pozastavení/zastavení
+- Nový datový formát / vylepšený formát zálohy
+- a mnoho dalšího
+
+Úplný seznam změn najdete v repozitáři projektu na Codebergu
