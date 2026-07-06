@@ -557,4 +557,10 @@
     <string name="recording_status_gps_weak">Signal GPS faible …</string>
     <string name="recording_status_gps_searching">Recherche du signal GPS…</string>
     <string name="recording_waiting_gps_start_anyway">Signal GPS non acquis - Démarrer quand même ?</string>
+    <string name="recording_elapsed">Durée</string>
+    <string name="recording_pause">Pause</string>
+    <string name="recording_resume">Reprendre</string>
+    <string name="recording_hold_to_stop">Appuyer longuement pour arrêter l\'l\'entraînement</string>
+    <string name="recording_intervals">Intervalles</string>
+    <string name="recording_status_recording">Enregistrement</string>
 </resources>
