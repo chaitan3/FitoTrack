@@ -36,12 +36,14 @@ import de.tadris.fitness.ui.statistics.fragments.StatsOverviewFragment;
 public class StatisticsAdapter extends FragmentStateAdapter {
 
     ArrayList<Fragment> fragments;
+    FitoTrackActivity context;
 
     public StatisticsAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, FitoTrackActivity context) {
         super(fragmentManager, lifecycle);
+        this.context = context;
         fragments = new ArrayList<>(Arrays.asList(
-                new StatsOverviewFragment(context),
-                new StatsHistoryFragment(context)
+                new StatsOverviewFragment(),
+                new StatsHistoryFragment()
         ));
     }
 
@@ -60,7 +62,7 @@ public class StatisticsAdapter extends FragmentStateAdapter {
         ArrayList<String> list = new ArrayList<>();
         for (Fragment fragment : fragments) {
             StatsFragment statsFragment = (StatsFragment)fragment;
-            list.add(statsFragment.getTitle());
+            list.add(statsFragment.getTitle(context));
         }
         return list;
     }

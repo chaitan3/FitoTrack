@@ -19,6 +19,7 @@
 
 package de.tadris.fitness.ui.statistics.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -47,9 +48,8 @@ public class StatsOverviewFragment extends StatsFragment {
     HorizontalBarChart numberOfActivitiesChart;
     HorizontalBarChart durationChart;
 
-    public StatsOverviewFragment(FitoTrackActivity ctx) {
-        super(R.layout.fragment_stats_overview, ctx);
-        statsProvider = new StatsProvider(ctx);
+    public StatsOverviewFragment() {
+        super(R.layout.fragment_stats_overview);
     }
 
     @Override
@@ -57,6 +57,7 @@ public class StatsOverviewFragment extends StatsFragment {
         super.onViewCreated(view, savedInstanceState);
 
         activity = (FitoTrackActivity)getContext();
+        statsProvider = new StatsProvider(activity);
 
         timeSpanSelection = view.findViewById(R.id.time_span_selection);
         timeSpanSelection.setForegroundColor(getResources().getColor(R.color.textDarkerWhite));
@@ -81,7 +82,7 @@ public class StatsOverviewFragment extends StatsFragment {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle(Context context) {
         return context.getString(R.string.stats_overview_title);
     }
 

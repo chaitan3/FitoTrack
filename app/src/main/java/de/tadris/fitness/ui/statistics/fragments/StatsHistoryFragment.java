@@ -19,6 +19,7 @@
 
 package de.tadris.fitness.ui.statistics.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -94,17 +95,18 @@ public class StatsHistoryFragment extends StatsFragment {
 
     UserPreferences preferences;
 
-    public StatsHistoryFragment(FitoTrackActivity ctx) {
-        super(R.layout.fragment_stats_history, ctx);
-        synchronizer = new ChartSynchronizer();
-        statsProvider = new StatsProvider(ctx);
-        preferences = new UserPreferences(ctx);
-        activity = ctx;
+    public StatsHistoryFragment() {
+        super(R.layout.fragment_stats_history);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        activity = context;
+        synchronizer = new ChartSynchronizer();
+        statsProvider = new StatsProvider(activity);
+        preferences = new UserPreferences(activity);
 
         // Register WorkoutType selection listeners
         selection = view.findViewById(R.id.stats_history_workout_type_selector);
@@ -434,7 +436,7 @@ public class StatsHistoryFragment extends StatsFragment {
 
 
     @Override
-    public String getTitle() {
+    public String getTitle(Context context) {
         return context.getString(R.string.stats_history_title);
     }
 }
