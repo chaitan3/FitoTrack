@@ -116,8 +116,9 @@ public class WorkoutLayer extends Layer {
 
         // on tap find the closest workout sample and if within a certain range select it
         RouteSample sample = findClosestSample(tapLatLong);
-
-        assert sample != null;
+        if (sample == null) {
+            return false;
+        }
         double distance =  sample.toLatLong().sphericalDistance(tapLatLong);
         System.out.println("distance " + distance + " max (" + max_distance + ")");
         if (distance < max_distance) {
@@ -139,7 +140,7 @@ public class WorkoutLayer extends Layer {
         RouteSample sample = null;
         double shortestDistance = 0;
 
-        for (int i = 0; i < this.samples.size() - 1; i++) {
+        for (int i = 0; i < this.samples.size(); i++) {
             double dist = latLong.sphericalDistance(samples.get(i).toLatLong());
             if (sample == null || (dist < shortestDistance)) {
                 sample = samples.get(i);
