@@ -179,26 +179,32 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
 
     private fun addSampleToAverageList(sample: RouteSample) {
         if (useAverageForCurrentSpeed) {
-            samplesForSpeedAverage += sample
-            // remove stale samples from list
-            samplesForSpeedAverage.removeAll { sample.timestamp - it.timestamp > currentSpeedAverageTime }
+            synchronized(samplesForSpeedAverage) {
+                samplesForSpeedAverage += sample
+                // remove stale samples from list
+                samplesForSpeedAverage.removeAll { sample.timestamp - it.timestamp > currentSpeedAverageTime }
+            }
         }
     }
 
     /**
-     * Returns speed with the method from user preferences
+     * Returns speed with the method from user preferences.
+     * Takes a snapshot under lock — this is read from the watchdog thread while
+     * [addSampleToAverageList] mutates the same list from the GPS sample thread.
      * @return speed in m/s
      */
     private fun getCurrentSpeed(): Double {
-        if (useAverageForCurrentSpeed && samplesForSpeedAverage.size >= 2) {
-            val distance = samplesForSpeedAverage.totalDistance
-            val timeStart = samplesForSpeedAverage.first().timestamp
-            val timeEnd = samplesForSpeedAverage.last().timestamp
-            val duration = timeEnd - timeStart
-            return distance / (duration / 1000.0)
-        } else {
-            return lastSample?.speed ?: 0.0
+        if (useAverageForCurrentSpeed) {
+            val snapshot = synchronized(samplesForSpeedAverage) { samplesForSpeedAverage.toList() }
+            if (snapshot.size >= 2) {
+                val distance = snapshot.totalDistance
+                val timeStart = snapshot.first().timestamp
+                val timeEnd = snapshot.last().timestamp
+                val duration = timeEnd - timeStart
+                return distance / (duration / 1000.0)
+            }
         }
+        return lastSample?.speed ?: 0.0
     }
 
     private fun recalculateEnergy() {
