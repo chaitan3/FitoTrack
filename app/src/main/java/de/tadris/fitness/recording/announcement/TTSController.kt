@@ -137,11 +137,20 @@ class TTSController(private val context: Context, val id: String = DEFAULT_TTS_C
             } else false
         }
 
+    private var isDestroyed = false
+
     /**
      * Destroys the TTS instance immediately. Ongoing announcements might be aborted.<br></br>
      * Use [.destroyWhenDone] instead, if you don't want to abort ongoing announcements.
+     *
+     * Safe to call multiple times (e.g. once from an explicit teardown and again from the
+     * component lifecycle) — [TextToSpeech.shutdown] itself is not idempotent and throws if
+     * invoked twice.
      */
+    @Synchronized
     fun destroy() {
+        if (isDestroyed) return
+        isDestroyed = true
         textToSpeech.shutdown()
     }
 
