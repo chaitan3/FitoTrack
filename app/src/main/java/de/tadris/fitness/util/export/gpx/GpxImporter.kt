@@ -105,7 +105,10 @@ class GpxImporter : IWorkoutImporter {
         )
     }
 
-    private fun Track.getRouteSamples() = trkseg.asSequence().flatMap { it.trkpt }.map { point ->
+    private fun Track.getSortedTrkpt() = trkseg.asSequence().flatMap { it.trkpt }
+        .sortedBy { parseDate(it.time).time }
+
+    private fun Track.getRouteSamples() = getSortedTrkpt().map { point ->
         RouteSample(
             workoutId = -1,
             timestamp = parseDate(point.time).time,
@@ -119,7 +122,7 @@ class GpxImporter : IWorkoutImporter {
         )
     }.toList()
 
-    private fun Track.getHrSamples() = trkseg.asSequence().flatMap { it.trkpt }.mapNotNull { point ->
+    private fun Track.getHrSamples() = getSortedTrkpt().mapNotNull { point ->
         val hr = point.extensions?.gpxTpxExtension?.hr ?: 0
         return@mapNotNull if(hr > 0){
             HeartRateSample(

@@ -23,6 +23,7 @@ import android.content.Context
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.calorie.CalorieCalculator
 import de.tadris.fitness.recording.component.AutoPauseComponent
+import kotlin.math.abs
 
 abstract class AbstractWorkoutSaver(
     protected val context: Context,
@@ -43,7 +44,7 @@ abstract class AbstractWorkoutSaver(
 
         var lastTimestamp = routeSamples.first().timestamp
         for(sample in routeSamples){
-            if(sample.timestamp - lastTimestamp > minPauseTime){
+            if(abs(sample.timestamp - lastTimestamp) > minPauseTime){
                 // insert pause here
                 pauses.add(WorkoutPause(
                     workoutId = workout.id,
