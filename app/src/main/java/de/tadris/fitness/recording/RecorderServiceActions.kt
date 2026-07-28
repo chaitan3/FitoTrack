@@ -168,9 +168,11 @@ class RecorderServiceActions(private val service: RecorderService) {
         }
 
         log(TAG, "Stopping and finalizing workout...")
+        if (state.isPause()) {
+            insertPause() // Append the pause that was in progress when stopping
+        }
         state = RecordingState.STOPPED
-        insertPause() // Append last active time
-        
+
         service.instance.db.workoutDao().editWorkout(service.stateHolder.workoutId) {
             it.copy(end = System.currentTimeMillis())
         }
