@@ -349,7 +349,7 @@ private fun DurationNumberField(
     label: String,
     modifier: Modifier = Modifier,
 ) {
-    var tfv by remember(value) {
+    var tfv by remember {
         mutableStateOf(TextFieldValue(value.toString()))
     }
     OutlinedTextField(
