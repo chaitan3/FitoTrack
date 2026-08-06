@@ -30,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 
+import de.tadris.fitness.R;
+
 @Entity(tableName = "workout_type")
 public class WorkoutType implements Serializable {
 
@@ -108,6 +110,13 @@ public class WorkoutType implements Serializable {
     @JsonIgnore
     public RecordingType getRecordingTypeDecoded() {
         return RecordingType.findById(this.recordingType);
+    }
+
+    @Ignore
+    @JsonIgnore
+    @PluralsRes
+    public int getRepeatingExerciseNameOrDefault() {
+        return repeatingExerciseName > 0 ? repeatingExerciseName : R.plurals.workoutRepetition;
     }
 
     @NonNull
