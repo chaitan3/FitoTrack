@@ -19,6 +19,7 @@
 package de.tadris.fitness.ui.map
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import de.tadris.fitness.Instance
@@ -46,6 +47,8 @@ class MapManager(private val activity: Activity) {
 
     private val userPreferences = Instance.getInstance(activity).userPreferences
     private val contentResolver = activity.contentResolver
+    private val darkModeEnabled = activity.resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
     private lateinit var mapView: MapView
     private lateinit var tileCache: TileCache
@@ -55,6 +58,9 @@ class MapManager(private val activity: Activity) {
         initMapProvider(activity)
         mapView.setBuiltInZoomControls(false)
         mapView.setZoomLevel(18.toByte())
+        if (darkModeEnabled) {
+            mapView.model.displayModel.backgroundColor = DARK_MODE_BACKGROUND_COLOR
+        }
         Thread {
             handleSetupLayersThread()
         }.start()
@@ -81,10 +87,14 @@ class MapManager(private val activity: Activity) {
     }
 
     private fun initTileCache(persistent: Boolean) {
+        val cacheId = userPreferences.mapStyle + if (darkModeEnabled) "-dark" else ""
         tileCache = AndroidUtil.createTileCache(
-            mapView.context, userPreferences.mapStyle, mapView.model.displayModel.tileSize,
+            mapView.context, cacheId, mapView.model.displayModel.tileSize,
             1f, mapView.model.frameBufferModel.overdrawFactor, persistent
         )
+        if (darkModeEnabled) {
+            tileCache = DarkModeTileCache(tileCache)
+        }
     }
 
     private fun setupOnlineMap(chosenTileLayer: String) {
@@ -204,6 +214,8 @@ class MapManager(private val activity: Activity) {
     }
 
     companion object {
+        private val DARK_MODE_BACKGROUND_COLOR = 0xFF121212.toInt()
+
         @JvmStatic
         fun initMapProvider(activity: Activity) {
             // This sets the device scale factor so the map is displayed accordingly
