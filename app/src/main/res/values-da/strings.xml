@@ -387,7 +387,6 @@
     <string name="editWorkoutStartEnd">Rediger Start/Slut</string>
     <string name="unitHeartBeatsPerMinute">spm</string>
     <string name="preferenceFirstDayOfWeek">Ugestart</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Brug gennemsnitshastighed over en bestemt tid i stedet for den sidste enkelt hastighedsoptegnelse for den nuværende hastighedsudregning.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Gennemsnits Hastighed</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Erstat den nuværende hastighed med et gennemsnit</string>
     <string name="preferenceCurrentSpeedTime">Gennemsnits Hastigheds Tidslængde</string>

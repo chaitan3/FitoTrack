@@ -512,7 +512,6 @@
     <string name="prefTrackStyleUsageTitle">Utilizar a coloração de trajeto automaticamento</string>
     <string name="workoutPauseDurationSum">Soma da duração de pausa</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Velocidade média</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Usar a velocidade média durante um período de tempo determinado ao invés do ultimo registro da velocidade para o cálculo de velocidade instantânea.</string>
     <string name="unitHeartBeatsPerMinute">BPM</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack precisa de permissão de acesso a localização para rastrear seu movimento durante o exercício. FitoTrack também coleta dados de localização, enquanto o aplicativo está em segundo plano ou enquanto a tela está desligada, para gravar o exercício. Os dados de localização permanecem sempre no seu celular sem seu claro consentimento para compartilha-los.</string>

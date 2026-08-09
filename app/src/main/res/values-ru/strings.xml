@@ -385,7 +385,6 @@
     <string name="selectColoring">Выбор окраски</string>
     <string name="pref_announcements_pace_control_title">Предупреждения о темпе</string>
     <string name="editWorkoutStartEnd">Подрезка начала/конца</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Для расчета текущей скорости использовать среднюю скорость за определенное время вместо последней единичной записи скорости.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Усредненная скорость</string>
     <string name="preferenceCurrentSpeedTime">Временной интервал усредненной скорости</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Заменить текущую скорость на усредненную</string>

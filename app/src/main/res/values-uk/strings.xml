@@ -166,7 +166,6 @@
     <string name="preferencesCategoryMap">Карта</string>
     <string name="preferenceTimeFormat">Формат часу</string>
     <string name="preferenceCurrentSpeedTime">Усереднений часовий інтервал швидкості</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Використовуйте середню швидкість за певний час замість останнього окремого запису швидкості для розрахунку поточної швидкості.</string>
     <string name="preferenceFirstDayOfWeek">Початок тиждня</string>
     <string name="unitMilesSingular">Миля</string>
     <string name="unitMilesPlural">Милі</string>

@@ -282,7 +282,6 @@
     <string name="preferenceCurrentSpeedTime">Rentang waktu kecepatan rata-rata</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Ganti kecepatan saat ini dengan rata-rata</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Kecepatan rata-rata</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Gunakan kecepatan rata-rata selama rentang waktu tertentu, bukan rekaman kecepatan tunggal terakhir, untuk perhitungan kecepatan saat ini.</string>
     <string name="preferenceFirstDayOfWeek">Awal minggu</string>
     <string name="workoutDiscarded">Workout dibatalkan</string>
     <string name="unitYardsSingular">Yard</string>

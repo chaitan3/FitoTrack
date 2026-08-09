@@ -367,7 +367,6 @@
     <string name="editWorkoutStartEnd">编辑开始/结束</string>
     <string name="unitHeartBeatsPerMinute">bpm</string>
     <string name="preferenceFirstDayOfWeek">每周开始日</string>
-    <string name="preferenceUseAverageForCurrentSpeed">使用某一时段的平均速度替代该时段最后时刻的瞬时速度。</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">平均速度</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">用平均值代替当前速度</string>
     <string name="preferenceCurrentSpeedTime">一段时间内的平均速度</string>

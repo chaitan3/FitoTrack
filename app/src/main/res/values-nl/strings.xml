@@ -375,7 +375,6 @@
     <string name="editWorkoutStartEnd">Start/Einde bewerken</string>
     <string name="unitHeartBeatsPerMinute">bpm</string>
     <string name="preferenceFirstDayOfWeek">Begin van de week</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Gebruik de gemiddelde snelheid over een bepaalde tijd in plaats van het laatste enkele snelheidsrecord voor de berekening van de huidige snelheid.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Gemiddelde snelheid</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Huidige snelheid vervangen door een gemiddelde</string>
     <string name="preferenceCurrentSpeedTime">Tijdspanne voor gemiddelde snelheid</string>

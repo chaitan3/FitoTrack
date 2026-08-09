@@ -239,7 +239,6 @@
     <string name="preferenceCurrentSpeedTime">Média de velocidade no período de tempo</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Substituir a velocidade atual por uma média</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Velocidade média</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Usar a velocidade média durante um período de tempo ao invés da última velocidade registrada para o cálculo da velocidade atual.</string>
     <string name="preferenceFirstDayOfWeek">Começo da semana</string>
     <string name="workoutDiscarded">Exercício descartado</string>
     <string name="timeSecondsSingular">Segundo</string>

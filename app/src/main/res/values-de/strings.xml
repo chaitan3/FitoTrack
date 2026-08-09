@@ -199,7 +199,6 @@
     <string name="preferenceCurrentSpeedTime">Zeitraum über den der Durchschnitt berechnet wird</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Aktuelle Geschwindigkeit durch einen Mittelwert ersetzen</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Gemittelte Geschwindigkeit</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Zur Berechnung der momentanen Geschwindigkeit die über einen bestimmten Zeitraum gemittelte Geschwindigkeit statt der zuletzt erfassten Einzelgeschwindigkeit verwenden.</string>
     <string name="workoutDiscarded">Workout verworfen</string>
     <string name="timeSecondsSingular">Sekunde</string>
     <string name="timeSecondsPlural">Sekunden</string>

@@ -285,7 +285,6 @@
     <string name="preferenceCurrentSpeedTime">சராசரி வேக நேர-இடைவெளி</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">தற்போதைய வேகத்தை சராசரியாக மாற்றவும்</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">சராசரி விரைவு</string>
-    <string name="preferenceUseAverageForCurrentSpeed">தற்போதைய வேக கணக்கீட்டிற்கான கடைசி ஒற்றை வேக பதிவுக்கு பதிலாக ஒரு குறிப்பிட்ட நேரத்தில் சராசரி வேகத்தைப் பயன்படுத்தவும்.</string>
     <string name="preferenceFirstDayOfWeek">வாரம் தொடக்க</string>
     <string name="workoutDiscarded">பயிற்சி நிராகரிக்கப்பட்டது</string>
     <string name="timeSecondsSingular">இரண்டாவது</string>

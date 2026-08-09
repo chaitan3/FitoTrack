@@ -41,7 +41,6 @@
     <string name="hintAddWorkout">Cliceáil ar an deilbhín móide a thaifeadadh nó a chur isteach a workout.</string>
     <string name="preferencesRecordingSummary">Bainistigh an taifeadadh workout</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Cuir an meánluas in ionad an luas reatha</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Bain úsáid as an meánluas thar am áirithe in ionad an taifead luas aonair deireanach don ríomh luas atá ann faoi láthair.</string>
     <string name="manageAutoTimeoutSummary">Cuir an t-eatramh in eagar le haghaidh stad uathoibríoch workout</string>
     <string name="aboutUnlistedContributors">A bhuíochas leis na ranníocóirí neamhliostaithe go léir a chabhraigh Le fi a aistriú agus a Leathnú chun Rianú!</string>
     <string name="actionGrant">Deontas</string>

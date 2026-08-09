@@ -374,7 +374,6 @@
     <string name="moveStartOfWorkout">Cortar inicio</string>
     <string name="runningMigrations">Migración de carreiras</string>
     <string name="editWorkoutStartEnd">Editar Inicio/Fin</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Usar a velocidade media durante unha marxe de tempo no lugar da última velocidade rexistrada do cálculo actual de velocidade.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Velocidade media</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Substituír velocidade actual pola media</string>
     <string name="preferenceCurrentSpeedTime">Período de tempo para a media</string>

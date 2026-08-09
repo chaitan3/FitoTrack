@@ -472,7 +472,6 @@
     <string name="manageAutoTimeoutSummary">وقفه را برای توقف اتوماتیک تمرینات تنظیم کنید</string>
     <string name="pref_auto_timeout_title">بازه زمانی پایان اتوماتیک</string>
     <string name="day">روز</string>
-    <string name="preferenceUseAverageForCurrentSpeed">استفاده از سرعت میانگین در یک زمان مشخص به جای آخرین سرعت ثبت شده برای محاسبه سرعت فعلی.</string>
     <string name="unitHeartRateSensorBattery">٪</string>
     <string name="unitHertzLong">هرتز</string>
     <string name="currentTime">زمان فعلی</string>

@@ -299,7 +299,6 @@
     <string name="preferenceDateFormat">Formát dátumu</string>
     <string name="per">za</string>
     <string name="no_workouts_recorded_for_this_activity">Žiadne cvičenia pre túto aktivitu</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Použi priemernú rýchlosť za určitý čas pre aktuálny výpočet rýchlosti namiesto posledného záznamu rýchlosti.</string>
     <string name="unitKilometersPlural">Kilometrov</string>
     <string name="unitHertzLong">Hertz</string>
     <string name="unitYardsPlural">Yardov</string>
