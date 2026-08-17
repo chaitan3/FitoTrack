@@ -1,0 +1,1 @@
+- Fix allenamenti non mostrati dopo fine registrazione (#25)

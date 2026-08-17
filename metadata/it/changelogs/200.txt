@@ -1,0 +1,4 @@
+- Schermata di comparazione altezza/elevazione e la mappa
+- Mostra sovrapposizione se segnale GPS non è ancora presente
+- Imposta layer mappa predefinito (#15)
+- Importazione dati velocizzata
