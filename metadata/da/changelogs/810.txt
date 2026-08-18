@@ -1,0 +1,8 @@
+- Tilføjet roning
+- Målret Android 10
+
+- Fiks GPX import/eksport på ældre Android enheder
+- Fiks tempo-stemmemeddelelser
+- Mindre layoutforbedringer
+
+- Tilføjet russisk

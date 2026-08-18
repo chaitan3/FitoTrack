@@ -1,0 +1,6 @@
+- Træningsstatistik
+- Importer GPX filer
+- Del træning i sektioner/omgange
+- Sammenføj backups med nuværende stadie
+
+Se venligst projektarkivet på Codeberg for flere ændringer

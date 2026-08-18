@@ -1,0 +1,6 @@
+- Indstilling af træningspause
+- Nuværende tid som TTS information
+- Eksporterede filer indeholder startdato og kommentar
+- Meget bedre stabilitet af sporing
+
+Se venligst projektarkivet på Codeberg for flere ændringer

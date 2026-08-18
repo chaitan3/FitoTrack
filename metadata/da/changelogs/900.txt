@@ -1,0 +1,11 @@
+- Tilføj pulsmålinger
+- Importer/eksporter pulsmålinger fra/til GPX filer
+- Genoptag standsede træninger
+- Deaktiver autopause og brug manuel pausemulighed
+- Ny meddelelse: Ændringer af træningsstadie som start, pause, genoptag
+
+- Forbedret grafskærm
+- Skalér kort efter skærmstørrelse
+- Gør "Vis på låst skærm" valgfrit (deaktiveret som standard)
+
+Se venligst projektarkivet på Codeberg for flere ændringer

@@ -1,0 +1,5 @@
+- tilføjet aktivitet Skateboarding
+- genskab tabte træninger
+- fikset diverse optagelsesstabilitetsudfordringer
+
+Se venligst projektarkivet på Codeberg for flere ændringer

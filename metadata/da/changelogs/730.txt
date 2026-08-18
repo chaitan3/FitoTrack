@@ -1,0 +1,4 @@
+- Træningsstatistik: Vis opsummerede værdier som søjler
+- Træningsstatistik: Åbn træningsoversig ved klik på en enkelt træning
+- Gennemsnitshastighed det seneste minut som stemmeinformation
+- Fiks autopause-fejl, der også forsagede meget støj i hastigheds- og elevationsdiagram

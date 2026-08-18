@@ -1,0 +1,7 @@
+- Importer flere træninger
+
+- Fiks forkert visning af tilladelsesdialog på Android <10
+- Genopfrisk valgt træning ved tilbagevenden til træningsoversigten
+- Formater meddelelsesudløserdialogen korrekt
+
+- Opdater oversættelser

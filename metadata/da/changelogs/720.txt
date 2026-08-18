@@ -1,0 +1,4 @@
+- Forhåbentlig fikset nedbrud ved import af GPX files på ældre Java versioner
+- Fikset hødje- og kaloriefejl
+
+- Opdateret fransk

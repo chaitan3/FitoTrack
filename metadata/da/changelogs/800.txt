@@ -1,0 +1,10 @@
+- Rediger træninger: type, distance, varighed
+- Om skærm
+- Tilføjet "US Customary" enhedssystem med fod
+- Tempo som udstillet information og stemmermeddelelse
+
+- Fjern ThunderForest kort pga licens
+- Bug fiks / stabilitet og UI/UX forbedringer
+- Tilføjet dansk, opdateret hollandsk
+
+Se venligst projektarkivet på Codeberg for flere ændringer

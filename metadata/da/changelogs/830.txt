@@ -1,0 +1,5 @@
+- Tilføj privatlivspolitik
+- Fiks GPX-eksport filer på Android <10
+- Ændr måden hvorpå lokationstilladelse bliver forespugt for at leve op til de nye Google Play regler
+
+- Opdater oversættelser

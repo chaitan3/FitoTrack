@@ -1,0 +1,9 @@
+Første frigivelse
+
+- Optag træninger
+- List træninger
+- Vis træningsdata (kort, hastighedsdiagram, energi) + slet træninger
+- Importer/eksporter data
+- Eksporter træninger som GPX
+- Ændre enheder
+- Ændre vægt
