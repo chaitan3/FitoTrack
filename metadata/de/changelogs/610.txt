@@ -1,0 +1,6 @@
+- Einstellung für das Trainings-Timeout
+- Aktuelle Uhrzeit als TTS-Information
+- Exportierte Dateien enthalten Startdatum und Kommentar
+- Deutlich verbesserte Stabilität der Aufzeichnung
+
+Weitere Änderungen finden Sie im Projekt-Repository auf Codeberg

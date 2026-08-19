@@ -1,0 +1,8 @@
+Neu:
+- Trainingseinheiten als GPS-Tracks auf OpenStreetMap hochladen (#24)
+- Automatischer Trainingsstopp (#23)
+
+Verbesserungen:
+- Korrektur der imperialen Gewichtseinheiten (#26)
+- Verbessertes Verhalten der Karte in den Analysebildschirmen
+- Bessere Kalorienberechnung

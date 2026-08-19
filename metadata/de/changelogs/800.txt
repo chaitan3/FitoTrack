@@ -1,0 +1,10 @@
+- Trainingseinheiten bearbeiten: Art, Distanz, Dauer
+- Info-Bildschirm
+- Das US-amerikanische Maßsystem mit Fuß als Einheit wurde hinzugefügt
+- Tempo als angezeigte Information und Sprachansage
+
+- ThunderForest-Karten wurden aus lizenzrechtlichen Gründen entfernt
+- Fehlerbehebungen / Verbesserungen bei Stabilität und UI/UX
+- Dänisch hinzugefügt, Niederländisch aktualisiert
+
+Weitere Änderungen finden Sie im Projekt-Repository auf Codeberg

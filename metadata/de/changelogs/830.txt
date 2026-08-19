@@ -1,0 +1,5 @@
+- Datenschutzerklärung hinzugefügt
+- Problem beim Speichern von GPX-Exportdateien unter Android <10 behoben
+- Die Art und Weise, wie die Standortberechtigung angefordert wird, wurde geändert, um den neuen Google Play-Richtlinien zu entsprechen
+
+- Übersetzungen aktualisiert

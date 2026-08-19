@@ -1,0 +1,12 @@
+- Thematische App-Symbole und Start-Shortcuts
+- Klimmzüge hinzugefügt
+- Die Statistiken in der Trainingsliste werden beim Herunterscrollen ausgeblendet
+- Bei der Geschwindigkeit in der Trainingsübersicht werden zwei Dezimalstellen verwendet
+- Dauer und Pausenzeiten werden neu berechnet, um einheitliche Zeitangaben zu gewährleisten
+- Es wurde behoben, dass der GPX-Massexport bei doppelten Dateinamen fehlschlug
+- Herzfrequenzen werden nun korrekt aus GPX-Dateien ausgelesen
+- Für die Statistiken wird die Einstellung „Erster Tag der Woche“ verwendet
+- Ukrainisch wurde hinzugefügt
+
+
+Eine vollständige Liste der Änderungen finden Sie im Projekt-Repository auf Codeberg

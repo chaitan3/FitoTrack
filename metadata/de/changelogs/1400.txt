@@ -1,0 +1,8 @@
+- Automatischer GPX-Export und App-Backups
+- Zoomen und Verschieben der Karte
+- Benutzerdefinierte Messwerte auf dem Freigabebildschirm
+- Anzeige des Akkustands des Bluetooth-Sensors (sofern verfügbar)
+- Komprimierung von Backups
+- Fehlerbehebungen
+
+Eine detailliertere Liste der Änderungen finden Sie im Projekt-Repository auf Codeberg

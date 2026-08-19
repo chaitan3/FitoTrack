@@ -1,0 +1,6 @@
+- Option zum Deaktivieren des Kommentardialogs beim Beenden von Trainingseinheiten
+- Optionale Ansage der Sekunden bei der Dauerangabe
+- Tempo/Dauer wurden auf dem „Teilen“-Bildschirm nicht korrekt angezeigt
+- Verwendung der neuen Slash-Screen-API
+- Optimierung für Android 14
+- Aktualisierte Übersetzungen

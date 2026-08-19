@@ -1,0 +1,3 @@
+Lokalisierung:
+- Aktualisierung der französischen Übersetzung dank Amadeous (#62)
+- Aktualisierung der niederländischen Übersetzung dank albertheres (#61)

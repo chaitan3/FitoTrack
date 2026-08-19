@@ -1,0 +1,7 @@
+Dieses Update enthält zahlreiche Fehlerbehebungen und kleinere Verbesserungen, darunter:
+- Es wurde versucht, einen Fehler zu beheben, durch den FitoTrack keine Daten aufzeichnete
+- Debug-Protokollierung
+- Das Zoomen der Karte über die Lautstärketasten ist nun optional
+- Korrektur des GPX-Formats
+
+Eine vollständige Liste der Änderungen finden Sie im Projekt-Repository auf Codeberg

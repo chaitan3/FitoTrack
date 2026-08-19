@@ -1,0 +1,4 @@
+- Bildschirm zum Vergleich des Höhen- bzw. Höhenprofil-Diagramms mit der Karte
+- Überlagerung anzeigen, wenn noch kein GPS-Signal gefunden wurde
+- Bevorzugte Kartenebene festlegen (Nr. 15)
+- Datenimport beschleunigen

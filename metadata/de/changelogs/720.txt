@@ -1,0 +1,4 @@
+- Der Absturz beim Importieren von GPX-Dateien unter älteren Java-Versionen wurde hoffentlich behoben
+- Fehler bei der Angabe von Höhe und Kalorien behoben
+
+- Französische Übersetzung aktualisiert

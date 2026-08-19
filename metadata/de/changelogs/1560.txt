@@ -1,0 +1,2 @@
+- Absturz beim Starten von Trainingseinheiten behoben
+- Übersetzungen aktualisiert

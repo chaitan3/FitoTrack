@@ -1,0 +1,7 @@
+- Mehrere Trainingseinheiten importieren
+
+- Fehler behoben, durch den der Berechtigungsdialog unter Android <10 falsch angezeigt wurde
+- Die angeklickte Trainingseinheit wird aktualisiert, wenn man zur Trainingsliste zurückkehrt
+- Dialogfeld zum Auslösen von Ansagen korrekt formatieren
+
+- Übersetzungen aktualisieren

@@ -1,0 +1,6 @@
+- Umfassende Neugestaltung und Überarbeitung
+- Neuer Aufnahmebildschirm mit größerer Pause-/Stopp-Schaltfläche
+- Neues Datenformat / verbessertes Backup-Format
+- und vieles mehr
+
+Eine vollständige Liste der Änderungen finden Sie im Projekt-Repository auf Codeberg

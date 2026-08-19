@@ -1,0 +1,5 @@
+- Aktivität „Skateboarden“ hinzugefügt
+- Verlorene Trainingseinheiten wiederhergestellt
+- Verschiedene Probleme mit der Aufnahmestabilität behoben
+
+Weitere Änderungen findest du im Projekt-Repository auf Codeberg

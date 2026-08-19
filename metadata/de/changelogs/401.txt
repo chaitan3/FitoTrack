@@ -1,0 +1,12 @@
+Verbesserungen:
+- Option zum Speichern von Backups auf dem internen Speicher (#29)
+- Deutlicher Hinweis darauf, dass Trainingskommentare bearbeitet werden können (#34)
+- Tempo im Format „MM’SS“ (#36)
+- Berücksichtigung des Höhenunterschieds bei der Kalorienberechnung (#39)
+
+Fehlerbehebungen:
+- Fehler bei den imperialen Einheiten (#42)
+- Die Trainingsliste wird nicht richtig aktualisiert (#37)
+
+Sprache:
+- Aktualisierte spanische Übersetzung (#43)

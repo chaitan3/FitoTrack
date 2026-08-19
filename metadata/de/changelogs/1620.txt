@@ -1,0 +1,1 @@
+- Behebung eines Fehlers in der Datenbankmigration, der in der letzten Version aufgetreten ist

@@ -1,0 +1,10 @@
+Neu:
+- Sprachansagen: Informieren Sie optional über den aktuellen Stand Ihres Trainings
+
+Verbesserungen:
+- Deutlichmachung, dass Trainingskommentare bearbeitet werden können
+- Behandlung einer ungültigen OSM-Authentifizierung
+- Deaktivierung der automatischen Pause bei fehlendem GPS-Empfang (um fehlerhafte Ergebnisse zu vermeiden)
+
+Lokalisierung:
+- Spanische Übersetzung

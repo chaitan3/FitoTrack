@@ -1,0 +1,4 @@
+- Pebble-Integration mit einer Begleit-App für Pebble-Uhren hinzugefügt
+- Hoffentlich wurde ein Fehler in der Datenbankmigration behoben, der in der letzten Version aufgetreten war
+- Formatierung des Tempos auf dem Freigabebildschirm korrigiert
+- Ein potenzieller Fehler bei der Herzfrequenzmessung behoben (+ Protokolle zur weiteren Untersuchung hinzugefügt)

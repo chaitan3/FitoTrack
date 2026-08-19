@@ -1,0 +1,11 @@
+Neue Funktionen:
+- Startknopf für Trainingseinheiten
+- Intervallansagen
+- Benutzerdefinierte InfoViews im Aufzeichnungsbildschirm
+- Unterstützung von Inline-Skating als Aktivität
+
+- Neue Option in den Einstellungen zur Auswahl des Datums- und Zeitformats
+- Symbol zur Anzeige der Aktivität
+- Einstellung für Energieeinheiten (kcal/J) und falsche Schreibweise von Entfernungs- und Zeiteinheiten
+
+Weitere Änderungen finden Sie im Projekt-Repository auf Codeberg

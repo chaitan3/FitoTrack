@@ -1,0 +1,4 @@
+- Trainingsstatistiken: Summenwerte als Balken anzeigen
+- Trainingsstatistiken: Trainingsübersicht öffnen, wenn auf ein einzelnes Training geklickt wird
+- Durchschnittsgeschwindigkeit der letzten Minute als Sprachansage
+- Fehler beheben, durch den die automatische Pause nicht funktionierte und es zudem zu starken Schwankungen im Geschwindigkeits- und Höhenprofil kam

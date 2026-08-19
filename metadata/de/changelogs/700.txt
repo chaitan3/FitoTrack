@@ -1,0 +1,6 @@
+- Trainingsstatistiken
+- GPX-Dateien importieren
+- Training in Abschnitte/Runden unterteilen
+- Sicherungskopien mit dem aktuellen Stand zusammenführen
+
+Weitere Änderungen finden Sie im Projekt-Repository auf Codeberg

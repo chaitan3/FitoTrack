@@ -1,0 +1,8 @@
+- Rudern hinzugefügt
+- Für Android 10 optimiert
+
+- GPX-Import/-Export auf älteren Android-Geräten behoben
+- Sprachansage zum Tempo behoben
+- Kleinere Verbesserungen am Layout
+
+- Russisch als erste Sprache hinzugefügt

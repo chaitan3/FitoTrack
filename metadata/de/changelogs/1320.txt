@@ -1,0 +1,2 @@
+- Absturz auf Android-Versionen unter Oreo (< 8) behoben
+- Übersetzungen aktualisiert

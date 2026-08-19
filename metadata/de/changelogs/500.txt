@@ -1,0 +1,16 @@
+Neue Funktionen:
+- Trainingseinheiten manuell hinzufügen (#53)
+- Dunkelmodus (#48)
+
+Verbesserungen:
+- Höhenkorrektur
+- Bluetooth-Kopfhörer erkennen (#51)
+- Aufzeichnung auf dem Sperrbildschirm anzeigen (#45)
+- OpenStreetMap-Quellenangabe im Aufzeichnungsbildschirm (#52)
+
+Fehlerbehebungen:
+- Falsche Geschwindigkeitswerte nach vorübergehendem Verlust des GPS-Signals (#47)
+
+Lokalisierung:
+- Aktualisierung der niederländischen Übersetzung dank albertheres und didierm (#57, #58)
+- Aktualisierung der ungarischen Übersetzung dank urbalazs (#59)
