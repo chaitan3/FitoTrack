@@ -69,7 +69,7 @@
     <string name="editWorkout">Upravit cvičení</string>
     <string name="cannotFindWorkout">Cvičení nelze najít</string>
     <string name="speedLastMinuteSpoken">Rychlost během poslední minuty</string>
-    <string name="speedLastMinute">Prům. Rychlost (poslední minuta)</string>
+    <string name="speedLastMinute">Prům. rychlost (poslední minuta)</string>
     <string name="sections">Úseky</string>
     <string name="no_workouts_recorded">Nebyla zaznamenána žádná cvičení</string>
     <string name="announcementSuppressDuringCall">Potlačit během hovoru</string>
@@ -129,8 +129,8 @@
     <string name="preferencesUserInterfaceSummary">Přizpůsobte si aplikaci</string>
     <string name="preferencesUserInterfaceTitle">Uživatelské rozhraní</string>
     <string name="avgSpeedTotalLong">Průměrná rychlost celkem</string>
-    <string name="avgSpeedTotalShort">Prům. Rychlost (celkem)</string>
-    <string name="avgSpeedInMotion">Prům. Rychlost (v pohybu)</string>
+    <string name="avgSpeedTotalShort">Prům. rychlost (celkem)</string>
+    <string name="avgSpeedInMotion">Prům. rychlost (v pohybu)</string>
     <string name="enterDescription">Zadejte popis</string>
     <string name="hintAddWorkout">Klepněte na ikonu plus a nahrajte nebo zadejte cvičení.</string>
     <string name="currentSpeed">Aktuální rychlost</string>
@@ -210,7 +210,7 @@
     <string name="workoutBurnedEnergy">Spálené kalorie</string>
     <string name="workoutTopSpeed">Maximální rychlost</string>
     <string name="workoutAvgSpeedLong">Průměrná rychlost</string>
-    <string name="workoutAvgSpeedShort">Prům. Rychlost</string>
+    <string name="workoutAvgSpeedShort">Prům. rychlost</string>
     <string name="workoutSpeed">Rychlost</string>
     <string name="workoutRoute">Trasa</string>
     <string name="workoutPace">Tempo</string>
