@@ -46,10 +46,6 @@ public class EnergyUnitUtils extends UnitUtils {
         }
     }
 
-    public String getEnergyFromJoules(double energyInJoules) {
-        return getEnergy(energyInJoules / 4186.8);
-    }
-
     public String getEnergy(double energyInJoules) {
         return getEnergy(energyInJoules, false);
     }

@@ -72,7 +72,7 @@ class CalorieCalculator(val provider: List<METProvider>) {
     ): Double {
         provider.forEach { provider ->
             val result = provider.calculateMET(measurements, workoutTypeId, speed * 3.6)
-            result?.let { return it } // return if not null
+            result?.takeIf { it > 0 }?.let { return it } // return if positive
         }
 
         return 0.0 // nothing found
