@@ -168,7 +168,6 @@ internal fun WorkoutDiagram(
                 chart,
                 converters,
                 data,
-                workout,
                 textColor,
                 primaryColor,
                 showIntervals,
@@ -181,7 +180,6 @@ internal fun WorkoutDiagram(
                 chart,
                 converters,
                 data,
-                workout,
                 textColor,
                 primaryColor,
                 showIntervals,
@@ -196,15 +194,20 @@ private fun buildChartData(
     chart: CombinedChart,
     converters: List<SampleConverter>,
     data: WorkoutData,
-    workout: Workout,
     textColor: Int,
     primaryColor: Int,
     showIntervals: Boolean,
     visibleRange: Pair<Long, Long>?,
 ) {
+    val actualSampleEnd = listOfNotNull(
+        data.samples.lastOrNull()?.relativeTime,
+        data.repetitionSamples.lastOrNull()?.relativeTime,
+        data.heartRateSamples.lastOrNull()?.relativeTime,
+    ).maxOrNull() ?: 0L
+
     val timeSpan = visibleRange
         ?.let { (start, end) -> StatsDataTypes.TimeSpan(start, end) }
-        ?: StatsDataTypes.TimeSpan(0, workout.activeDuration)
+        ?: StatsDataTypes.TimeSpan(0, actualSampleEnd)
 
     val hasMultiple = converters.size > 1
     val lineData = LineData()
@@ -258,7 +261,7 @@ private fun buildChartData(
     combinedData.setData(lineData)
 
     if (showIntervals) {
-        combinedData.setData(buildIntervalBars(chart, data, lineData))
+        combinedData.setData(buildIntervalBars(data, lineData))
     } else {
         combinedData.setData(BarData())
     }
@@ -296,7 +299,6 @@ private fun buildChartData(
 }
 
 private fun buildIntervalBars(
-    chart: CombinedChart,
     data: WorkoutData,
     lineData: LineData,
 ): BarData {

@@ -73,13 +73,15 @@ data class Workout(
         return if (safeComment.isNotEmpty()) {
             String.format(
                 "workout-%s-%s-%s",
-                safeDateString, getSafeWorkoutTypeTitle(context),
+                safeDateString,
+                getSafeWorkoutTypeTitle(context),
                 safeComment
             )
         } else {
             String.format(
                 "workout-%s-%s",
-                safeDateString, getSafeWorkoutTypeTitle(context)
+                safeDateString,
+                getSafeWorkoutTypeTitle(context)
             )
         }
     }
