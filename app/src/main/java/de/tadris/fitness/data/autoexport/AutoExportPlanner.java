@@ -36,6 +36,8 @@ import de.tadris.fitness.data.autoexport.source.ExportSource;
 
 public class AutoExportPlanner {
 
+    private static final long COMMENT_EXPORT_DELAY_MINUTES = 1;
+
     private final Context context;
 
     public AutoExportPlanner(Context context) {
@@ -77,22 +79,25 @@ public class AutoExportPlanner {
     }
 
     public void onWorkoutRecorded(Workout workout) {
+        boolean delayForComment = Instance.getInstance(context).userPreferences.getAskForComment();
         for (ExportTargetConfiguration configuration : getConfigurations(ExportSource.EXPORT_SOURCE_WORKOUT_GPX)) {
-            planWorkoutExportFor(workout, configuration);
+            planWorkoutExportFor(workout, configuration, delayForComment ? COMMENT_EXPORT_DELAY_MINUTES : 0);
         }
     }
 
-    private void planWorkoutExportFor(Workout workout, ExportTargetConfiguration configuration) {
+    private void planWorkoutExportFor(Workout workout, ExportTargetConfiguration configuration, long delayMinutes) {
         Data data = new Data.Builder()
                 .putString(AutoExporter.DATA_SOURCE_TYPE, ExportSource.EXPORT_SOURCE_WORKOUT_GPX)
                 .putString(AutoExporter.DATA_SOURCE_DATA, String.valueOf(workout.getId()))
                 .putLong(AutoExporter.DATA_TARGET_CONFIG_ID, configuration.id)
                 .build();
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AutoExporter.class)
+        OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(AutoExporter.class)
                 .setConstraints(configuration.getTargetImplementation().getConstraints())
-                .setInputData(data)
-                .build();
-        WorkManager.getInstance(context).enqueue(workRequest);
+                .setInputData(data);
+        if (delayMinutes > 0) {
+            workRequestBuilder.setInitialDelay(delayMinutes, TimeUnit.MINUTES);
+        }
+        WorkManager.getInstance(context).enqueue(workRequestBuilder.build());
     }
 
     private ExportTargetConfiguration[] getConfigurations(String source) {
