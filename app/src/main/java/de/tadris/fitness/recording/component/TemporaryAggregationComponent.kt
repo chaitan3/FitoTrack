@@ -157,7 +157,9 @@ class TemporaryAggregationComponent : RecorderServiceComponent {
     }
 
     private fun addElevation(sample: RouteSample) {
-        val sampleElevation = getElevationForPressure(sample.pressure)
+        val sampleElevation =
+            if (sample.pressure != -1f) getElevationForPressure(sample.pressure)
+            else sample.elevation // fall back to GPS elevation if there is no pressure data
         if (elevation != -1.0) {
             val newElevation =
                 sampleElevation * PRESSURE_ELEVATION_AVERAGE + elevation * (1 - PRESSURE_ELEVATION_AVERAGE) // floating avg
