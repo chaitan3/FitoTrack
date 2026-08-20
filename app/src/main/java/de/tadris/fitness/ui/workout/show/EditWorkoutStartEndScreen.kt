@@ -22,7 +22,9 @@ package de.tadris.fitness.ui.workout.show
 import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -60,6 +62,8 @@ import de.tadris.fitness.ui.map.SimpleColoringStrategy
 import de.tadris.fitness.ui.map.WorkoutLayer
 import de.tadris.fitness.ui.map.WorkoutMap
 import de.tadris.fitness.ui.map.WorkoutMapColoring
+import de.tadris.fitness.ui.workout.diagram.ConverterManager
+import de.tadris.fitness.ui.workout.diagram.WorkoutDiagram
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
@@ -192,6 +196,9 @@ private fun EditWorkoutStartEndContent(
     val hazeState = rememberHazeState()
     val editHolder = remember { EditPreviewHolder() }
     val primaryColor = MaterialTheme.colorScheme.primary.toArgb()
+    val converterManager = remember(data) { ConverterManager(context, data) }
+    val defaultConverter =
+        remember(converterManager) { converterManager.availableConverters.firstOrNull() }
 
     var selectedSample by remember { mutableStateOf<RouteSample?>(null) }
     var selectedStartSample by remember { mutableStateOf<RouteSample?>(null) }
@@ -254,26 +261,41 @@ private fun EditWorkoutStartEndContent(
             )
         }
     ) { _ ->
-        WorkoutMap(
-            data = data,
-            showPauses = true,
-            clickable = true,
-            coloring = WorkoutMapColoring.None,
-            selectedSample = selectedSample,
-            onSelectionChanged = { selectedSample = it },
-            onMapUpdate = { mapView ->
-                editHolder.update(
-                    mapView,
-                    data,
-                    selectedStartSample,
-                    selectedEndSample,
-                    primaryColor
+        Column(Modifier.fillMaxSize()) {
+            WorkoutMap(
+                data = data,
+                showPauses = true,
+                clickable = true,
+                coloring = WorkoutMapColoring.None,
+                selectedSample = selectedSample,
+                onSelectionChanged = { selectedSample = it },
+                onMapUpdate = { mapView ->
+                    editHolder.update(
+                        mapView,
+                        data,
+                        selectedStartSample,
+                        selectedEndSample,
+                        primaryColor
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.6f)
+                    .hazeSource(hazeState),
+            )
+            if (defaultConverter != null) {
+                WorkoutDiagram(
+                    converter = defaultConverter,
+                    data = data,
+                    workout = data.workout,
+                    interactive = true,
+                    onSelectionChanged = { selectedSample = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.4f),
                 )
-            },
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeSource(hazeState),
-        )
+            }
+        }
     }
 
     if (showHelpDialog) {
