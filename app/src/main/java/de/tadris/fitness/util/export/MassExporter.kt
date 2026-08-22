@@ -51,6 +51,7 @@ class MassExporter(
 
     private fun exportWorkout(index: Int, workout: Workout){
         val data = WorkoutData.fromWorkout(workoutDao, workout)
+        if (!data.hasRouteData) return // skip workouts that doesn't contain any location data
         val zipEntryName =
             String.format("%05d", index) + "_" + workout.getWorkoutType(context) + ".gpx";
         val entry = ZipEntry(zipEntryName)
