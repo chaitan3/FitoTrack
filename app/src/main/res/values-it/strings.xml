@@ -318,7 +318,6 @@
     <string name="unitHertzLong">Hertz</string>
     <string name="unitHeartBeatsPerMinute">bpm</string>
     <string name="preferenceFirstDayOfWeek">Inizio della settimana</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Utilizzare la velocità media in un determinato periodo di tempo invece dell\'ultimo record di velocità singolo per il calcolo della velocità corrente.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Velocità media ponderata</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Sostituisci la velocità attuale con una media</string>
     <string name="preferenceCurrentSpeedTime">Velocità media nell\'arco di tempo</string>

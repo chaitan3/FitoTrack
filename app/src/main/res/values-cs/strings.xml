@@ -476,7 +476,6 @@
     <string name="preferenceCurrentSpeedTime">Průměrné časové rozpětí rychlosti</string>
     <string name="workoutAvgDurationLong">Průměrná doba</string>
     <string name="workoutDurationSum">Celková doba</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Pro výpočet aktuální rychlosti použijte průměrnou rychlost za určitou dobu namísto posledního záznamu rychlosti.</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="unitHertzLong">Hertz</string>
     <string name="moveStartOfWorkout">Uříznutí startu</string>

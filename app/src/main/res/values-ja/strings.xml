@@ -123,7 +123,6 @@
     <string name="intervalsIncludePauseTitle">インターバルトレーニングに一時停止時間を含める</string>
     <string name="preferencesBackupTitle">データベース</string>
     <string name="preferenceDateFormat">日付の表示形式</string>
-    <string name="preferenceUseAverageForCurrentSpeed">現在速度の計算に、直近の単一速度記録の代わりに一定期間の平均速度を使用します。</string>
     <string name="unitYardsPlural">ヤード</string>
     <string name="max">最高</string>
     <string name="avg">平均</string>

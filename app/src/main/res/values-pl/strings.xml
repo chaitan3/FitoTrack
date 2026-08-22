@@ -141,7 +141,6 @@
     <string name="timeSecondsSingular">Sekunda</string>
     <string name="workoutDiscarded">Trening odrzucony</string>
     <string name="preferenceFirstDayOfWeek">Początek tygodnia</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Używaj średniej prędkości z określonego czasu zamiast ostatniego zapisu prędkości do obliczania aktualnej prędkości</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Uśredniona prędkość</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Zastąp aktualną prędkość średnią</string>
     <string name="preferenceCurrentSpeedTime">Uśredniona prędkość przedziału czasu</string>

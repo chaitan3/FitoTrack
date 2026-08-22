@@ -369,7 +369,6 @@
     <string name="inclination">Nukrypimas</string>
     <string name="no_workouts_recorded_for_this_activity">Šios veiklos treniruočių nėra</string>
     <string name="workoutDiscarded">Treniruotė išmesta</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Apskaičiuojant dabartinį greitį, vietoj paskutinio atskiro greičio įrašo naudokite vidutinį greitį per tam tikrą laiko tarpą.</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Pakeiskite esamą greitį vidutiniu</string>
     <string name="preferenceCurrentSpeedTime">Vidurkio greičio skaičiavimo intervalas</string>
     <string name="announcementCountdown">Automatinio paleidimo veiksmai (atgalinis skaičiavimas, būsena ir kt.)</string>

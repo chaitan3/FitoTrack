@@ -376,7 +376,6 @@
     <string name="moveStartOfWorkout">Kesme başlangıcı</string>
     <string name="runningMigrations">Taşıma işlemleri çalıştırma</string>
     <string name="editWorkoutStartEnd">Başlangıç/Bitişi Düzenle</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Geçerli hız hesaplaması için son tek hız kaydı yerine, belirli bir zamandaki ortalama hızı kullan.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Ortalama hız</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Geçerli hızı ortalama bir değerle değiştirin</string>
     <string name="preferenceCurrentSpeedTime">Ortalama hız zaman aralığı</string>

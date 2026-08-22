@@ -431,7 +431,6 @@
     <string name="workoutFrequency">Gyakoriság</string>
     <string name="workoutAvgFrequencyShort">Átlagos gyakoriság</string>
     <string name="prefTrackStyleUsageTitle">Nyomvonalszínezés automatikus használata</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Egy bizonyos idő alatti átlagos sebesség használata az utolsó önálló sebességbejegyzés helyett a jelenlegi sebesség számításához.</string>
     <string name="recordingActivityPermissionMessage">A FitoTrack alkalmazásnak szüksége van a fizikai tevékenysége követésének engedélyére a beltéri edzések rögzítéséhez.</string>
     <string name="invalidNumberFormat">Érvénytelen számformátum.</string>
     <string name="fileNotFound">A fájl nem található</string>

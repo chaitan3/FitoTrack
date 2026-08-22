@@ -390,7 +390,6 @@
     <string name="moveEndOfWorkout">Cortar el final</string>
     <string name="moveStartOfWorkout">Cortar el inicio</string>
     <string name="editWorkoutStartEnd">Editar el inicio/fin</string>
-    <string name="preferenceUseAverageForCurrentSpeed">Utilizar la velocidad media durante un tiempo determinado en lugar del último registro de velocidad para el cálculo de la velocidad actual.</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Velocidad media</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Reemplazar la velocidad actual por un promedio</string>
     <string name="preferenceCurrentSpeedTime">Intervalo de tiempo para el cálculo del promedio</string>
