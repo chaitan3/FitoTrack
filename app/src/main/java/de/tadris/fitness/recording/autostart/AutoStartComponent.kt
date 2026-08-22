@@ -122,19 +122,48 @@ class AutoStartComponent : RecorderServiceComponent {
         countdownTimer = object : CountDownTimer(delayMs, 1000) {
             override fun onTick(ms: Long) {
                 val remainingS = ((ms + 500) / 1000).toInt()
+                postState(AutoStartStateEvent.State.Countdown(ms, remainingS))
+                val announcement = getCountdownAnnouncementText(remainingS) ?: return
                 vibratorController.vibrate(50)
                 if (ttsController.isTtsAvailable) {
-                    ttsController.speak(remainingS.toString())
+                    ttsController.speak(announcement)
                 } else {
                     toneController.playTone(ToneGenerator.TONE_PROP_BEEP, 200)
                 }
-                postState(AutoStartStateEvent.State.Countdown(ms, remainingS))
             }
             override fun onFinish() {
                 postState(AutoStartStateEvent.State.Countdown(0, 0))
                 proceedWithMode(mode)
             }
         }.start()
+    }
+
+    private fun getCountdownAnnouncementText(remainingS: Int): String? = when (remainingS) {
+        in 1..10 -> remainingS.toString()
+        in 15..60 if remainingS % 5 == 0 ->
+            service.getString(R.string.ttsLongSecondCountdownAnnouncement, secondsText(remainingS))
+
+        in 75..600 if remainingS % 15 == 0 -> minuteSecondText(remainingS)
+        in 630..1830 if remainingS % 30 == 0 -> minuteSecondText(remainingS)
+        else -> null
+    }
+
+    private fun secondsText(s: Int) = service.resources.getQuantityString(R.plurals.seconds, s, s)
+
+    private fun minutesText(m: Int) = service.resources.getQuantityString(R.plurals.minutes, m, m)
+
+    private fun minuteSecondText(remainingS: Int): String {
+        val minutes = remainingS / 60
+        val seconds = remainingS % 60
+        return if (seconds == 0) {
+            service.getString(R.string.ttsMinuteCountdownAnnouncement, minutesText(minutes))
+        } else {
+            service.getString(
+                R.string.ttsMinuteSecondCountdownAnnouncement,
+                minutesText(minutes),
+                secondsText(seconds)
+            )
+        }
     }
 
     private fun proceedWithMode(mode: AutoStartMode) {
