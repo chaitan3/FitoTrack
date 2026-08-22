@@ -17,7 +17,9 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  -->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">FitoTrack</string>
     <string name="stop">Stop</string>
     <string name="delete">Delete</string>
@@ -532,7 +534,7 @@
     <string name="takeBackups2">Every second day</string>
     <string name="takeBackups3">Every third day</string>
     <string name="takeBackups7">Every week</string>
-    <string name="takeBackups14">Every fortnight</string>
+    <string name="takeBackups14">Every second week</string>
     <string name="selectExportTarget">Select export target</string>
     <string name="configureHttpPostRequest">Configure HTTP POST request</string>
     <string name="httpUrl">URL</string>
