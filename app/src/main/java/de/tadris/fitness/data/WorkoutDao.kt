@@ -37,6 +37,34 @@ interface WorkoutDao {
     @Query("select * from workout where `end` == -1")
     fun findRunningWorkout(): Workout?
 
+    @Transaction
+    fun resumeWorkout(workoutId: Long) {
+        val workout = findById(workoutId) ?: return
+        if (workout.end == -1L) return // already running, nothing to do
+
+        val now = System.currentTimeMillis()
+        val pauseStart = listOfNotNull(
+            workout.end,
+            workout.start,
+            getLastSampleTimestamp(workoutId),
+            getLastHeartRateSampleTimestamp(workoutId),
+            getLastRepetitionSampleTimestamp(workoutId),
+        ).max()
+        if (pauseStart < now) {
+            insertPause(WorkoutPause(workoutId, 0, pauseStart, now, true))
+        }
+        updateWorkout(workout.copy(end = -1L))
+    }
+
+    @Query("SELECT MAX(timestamp) FROM route_sample WHERE workoutId = :workoutId")
+    fun getLastSampleTimestamp(workoutId: Long): Long?
+
+    @Query("SELECT MAX(timestamp) FROM heart_rate_sample WHERE workoutId = :workoutId")
+    fun getLastHeartRateSampleTimestamp(workoutId: Long): Long?
+
+    @Query("SELECT MAX(timestamp) FROM repetition_sample WHERE workoutId = :workoutId")
+    fun getLastRepetitionSampleTimestamp(workoutId: Long): Long?
+
     @Query("select * from workout where `end` == -1")
     fun findAllRunningWorkouts(): List<Workout>
 
@@ -129,8 +157,10 @@ interface WorkoutDao {
             updateSample(sample)
         }
 
+        // Pauses are recalculated with fresh IDs so replace
+        deletePausesOfWorkout(data.workout.id)
         for (pause in data.pauses) {
-            updatePause(pause)
+            insertPause(pause)
         }
 
         for (event in data.events) {
@@ -197,8 +227,8 @@ interface WorkoutDao {
     @Update
     fun updateSample(sample: RepetitionSample)
 
-    @Update
-    fun updatePause(pause: WorkoutPause)
+    @Query("DELETE FROM workout_pause WHERE workoutId = :workoutId")
+    fun deletePausesOfWorkout(workoutId: Long)
 
     @Update
     fun updateWorkoutEvent(event: WorkoutEvent)

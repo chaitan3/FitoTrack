@@ -24,6 +24,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import de.tadris.fitness.recording.RecorderService
 import de.tadris.fitness.recording.event.LocationChangeEvent
@@ -40,6 +41,7 @@ class GpsComponent : RecorderServiceComponent, LocationListener {
 
         private const val TAG = "GpsComponent"
         private const val LOCATION_INTERVAL = 1000L
+        private const val MAX_LAST_KNOWN_LOCATION_AGE_MS = 10_000L
 
         /**
          * @param location the location whose geographical coordinates should be converted.
@@ -84,7 +86,11 @@ class GpsComponent : RecorderServiceComponent, LocationListener {
     private fun checkLastKnownLocation() {
         val location = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         if (location != null) {
-            onLocationChanged(location)
+            val ageMs =
+                (SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos) / 1_000_000L
+            if (ageMs <= MAX_LAST_KNOWN_LOCATION_AGE_MS) {
+                onLocationChanged(location)
+            }
         }
     }
 

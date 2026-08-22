@@ -100,12 +100,21 @@ class RecordingStateHolder {
     }
 
     private fun recoverStateVariables(context: Context, workout: Workout) {
-        state = RecordingState.RUNNING
+        state = RecordingState.AUTO_PAUSE
 
-        // Estimate pause and active time from recorded samples
         val data = WorkoutData.fromWorkout(context, workout)
         pauseDuration = data.pauses.sumOf { it.duration }
-        activeDuration = System.currentTimeMillis() - workout.start - pauseDuration
+
+        val lastRelativeTime = listOf(
+            data.samples.maxOfOrNull { it.relativeTime },
+            data.heartRateSamples.maxOfOrNull { it.relativeTime },
+            data.repetitionSamples.maxOfOrNull { it.relativeTime },
+            data.events.maxOfOrNull { it.relativeTime },
+        ).mapNotNull { it }.maxOrNull()
+
+        activeDuration = lastRelativeTime
+                // No samples recorded yet: estimate from wall clock and recorded pauses
+            ?: (System.currentTimeMillis() - workout.start - pauseDuration).coerceAtLeast(0)
         lastStateChange = System.currentTimeMillis()
     }
 

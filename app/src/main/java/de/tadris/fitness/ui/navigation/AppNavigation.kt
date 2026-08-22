@@ -32,9 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import de.tadris.fitness.Instance
 import de.tadris.fitness.data.RecordingType
-import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.data.WorkoutType
-import de.tadris.fitness.recording.RecordingStateHolder
 import de.tadris.fitness.ui.ImportHandler
 import de.tadris.fitness.ui.ImportViewModel
 import de.tadris.fitness.ui.dashboard.DashboardScreen
@@ -344,17 +342,7 @@ fun AppNavigation(
                     navController.navigate(Route.ShareWorkout(workoutId))
                 },
                 onResumeWorkout = { workout ->
-                    val dao = Instance.getInstance(context).db.workoutDao()
-                    dao.insertPause(
-                        WorkoutPause(
-                            workout.id,
-                            0,
-                            workout.end,
-                            System.currentTimeMillis(),
-                            true
-                        )
-                    )
-                    dao.updateWorkout(workout.copy(end = RecordingStateHolder.RUNNING_WORKOUT_END_TIME))
+                    Instance.getInstance(context).db.workoutDao().resumeWorkout(workout.id)
                     val workoutType = workout.getWorkoutType(context)
                     val route = if (RecordingType.findById(workoutType.recordingType) == RecordingType.GPS) {
                         Route.RecordGpsWorkout(workoutType.id, false)
