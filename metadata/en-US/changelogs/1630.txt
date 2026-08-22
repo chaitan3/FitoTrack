@@ -1,0 +1,7 @@
+- Use map recoloring in the dark theme
+- Readded speed diagram to the edit start/end screen
+- Announce auto start delay at decreasing intervals instead of every second
+- Use a wheel picker for the auto start delay selection
+- 17 individual bugfixes
+
+please see the project repository on Codeberg for a full list of changes
