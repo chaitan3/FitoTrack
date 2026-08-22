@@ -192,7 +192,7 @@ fun IndoorRecordingScreen(
     val intensityLabel = stringResource(R.string.workoutIntensity)
 
     val repetitionsLabel = workoutType?.let {
-        LocalResources.current.getQuantityString(it.repeatingExerciseName, repetitions)
+        LocalResources.current.getQuantityString(it.repeatingExerciseNameOrDefault, repetitions)
     }.orEmpty()
 
     RecordingScaffold(

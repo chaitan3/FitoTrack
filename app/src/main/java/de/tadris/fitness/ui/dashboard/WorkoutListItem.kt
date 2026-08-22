@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.tadris.fitness.Instance
+import de.tadris.fitness.data.RecordingType
 import de.tadris.fitness.data.Workout
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.ui.theme.FitoTrackTheme
@@ -71,7 +72,7 @@ internal fun WorkoutListItem(
     val dateText = instance.userDateTimeUtils.formatDateTime(Date(workout.start))
     val distanceText = if (workout.distance == 0.0 && workout.repetitions > 0) {
         val reps = workout.repetitions
-        "$reps ${LocalResources.current.getQuantityString(workoutType.repeatingExerciseName, reps)}"
+        "$reps ${LocalResources.current.getQuantityString(workoutType.getRepeatingExerciseNameOrDefault(), reps)}"
     } else {
         instance.distanceUnitUtils.getDistance(workout.distance.toInt())
     }

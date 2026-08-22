@@ -141,6 +141,10 @@
         <item quantity="one">Pull up</item>
         <item quantity="other">Pull ups</item>
     </plurals>
+    <plurals name="workoutRepetition">
+        <item quantity="one">Rep</item>
+        <item quantity="other">Reps</item>
+    </plurals>
     <string name="unknown">Unknown</string>
     <string name="workoutTypeAdd">Add</string>
     <string name="workoutTypeAll">All</string>
