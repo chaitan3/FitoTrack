@@ -176,6 +176,15 @@ interface WorkoutDao {
     @Delete
     fun deleteSample(sample: RouteSample)
 
+    @Delete
+    fun deleteSample(sample: HeartRateSample)
+
+    @Delete
+    fun deleteSample(sample: RepetitionSample)
+
+    @Delete
+    fun deleteWorkoutEvent(event: WorkoutEvent)
+
     @Update
     fun updateSamples(samples: List<RouteSample>)
 

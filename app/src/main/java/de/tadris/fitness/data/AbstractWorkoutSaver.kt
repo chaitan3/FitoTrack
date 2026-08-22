@@ -34,6 +34,8 @@ abstract class AbstractWorkoutSaver(
     var routeSamples = data.samples
     var hrSamples = data.heartRateSamples
     var pauses = data.pauses
+    var events = data.events
+    var repetitionSamples = data.repetitionSamples
 
     abstract fun save()
 
@@ -71,6 +73,9 @@ abstract class AbstractWorkoutSaver(
 
         routeSamples = routeSamples.map { it.copy(relativeTime = getRelativeTime(it.timestamp)) }
         hrSamples = hrSamples.map { it.copy(relativeTime = getRelativeTime(it.timestamp)) }
+        events = events.map { it.copy(relativeTime = getRelativeTime(it.timestamp)) }
+        repetitionSamples =
+            repetitionSamples.map { it.copy(relativeTime = getRelativeTime(it.timestamp)) }
     }
 
     protected fun calculateSampleSpeed(){
@@ -124,7 +129,8 @@ abstract class AbstractWorkoutSaver(
         Instance.getInstance(context).db.workoutDao().updateWorkoutData(getCurrentWorkoutData())
     }
 
-    protected fun getCurrentWorkoutData() = WorkoutData(workout, routeSamples, pauses, emptyList(), emptyList(), hrSamples)
+    protected fun getCurrentWorkoutData() =
+        WorkoutData(workout, routeSamples, pauses, events, repetitionSamples, hrSamples)
 
 
 

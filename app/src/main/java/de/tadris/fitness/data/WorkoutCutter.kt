@@ -45,38 +45,57 @@ class WorkoutCutter(
     }
 
     private fun cutStart(startSample: RouteSample) {
-        val removedSamples = mutableListOf<RouteSample>()
+        val cutoff = startSample.timestamp
 
-        for(sample in routeSamples){
-            if(sample.id == startSample.id) break
-            removedSamples += sample
-        }
+        deleteSamples(routeSamples.filter { it.timestamp < cutoff })
+        deleteHrSamples(hrSamples.filter { it.timestamp < cutoff })
+        deleteEvents(events.filter { it.timestamp < cutoff })
+        deleteRepetitionSamples(repetitionSamples.filter { it.timestamp < cutoff })
 
-        deleteSamples(removedSamples)
-        workout = workout.copy(start = startSample.timestamp)
+        workout = workout.copy(start = cutoff)
     }
 
     private fun cutEnd(endSample: RouteSample) {
-        val removedSamples = mutableListOf<RouteSample>()
+        val cutoff = endSample.timestamp
 
-        var found = false
-        for(sample in routeSamples){
-            if(found){
-                removedSamples += sample
-            }else if(sample.id == endSample.id){
-                found = true
-            }
-        }
+        deleteSamples(routeSamples.filter { it.timestamp > cutoff })
+        deleteHrSamples(hrSamples.filter { it.timestamp > cutoff })
+        deleteEvents(events.filter { it.timestamp > cutoff })
+        deleteRepetitionSamples(repetitionSamples.filter { it.timestampEnd > cutoff })
 
-        deleteSamples(removedSamples)
-        workout = workout.copy(end = endSample.timestamp)
+        workout = workout.copy(end = cutoff)
     }
 
     private fun deleteSamples(samples: List<RouteSample>) {
+        val dao = Instance.getInstance(context).db.workoutDao()
         for(sample in samples){
-            Instance.getInstance(context).db.workoutDao().deleteSample(sample)
+            dao.deleteSample(sample)
         }
         routeSamples = routeSamples.filter { it !in samples }
+    }
+
+    private fun deleteHrSamples(samples: List<HeartRateSample>) {
+        val dao = Instance.getInstance(context).db.workoutDao()
+        for (sample in samples) {
+            dao.deleteSample(sample)
+        }
+        hrSamples = hrSamples.filter { it !in samples }
+    }
+
+    private fun deleteEvents(removedEvents: List<WorkoutEvent>) {
+        val dao = Instance.getInstance(context).db.workoutDao()
+        for (event in removedEvents) {
+            dao.deleteWorkoutEvent(event)
+        }
+        events = events.filter { it !in removedEvents }
+    }
+
+    private fun deleteRepetitionSamples(samples: List<RepetitionSample>) {
+        val dao = Instance.getInstance(context).db.workoutDao()
+        for (sample in samples) {
+            dao.deleteSample(sample)
+        }
+        repetitionSamples = repetitionSamples.filter { it !in samples }
     }
 
 }
