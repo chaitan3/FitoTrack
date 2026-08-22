@@ -398,7 +398,8 @@
     <string name="autoStartCountdownMsgMove">Starting workout once you start moving</string>
     <string name="workoutAutoStarted">Workout started automatically</string>
     <string name="popup_auto_start_delay">With custom delay</string>
-    <string name="autoStartDelaySeconds">Delay in seconds</string>
+    <string name="autoStartDelaySeconds">Seconds</string>
+    <string name="autoStartDelayMinutes">Minutes</string>
     <string name="popup_auto_start">With default delay</string>
     <string name="popup_auto_start_immediately">Start immediately</string>
     <string name="popup_auto_start_on_move">When I start moving</string>

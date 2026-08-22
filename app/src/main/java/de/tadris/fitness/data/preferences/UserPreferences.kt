@@ -122,6 +122,8 @@ class UserPreferences(private val context: Context) : PreferenceProvider {
 
     var autoTimeout by IntSharedPreference("autoTimeoutPeriod", 20)
 
+    var lastAutoStartDelayS by IntSharedPreference("lastAutoStartDelaySeconds", 20)
+
     var useAutoPause by BooleanSharedPreference("autoPause", true)
 
     var useAverageForCurrentSpeed
