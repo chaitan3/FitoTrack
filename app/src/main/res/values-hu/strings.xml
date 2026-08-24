@@ -284,7 +284,7 @@
     <string name="resumeWorkout">Edzés folytatása</string>
     <string name="heartRateNotAvailable">A pulzusszám jelenleg nem érhető el.</string>
     <string name="announcementWorkoutActions">Edzésműveletek (szünet, folytatás stb.)</string>
-    <string name="resumeWorkoutConfirmation">Folytatja ezt az edzést\? Ez egy szünet is hozzá lesz adva attól az időtől kezdve, amikor az edzést leállították.</string>
+    <string name="resumeWorkoutConfirmation">Folytatja ezt az edzést? Ez egy szünet is hozzá lesz adva attól az időtől kezdve, amikor az edzést leállították.</string>
     <string name="prefShowOnLockScreenSummary">Edzésinformációk megjelenítése akkor is, ha az eszköz zárolva van.</string>
     <string name="prefShowOnLockScreenTitle">Látható a zárolási képernyőn</string>
     <string name="notimeout">Nincs időkorlát</string>
@@ -360,7 +360,7 @@
     <string name="downloadMapsTitle">Térképek letöltése</string>
     <string name="actionImportMultiple">Több importálása</string>
     <string name="actionImport">Importálás</string>
-    <string name="importWorkoutMultipleQuestion">Szeretne egy vagy több GPX-fájlt importálni\?</string>
+    <string name="importWorkoutMultipleQuestion">Szeretne egy vagy több GPX-fájlt importálni?</string>
     <string name="recordingPermissionNotGrantedMessage">A FitoTrack alkalmazásnak szüksége van a helyengedélyére az edzés közbeni mozgás követéséhez. A FitoTrack helyadatokat is gyűjt, miközben az alkalmazás a háttérben van vagy a képernyő ki van kapcsolva, hogy rögzítse az edzéseit. A helyadatok mindig a telefonján maradnak, és csak akkor lesznek megosztva, ha egyértelműen beleegyezik.</string>
     <string name="workoutTypeAll">Összes</string>
     <string name="workoutRecordingTypeGps">GPS edzések</string>
