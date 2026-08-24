@@ -222,9 +222,7 @@
     <string name="cannotFindWorkout">Kan inte hitta träningspasset</string>
     <string name="speedLastMinuteSpoken">Hastighet under den senaste minuten</string>
     <string name="sections">Delsträckor</string>
-    <string name="workoutStatsHelpText">Den här skärmen visar statistik över genomförda träningspass. För att använda den måste du först välja träningstyp genom att trycka på den. Ställ sedan in den på den information och det tidsspann du vill se.
-\n
-\nOm du t.ex. väljer \"Vecka\" som tidsspann kommer varje veckas samtliga träningspass slås ihop till en gemensam datapunkt som antingen beräknar medelvärdet eller summan för den veckan.</string>
+    <string name="workoutStatsHelpText">Den här skärmen visar statistik över genomförda träningspass. För att använda den måste du först välja träningstyp genom att trycka på den. Ställ sedan in den på den information och det tidsspann du vill se. \n \nOm du t.ex. väljer \"Vecka\" som tidsspann kommer varje veckas samtliga träningspass slås ihop till en gemensam datapunkt som antingen beräknar medelvärdet eller summan för den veckan.</string>
     <string name="workoutTypeEditId">ID</string>
     <string name="workoutTypeEditIcon">Symbol</string>
     <string name="preferenceCategoryRenderThemeCategories">Kategorier</string>
@@ -366,14 +364,14 @@
     <string name="workoutTypeEditNameError">Var god ange ett namn</string>
     <string name="workoutTypeEditIdErrorEmpty">Vänligen ange ett ID</string>
     <string name="importMultipleMessageSelectFolder">Var god välj en mapp som innehåller alla de GPX-filer du vill importera.</string>
-    <string name="importWorkoutMultipleQuestion">Vill du importera en GPX-fil eller flera\?</string>
+    <string name="importWorkoutMultipleQuestion">Vill du importera en GPX-fil eller flera?</string>
     <string name="actionImportMultiple">Importera flera</string>
     <string name="notimeout">Ingen tidsgräns</string>
     <string name="importMultipleGpxFiles">Importera flera GPX-filer</string>
     <string name="selectBluetoothDevice">Välj Bluetooth-enhet</string>
     <string name="intervalAutoStartDelayTraining">Fördröjning av automatisk start</string>
     <string name="prefShowOnLockScreenTitle">Synligt på låsskärmen</string>
-    <string name="resumeWorkoutConfirmation">Återuppta detta träningspass\? En paus från tidpunkten då träningspasset stoppades kommer att läggas till.</string>
+    <string name="resumeWorkoutConfirmation">Återuppta detta träningspass? En paus från tidpunkten då träningspasset stoppades kommer att läggas till.</string>
     <string name="nothingSelected">Ingenting har valts</string>
     <string name="pref_announcements_pace_control_summary">Varna när du går under eller över en specificerad hastighet</string>
     <string name="workoutTypeEditMinDistance">Mätavstånd</string>
