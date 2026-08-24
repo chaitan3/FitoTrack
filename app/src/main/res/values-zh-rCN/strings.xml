@@ -19,9 +19,7 @@
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="recordingPermissionNotGrantedMessage">为了追踪锻炼期间您的运行，FitoTrack 需要位置权限。 FitoTrack 也会在后台运行，或屏幕关闭时收集位置数据，以便记录您的锻炼。除非您明确同意分享，否则位置数据只会储存在手机上。</string>
     <string name="editDisplayedInformationHint">只要锻炼未开始，您就可以点击四个区域之一，来编辑显示值。</string>
-    <string name="workoutStatsHelpText">此屏幕显示的是您锻炼的历史统计数据。查看统计数据，请先点击选择锻炼类型，然后设置您想了解的信息和时间跨段。
-\n
-\n例如：如果您选择了以“周”为时间跨度，则每周的锻炼数据以一个点来显示，此点表示该周的平均值或总和。</string>
+    <string name="workoutStatsHelpText">此屏幕显示的是您锻炼的历史统计数据。查看统计数据，请先点击选择锻炼类型，然后设置您想了解的信息和时间跨段。 \n \n例如：如果您选择了以“周”为时间跨度，则每周的锻炼数据以一个点来显示，此点表示该周的平均值或总和。</string>
     <string name="downloading">正在下载…</string>
     <string name="chooseMapHint">请选择一个地图文件</string>
     <string name="downloadCanceled">下载取消</string>
