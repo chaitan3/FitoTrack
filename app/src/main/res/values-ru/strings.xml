@@ -292,7 +292,7 @@
     <string name="workoutTypeEditId">Идентификатор</string>
     <string name="workoutTypeEditIdErrorCharacters">Допустимые символы: a–z, A–Z, 0–9, _, -</string>
     <string name="hintManageWorkoutTypes">Нажмите на плюс для добавления собственных типов тренировок.</string>
-    <string name="resumeWorkoutConfirmation">Возобновить тренировку\? Будет добавлена пауза с того момента, когда тренировка была остановлена.</string>
+    <string name="resumeWorkoutConfirmation">Возобновить тренировку? Будет добавлена пауза с того момента, когда тренировка была остановлена.</string>
     <string name="prefShowOnLockScreenSummary">Показывать информацию о тренировке, даже если устройство заблокировано.</string>
     <string name="prefShowOnLockScreenTitle">Отображение на экране блокировки</string>
     <string name="notimeout">Нет тайм-аута</string>
@@ -360,7 +360,7 @@
     <string name="downloadMapsTitle">Скачать карты</string>
     <string name="actionImportMultiple">Импортировать несколько</string>
     <string name="actionImport">Импортировать</string>
-    <string name="importWorkoutMultipleQuestion">Вы хотите импортировать один файл GPX или несколько\?</string>
+    <string name="importWorkoutMultipleQuestion">Вы хотите импортировать один файл GPX или несколько?</string>
     <string name="invalidNumberFormat">Неверный формат числа.</string>
     <string name="auto">Автоматически</string>
     <string name="pref_announcements_pace_control_summary">Предупреждать, когда скорость ниже или выше указанной</string>
