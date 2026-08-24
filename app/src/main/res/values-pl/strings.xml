@@ -55,21 +55,21 @@
     <string name="importingFiles">Importowanie plików</string>
     <string name="connectHeartRateDevice">Podłącz urządzenie do pomiaru tętna</string>
     <string name="selectBluetoothDevice">Wybierz urządzenie Bluetooth</string>
-    <string name="importWorkoutMultipleQuestion">Czy chcesz zaimportować jeden plik GPX, czy wiele\?</string>
-    <string name="importMultipleMessageSelectFolder">Wybierz folder zawierający wszystkie pliki GPX, które chcesz zaimportować.</string>
+    <string name="importWorkoutMultipleQuestion">Czy chcesz zaimportować jeden plik GPX, czy wiele?</string>
+    <string name="importMultipleMessageSelectFolder">Wybierz folder zawierający pliki GPX, które chcesz zaimportować.</string>
     <string name="importMultipleGpxFiles">Importuj wiele plików GPX</string>
     <string name="recordingStateStopped">Zatrzymany</string>
     <string name="recordingStatePaused">Wstrzymany</string>
     <string name="recordingStateRunning">Działający</string>
     <string name="recordingStateIdle">Bezczynny</string>
-    <string name="speechConfigNoSpeech">Brak powiadom.</string>
+    <string name="speechConfigNoSpeech">Brak powiadomienia</string>
     <string name="actionGrant">Przyznaj</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack potrzebuje uprawnień do lokalizacji, aby śledzić Twój ruch podczas treningu. FitoTrack zbiera również dane o lokalizacji, gdy aplikacja działa w tle lub ekran jest wyłączony, aby nagrywać treningi. Dane o lokalizacji zawsze pozostają w telefonie bez Twojej wyraźnej zgody na ich udostępnienie.</string>
     <string name="recordingPermissionNotGrantedTitle">Nie przyznano uprawnień</string>
     <string name="unitFootSingular">Stopa</string>
     <string name="unitFootPlural">Stopy</string>
     <string name="noWorkoutStarted">Trening nie rozpoczął się</string>
-    <string name="editDisplayedInformationHint">Dopóki trening nie rozpoczął się, możesz edytować wyświetlane wartości, naciskając jedno z czterech pól.</string>
+    <string name="editDisplayedInformationHint">Przed rozpoczęciem treningu możesz edytować wyświetlane wartości, naciskając jedno z czterech pól</string>
     <string name="editDisplayedInformation">Edycja wyświetlanych informacji</string>
     <string name="aboutPrivacyPolicy">Polityka prywatności</string>
     <string name="aboutHelpTranslating">Pomóż w tłumaczeniu</string>
@@ -96,9 +96,7 @@
     <string name="merge">Połącz</string>
     <string name="replace">Zamień</string>
     <string name="replaceOrMergeMessage">Zamienić czy połączyć bazę danych z plikiem kopii zapasowej\?</string>
-    <string name="workoutStatsHelpText">Ten ekran pokazuje historyczne statystyki treningów. Aby z niego skorzystać, musisz najpierw określić typ treningu przez jego naciśnięcie. Następnie ustaw informacje, o których chcesz wiedzieć, i przedział czasu.
-\n
-\nNp. jeśli wybierzesz „Tydzień” jako przedział czasu, wszystkie treningi z każdego tygodnia zostaną połączone w jeden punkt danych, obliczając średnią albo sumę z każdego tygodnia.</string>
+    <string name="workoutStatsHelpText">Ten ekran pokazuje historyczne statystyki treningów. Aby z niego skorzystać, wybierz typ treningu i ustaw informacje, o których chcesz wiedzieć w danym przedziale czasu.\n \nNp. jeśli wybierzesz „Tydzień” jako przedział czasu, wszystkie treningi dla każdego tygodnia zostaną połączone w jeden punkt danych, obliczając średnią albo sumę z każdego tygodnia.</string>
     <string name="singleWorkout">Pojedynczy trening</string>
     <string name="dayInMonth">Dzień w miesiącu</string>
     <string name="calendarWeekYear">Tydzień / Rok kalendarzowy</string>
@@ -117,7 +115,7 @@
     <string name="no_workouts_recorded_for_this_activity">Brak treningów dla tej aktywności</string>
     <string name="unlockPhoneStopWorkout">Odblokuj ekran, aby zatrzymać nagrywanie</string>
     <string name="currentTime">Aktualny czas</string>
-    <string name="pref_auto_timeout_title">Czas do automatycznego zatrzymania</string>
+    <string name="pref_auto_timeout_title">Przedział czasu automatycznego zatrzymania</string>
     <string name="intervalAutoTimeoutTraining">Czas automatycznego zatrzymania treningu</string>
     <string name="manageAutoTimeoutSummary">Edytuj interwał do automatycznego zatrzymania treningu</string>
     <string name="unitHeartBeatsPerMinute">bpm</string>
@@ -148,7 +146,7 @@
     <string name="preferenceDateFormat">Format daty</string>
     <string name="preferencesCategoryMap">Mapa</string>
     <string name="preferencesCategoryAppearance">Wygląd</string>
-    <string name="preferencesBackupSummary">Utwórz/Przywróć kopię zapasową swoich danych treningowych</string>
+    <string name="preferencesBackupSummary">Utwórz i przywróć kopię zapasową danych treningowych</string>
     <string name="preferencesBackupTitle">Baza danych</string>
     <string name="preferencesRecordingSummary">Zarządzaj nagrywaniem treningu</string>
     <string name="preferencesRecordingTitle">Nagrywanie</string>
@@ -158,13 +156,13 @@
     <string name="avgSpeedTotalShort">Śr. prędkość (całkowita)</string>
     <string name="avgSpeedInMotion">Śr. prędkość (w ruchu)</string>
     <string name="enterDescription">Wprowadź opis</string>
-    <string name="hintAddWorkout">Naciśnij ikonę plusa, aby nagrać lub wprowadzić trening.</string>
+    <string name="hintAddWorkout">Naciśnij ikonę plusa, aby nagrać lub wprowadzić trening</string>
     <string name="currentSpeed">Aktualna prędkość</string>
     <string name="intervalSets">Zestawy interwałów</string>
     <string name="intervalSet">Zestaw interwałów</string>
     <string name="intervalTraining">Trening interwałowy</string>
-    <string name="intervalsIncludePauseSummary">Jeśli włączone, interwały będą kontynuowane nawet podczas postojów w treningu</string>
-    <string name="intervalsIncludePauseTitle">Uwzględniaj czas postoju w treningu interwałowym</string>
+    <string name="intervalsIncludePauseSummary">Kontynuuj interwały podczas wstrzymania treningu</string>
+    <string name="intervalsIncludePauseTitle">Uwzględniaj czas wstrzymania w treningu interwałowym</string>
     <string name="intervalSetSelected">Wybrano zestaw interwałów</string>
     <string name="selectIntervalSet">Wybierz zestaw interwałów</string>
     <string name="deleteIntervalSetMessage">Czy chcesz usunąć zestaw interwałów\?</string>
@@ -172,10 +170,10 @@
     <string name="enterName">Wprowadź nazwę</string>
     <string name="length_in_minutes">Czas trwania (minuty):</string>
     <string name="interval_name">Nazwa:</string>
-    <string name="hintEditIntervalSet">Dodaj interwały, które będą wypowiadane.</string>
-    <string name="hintManageIntervalSets">Dodaj zestaw interwałów, aby używać go w swoich treningach.</string>
+    <string name="hintEditIntervalSet">Dodaj interwały, które będą wypowiadane</string>
+    <string name="hintManageIntervalSets">Dodaj zestaw interwałów, aby używać go w swoich treningach</string>
     <string name="create">Utwórz</string>
-    <string name="manageIntervalsSummary">Edytuj zestawy interwałów do użycia podczas treningu z komunikatami głosowymi</string>
+    <string name="manageIntervalsSummary">Edytuj zestawy interwałów, które możesz używać podczas treningu z komunikatami głosowymi</string>
     <string name="createIntervalSet">Utwórz nowy zestaw interwałów</string>
     <string name="manageIntervalSets">Zarządzaj zestawami interwałów</string>
     <string name="edit_interval">Edytuj interwał</string>
@@ -205,9 +203,9 @@
     <string name="trackStyle">Styl trasy</string>
     <string name="mapStyle">Styl mapy</string>
     <string name="gps">GPS</string>
-    <string name="importBackupSummary">Przywraca wykonaną kopię zapasową</string>
+    <string name="importBackupSummary">Przywróć kopię zapasową</string>
     <string name="importBackup">Importuj dane z kopii zapasowej</string>
-    <string name="exportDataSummary">Wykonuje kopię zapasową wszystkich treningów</string>
+    <string name="exportDataSummary">Utwórz kopię zapasową wszystkich treningów</string>
     <string name="exportData">Eksportuj dane</string>
     <string name="pref_announcements_config_summary">Wybierz czas i odległość między powiadomieniami głosowymi</string>
     <string name="pref_unit_system">Preferowany system jednostek</string>
@@ -232,7 +230,7 @@
     <string name="enterComment">Wprowadź komentarz</string>
     <string name="comment">Komentarz</string>
     <string name="enable">Włącz</string>
-    <string name="noGpsMessage">Włącz GPS do śledzenia treningu.</string>
+    <string name="noGpsMessage">Włącz GPS, aby śledzić swój trening.</string>
     <string name="noGpsTitle">GPS wyłączony</string>
     <string name="recordWorkout">Nagraj trening</string>
     <string name="setDuration">Ustaw czas trwania</string>
@@ -289,10 +287,10 @@
     <string name="actionImportMultiple">Importuj wiele</string>
     <string name="actionImport">Importuj</string>
     <string name="workoutTypeEditId">ID</string>
-    <string name="hintManageWorkoutTypes">Naciśnij ikonę plusa, aby dodać niestandardowe typy treningów.</string>
-    <string name="resumeWorkoutConfirmation">Czy na pewno chcesz wznowić ten trening\? Spowoduje to również dodanie wstrzymania od momentu zatrzymania treningu.</string>
-    <string name="prefShowOnLockScreenTitle">Widoczne na ekranie blokady</string>
-    <string name="prefShowOnLockScreenSummary">Pokazuj informacje o treningu, nawet jeśli ekran jest zablokowany</string>
+    <string name="hintManageWorkoutTypes">Naciśnij ikonę plusa, aby dodać niestandardowe typy treningów</string>
+    <string name="resumeWorkoutConfirmation">Czy na pewno chcesz wznowić ten trening? Spowoduje to dodanie wstrzymania od momentu zatrzymania treningu.</string>
+    <string name="prefShowOnLockScreenTitle">Pokazuj na ekranie blokady</string>
+    <string name="prefShowOnLockScreenSummary">Pokazuj ekran nagrywania podczas blokady ekranu</string>
     <string name="notimeout">Bez limitu czasu</string>
     <string name="workoutStarted">Trening rozpoczęty</string>
     <string name="workoutStopped">Trening zatrzymany</string>
@@ -302,7 +300,7 @@
     <string name="actionPause">Wstrzymaj</string>
     <string name="autoPauseSummary">Automatycznie wstrzymuj i kontynuuj treningi</string>
     <string name="autoPauseTitle">Automatyczne wstrzymanie</string>
-    <string name="heartRateNotAvailable">Tętno jest obecnie niedostępne.</string>
+    <string name="heartRateNotAvailable">Tętno nie jest obecnie dostępne.</string>
     <string name="resumeWorkout">Wznów trening</string>
     <string name="inclination">Nachylenie</string>
     <string name="fileNotFound">Nie znaleziono pliku</string>
@@ -339,7 +337,7 @@
         <item quantity="other"><xliff:g example="12" id="secs">%1$d</xliff:g> sekund</item>
     </plurals>
     <string name="launchError">Nie udało się uruchomić aplikacji</string>
-    <string name="editStartEndHelp">Wybierz pozycję na mapie albo diagramie. Następnie naciśnij jedną ze strzałek, aby wybrać nowy punkt początkowy albo końcowy. Gdy skończysz, naciśnij ikonę zapisu, aby zastosować zmiany.</string>
+    <string name="editStartEndHelp">Wybierz pozycję na mapie albo diagramie i naciśnij jedną ze strzałek, aby wybrać nowy punkt początkowy albo końcowy. Gdy zakończysz, naciśnij ikonę zapisu, aby zastosować zmiany.</string>
     <string name="actionApply">Zastosuj</string>
     <string name="moveEndOfWorkout">Wytnij koniec</string>
     <string name="moveStartOfWorkout">Wytnij początek</string>
@@ -481,10 +479,10 @@
     <string name="saturday">Sobota</string>
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="autoBackupTitle">Automatyczne kopie zapasowe</string>
-    <string name="workoutGPXExportTitle">Eksportowanie treningów do GPX</string>
+    <string name="workoutGPXExportTitle">Eksportuj treningi jako GPX</string>
     <string name="deleteExportTargetConfirmation">Czy na pewno chcesz usunąć to miejsce eksportu\?</string>
     <string name="autoExportBackupTitle">Automatyczne kopie zapasowe aplikacji</string>
-    <string name="autoExportBackupExplanation">W określonym przedziale czasu kopia zapasowa zostanie wyeksportowana tutaj:</string>
+    <string name="autoExportBackupExplanation">Kopia zapasowa będzie tutaj zapisywana w określonym odstępie czasu:</string>
     <string name="exportIntervalTitle">Częstotliwość tworzenia kopii zapasowej</string>
     <string name="takeBackups1">Codziennie</string>
     <string name="takeBackups2">Co drugi dzień</string>
@@ -497,14 +495,14 @@
     <string name="exportTargetDirectory">Katalog</string>
     <string name="exportTargetHttpPost">Żądanie HTTP POST</string>
     <string name="autoExportWorkoutsSummary">Eksportuj nowo nagrane treningi</string>
-    <string name="hintConfigureExportTargets">Dodaj miejsca, do których mają zostać wyeksportowane pliki.</string>
+    <string name="hintConfigureExportTargets">Dodaj miejsca, do których eksportować pliki</string>
     <string name="autoExportBackupSummary">Automatycznie eksportuj kopie zapasowe</string>
     <string name="takeBackups7">Co tydzień</string>
-    <string name="autoExportWorkoutExplanation">Po nagraniu nowego treningu plik GPX zostanie wyeksportowany tutaj:</string>
+    <string name="autoExportWorkoutExplanation">Plik GPX zostanie tutaj zapisany po nagraniu nowego treningu:</string>
     <string name="takeBackups14">Co drugi tydzień</string>
     <string name="preferencesDebugTitle">Debugowanie</string>
     <string name="debugSensorsTitle">Debuguj czujniki</string>
-    <string name="debugSensorsSummary">Zbierz dane z czujników, które są zapisywane w pliku z logami</string>
+    <string name="debugSensorsSummary">Zbierz i zapisz dane z czujników do logów aplikacji</string>
     <string name="debugPressureSensor">Debuguj czujnik ciśnienia</string>
     <string name="calibrating">Kalibrowanie</string>
     <string name="noSensorAvailable">Brak dostępnego czujnika</string>
@@ -516,8 +514,8 @@
         <item quantity="other">%d satelitów</item>
     </plurals>
     <string name="debugShareLogsTitle">Udostępnij logi</string>
-    <string name="debugShareLogsSummary">Udostępnij logi zawierające przydatne dane, aby znaleźć błędy w rejestratorze treningów. Zwykle nie zawierają danych o lokalizacji</string>
-    <string name="zoomWithVolumeButtonsSummary">Zwiększaj i zmniejszaj głośność, aby kontrolować powiększanie i pomniejszanie</string>
+    <string name="debugShareLogsSummary">Udostępnij logi aplikacji, aby zdebugować rejestrator treningów. Logi zazwyczaj nie zawierają danych o lokalizacji</string>
+    <string name="zoomWithVolumeButtonsSummary">Używaj przycisków głośności, aby powiększać i pomniejszać</string>
     <string name="zoomWithVolumeButtonsTitle">Powiększanie za pomocą przycisków głośności</string>
     <string name="histogram">Histogram</string>
     <string name="monthYear">Miesiąc / Rok</string>
@@ -529,7 +527,7 @@
     <string name="stats_overview_title">Przegląd</string>
     <string name="details">Szczegóły</string>
     <string name="workoutDistanceSum">Suma odległości</string>
-    <string name="massExportGpxSummary">Tworzy plik ZIP zawierający wszystkie treningi jako pliki GPX</string>
+    <string name="massExportGpxSummary">Utwórz plik ZIP wszystkich treningów jako pliki GPX</string>
     <string name="massExportGpxTitle">Eksportuj wszystkie treningi jako GPX</string>
     <string name="workoutPauseDurationSum">Suma czasów trwania wstrzymania</string>
     <string name="statistics">Statystyki</string>
@@ -546,7 +544,7 @@
     <string name="workoutTypePullUps">Podciąganie</string>
     <string name="workoutDurationPrecisionToSeconds">Dokładność czasu trwania do sekund</string>
     <string name="askForComment">Pytaj o komentarz</string>
-    <string name="askForCommentSummary">Poproś o wpisanie komentarza podczas zatrzymywania nagrywania</string>
+    <string name="askForCommentSummary">Proś o wprowadzenie komentarza po zatrzymaniu nagrywania</string>
     <string name="removeOAuthToken">Usuń OAuth Token</string>
     <string name="removedOAuthToken">Usunięto OAuth Token</string>
     <string name="saveChangesQuestion">Czy zapisać zmiany?</string>
@@ -554,7 +552,7 @@
     <string name="language">Język</string>
     <string name="restorePreparing">Przygotowywanie</string>
     <string name="addWorkoutType">Dodaj typ treningu</string>
-    <string name="autoStartDelaySeconds">Opóźnienie w sekundach</string>
+    <string name="autoStartDelaySeconds">Sekundy</string>
     <string name="actionBack">Wstecz</string>
     <string name="more">Więcej</string>
     <string name="recording_elapsed">Czas trwania</string>
@@ -582,4 +580,11 @@
     <string name="localNetworkPermissionDeniedMessage">Dostęp do sieci lokalnej został trwale odrzucony. Aby go przyznać, otwórz ustawienia aplikacji.</string>
     <string name="openSettings">Otwórz ustawienia</string>
     <string name="pref_use_system_colors">Dynamiczne kolory (Material You)</string>
+    <plurals name="workoutRepetition">
+        <item quantity="one">powtórzenie</item>
+        <item quantity="few">powtórzenia</item>
+        <item quantity="many">powtórzeń</item>
+        <item quantity="other">powtórzeń</item>
+    </plurals>
+    <string name="autoStartDelayMinutes">Minuty</string>
 </resources>
