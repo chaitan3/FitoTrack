@@ -205,9 +205,7 @@
     <string name="light_theme">Chiaro</string>
     <string name="dark_theme">Scuro</string>
     <string name="system_default">Default di sistema</string>
-    <string name="workoutStatsHelpText">Questa schermata mostra le statistiche storiche degli allenamenti. Per utilizzarlo devi prima specificare il tipo di allenamento cliccandoci sopra, quindi imposta le informazioni che desideri conoscere e l\'intervallo di tempo.
-\n
-\nPer esempio, se si seleziona «Settimana» come intervallo di tempo, tutti gli allenamenti di ogni settimana verranno uniti in un punto dati calcolando la media o la somma di ogni settimana.</string>
+    <string name="workoutStatsHelpText">Questa schermata mostra le statistiche storiche degli allenamenti. Per utilizzarlo devi prima specificare il tipo di allenamento cliccandoci sopra, quindi imposta le informazioni che desideri conoscere e l\'intervallo di tempo. \n \nPer esempio, se si seleziona «Settimana» come intervallo di tempo, tutti gli allenamenti di ogni settimana verranno uniti in un punto dati calcolando la media o la somma di ogni settimana.</string>
     <string name="no_workouts_recorded">Nessun allenamento registrato</string>
     <string name="announcementSuppressDuringCall">Sopprimere durante la chiamata</string>
     <string name="replaceOrMergeMessage">Sostituire o unire il database con un file di backup\?</string>
