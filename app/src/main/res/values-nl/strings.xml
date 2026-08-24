@@ -285,7 +285,7 @@
     <string name="resumeWorkout">Training hervatten</string>
     <string name="heartRateNotAvailable">Hartslag is momenteel niet beschikbaar.</string>
     <string name="announcementWorkoutActions">Trainingsacties (pauzeren, hervatten, enz.)</string>
-    <string name="resumeWorkoutConfirmation">Deze training hervatten\? Er wordt een pauze toegevoegd vanaf het moment dat de training werd gestopt.</string>
+    <string name="resumeWorkoutConfirmation">Deze training hervatten? Er wordt een pauze toegevoegd vanaf het moment dat de training werd gestopt.</string>
     <string name="prefShowOnLockScreenSummary">Trainingsinfo weergeven, zelfs als het apparaat is vergrendeld.</string>
     <string name="prefShowOnLockScreenTitle">Zichtbaar op vergrendelscherm</string>
     <string name="notimeout">Geen Time-Out</string>
