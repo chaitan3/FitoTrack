@@ -476,9 +476,9 @@
     <string name="configureHttpPostRequest">Configurer les requêtes HTTP POST</string>
     <string name="calibrating">Calibrage</string>
     <string name="hidden">Caché</string>
-    <string name="autoExportWorkoutExplanation">Après qu\'un nouvel entrainement est enregistré, un export GPX sera enregistré ici :</string>
+    <string name="autoExportWorkoutExplanation">Après qu\'un nouvel entrainement est enregistré, un export GPX sera enregistré ici :</string>
     <string name="autoExportBackupSummary">Exporter des sauvegardes automatiquement</string>
-    <string name="autoExportBackupExplanation">À l\'intervalle spécifié, une sauvegarde sera exportée ici :</string>
+    <string name="autoExportBackupExplanation">À l\'intervalle spécifié, une sauvegarde sera exportée ici :</string>
     <string name="takeBackups1">Tous les jours</string>
     <string name="takeBackups2">Tous les deux jours</string>
     <string name="takeBackups7">Toutes les semaines</string>
