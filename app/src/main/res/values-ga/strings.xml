@@ -52,7 +52,7 @@
     <string name="workoutTypeEditIdErrorUnique">Tá cineál workout cheana ag baint úsáide as AN ID SEO</string>
     <string name="editStartEndHelp">Roghnaigh post ar an léarscáil nó ar an léaráid. Ansin cliceáil ar cheann de na saigheada a roghnú pointe nua ag tosú nó dar críoch. Nuair atá tú ag déanamh, cliceáil ar an deilbhín sábhála chun na hathruithe a chur i bhfeidhm.</string>
     <string name="connectHeartRateDevice">Ceangail gléas ráta croí</string>
-    <string name="resumeWorkoutConfirmation">Atosaigh an workout\? Beidh sos ón am a stopadh an workout a chur leis.</string>
+    <string name="resumeWorkoutConfirmation">Atosaigh an workout? Beidh sos ón am a stopadh an workout a chur leis.</string>
     <string name="dialog_nfc_disabled">D fhonn clibeanna NFC a úsáid chun workouts a thosú agus a stopadh ní mór duit NFC a chumasú i socruithe gléas ar dtús</string>
     <string name="delete">Scrios</string>
     <string name="errorGpxExportFailed">Theip ar easpórtáil GPX.</string>
@@ -67,16 +67,14 @@
     <string name="recordingStateRunning">Ag rith</string>
     <string name="importMultipleGpxFiles">Iompórtáil il-chomhaid GPX</string>
     <string name="importMultipleMessageSelectFolder">Roghnaigh fillteán ina bhfuil na comhaid GPX go léir ar mhaith leat iad a iompórtáil.</string>
-    <string name="importWorkoutMultipleQuestion">Ar mhaith leat comhad GPX amháin nó níos mó a iompórtáil\?</string>
+    <string name="importWorkoutMultipleQuestion">Ar mhaith leat comhad GPX amháin nó níos mó a iompórtáil?</string>
     <string name="nfcStartSummary">Má gníomhachtaithe, beidh tú in ann a thosú agus a stopadh workouts ag scanadh chlib NFC</string>
     <string name="actionImport">Iompórtáil</string>
     <string name="actionImportMultiple">Iompórtáil il</string>
     <string name="selectBluetoothDevice">Roghnaigh gléas Bluetooth</string>
     <string name="exportDataSummary">Tógann sé seo cúltaca de gach workouts</string>
     <string name="unlockPhoneStopWorkout">Díghlasáil do ghuthán chun stop a chur leis an taifeadadh</string>
-    <string name="workoutStatsHelpText">Taispeánann an scáileán stats stairiúil na workouts. Chun é a úsáid is gá duit a shonrú ar dtús leis an gcineál workout trí chliceáil ar sé. Ansin socraigh an fhaisnéis is mian leat a fháil amach faoi agus an tréimhse ama.
-\n
-\nM.sh. má roghnaíonn tú \"Seachtain\" mar réise ama, beidh gach workouts de gach seachtain a chumasc i bpointe sonraí amháin ceachtar ríomh an meán nó suim gach seachtain.</string>
+    <string name="workoutStatsHelpText">Taispeánann an scáileán stats stairiúil na workouts. Chun é a úsáid is gá duit a shonrú ar dtús leis an gcineál workout trí chliceáil ar sé. Ansin socraigh an fhaisnéis is mian leat a fháil amach faoi agus an tréimhse ama. \n \nM.sh. má roghnaíonn tú \"Seachtain\" mar réise ama, beidh gach workouts de gach seachtain a chumasc i bpointe sonraí amháin ceachtar ríomh an meán nó suim gach seachtain.</string>
     <string name="recordingActivityPermissionMessage">FitoTrack riachtanais an cead a rianú do ghníomhaíocht fhisiciúil a thaifeadadh workouts faoi dhíon.</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack riachtanais suíomh cead a rianú do ghluaiseacht le linn do workout. Bailíonn FitoTrack sonraí suímh freisin agus an aip sa chúlra nó múchtar an scáileán chun do chuid oibre a thaifeadadh. Tá sonraí suímh i gcónaí ar do ghuthán gan do thoiliú soiléir chun é a roinnt.</string>
     <string name="recordingStatePaused">Moillithe</string>
