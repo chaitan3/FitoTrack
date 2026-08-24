@@ -18,9 +18,7 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="sections">Seksjoner</string>
-    <string name="workoutStatsHelpText">Denne skjermen viser historisk treningsøktstatistikk. Angi treningsøkten først ved å klikke på den. Sett så infoen du ønsker og tidsrommet.
-\n
-\nFor eksempel, hvis du velger \"Uke\", som tidsrom, vil alle treningsøkter for hver uke bli flettet til ett datapunkt som enten er gjennomsnitt eller sum for hver uke.</string>
+    <string name="workoutStatsHelpText">Denne skjermen viser historisk treningsøktstatistikk. Angi treningsøkten først ved å klikke på den. Sett så infoen du ønsker og tidsrommet. \n \nFor eksempel, hvis du velger \"Uke\", som tidsrom, vil alle treningsøkter for hver uke bli flettet til ett datapunkt som enten er gjennomsnitt eller sum for hver uke.</string>
     <string name="unitMilesPerHour">Engelske mil per time</string>
     <string name="unitYardsPlural">Yard</string>
     <string name="unitYardsSingular">Yard</string>
@@ -278,7 +276,7 @@
     <string name="resumeWorkout">Gjenoppta treningsøkt</string>
     <string name="heartRateNotAvailable">Puls er ikke tilgjengelig for øyeblikket.</string>
     <string name="announcementWorkoutActions">Treningshandlinger (pause, gjenoppta, etc.)</string>
-    <string name="resumeWorkoutConfirmation">Fortsett denne treningen\? En pause fra treningen ble stoppet vil bli lagt til.</string>
+    <string name="resumeWorkoutConfirmation">Fortsett denne treningen? En pause fra treningen ble stoppet vil bli lagt til.</string>
     <string name="prefShowOnLockScreenSummary">Vis treningsøktinfo selv om enheten er låst.</string>
     <string name="prefShowOnLockScreenTitle">Synlig på låseskjermen</string>
     <string name="notimeout">Uten tidsavbrudd</string>
@@ -301,7 +299,7 @@
     <string name="workoutTypeAdd">Legg til</string>
     <string name="actionImportMultiple">Importer flere</string>
     <string name="actionImport">Importer</string>
-    <string name="importWorkoutMultipleQuestion">Ønsker du å importere én eller flere GPX-filer\?</string>
+    <string name="importWorkoutMultipleQuestion">Ønsker du å importere én eller flere GPX-filer?</string>
     <string name="recordingPermissionNotGrantedMessage">Innvilg posisjonstilgang for å spore dine bevegelser under treningsøkter, når skjermen er av, og i bakgrunnen. Den forblir på enheten din uten din klare tilgang til å dele den.</string>
     <string name="overwriteMapConfirmation">Ønsker du å overskrive den eksisterende kartfilen «%s»\?</string>
     <string name="downloadMapsSpecifyDirectory">Angi en mappe for frakoblede kart først</string>
