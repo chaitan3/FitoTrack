@@ -50,7 +50,7 @@
     <string name="pref_weight_summary">Dein Gewicht ist zur Kalorienberechnung erforderlich</string>
     <string name="recordWorkout">Workout aufzeichnen</string>
     <string name="restore">Wiederherstellen</string>
-    <string name="setPreferencesMessage">Du kannst in den Einstellungen dein bevorzugtes Einheitensystem und dein Gewicht festlegen.</string>
+    <string name="setPreferencesMessage">Du kannst in den Einstellungen dein bevorzugtes Einheitensystem und Gewicht festlegen.</string>
     <string name="setPreferencesTitle">Einstellungen festlegen</string>
     <string name="settings">Einstellungen</string>
     <string name="shareFile">Datei teilen</string>
@@ -84,7 +84,7 @@
     <string name="enable">Aktivieren</string>
     <string name="height">Höhe</string>
     <string name="noGpsTitle">GPS deaktiviert</string>
-    <string name="noGpsMessage">Bitte aktiviere GPS, damit dein Workout aufgezeichnet werden kann.</string>
+    <string name="noGpsMessage">Bitte aktiviere GPS, um dein Workout aufzuzeichnen.</string>
     <string name="workoutAscent">Aufstieg</string>
     <string name="workoutDescent">Abstieg</string>
     <string name="mapStyle">Kartenstil</string>
@@ -163,11 +163,11 @@
     <string name="add_interval">Intervall hinzufügen</string>
     <string name="edit_interval">Intervall bearbeiten</string>
     <string name="manageIntervalSets">Intervallsätze bearbeiten</string>
-    <string name="manageIntervalsSummary">Bearbeite die Intervallsätze, die du dann während des Workouts über Sprachansagen nutzen kannst.</string>
+    <string name="manageIntervalsSummary">Bearbeite Intervallsätze, die du dann während des Workouts als Sprachansagen nutzen kannst.</string>
     <string name="createIntervalSet">Neuen Intervallsatz erstellen</string>
     <string name="create">Erstellen</string>
     <string name="hintManageIntervalSets">Füge einen Intervallsatz hinzu, um ihn in deinen Workouts zu verwenden.</string>
-    <string name="hintEditIntervalSet">Füge Intervalle hinzu, die gesprochen werden sollen.</string>
+    <string name="hintEditIntervalSet">Füge Intervalle hinzu, die gesprochen werden sollen</string>
     <string name="interval_name">Name:</string>
     <string name="length_in_minutes">Länge (Minuten):</string>
     <string name="enterName">Gebe einen Namen ein</string>
@@ -176,12 +176,12 @@
     <string name="selectIntervalSet">Intervallsatz auswählen</string>
     <string name="intervalSetSelected">Intervallsatz ausgewählt</string>
     <string name="intervalsIncludePauseTitle">Pausenzeit in das Intervalltraining einbeziehen</string>
-    <string name="intervalsIncludePauseSummary">Wenn aktiv, werden die Intervalle auch dann fortgesetzt, wenn du Pausen einlegst.</string>
+    <string name="intervalsIncludePauseSummary">Intervalle auch fortsetzen, während das Workout pausiert ist</string>
     <string name="intervalTraining">Intervalltraining</string>
     <string name="intervalSet">Intervallsatz</string>
     <string name="intervalSets">Intervallsätze</string>
     <string name="currentSpeed">Aktuelle Geschwindigkeit</string>
-    <string name="hintAddWorkout">Klicke auf das Plus-Symbol, um ein Workout aufzuzeichnen oder einzugeben.</string>
+    <string name="hintAddWorkout">Klicke auf das Plus-Symbol, um ein Workout aufzuzeichnen oder einzugeben</string>
     <string name="enterDescription">Gebe eine Beschreibung ein</string>
     <string name="avgSpeedInMotion">⌀-Geschw. (Bewegung)</string>
     <string name="avgSpeedTotalShort">⌀-Geschw. (Gesamt)</string>
@@ -191,7 +191,7 @@
     <string name="preferencesRecordingTitle">Aufzeichnung</string>
     <string name="preferencesRecordingSummary">Workout-Aufzeichnung steuern</string>
     <string name="preferencesBackupTitle">Datenbank</string>
-    <string name="preferencesBackupSummary">Workout-Daten sichern/wiederherstellen</string>
+    <string name="preferencesBackupSummary">Workout-Daten sichern und wiederherstellen</string>
     <string name="preferencesCategoryAppearance">Erscheinungsbild</string>
     <string name="preferenceDateFormat">Datumsformat</string>
     <string name="preferenceTimeFormat">Zeitformat</string>
@@ -219,7 +219,7 @@
     <string name="workoutTypeInlineSkating">Inlineskaten</string>
     <string name="manageAutoTimeoutSummary">Einstellung zum automatischen Stoppen des Workouts</string>
     <string name="intervalAutoTimeoutTraining">Workout Auto-Stop Timer</string>
-    <string name="pref_auto_timeout_title">Zeitspanne bis Auto-Stop</string>
+    <string name="pref_auto_timeout_title">Auto-Stopp Zeitspanne</string>
     <string name="currentTime">Aktuelle Uhrzeit</string>
     <string name="unlockPhoneStopWorkout">Bitte das Telefon entsperren, um die Aufnahme zu beenden</string>
     <string name="workout_statistics">Workout-Statistiken</string>
@@ -263,7 +263,7 @@
     <string name="aboutContributors">Mitwirkende</string>
     <string name="aboutSendFeedback">Rückmeldung an den Entwickler senden</string>
     <string name="aboutSourceCode">Quellcode ansehen</string>
-    <string name="editDisplayedInformationHint">Solange das Workout noch nicht gestartet wurde, kannst du die angezeigten Werte bearbeiten, indem du auf eines der vier Felder klickst.</string>
+    <string name="editDisplayedInformationHint">Bevor das Workout gestartet wurde, kannst du die angezeigten Werte bearbeiten, indem du auf eines der vier Felder klickst.</string>
     <string name="editDisplayedInformation">Angezeigte Informationen bearbeiten</string>
     <string name="unitFootPlural">Fuß</string>
     <string name="unitFootSingular">Fuß</string>
@@ -280,7 +280,7 @@
     <string name="aboutUnlistedContributors">Vielen Dank an alle nicht aufgeführten Mitwirkenden, die beim Übersetzen und Erweitern von FitoTrack geholfen haben!</string>
     <string name="aboutHelpTranslating">Beim Übersetzen helfen</string>
     <string name="importMultipleGpxFiles">Mehrere GPX-Dateien importieren</string>
-    <string name="importMultipleMessageSelectFolder">Bitte wähle einen Ordner, der alle GPX-Dateien enthält, die du importieren möchtest.</string>
+    <string name="importMultipleMessageSelectFolder">Bitte wähle einen Ordner, der die GPX-Dateien enthält, die du importieren möchtest.</string>
     <string name="importingFiles">Dateien importieren</string>
     <string name="actionGrant">Gewähren</string>
     <string name="aboutPrivacyPolicy">Datenschutzerklärung</string>
@@ -305,8 +305,8 @@
     <string name="workoutStopped">Workout gestoppt</string>
     <string name="workoutStarted">Workout gestartet</string>
     <string name="notimeout">Kein Timeout</string>
-    <string name="prefShowOnLockScreenTitle">Auf dem Sperrbildschirm sichtbar</string>
-    <string name="prefShowOnLockScreenSummary">Workout-Informationen zeigen, selbst wenn das Gerät gesperrt ist.</string>
+    <string name="prefShowOnLockScreenTitle">Auf dem Sperrbildschirm anzeigen</string>
+    <string name="prefShowOnLockScreenSummary">Aufnahme zeigen, selbst wenn das Gerät gesperrt ist</string>
     <string name="resumeWorkoutConfirmation">Dieses Workout fortsetzen? Es wird ab dem Zeitpunkt, an dem das Workout gestoppt wurde, eine Pause hinzugefügt.</string>
     <string name="editWorkoutType">Workout-Typ bearbeiten</string>
     <string name="workoutTypeEditIcon">Symbol</string>
@@ -323,7 +323,7 @@
     <string name="workoutTypeEditIdErrorEmpty">Bitte gib eine ID an</string>
     <string name="workoutTypeEditIdErrorCharacters">Erlaubte Zeichen: a–z, A–Z, 0–9, _, -</string>
     <string name="workoutTypeEditId">ID</string>
-    <string name="hintManageWorkoutTypes">Klicke auf das Plus, um benutzerdefinierte Workout-Typen hinzuzufügen.</string>
+    <string name="hintManageWorkoutTypes">Klicke auf das Plus-Icon, um benutzerdefinierte Workout-Typen hinzuzufügen</string>
     <string name="workoutTypeAdd">Hinzufügen</string>
     <string name="workoutTypeAll">Alle</string>
     <string name="importWorkoutMultipleQuestion">Möchtest du eine GPX-Datei importieren oder mehrere?</string>
@@ -349,9 +349,9 @@
     <string name="chooseMapHint">Bitte eine Kartendatei auswählen</string>
     <string name="exportTargetDirectory">Verzeichnis</string>
     <string name="autoBackupTitle">Automatische Sicherungen</string>
-    <string name="workoutGPXExportTitle">GPX-Export von Workouts</string>
+    <string name="workoutGPXExportTitle">Workouts als GPX exportieren</string>
     <string name="unknown">Unbekannt</string>
-    <string name="hintConfigureExportTargets">Füge Ziele hinzu, wohin die Dateien exportiert werden sollen.</string>
+    <string name="hintConfigureExportTargets">Füge Ziele hinzu, wohin die Dateien exportiert werden sollen</string>
     <string name="deleteExportTargetConfirmation">Dieses Export-Ziel wirklich entfernen\?</string>
     <string name="intervalAutoStartDelayTraining">Workout Auto-Start Verzögerung</string>
     <string name="manageAutoStartDelaySummary">Wähle einen Countdown, nach dem dein Workout automatisch startet</string>
@@ -473,7 +473,7 @@
     <string name="autoExportBackupTitle">Automatische App-Sicherungen</string>
     <string name="autoExportBackupSummary">Sicherungen automatisch exportieren</string>
     <string name="autoExportBackupExplanation">Im festgelegten Intervall wird hierher eine Sicherung exportiert:</string>
-    <string name="autoExportWorkoutExplanation">Nachdem ein neues Workout aufgenommen wurde, wird hier ein GPX-Export gespeichert:</string>
+    <string name="autoExportWorkoutExplanation">Hier wird eine GPX-Datei gespeichert, nachdem ein neues Workout aufgenommen wurde:</string>
     <string name="exportIntervalTitle">Sicherungsintervall</string>
     <string name="takeBackups1">Jeden Tag</string>
     <string name="takeBackups2">Jeden zweiten Tag</string>
@@ -504,9 +504,9 @@
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="preferencesDebugTitle">Debuggen</string>
     <string name="debugShareLogsTitle">Protokolle teilen</string>
-    <string name="debugShareLogsSummary">Protokolle teilen, die nützliche Daten enthalten, um Bugs in der Workout-Aufzeichnung zu finden. Normalerweise enthalten diese keine Standortdaten.</string>
+    <string name="debugShareLogsSummary">Programm-Protokolle teilen, um Fehler in der Workout-Aufzeichnung zu finden. Normalerweise enthalten diese keine Standortdaten.</string>
     <string name="debugSensorsTitle">Sensoren debuggen</string>
-    <string name="debugSensorsSummary">Sensordaten sammeln, die in die Protokoll-Datei geschrieben werden</string>
+    <string name="debugSensorsSummary">Sensordaten sammeln und in der Protokoll-Datei speichern</string>
     <string name="debugPressureSensor">Drucksensor debuggen</string>
     <string name="calibrating">Kalibrieren</string>
     <string name="noSensorAvailable">Kein Sensor verfügbar</string>
@@ -518,7 +518,7 @@
         <item quantity="other">%d Satelliten</item>
     </plurals>
     <string name="massExportGpxTitle">Alle Workouts als GPX exportieren</string>
-    <string name="massExportGpxSummary">Erstellt eine ZIP-Datei, die alle Workouts als GPX-Dokumente enthält</string>
+    <string name="massExportGpxSummary">Erstelle eine ZIP-Datei, die alle Workouts als GPX-Datei enthält</string>
     <string name="stats_overview_title">Überblick</string>
     <string name="stats_explore_title">Erkunden</string>
     <string name="stats_history_title">Verlauf</string>
@@ -541,7 +541,7 @@
         <item quantity="other">Klimmzüge</item>
     </plurals>
     <string name="workoutTypePullUps">Klimmzüge</string>
-    <string name="askForCommentSummary">Nach einem Kommentar fragen, wenn ein Workout beendet wird</string>
+    <string name="askForCommentSummary">Nach einem Kommentar fragen, nachdem ein Workout beendet wird</string>
     <string name="askForComment">Nach Kommentar fragen</string>
     <string name="removedOAuthToken">OAuth-Token entfernt</string>
     <string name="removeOAuthToken">OAuth-Token entfernen</string>
@@ -575,4 +575,8 @@
     <string name="zoom_in">Hineinzoomen</string>
     <string name="zoom_out">Herauszoomen</string>
     <string name="recording_hold_to_stop">Lange drücken, um den Workout anzuhalten</string>
+    <plurals name="workoutRepetition">
+        <item quantity="one">Wdh.</item>
+        <item quantity="other">Wdh.</item>
+    </plurals>
 </resources>
