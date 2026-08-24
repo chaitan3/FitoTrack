@@ -21,9 +21,7 @@
     <string name="noGpsMessage">請啟用 GPS 來追蹤健身項目</string>
     <string name="noGpsTitle">GPS (導航系統) 功能停用了</string>
     <string name="notimeout">沒有暫停</string>
-    <string name="workoutStatsHelpText">此螢幕顯示的是您的健身項目資料。請先選擇健身項目類型，然後輸入您想查看的資料以及相關的時間跨段。
-\n
-\n例：如果您選擇了的時間跨段是「週」，每一個星期的所有健身項目會被合併成一個資料點，而每星期的平均或總數亦會被計算。</string>
+    <string name="workoutStatsHelpText">此螢幕顯示的是您的健身項目資料。請先選擇健身項目類型，然後輸入您想查看的資料以及相關的時間跨段。 \n \n例：如果您選擇了的時間跨段是「週」，每一個星期的所有健身項目會被合併成一個資料點，而每星期的平均或總數亦會被計算。</string>
     <string name="alreadyDownloading">已經正在下載一份文件</string>
     <string name="downloadMapConfirmation">您想下載地圖文件 %s？</string>
     <string name="overwriteMapConfirmation">您想覆蓋現有的地圖文件 %s？</string>
