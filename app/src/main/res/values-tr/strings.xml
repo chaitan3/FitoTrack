@@ -72,9 +72,7 @@
     <string name="merge">Birleştir</string>
     <string name="replace">Değiştir</string>
     <string name="replaceOrMergeMessage">Veri tabanı, yedekleme dosyasıyla değiştirilsin mi birleştirilsin mi\?</string>
-    <string name="workoutStatsHelpText">Bu ekran, egzersizlerin geçmiş istatistiklerini gösterir. Kullanmak için önce üzerine tıklayarak egzersiz türünü belirtmeniz gerekir. Daha sonra öğrenmek istediğiniz bilgileri ve zaman aralığını belirleyin.
-\n
-\nÖrneğin zaman aralığını \"Hafta\" olarak seçerseniz, her haftanın tüm egzersizleri ortalaması veya toplamı hesaplanarak tek bir veri noktasında birleştirilecektir.</string>
+    <string name="workoutStatsHelpText">Bu ekran, egzersizlerin geçmiş istatistiklerini gösterir. Kullanmak için önce üzerine tıklayarak egzersiz türünü belirtmeniz gerekir. Daha sonra öğrenmek istediğiniz bilgileri ve zaman aralığını belirleyin. \n \nÖrneğin zaman aralığını \"Hafta\" olarak seçerseniz, her haftanın tüm egzersizleri ortalaması veya toplamı hesaplanarak tek bir veri noktasında birleştirilecektir.</string>
     <string name="singleWorkout">Tek Egzersiz</string>
     <string name="dayInMonth">Ayın Günü</string>
     <string name="calendarWeekYear">Takvim Haftası / Yılı</string>
@@ -278,7 +276,7 @@
     <string name="error">Hata</string>
     <string name="delete">Sil</string>
     <string name="app_name">FitoTrack</string>
-    <string name="resumeWorkoutConfirmation">Bu egzersize devam edilsin mi\? Egzersizin durdurulduğu zamandan bir duraklama eklenecektir.</string>
+    <string name="resumeWorkoutConfirmation">Bu egzersize devam edilsin mi? Egzersizin durdurulduğu zamandan bir duraklama eklenecektir.</string>
     <string name="prefShowOnLockScreenSummary">Aygıt kilitli olsa bile egzersiz bilgilerini göster.</string>
     <string name="prefShowOnLockScreenTitle">Kilit ekranında görünür</string>
     <string name="notimeout">Zaman Aşımı Yok</string>
@@ -299,7 +297,7 @@
     <string name="workoutTypeEditId">Kimlik</string>
     <string name="hintManageWorkoutTypes">Özel egzersiz türleri eklemek için artıya tıklayın.</string>
     <string name="workoutTypeAdd">Ekle</string>
-    <string name="importWorkoutMultipleQuestion">Bir GPX dosyasını mı yoksa birden fazla dosyayı mı içe aktarmak istiyorsunuz\?</string>
+    <string name="importWorkoutMultipleQuestion">Bir GPX dosyasını mı yoksa birden fazla dosyayı mı içe aktarmak istiyorsunuz?</string>
     <string name="actionImportMultiple">Birden fazla içe aktar</string>
     <string name="actionImport">İçe aktar</string>
     <string name="downloading">İndiriliyor…</string>
