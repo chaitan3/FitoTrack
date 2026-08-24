@@ -215,9 +215,7 @@
     <string name="calendarWeekYear">Kalender Uge / År</string>
     <string name="dayInMonth">Dag i Måneden</string>
     <string name="singleWorkout">Enkelt Træning</string>
-    <string name="workoutStatsHelpText">Denne skærm viser historik for træningen. For at bruge det skal du først angive træningstypen ved at klikke på den. Indstil derefter de oplysninger, du vil vide om, og tidsrummet.
-\n
-\nF.eks. Hvis du vælger \"Uge\" som tidsperiode, bliver alle træningsprogrammer i hver uge flettet til et datapunkt, der enten beregner gennemsnittet eller summen af hver uge.</string>
+    <string name="workoutStatsHelpText">Denne skærm viser historik for træningen. For at bruge det skal du først angive træningstypen ved at klikke på den. Indstil derefter de oplysninger, du vil vide om, og tidsrummet. \n \nF.eks. Hvis du vælger \"Uge\" som tidsperiode, bliver alle træningsprogrammer i hver uge flettet til et datapunkt, der enten beregner gennemsnittet eller summen af hver uge.</string>
     <string name="replaceOrMergeMessage">Erstat eller kombiner database med backup fil?</string>
     <string name="replace">Erstat</string>
     <string name="merge">Kombiner</string>
