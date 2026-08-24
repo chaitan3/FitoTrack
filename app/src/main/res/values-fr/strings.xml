@@ -216,9 +216,7 @@
     <string name="calendarWeekYear">Calendrier Semaine / Année</string>
     <string name="dayInMonth">Jour du mois</string>
     <string name="singleWorkout">Entraînement unique</string>
-    <string name="workoutStatsHelpText">Cet écran montre les statistiques historiques des séances d\'entraînement. Pour l\'utiliser, vous devez d\'abord spécifier le type d\'entraînement en cliquant sur celui-ci. Ensuite, définissez les informations que vous voulez connaître et la durée.
-\n
-\nPar exemple, si vous sélectionnez « Semaine » comme période de temps, tous les entraînements de chaque semaine seront fusionnés en un point de données calculant la moyenne ou la somme de chaque semaine.</string>
+    <string name="workoutStatsHelpText">Cet écran montre les statistiques historiques des séances d\'entraînement. Pour l\'utiliser, vous devez d\'abord spécifier le type d\'entraînement en cliquant sur celui-ci. Ensuite, définissez les informations que vous voulez connaître et la durée. \n \nPar exemple, si vous sélectionnez « Semaine » comme période de temps, tous les entraînements de chaque semaine seront fusionnés en un point de données calculant la moyenne ou la somme de chaque semaine.</string>
     <string name="replaceOrMergeMessage">Remplacer ou fusionner la base de données avec un fichier de sauvegarde ?</string>
     <string name="replace">Remplacer</string>
     <string name="merge">Fusionner</string>
@@ -297,7 +295,7 @@
     <string name="autoPauseSummary">Automatiquement pause et continuer les séances d\'entraînement</string>
     <string name="autoPauseTitle">Pause automatique</string>
     <string name="notimeout">Aucune pause</string>
-    <string name="resumeWorkoutConfirmation">Reprendre cette séance d\'entraînement \? Une pause à partir du moment où la séance d\'entraînement a été arrêtée sera ajoutée.</string>
+    <string name="resumeWorkoutConfirmation">Reprendre cette séance d\'entraînement ? Une pause à partir du moment où la séance d\'entraînement a été arrêtée sera ajoutée.</string>
     <string name="prefShowOnLockScreenSummary">Afficher les informations relatives à l\'entraînement même si l\'appareil est verrouillé.</string>
     <string name="prefShowOnLockScreenTitle">Visible sur l\'écran de verrouillage</string>
     <string name="editWorkoutType">Modifier l\'entraînement</string>
