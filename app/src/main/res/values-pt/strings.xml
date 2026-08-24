@@ -76,9 +76,7 @@
     <string name="merge">Agregar</string>
     <string name="replace">Substituir</string>
     <string name="replaceOrMergeMessage">Substituir ou agregar base de dados com o backup\?</string>
-    <string name="workoutStatsHelpText">Esta seção apresenta estatísticas relativas ao histórico dos exercícios. Para usá-la, necessita primeiro de especificar o tipo de exercício ao clicar na respectiva modalidade. Em seguida, defina a informação que deseja saber e em que intervalo de tempo.
-\n
-\nEx: se selecionar \"Semana\" como intervalo, todos os exercícios de cada semana serão aglomerados num só conjunto de dados calculando assim quer a média semanal quer a soma de cada semana.</string>
+    <string name="workoutStatsHelpText">Esta seção apresenta estatísticas relativas ao histórico dos exercícios. Para usá-la, necessita primeiro de especificar o tipo de exercício ao clicar na respectiva modalidade. Em seguida, defina a informação que deseja saber e em que intervalo de tempo. \n \nEx: se selecionar \"Semana\" como intervalo, todos os exercícios de cada semana serão aglomerados num só conjunto de dados calculando assim quer a média semanal quer a soma de cada semana.</string>
     <string name="singleWorkout">Exercício Único</string>
     <string name="calendarWeekYear">Calendário Semana / Ano</string>
     <string name="help">Ajuda</string>
@@ -269,7 +267,7 @@
     <string name="stop">Parar</string>
     <string name="app_name">FitoTrack</string>
     <string name="hintManageWorkoutTypes">Carregue no mais para adicionar tipos de treino personalizados.</string>
-    <string name="resumeWorkoutConfirmation">Retomar este exercício\? Isto também irá adicionar uma pausa a partir do momento em que o treino foi parado.</string>
+    <string name="resumeWorkoutConfirmation">Retomar este exercício? Isto também irá adicionar uma pausa a partir do momento em que o treino foi parado.</string>
     <string name="prefShowOnLockScreenSummary">Mostrar informações de exercício, mesmo que o telefone esteja bloqueado.</string>
     <string name="prefShowOnLockScreenTitle">Visível no ecrã de bloqueio</string>
     <string name="notimeout">Sem Tempo-Limite</string>
