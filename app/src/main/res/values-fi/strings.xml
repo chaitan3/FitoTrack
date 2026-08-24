@@ -224,7 +224,7 @@
     <string name="recordingStatePaused">Keskeytetty</string>
     <string name="recordingStateStopped">Pysäytetty</string>
     <string name="importMultipleGpxFiles">Tuo useita GPX-tiedostoja</string>
-    <string name="importWorkoutMultipleQuestion">Haluatko tuoda yhden vai useita GPX-tiedostoja\?</string>
+    <string name="importWorkoutMultipleQuestion">Haluatko tuoda yhden vai useita GPX-tiedostoja?</string>
     <string name="actionImport">Tuo</string>
     <string name="actionImportMultiple">Tuo useita</string>
     <string name="importingFiles">Tuodaan tiedostoja</string>
@@ -441,7 +441,7 @@
         <item quantity="one">Yksi satelliitti</item>
         <item quantity="other">%d satelliittia</item>
     </plurals>
-    <string name="resumeWorkoutConfirmation">Jatketaanko tätä treeniä\? Keskeytysaika ajankohdasta, kun treeni pysäytettiin, lisätään kokonaisaikaan.</string>
+    <string name="resumeWorkoutConfirmation">Jatketaanko tätä treeniä? Keskeytysaika ajankohdasta, kun treeni pysäytettiin, lisätään kokonaisaikaan.</string>
     <string name="intervalAutoStartDelayTraining">Treenin automaattisen käynnistyksen viive</string>
     <string name="workouts">Treenit</string>
     <string name="workoutAvgDurationLong">Keskimääräinen kesto</string>
