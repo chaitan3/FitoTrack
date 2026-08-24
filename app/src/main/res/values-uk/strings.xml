@@ -303,9 +303,7 @@
     <string name="workoutAvgIntensityShort">Середня інтенсивність</string>
     <string name="workoutAvgSpeedLong">Середня швидкість</string>
     <string name="heartRateSensorBattery">Батарея датчика</string>
-    <string name="workoutStatsHelpText">Цей екран показує історичну статистику тренувань. Щоб скористатися ним, спочатку потрібно вказати тип тренування, натиснувши на нього. Потім встановіть інформацію, про яку ви хочете дізнатися, і часовий проміжок.
-\n
-\nНаприклад, якщо ви виберете \"Тиждень\" як часовий проміжок, всі тренування кожного тижня будуть об\'єднані в одну точку даних з обчисленням середнього значення або суми за кожен тиждень.</string>
+    <string name="workoutStatsHelpText">Цей екран показує історичну статистику тренувань. Щоб скористатися ним, спочатку потрібно вказати тип тренування, натиснувши на нього. Потім встановіть інформацію, про яку ви хочете дізнатися, і часовий проміжок. \n \nНаприклад, якщо ви виберете \"Тиждень\" як часовий проміжок, всі тренування кожного тижня будуть об\'єднані в одну точку даних з обчисленням середнього значення або суми за кожен тиждень.</string>
     <string name="replaceOrMergeMessage">Замінити чи об\'єднати базу даних з файлу резервної копії\?</string>
     <string name="merge">Обʼєднати</string>
     <string name="workoutMaxHeartRate">Максимальний пульс</string>
@@ -367,7 +365,7 @@
     <string name="theme">Тема</string>
     <string name="manageIntervalsSummary">Редагуйте набори інтервалів, які ви зможете використовувати під час тренування, за допомогою голосового зворотного зв\'язку.</string>
     <string name="importMultipleMessageSelectFolder">Виберіть папку з усіма GPX-файлами, які ви хочете імпортувати.</string>
-    <string name="importWorkoutMultipleQuestion">Ви хочете імпортувати один файл GPX чи декілька\?</string>
+    <string name="importWorkoutMultipleQuestion">Ви хочете імпортувати один файл GPX чи декілька?</string>
     <string name="unitMilesPerHour">Милі на годину</string>
     <string name="unitKilometersPerHour">Кілометрів на годину</string>
     <string name="unitMetersSingular">Метер</string>
@@ -392,7 +390,7 @@
     <string name="notimeout">Без тайм-ауту</string>
     <string name="nfcStartSummary">Якщо ця функція активована, ви зможете розпочинати та припиняти тренування, скануючи NFC-мітку</string>
     <string name="prefShowOnLockScreenTitle">Відображати на екрані блокування</string>
-    <string name="resumeWorkoutConfirmation">Продовжити це тренування\? Буде додано паузу з часу, коли тренування було зупинено.</string>
+    <string name="resumeWorkoutConfirmation">Продовжити це тренування? Буде додано паузу з часу, коли тренування було зупинено.</string>
     <string name="hintManageWorkoutTypes">Натисніть на плюс, щоб додати власні типи тренувань.</string>
     <string name="workoutTypeEditId">Ідентифікатор</string>
     <string name="workoutTypeEditIdErrorCharacters">Дозволені символи: a-z, A-Z, 0-9, _, -</string>
