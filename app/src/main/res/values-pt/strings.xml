@@ -299,7 +299,7 @@
     <string name="preferenceCategoryVoiceFeedback">Feedback de voz</string>
     <string name="actionImportMultiple">Importar múltiplos</string>
     <string name="actionImport">Importar</string>
-    <string name="importWorkoutMultipleQuestion">Pretende importar um ficheiro GPX ou múltiplos\?</string>
+    <string name="importWorkoutMultipleQuestion">Pretende importar um ficheiro GPX ou múltiplos?</string>
     <string name="workoutTypeAll">Todos</string>
     <string name="workoutRecordingTypeGps">Treinos GPS</string>
     <string name="workoutRecordingTypeIndoor">Treinos em Interior</string>
