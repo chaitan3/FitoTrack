@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
   ~
@@ -224,9 +223,7 @@
     <string name="currentTime">Aktuelle Uhrzeit</string>
     <string name="unlockPhoneStopWorkout">Bitte das Telefon entsperren, um die Aufnahme zu beenden</string>
     <string name="workout_statistics">Workout-Statistiken</string>
-    <string name="workoutStatsHelpText">Dieser Bildschirm zeigt Statistiken zu den Workouts im Verlauf an. Um ihn zu verwenden, muss man zunächst die Art des Workouts angeben, indem man darauf klickt. Dann stellt man die Informationen, über die man etwas wissen möchte, und die Zeitspanne ein.
-\n
-\nWenn man z. B. „Woche“ als Zeitspanne auswählt, werden alle Workouts jeder Woche in einem Datenpunkt zusammengefasst und entweder der Durchschnitt oder die Summe der jeweiligen Woche berechnet.</string>
+    <string name="workoutStatsHelpText">Dieser Bildschirm zeigt Statistiken zu den Workouts im Verlauf an. Um ihn zu verwenden, muss man zunächst die Art des Workouts angeben, indem man darauf klickt. Dann stellt man die Informationen, über die man etwas wissen möchte, und die Zeitspanne ein. \n \nWenn man z. B. „Woche“ als Zeitspanne auswählt, werden alle Workouts jeder Woche in einem Datenpunkt zusammengefasst und entweder der Durchschnitt oder die Summe der jeweiligen Woche berechnet.</string>
     <string name="replaceOrMergeMessage">Datenbank ersetzen oder mit Backup zusammenführen?</string>
     <string name="replace">Ersetzen</string>
     <string name="merge">Zusammenführen</string>
@@ -310,7 +307,7 @@
     <string name="notimeout">Kein Timeout</string>
     <string name="prefShowOnLockScreenTitle">Auf dem Sperrbildschirm sichtbar</string>
     <string name="prefShowOnLockScreenSummary">Workout-Informationen zeigen, selbst wenn das Gerät gesperrt ist.</string>
-    <string name="resumeWorkoutConfirmation">Dieses Workout fortsetzen\? Es wird ab dem Zeitpunkt, an dem das Workout gestoppt wurde, eine Pause hinzugefügt.</string>
+    <string name="resumeWorkoutConfirmation">Dieses Workout fortsetzen? Es wird ab dem Zeitpunkt, an dem das Workout gestoppt wurde, eine Pause hinzugefügt.</string>
     <string name="editWorkoutType">Workout-Typ bearbeiten</string>
     <string name="workoutTypeEditIcon">Symbol</string>
     <string name="deleteWorkoutTypeConfirmation">Möchtest du den Workout-Typ wirklich löschen\?</string>
