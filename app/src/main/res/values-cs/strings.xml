@@ -19,7 +19,7 @@
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="gps">GPS</string>
     <string name="app_name">FitoTrack</string>
-    <string name="resumeWorkoutConfirmation">Pokračovat v tomto cvičení\? Bude přidána pauza od okamžiku zastavení cvičení.</string>
+    <string name="resumeWorkoutConfirmation">Pokračovat v tomto cvičení? Bude přidána pauza od okamžiku zastavení cvičení.</string>
     <string name="prefShowOnLockScreenSummary">Zobrazit informace o cvičení, i když je zařízení zamčené.</string>
     <string name="prefShowOnLockScreenTitle">Viditelné na zamykací obrazovce</string>
     <string name="notimeout">Žádný časový limit</string>
@@ -77,9 +77,7 @@
     <string name="merge">Sloučit</string>
     <string name="replace">Nahradit</string>
     <string name="replaceOrMergeMessage">Chcete nahradit nebo sloučit databázi záložním souborem\?</string>
-    <string name="workoutStatsHelpText">Tato obrazovka zobrazuje historické statistiky cvičení. Chcete-li se do nich dostat, musíte nejprve vybrat typ cvičení. Poté nastavte informace, které chcete zobrazit a časové rozpětí.
-\n
-\nNapř. pokud jako časové rozpětí vyberete možnost „Týden“, všechna cvičení každého týdne budou sloučena do jednoho datového bodu buď s výpočtem průměru, nebo součtu každého týdne.</string>
+    <string name="workoutStatsHelpText">Tato obrazovka zobrazuje historické statistiky cvičení. Chcete-li se do nich dostat, musíte nejprve vybrat typ cvičení. Poté nastavte informace, které chcete zobrazit a časové rozpětí. \n \nNapř. pokud jako časové rozpětí vyberete možnost „Týden“, všechna cvičení každého týdne budou sloučena do jednoho datového bodu buď s výpočtem průměru, nebo součtu každého týdne.</string>
     <string name="singleWorkout">Jednotlivé cvičení</string>
     <string name="dayInMonth">Den v měsíci</string>
     <string name="calendarWeekYear">Kalendářní týden / rok</string>
@@ -358,7 +356,7 @@
     <string name="downloadMapsTitle">Stáhnout mapy</string>
     <string name="actionImportMultiple">Importovat více</string>
     <string name="actionImport">Importovat</string>
-    <string name="importWorkoutMultipleQuestion">Chcete importovat jeden soubor GPX nebo více souborů\?</string>
+    <string name="importWorkoutMultipleQuestion">Chcete importovat jeden soubor GPX nebo více souborů?</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack vyžaduje povolení přístupu k vaší poloze aby mohl sledovat váš pohyb během tréninku. FitoTrack také může sbírat údaje o vaší poloze při běhu aplikace na pozadí nebo když je obrazovka vypnutá během záznamu tréninku. Údaje o poloze vždy zůstávají na vašem zařízení pokud neudělíte souhlas s jejich sdílením.</string>
     <string name="workoutTypeAll">Vše</string>
     <string name="workoutRecordingTypeGps">Tréninky s GPS</string>
