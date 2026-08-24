@@ -293,7 +293,7 @@
     <string name="editWorkoutStartEnd">עריכת התחלה/סיום</string>
     <string name="recordingStateIdle">המתנה</string>
     <string name="recordingStateRunning">ריצה</string>
-    <string name="resumeWorkoutConfirmation">להמשיך את האימון הזה\? תירשם באימון השהיה לזמן שבו האימון נעצר.</string>
+    <string name="resumeWorkoutConfirmation">להמשיך את האימון הזה? תירשם באימון השהיה לזמן שבו האימון נעצר.</string>
     <string name="workoutTypeEditMinDistance">מרחק דגימה</string>
     <string name="pref_map_directory">תיקייה למפה הבלתי מקוונת</string>
     <string name="pref_render_theme_style">סגנון</string>
