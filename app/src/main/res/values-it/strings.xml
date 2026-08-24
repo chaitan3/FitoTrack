@@ -551,7 +551,7 @@
     <string name="saveChangesQuestionMessage">Vuoi davvero salvare i cambiamenti?</string>
     <string name="restorePreparing">Preparazione</string>
     <string name="actionBack">Indietro</string>
-    <string name="more"></string>
+    <string name="more"/>
     <string name="recording_elapsed">Durata</string>
     <string name="recording_pause">Pausa</string>
     <string name="recording_resume">Riprendi</string>
