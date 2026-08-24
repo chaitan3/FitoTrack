@@ -317,7 +317,7 @@
     <string name="workoutTypeEditIdErrorCharacters">Caractères autorisés : a – z, A – Z, 0–9, _, -</string>
     <string name="actionImportMultiple">Importations multiples</string>
     <string name="actionImport">Importer</string>
-    <string name="importWorkoutMultipleQuestion">Voulez-vous importer un ou plusieurs fichiers GPX \?</string>
+    <string name="importWorkoutMultipleQuestion">Voulez-vous importer un ou plusieurs fichiers GPX ?</string>
     <string name="cancelDownloadConfirmation">Voulez-vous annuler le téléchargement en cours \?</string>
     <string name="downloadMapConfirmation">Télécharger la carte \\\"%s\\\" \?</string>
     <string name="overwriteMapConfirmation">Écraser le fichier de carte \\\"%s\\\" existant \?</string>
