@@ -320,9 +320,7 @@
     <string name="recordingStateStopped">Zastavené</string>
     <string name="aboutPrivacyPolicy">Zásady súkromia</string>
     <string name="speechConfigNoSpeech">Žiadne oznámenia</string>
-    <string name="workoutStatsHelpText">Táto obrazovka zobrazuje historické štatistiky cvičení. Pre použitie musíte najprv vybrať typ cvičenia. Potom nastavte informácie ktoré chcete zobraziť a časové rozpätie.
-\n
-\nNapr. ak vyberiete \"týždeň\", všetky cvičenia v týždňovom časovom rozpätí budú zlúčené do jedného bodu buď s výpočtom priemeru alebo súčtu každého týždňa.</string>
+    <string name="workoutStatsHelpText">Táto obrazovka zobrazuje historické štatistiky cvičení. Pre použitie musíte najprv vybrať typ cvičenia. Potom nastavte informácie ktoré chcete zobraziť a časové rozpätie. \n \nNapr. ak vyberiete \"týždeň\", všetky cvičenia v týždňovom časovom rozpätí budú zlúčené do jedného bodu buď s výpočtom priemeru alebo súčtu každého týždňa.</string>
     <string name="workoutImported">Cvičenie úspešne importované</string>
     <string name="aboutChangelog">Zoznam zmien</string>
     <string name="aboutOpenSourceLibraries">Open source knižnice</string>
@@ -342,7 +340,7 @@
     <string name="aboutAuthor">Autor</string>
     <string name="aboutSourceCode">Zobraziť zdrojový kód</string>
     <string name="unitFootSingular">Stopa</string>
-    <string name="importWorkoutMultipleQuestion">Chcete importovať jeden alebo viaceré GPX súbory\?</string>
+    <string name="importWorkoutMultipleQuestion">Chcete importovať jeden alebo viaceré GPX súbory?</string>
     <plurals name="importedWorkouts">
         <item quantity="one">Importované jedno cvičenie</item>
         <item quantity="few">Importované %d cvičenia</item>
@@ -374,7 +372,7 @@
     <string name="workoutResumed">Cvičenie obnovené</string>
     <string name="prefShowOnLockScreenTitle">Viditeľné na uzamknutej obrazovke</string>
     <string name="prefShowOnLockScreenSummary">Zobraziť informácie o cvičení, aj keď je zariadenie uzamknuté.</string>
-    <string name="resumeWorkoutConfirmation">Pokračovať v tomto cvičení\? Bude pridaná pauza od okamžiku zastavenia cvičenia.</string>
+    <string name="resumeWorkoutConfirmation">Pokračovať v tomto cvičení? Bude pridaná pauza od okamžiku zastavenia cvičenia.</string>
     <string name="hintManageWorkoutTypes">Kliknutím na plus pridáte vlastný typy cvičenia.</string>
     <string name="preferenceCategoryVoiceFeedback">Hlasová spätná väzba</string>
     <string name="actionSave">Uložiť</string>
