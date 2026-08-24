@@ -285,7 +285,7 @@
     <string name="resumeWorkout">Riprendere L\'Allenamento</string>
     <string name="heartRateNotAvailable">La frequenza cardiaca non è attualmente disponibile.</string>
     <string name="announcementWorkoutActions">Azioni di allenamento (pausa, riprendere, ecc.)</string>
-    <string name="resumeWorkoutConfirmation">Riprendere questo allenamento\? Verrà aggiunta una pausa dal momento in cui l\'allenamento è stato interrotto.</string>
+    <string name="resumeWorkoutConfirmation">Riprendere questo allenamento? Verrà aggiunta una pausa dal momento in cui l\'allenamento è stato interrotto.</string>
     <string name="prefShowOnLockScreenSummary">Mostra le informazioni sull\'allenamento anche se il dispositivo è bloccato.</string>
     <string name="prefShowOnLockScreenTitle">Visibile sulla schermata di blocco</string>
     <string name="notimeout">Nessun Timeout</string>
@@ -309,7 +309,7 @@
     <string name="workoutTypeAll">Tutto</string>
     <string name="actionImportMultiple">Importazione multipla</string>
     <string name="actionImport">Importa</string>
-    <string name="importWorkoutMultipleQuestion">Vuoi importare un solo file GPX o una serie di file\?</string>
+    <string name="importWorkoutMultipleQuestion">Vuoi importare un solo file GPX o una serie di file?</string>
     <string name="recordingActivityPermissionMessage">FitoTrack ha bisogno dell\'autorizzazione per monitorare la tua attività fisica per registrare gli allenamenti al chiuso.</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack necessita il permesso di accedere alla tua posizione per tracciare i tuoi movimenti durante l\'allenamento. FitoTrack accede alla tua posizione per registrare i tuoi allenamenti anche quando la applicazione è eseguita in sfondo o lo schermo è spento. I dati di geolocalizzazione rimangono sul telefono se non acconsenti esplicitamente a condividerli.</string>
     <string name="editWorkoutStartEnd">Modifica inizio/fine</string>
