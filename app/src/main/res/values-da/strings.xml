@@ -287,7 +287,7 @@
     <string name="resumeWorkout">Genoptag Træning</string>
     <string name="heartRateNotAvailable">Puls er i øjeblikket ikke tilgængelig.</string>
     <string name="announcementWorkoutActions">Workorkout handlinger (pause, genoptage, etc.)</string>
-    <string name="resumeWorkoutConfirmation">Genoptag denne træning\? En pause fra tidspunktet hvor træningen var stoppet vil blive tilføjet.</string>
+    <string name="resumeWorkoutConfirmation">Genoptag denne træning? En pause fra tidspunktet hvor træningen var stoppet vil blive tilføjet.</string>
     <string name="prefShowOnLockScreenSummary">Vis træningsoplysninger selv hvis enheden er låst.</string>
     <string name="prefShowOnLockScreenTitle">Synlig på låseskærmen</string>
     <string name="notimeout">Ingen Timeout</string>
@@ -383,7 +383,7 @@
     <string name="downloadMapsSpecifyDirectory">Venligst definer en mappe til offline kort først</string>
     <string name="downloadMapsTitle">Download Kort</string>
     <string name="runningMigrations">Kørende migrationer</string>
-    <string name="importWorkoutMultipleQuestion">Vil du importere en eller flere GPX filer\?</string>
+    <string name="importWorkoutMultipleQuestion">Vil du importere en eller flere GPX filer?</string>
     <string name="editWorkoutStartEnd">Rediger Start/Slut</string>
     <string name="unitHeartBeatsPerMinute">spm</string>
     <string name="preferenceFirstDayOfWeek">Ugestart</string>
