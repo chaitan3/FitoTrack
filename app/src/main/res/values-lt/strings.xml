@@ -63,9 +63,7 @@
     <string name="timeHourShort">val</string>
     <string name="timeMinuteShort">min</string>
     <string name="timeMinutePlural">Minutės</string>
-    <string name="workoutStatsHelpText">Šiame ekrane rodoma istorinė treniruočių statistika. Norėdami ja naudotis, pirmiausia turite nurodyti treniruotės tipą spustelėdami ant jos. Tada nustatykite informaciją, kurią norite sužinoti, ir laiko intervalą.
-\n
-\nPvz. jei kaip laiko intervalą pasirinksite „Savaitė“, visos kiekvienos savaitės treniruotės bus sujungtos į vieną duomenų tašką apskaičiuojant kiekvienos savaitės vidurkį arba sumą.</string>
+    <string name="workoutStatsHelpText">Šiame ekrane rodoma istorinė treniruočių statistika. Norėdami ja naudotis, pirmiausia turite nurodyti treniruotės tipą spustelėdami ant jos. Tada nustatykite informaciją, kurią norite sužinoti, ir laiko intervalą. \n \nPvz. jei kaip laiko intervalą pasirinksite „Savaitė“, visos kiekvienos savaitės treniruotės bus sujungtos į vieną duomenų tašką apskaičiuojant kiekvienos savaitės vidurkį arba sumą.</string>
     <string name="singleWorkout">Viena treniruotė</string>
     <string name="dayInMonth">Mėnesio diena</string>
     <string name="calendarWeekYear">Kalendorinė savaitė / metai</string>
@@ -291,7 +289,7 @@
     <string name="workoutTypeEditIdErrorCharacters">Leidžiami simboliai: a-z, A-Z, 0-9, _, -</string>
     <string name="workoutTypeEditId">ID</string>
     <string name="hintManageWorkoutTypes">Spustelėkite pliusą, kad pridėtumėte pasirinktinius treniruočių tipus.</string>
-    <string name="resumeWorkoutConfirmation">Tęsti šią treniruotę\? Bus pridėta pauzė nuo tada, kai treniruotė buvo sustabdyta.</string>
+    <string name="resumeWorkoutConfirmation">Tęsti šią treniruotę? Bus pridėta pauzė nuo tada, kai treniruotė buvo sustabdyta.</string>
     <string name="prefShowOnLockScreenSummary">Rodyti treniruotės informaciją, net jei įrenginys užrakintas.</string>
     <string name="prefShowOnLockScreenTitle">Matoma užrakintame ekrane</string>
     <string name="workoutStarted">Treniruotė pradėta</string>
@@ -311,7 +309,7 @@
     <string name="importingFiles">Importuojami failai</string>
     <string name="actionImportMultiple">Importuoti kelis</string>
     <string name="actionImport">Importuoti</string>
-    <string name="importWorkoutMultipleQuestion">Ar norite importuoti vieną GPX failą, ar kelis\?</string>
+    <string name="importWorkoutMultipleQuestion">Ar norite importuoti vieną GPX failą, ar kelis?</string>
     <string name="importMultipleMessageSelectFolder">Pasirinkite aplanką, kuriame yra visi GPX failai, kuriuos norite importuoti.</string>
     <string name="importMultipleGpxFiles">Importuoti kelis GPX failus</string>
     <string name="recordingStateStopped">Sustabdyta</string>
