@@ -1,0 +1,7 @@
+- Ve tmavém motivu se nyní používá přebarvení mapy
+- Do obrazovky pro úpravu začátku a konce byl znovu přidán diagram rychlosti
+- Zpoždění automatického spuštění se nyní oznamuje v klesajících intervalech namísto každou sekundu
+- Pro výběr zpoždění automatického spuštění se nyní používá kolečkový výběr
+- 17 jednotlivých oprav chyb
+
+úplný seznam změn najdete v repozitáři projektu na Codebergu
