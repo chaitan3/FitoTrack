@@ -39,7 +39,7 @@
     <string name="unitFootSingular">Pé</string>
     <string name="unitFootPlural">Pés</string>
     <string name="noWorkoutStarted">Non se iniciou a actividade</string>
-    <string name="editDisplayedInformationHint">Sempre que a actividade non tivese comezado, podes editar os valores mostrados premendo nalgún dos catro campos.</string>
+    <string name="editDisplayedInformationHint">Antes do comezo da actividade, podes editar os valores mostrados premendo nalgún dos catro campos</string>
     <string name="editDisplayedInformation">Editar a información presentada</string>
     <string name="aboutSendFeedback">Enviar comentarios sobre a app</string>
     <string name="aboutSourceCode">Ver código fonte</string>
@@ -62,7 +62,7 @@
     <string name="merge">Combinar</string>
     <string name="replace">Reemplazar</string>
     <string name="replaceOrMergeMessage">Reemplazar ou combinar a base de datos co arquivo de respaldo\?</string>
-    <string name="workoutStatsHelpText">Esta pantalla mostra as estatísticas históricas das actividades. Para usalas, primeiro debes indicar o tipo de actividade premendo nela. Após, configura a información que desexas coñecer e o período de tempo. \n \nEx. Se escolles \"Semana\" como período de tempo, todas as actividades de cada semana fusionaranse nun punto de datos, xa sexa calculando o promedio ou a suma de cada semana.</string>
+    <string name="workoutStatsHelpText">Esta pantalla mostra as estatísticas históricas das actividades. Para usalas, escolle un tipo de actividade e o tipo de informaciń que queres coñecer para o período.\n \nEx. Se escolles \"Semana\" como período de tempo, todas as actividades de cada semana fusionaranse nun punto de datos, xa sexa calculando o promedio ou a suma de cada semana.</string>
     <string name="singleWorkout">Actividade única</string>
     <string name="dayInMonth">Día do mes</string>
     <string name="calendarWeekYear">Calendario Semana/Ano</string>
@@ -105,7 +105,7 @@
     <string name="preferenceTimeFormat">Formato da hora</string>
     <string name="preferenceDateFormat">Formato da data</string>
     <string name="preferencesCategoryAppearance">Aparencia</string>
-    <string name="preferencesBackupSummary">Copiar/Restablecer os teus datos de actividades</string>
+    <string name="preferencesBackupSummary">Copiar e Restablecer os datos de actividades</string>
     <string name="preferencesBackupTitle">Base de datos</string>
     <string name="preferencesRecordingSummary">Xestionar a gravación de actividades</string>
     <string name="preferencesRecordingTitle">Ao gravar</string>
@@ -115,12 +115,12 @@
     <string name="avgSpeedTotalShort">Vel. Promedio (Total)</string>
     <string name="avgSpeedInMotion">Vel. Promedio (en movemento)</string>
     <string name="enterDescription">Escribe unha descrición</string>
-    <string name="hintAddWorkout">Preme na icona «+» para engadir unha actividade.</string>
+    <string name="hintAddWorkout">Preme na icona «+» para gravar ou engadir unha actividade</string>
     <string name="currentSpeed">Velocidade actual</string>
     <string name="intervalSets">Conxunto de intervalos</string>
     <string name="intervalSet">Conxunto de intervalos</string>
     <string name="intervalTraining">Adestramento por intervalos</string>
-    <string name="intervalsIncludePauseSummary">Se está activado, os intervalos continuarán incluso se fas pausas na actividade.</string>
+    <string name="intervalsIncludePauseSummary">Continuar cos intervalos tanto se a actividade está en pausa</string>
     <string name="intervalsIncludePauseTitle">Incluír tempo de pausa no adestramento por intervalos</string>
     <string name="intervalSetSelected">Conxunto de intervalos seleccionado</string>
     <string name="selectIntervalSet">Seleccionar conxunto de intervalos</string>
@@ -129,11 +129,11 @@
     <string name="enterName">Dalle un nome</string>
     <string name="length_in_minutes">Tempo (minutos):</string>
     <string name="interval_name">Nome:</string>
-    <string name="hintEditIntervalSet">Engade intervalos que se falarán.</string>
-    <string name="hintManageIntervalSets">Engade un conxunto de intervalos para usalo durante as actividades.</string>
+    <string name="hintEditIntervalSet">Engade intervalos que se falarán</string>
+    <string name="hintManageIntervalSets">Engade unha serie de intervalos para usala durante as actividades</string>
     <string name="create">Crear</string>
     <string name="createIntervalSet">Crear novo conxunto de intervalos</string>
-    <string name="manageIntervalsSummary">Edita os conxuntos de intervalos que poderás utilizar durante a actividade mediante o asistente de voz.</string>
+    <string name="manageIntervalsSummary">Edita as series de intervalos que poderás utilizar durante a actividade con asistente de voz</string>
     <string name="manageIntervalSets">Xestionar conxuntos de intervalos</string>
     <string name="add_interval">Engadir intervalo</string>
     <string name="add">Engadir</string>
@@ -157,9 +157,9 @@
     <string name="waiting_gps">Agardando polo GPS</string>
     <string name="mapStyle">Estilo do mapa</string>
     <string name="gps">GPS</string>
-    <string name="importBackupSummary">Restaurar unha copia de apoio</string>
+    <string name="importBackupSummary">Restablecer una copia de apoio</string>
     <string name="importBackup">Importar copia de apoio</string>
-    <string name="exportDataSummary">Fai copia de todas as actividades</string>
+    <string name="exportDataSummary">Crea unha copia de todas as actividades</string>
     <string name="exportData">Exportar datos</string>
     <string name="settings">Axustes</string>
     <string name="pref_unit_system">Sistema preferido de unidades</string>
@@ -241,7 +241,7 @@
     <string name="timeMinuteShort">min</string>
     <string name="timeMinutePlural">Minutos</string>
     <string name="timeMinuteSingular">Minuto</string>
-    <string name="setPreferencesMessage">Podes indicar o sistema de unidades preferido e o teu peso nos axustes.</string>
+    <string name="setPreferencesMessage">Podes indicar o sistema de unidades preferido e peso nos axustes.</string>
     <string name="setPreferencesTitle">Establecer preferencias</string>
     <string name="backup">Copia de apoio</string>
     <string name="restore">Restablecer</string>
@@ -274,11 +274,11 @@
     <string name="autoPauseSummary">Deter automaticamente e retomar a actividade</string>
     <string name="autoPauseTitle">Pausa automática</string>
     <string name="resumeWorkout">Retomar actividade</string>
-    <string name="heartRateNotAvailable">O pulso cardíaco non está dispoñible.</string>
+    <string name="heartRateNotAvailable">O ritmo cardíaco non está dispoñible.</string>
     <string name="announcementWorkoutActions">Accións na actividade (deter, retomar, etc.)</string>
-    <string name="resumeWorkoutConfirmation">Reactivar a actividade? Isto engadirá unha pausa desde o momento en que a actividade se detivo.</string>
-    <string name="prefShowOnLockScreenSummary">Mostrar información da actividade aínda que o dispositivo estea bloqueado.</string>
-    <string name="prefShowOnLockScreenTitle">Visible na pantalla de bloqueo</string>
+    <string name="resumeWorkoutConfirmation">Retomar a actividade? Isto engadirá unha pausa desde o momento en que a actividade se detivo.</string>
+    <string name="prefShowOnLockScreenSummary">Mostrar a pantalla de gravación mentras o dispositivo está bloqueado</string>
+    <string name="prefShowOnLockScreenTitle">Mostrar coa pantalla bloqueada</string>
     <string name="notimeout">Sen caducidade</string>
     <string name="editWorkoutType">Editar tipo de actividade</string>
     <string name="workoutTypeEditIcon">Icona</string>
@@ -295,11 +295,11 @@
     <string name="workoutTypeEditIdErrorEmpty">Escribe un ID</string>
     <string name="workoutTypeEditIdErrorCharacters">Caracteres permitidos: a-z, A-Z, 0-9, _, -</string>
     <string name="workoutTypeEditId">ID</string>
-    <string name="hintManageWorkoutTypes">Preme na icona máis para engadir tipos de actividades.</string>
+    <string name="hintManageWorkoutTypes">Preme na icona «+» para engadir tipos de actividades</string>
     <string name="workoutTypeAdd">Engadir</string>
     <string name="actionImportMultiple">Importar varios</string>
     <string name="actionImport">Importar un</string>
-    <string name="importWorkoutMultipleQuestion">Queres importar un só ficheiro GPX ou varios\?</string>
+    <string name="importWorkoutMultipleQuestion">Queres importar un só ficheiro GPX ou varios?</string>
     <string name="downloading">Descargando…</string>
     <string name="chooseMapHint">Escolle o ficheiro do mapa</string>
     <string name="downloadCanceled">Descarga cancelada</string>
@@ -367,7 +367,7 @@
     <string name="ttsBelowTargetSpeed">Demasiado lento</string>
     <string name="lowerPaceLimit">Límite inferior de ritmo</string>
     <string name="upperPaceLimit">Límite superior de ritmo</string>
-    <string name="editStartEndHelp">Selecciona unha posición no mapa ou diagrama. Despois preme nunha das frechas para elixir un novo punto de inicio e fin. Cando remates preme na icona de gardar para aplicar os cambios.</string>
+    <string name="editStartEndHelp">Selecciona unha posición no mapa ou diagrama e preme nunha das frechas para elixir un novo punto de inicio e fin. Cando remates preme na icona de gardar para aplicar os cambios.</string>
     <string name="launchError">Non se puido iniciar a aplicación</string>
     <string name="actionApply">Aplicar</string>
     <string name="moveEndOfWorkout">Cortar fin</string>
@@ -375,7 +375,7 @@
     <string name="runningMigrations">Migración de carreiras</string>
     <string name="editWorkoutStartEnd">Editar Inicio/Fin</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Velocidade media</string>
-    <string name="preferenceCurrentSpeedAverageTimeSummary">Substituír velocidade actual pola media</string>
+    <string name="preferenceCurrentSpeedAverageTimeSummary">Substituír velocidade actual co promedio</string>
     <string name="preferenceCurrentSpeedTime">Período de tempo para a media</string>
     <string name="preferencesCategoryMap">Mapa</string>
     <string name="prefTrackStyleUsageTitle">Usar automáticamente cores para ruta</string>
@@ -468,13 +468,13 @@
     <string name="heartRateSensorBattery">Sensor da batería</string>
     <string name="exportTargetDirectory">Directorio</string>
     <string name="exportTargetHttpPost">Solicitude HTTP POST</string>
-    <string name="workoutGPXExportTitle">Exportación a GPX das actividades</string>
-    <string name="hintConfigureExportTargets">Indicar a que ficheiros se deben exportar.</string>
+    <string name="workoutGPXExportTitle">Exportar as actividades como GPX</string>
+    <string name="hintConfigureExportTargets">Indica a onde queres exportar os ficheiros</string>
     <string name="deleteExportTargetConfirmation">Eliminar este obxectivo de exportación\?</string>
     <string name="autoExportBackupTitle">Copias de apoio automáticas da app</string>
     <string name="autoExportBackupSummary">Exportar copias automáticamente</string>
-    <string name="autoExportBackupExplanation">Nos prazos indicados aquí será exportada a copia:</string>
-    <string name="autoExportWorkoutExplanation">Despois de gravar unha actividade, garda aquí un ficheiro GPX:</string>
+    <string name="autoExportBackupExplanation">Vaise gardar aquí unha copia de apoio co intervalo indicado:</string>
+    <string name="autoExportWorkoutExplanation">Vaise gardar aquí un ficheiro GPX ao finalizar a gravación da actividade:</string>
     <string name="exportIntervalTitle">Intervalo de copia</string>
     <string name="takeBackups1">Cada día</string>
     <string name="httpUrl">URL</string>
@@ -489,9 +489,9 @@
     <string name="takeBackups7">Cada semana</string>
     <string name="selectExportTarget">Seleccionar a onde exportar</string>
     <string name="preferencesDebugTitle">Depurar</string>
-    <string name="debugShareLogsSummary">Comparte o rexistro onde se atopan datos útiles para solucinar problemas ao gravar. Normalmente non contén datos de localización.</string>
+    <string name="debugShareLogsSummary">Comparte os rexistros da aplicación para mellorar o gravador de actividades. Os rexistros normalmente non teñen datos de localización.</string>
     <string name="debugSensorsTitle">Depurar sensores</string>
-    <string name="debugSensorsSummary">Recoller datos dos sensores que aparecen no ficheiro de rexistro</string>
+    <string name="debugSensorsSummary">Recoller e gardar datos dos sensores nos ficheiros do rexistro</string>
     <string name="debugPressureSensor">Depurar sensor de presión</string>
     <string name="calibrating">Calibrando</string>
     <string name="noSensorAvailable">Non hai sensor</string>
@@ -500,7 +500,7 @@
         <item quantity="one">Un satélite</item>
         <item quantity="other">%d satélites</item>
     </plurals>
-    <string name="zoomWithVolumeButtonsSummary">Os botóns de volume controlan o nivel de zoom</string>
+    <string name="zoomWithVolumeButtonsSummary">Usa os botóns de volume para elixir o nivel de zoom</string>
     <string name="zoomWithVolumeButtonsTitle">Zoom cos botóns de volume</string>
     <string name="workoutTypeSwimming">Natación</string>
     <string name="workoutCount">Número de actividades</string>
@@ -511,7 +511,7 @@
     <string name="monthYear">Mes/Ano</string>
     <string name="workoutAvgDistance">Distancia media</string>
     <string name="workoutDistanceSum">Suma da distancia</string>
-    <string name="massExportGpxSummary">Crea un ficheiro ZIP que contén todas as actividades como documentos GPX</string>
+    <string name="massExportGpxSummary">Crear un ficheiro ZIP con todas as actividades como ficheiros GPX</string>
     <string name="show_sum">Mostrar suma</string>
     <string name="massExportGpxTitle">Exporta todas as actividades como GPX</string>
     <string name="workoutAvgDurationLong">Duración media</string>
@@ -527,7 +527,7 @@
     </plurals>
     <string name="workoutDurationPrecisionToSeconds">Precisión da duración en segundos</string>
     <string name="askForComment">Pedir comentario</string>
-    <string name="askForCommentSummary">Pedir que escribas un comentario ao finalizar a gravación</string>
+    <string name="askForCommentSummary">Pedir que engadas un comentario ao deter a gravación</string>
     <string name="removeOAuthToken">Eliminar Token OAuth</string>
     <string name="removedOAuthToken">Eliminouse o Token OAuth</string>
     <string name="saveChangesQuestion">Gardar os cambios?</string>
@@ -535,7 +535,7 @@
     <string name="language">Idioma</string>
     <string name="restorePreparing">Preparando</string>
     <string name="addWorkoutType">Engadir tipo de actividade</string>
-    <string name="autoStartDelaySeconds">Adiamento en segundos</string>
+    <string name="autoStartDelaySeconds">Segundos</string>
     <string name="actionBack">Volver</string>
     <string name="more">Máis</string>
     <string name="recording_elapsed">Duración</string>
@@ -563,4 +563,9 @@
     <string name="localNetworkPermissionDeniedMessage">Denegouse de xeito permanente o acceso á rede local. Para concedelo, abre os axustes da app.</string>
     <string name="openSettings">Abrir axustes</string>
     <string name="pref_use_system_colors">Cores dinámicas (Material You)</string>
+    <plurals name="workoutRepetition">
+        <item quantity="one">Rep</item>
+        <item quantity="other">Reps</item>
+    </plurals>
+    <string name="autoStartDelayMinutes">Minutos</string>
 </resources>
