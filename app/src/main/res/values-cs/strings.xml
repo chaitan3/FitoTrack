@@ -20,8 +20,8 @@
     <string name="gps">GPS</string>
     <string name="app_name">FitoTrack</string>
     <string name="resumeWorkoutConfirmation">Pokračovat v tomto cvičení? Bude přidána pauza od okamžiku zastavení cvičení.</string>
-    <string name="prefShowOnLockScreenSummary">Zobrazit informace o cvičení, i když je zařízení zamčené.</string>
-    <string name="prefShowOnLockScreenTitle">Viditelné na zamykací obrazovce</string>
+    <string name="prefShowOnLockScreenSummary">Zobrazit obrazovku nahrávání, i když je zařízení zamčené</string>
+    <string name="prefShowOnLockScreenTitle">Zobrazit na zamykací obrazovce</string>
     <string name="notimeout">Žádný časový limit</string>
     <string name="workoutStarted">Cvičení zahájeno</string>
     <string name="workoutStopped">Cvičení zastaveno</string>
@@ -39,8 +39,8 @@
     <string name="connectHeartRateDevice">Připojte zařízení k měření tepové frekvence</string>
     <string name="selectBluetoothDevice">Vyberte zařízení Bluetooth</string>
     <string name="importingFiles">Importuji soubory</string>
-    <string name="importMultipleMessageSelectFolder">Vyberte složku obsahující všechny soubory GPX, které chcete importovat.</string>
-    <string name="importMultipleGpxFiles">Import více souborů GPX</string>
+    <string name="importMultipleMessageSelectFolder">Vyberte složku obsahující soubory GPX, které chcete importovat.</string>
+    <string name="importMultipleGpxFiles">Importovat několik souborů GPX</string>
     <string name="recordingStateStopped">Zastaveno</string>
     <string name="recordingStatePaused">Pozastaveno</string>
     <string name="recordingStateRunning">Spuštěno</string>
@@ -51,7 +51,7 @@
     <string name="unitFootSingular">Stopa</string>
     <string name="unitFootPlural">Stopy</string>
     <string name="noWorkoutStarted">Nebylo zahájeno žádné cvičení</string>
-    <string name="editDisplayedInformationHint">Dokud cvičení nezačalo, můžete upravit zobrazené hodnoty klepnutím na jedno ze čtyř polí.</string>
+    <string name="editDisplayedInformationHint">Před zahájením cvičení můžete upravit zobrazené hodnoty klepnutím na jedno ze čtyř polí</string>
     <string name="editDisplayedInformation">Upravit zobrazené informace</string>
     <string name="aboutPrivacyPolicy">Zásady soukromí</string>
     <string name="aboutHelpTranslating">Pomozte s překladem</string>
@@ -77,7 +77,7 @@
     <string name="merge">Sloučit</string>
     <string name="replace">Nahradit</string>
     <string name="replaceOrMergeMessage">Chcete nahradit nebo sloučit databázi záložním souborem\?</string>
-    <string name="workoutStatsHelpText">Tato obrazovka zobrazuje historické statistiky cvičení. Chcete-li se do nich dostat, musíte nejprve vybrat typ cvičení. Poté nastavte informace, které chcete zobrazit a časové rozpětí. \n \nNapř. pokud jako časové rozpětí vyberete možnost „Týden“, všechna cvičení každého týdne budou sloučena do jednoho datového bodu buď s výpočtem průměru, nebo součtu každého týdne.</string>
+    <string name="workoutStatsHelpText">Tato obrazovka zobrazuje historické statistiky cvičení. Pro její použití vyberte typ cvičení a nastavte informace, které chcete vědět o časovém rozmezí.\n \nPokud například jako časové rozpětí vyberete možnost „Týden“, všechna cvičení každého týdne budou sloučena do jednoho datového bodu buď s výpočtem průměru, nebo součtu každého týdne.</string>
     <string name="singleWorkout">Jednotlivé cvičení</string>
     <string name="dayInMonth">Den v měsíci</string>
     <string name="calendarWeekYear">Kalendářní týden / rok</string>
@@ -96,7 +96,7 @@
     <string name="no_workouts_recorded_for_this_activity">Žádné cvičení pro tuto aktivitu</string>
     <string name="unlockPhoneStopWorkout">Pro zastavení záznamu odemkněte telefon</string>
     <string name="currentTime">Aktuální čas</string>
-    <string name="pref_auto_timeout_title">Interval automatického zastavení</string>
+    <string name="pref_auto_timeout_title">Čas do automatického zastavení</string>
     <string name="intervalAutoTimeoutTraining">Automatický časovač cvičení</string>
     <string name="manageAutoTimeoutSummary">Upravit interval automatického zastavení cvičení</string>
     <string name="pref_energy_unit">Energetická jednotka</string>
@@ -120,9 +120,9 @@
     <string name="preferenceTimeFormat">Formát času</string>
     <string name="preferenceDateFormat">Formát data</string>
     <string name="preferencesCategoryAppearance">Vzhled</string>
-    <string name="preferencesBackupSummary">Zálohování/obnovení dat cvičení</string>
+    <string name="preferencesBackupSummary">Zálohovat a obnovit data o trénincích</string>
     <string name="preferencesBackupTitle">Databáze</string>
-    <string name="preferencesRecordingSummary">Správa záznamu tréninku</string>
+    <string name="preferencesRecordingSummary">Správa záznamu cvičení</string>
     <string name="preferencesRecordingTitle">Záznam</string>
     <string name="preferencesUserInterfaceSummary">Přizpůsobte si aplikaci</string>
     <string name="preferencesUserInterfaceTitle">Uživatelské rozhraní</string>
@@ -130,12 +130,12 @@
     <string name="avgSpeedTotalShort">Prům. rychlost (celkem)</string>
     <string name="avgSpeedInMotion">Prům. rychlost (v pohybu)</string>
     <string name="enterDescription">Zadejte popis</string>
-    <string name="hintAddWorkout">Klepněte na ikonu plus a nahrajte nebo zadejte cvičení.</string>
+    <string name="hintAddWorkout">Klepněte na ikonu plus a nahrajte nebo zadejte cvičení</string>
     <string name="currentSpeed">Aktuální rychlost</string>
     <string name="intervalSets">Sady intervalů</string>
     <string name="intervalSet">Sada intervalů</string>
     <string name="intervalTraining">Intervalový trénink</string>
-    <string name="intervalsIncludePauseSummary">Pokud je aktivováno, intervaly budou pokračovat, i když v tréninku uděláte pauzy.</string>
+    <string name="intervalsIncludePauseSummary">Pokračovat v intervalech, i když je cvičení pozastaveno</string>
     <string name="intervalsIncludePauseTitle">Zahrnout čas pauzy do intervalového tréninku</string>
     <string name="intervalSetSelected">Interval vybrán</string>
     <string name="selectIntervalSet">Vybrat interval</string>
@@ -144,11 +144,11 @@
     <string name="enterName">Zadejte jméno</string>
     <string name="length_in_minutes">Délka (minuty):</string>
     <string name="interval_name">Jméno:</string>
-    <string name="hintEditIntervalSet">Přidejte intervaly, které budou vysloveny.</string>
-    <string name="hintManageIntervalSets">Přidejte sadu intervalů pro vaše cvičení.</string>
+    <string name="hintEditIntervalSet">Přidejte intervaly, které budou vysloveny</string>
+    <string name="hintManageIntervalSets">Přidejte sadu intervalů pro použití ve vašich cvičeních</string>
     <string name="create">Vytvořit</string>
     <string name="createIntervalSet">Vytvořit novou sadu intervalů</string>
-    <string name="manageIntervalsSummary">Upravit intervaly, které budete moci používat během cvičení, pomocí hlasové zpětné vazby.</string>
+    <string name="manageIntervalsSummary">Upravit intervaly, které můžete použít během cvičení, pomocí hlasové zpětné vazby</string>
     <string name="manageIntervalSets">Správa intervalů</string>
     <string name="add_interval">Přidat interval</string>
     <string name="add">Přidat</string>
@@ -171,9 +171,9 @@
     <string name="actionUploadToOSM">Nahrát do OSM</string>
     <string name="waiting_gps">Čekání na GPS</string>
     <string name="mapStyle">Styl mapy</string>
-    <string name="importBackupSummary">Obnovení pořízené zálohy</string>
+    <string name="importBackupSummary">Obnovit zálohu</string>
     <string name="importBackup">Importovat zálohu dat</string>
-    <string name="exportDataSummary">Vytvoří zálohu všech cvičení</string>
+    <string name="exportDataSummary">Vytvořit zálohu všech cvičení</string>
     <string name="exportData">Export dat</string>
     <string name="settings">Nastavení</string>
     <string name="pref_unit_system">Preferovaný systém jednotek</string>
@@ -241,7 +241,7 @@
     <string name="enterComment">Vložit komentář</string>
     <string name="comment">Komentář</string>
     <string name="enable">Povolit</string>
-    <string name="noGpsMessage">Povolte prosím GPS pro sledování vašeho tréninku.</string>
+    <string name="noGpsMessage">Povolte prosím GPS pro sledování vašeho cvičení.</string>
     <string name="noGpsTitle">GPS vypnuta</string>
     <string name="recordWorkout">Záznam cvičení</string>
     <string name="setDuration">Nastavit dobu trvání</string>
@@ -260,7 +260,7 @@
     <string name="timeMinuteShort">min</string>
     <string name="timeMinutePlural">Minut</string>
     <string name="timeMinuteSingular">Minuta</string>
-    <string name="setPreferencesMessage">V nastavení můžete vybrat preferovaný systém jednotek a váhy.</string>
+    <string name="setPreferencesMessage">V nastavení si můžete nastavit preferovaný systém jednotek a váhu.</string>
     <string name="setPreferencesTitle">Nastavení předvoleb</string>
     <string name="backup">Záloha</string>
     <string name="restore">Obnovit</string>
@@ -283,7 +283,7 @@
     <string name="workoutTypeEditMET">MET</string>
     <string name="editWorkoutType">Upravit typ cvičení</string>
     <string name="workoutTypeEditIcon">Ikona</string>
-    <string name="deleteWorkoutTypeConfirmation">Opravdu chcete odstranit tento typ tréninku\?</string>
+    <string name="deleteWorkoutTypeConfirmation">Opravdu chcete odstranit tento typ cvičení?</string>
     <string name="deleteWorkoutType">Smazat Typ Cvičení</string>
     <string name="actionSave">Uložit</string>
     <string name="customWorkoutTypesTitle">Vlastní typy cvičení</string>
@@ -295,7 +295,7 @@
     <string name="workoutTypeEditIdErrorEmpty">Zadejte prosím ID</string>
     <string name="workoutTypeEditIdErrorCharacters">Povolené znaky: a–z, A–Z, 0–9, _, -</string>
     <string name="workoutTypeEditId">ID</string>
-    <string name="hintManageWorkoutTypes">Klepnutím na plus přidáte vlastní typy cvičení.</string>
+    <string name="hintManageWorkoutTypes">Klepnutím na ikonu plus přidáte vlastní typy cvičení</string>
     <string name="workoutTypeAdd">Přidat</string>
     <string name="downloadFailed">Stahování selhalo</string>
     <string name="downloadSuccess">Stahováno dokončeno</string>
@@ -305,8 +305,8 @@
     <string name="pref_auto_start_mode_wait_for_gps">Počkat na přesnou polohu</string>
     <string name="pref_auto_start_mode_instant">Začít ihned</string>
     <string name="pref_auto_start_mode_title">Režim automatického spuštění</string>
-    <string name="intervalAutoStartModeTraining">Režim automatického spuštění tréninku</string>
-    <string name="manageAutoStartModeSummary">Změnit režim automatického spuštění tréninku</string>
+    <string name="intervalAutoStartModeTraining">Režim automatického spuštění cvičení</string>
+    <string name="manageAutoStartModeSummary">Změnit režim automatického spuštění cvičení</string>
     <string name="ttsMinuteSecondCountdownAnnouncement"><xliff:g example="1 minute" id="mins">%1$s</xliff:g> a <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> do startu</string>
     <string name="ttsMinuteCountdownAnnouncement"><xliff:g example="12 minutes" id="mins">%1$s</xliff:g> do startu</string>
     <string name="ttsLongSecondCountdownAnnouncement"><xliff:g example="5 seconds" id="secs">%1$s</xliff:g> do startu</string>
@@ -324,9 +324,9 @@
     <string name="scanning">Skenování…</string>
     <string name="announcementCountdown">Akce automatického spuštění (odpočítávání, stav atd.)</string>
     <string name="action_nfc_settings">Přejít do nastavení NFC</string>
-    <string name="dialog_nfc_disabled">Abyste mohli používat značky NFC ke spuštění a zastavení tréninku, musíte nejprve povolit NFC v nastavení zařízení</string>
+    <string name="dialog_nfc_disabled">Pro používání značek NFC ke spuštění a zastavení cvičení musíte nejprve povolit NFC v nastavení zařízení</string>
     <string name="dialog_nfc_disabled_title">Funkce NFC je momentálně vypnutá</string>
-    <string name="nfcStartSummary">Pokud je aktivováno, budete moci zahájit a ukončit trénink naskenováním štítku NFC</string>
+    <string name="nfcStartSummary">Pokud je aktivováno, budete moci zahájit a ukončit cvičení naskenováním štítku NFC</string>
     <string name="nfcStartTitle">Spuštění skenování</string>
     <string name="workoutAutoStartAborted">Automatické spuštění přerušeno</string>
     <string name="abort">Zrušit</string>
@@ -335,15 +335,15 @@
     <string name="popup_auto_start_immediately">Začít ihned</string>
     <string name="popup_auto_start">S výchozím zpožděním</string>
     <string name="popup_auto_start_delay">S vlastním zpožděním</string>
-    <string name="workoutAutoStarted">Trénink byl zahájen automaticky</string>
-    <string name="autoStartCountdownMsgMove">Zahájení tréninku, jakmile se začnete pohybovat</string>
-    <string name="autoStartCountdownMsgGps">Zahájení tréninku, jakmile je pozice GPS dostatečně přesná</string>
-    <string name="autoStartCountdownMsg">Zahájení tréninku za</string>
+    <string name="workoutAutoStarted">Cvičení automaticky zahájeno</string>
+    <string name="autoStartCountdownMsgMove">Cvičení bude zahájeno, jakmile se začnete pohybovat</string>
+    <string name="autoStartCountdownMsgGps">Cvičení bude zahájeno, jakmile bude pozice GPS dostatečně přesná</string>
+    <string name="autoStartCountdownMsg">Zahájení cvičení za</string>
     <string name="customAutoStartDelay">Jiné</string>
     <string name="noAutoStartDelay">Žádný</string>
     <string name="pref_auto_start_delay_title">Automatické odpočítávání startu</string>
-    <string name="manageAutoStartDelaySummary">Zvolit výchozí odpočítávání pro automatické spuštění tréninku</string>
-    <string name="intervalAutoStartDelayTraining">Zpoždění automatického spuštění tréninku</string>
+    <string name="manageAutoStartDelaySummary">Zvolit výchozí odpočítávání pro automatické spuštění cvičení</string>
+    <string name="intervalAutoStartDelayTraining">Zpoždění automatického spuštění cvičení</string>
     <string name="downloading">Stahování…</string>
     <string name="chooseMapHint">Vyberte prosím soubor s mapou</string>
     <string name="downloadCanceled">Stahování zrušeno</string>
@@ -356,11 +356,11 @@
     <string name="downloadMapsTitle">Stáhnout mapy</string>
     <string name="actionImportMultiple">Importovat více</string>
     <string name="actionImport">Importovat</string>
-    <string name="importWorkoutMultipleQuestion">Chcete importovat jeden soubor GPX nebo více souborů?</string>
-    <string name="recordingPermissionNotGrantedMessage">FitoTrack vyžaduje povolení přístupu k vaší poloze aby mohl sledovat váš pohyb během tréninku. FitoTrack také může sbírat údaje o vaší poloze při běhu aplikace na pozadí nebo když je obrazovka vypnutá během záznamu tréninku. Údaje o poloze vždy zůstávají na vašem zařízení pokud neudělíte souhlas s jejich sdílením.</string>
+    <string name="importWorkoutMultipleQuestion">Chcete importovat jeden nebo více souborů GPX?</string>
+    <string name="recordingPermissionNotGrantedMessage">FitoTrack vyžaduje povolení k přístupu k vaší poloze, aby mohl sledovat váš pohyb během cvičení. FitoTrack také během záznamu sbírá údaje o vaší poloze, když je aplikace na pozadí nebo když je obrazovka vypnutá. Údaje o poloze vždy zůstávají na vašem zařízení, pokud výslovně neudělíte souhlas s jejich sdílením.</string>
     <string name="workoutTypeAll">Vše</string>
-    <string name="workoutRecordingTypeGps">Tréninky s GPS</string>
-    <string name="workoutRecordingTypeIndoor">Tréninky uvnitř</string>
+    <string name="workoutRecordingTypeGps">Cvičení s GPS</string>
+    <string name="workoutRecordingTypeIndoor">Cvičení uvnitř</string>
     <string name="workoutRepetitions">Opakování</string>
     <string name="workoutFrequency">Frekvence</string>
     <string name="workoutIntensity">Intenzita</string>
@@ -416,7 +416,7 @@
 \nVýchozí styl mapy OSM</string>
     <string name="humanitarian_clean_map_but_sometimes_not_available">Humanitární
 \nČistá mapa, ale ne vždy dostupná</string>
-    <string name="zoomWithVolumeButtonsSummary">Zvýšení a snížení hlasitosti ovládá přiblížení a oddálení</string>
+    <string name="zoomWithVolumeButtonsSummary">Použít tlačítka zvýšení a snížení hlasitosti pro přiblížení a oddálení</string>
     <string name="zoomWithVolumeButtonsTitle">Přiblížení pomocí tlačítek hlasitosti</string>
     <string name="joule_unit">Joule</string>
     <string name="always_mode">Vždy</string>
@@ -434,8 +434,8 @@
     <string name="autoExportBackupTitle">Automatické zálohování</string>
     <string name="autoExportBackupSummary">Automatický export záloh</string>
     <string name="massExportGpxTitle">Export všech cvičení jako GPX</string>
-    <string name="massExportGpxSummary">Vytvoří soubor ZIP obsahující všechny cvičení jako dokumenty GPX</string>
-    <string name="debugShareLogsSummary">Sdílet logovací protokoly, které obsahují užitečné údaje pro hledání chyb v záznamníku cvičení. Obvykle neobsahují údaje o poloze.</string>
+    <string name="massExportGpxSummary">Vytvořit soubor ZIP se všemi cvičeními jako soubory GPX</string>
+    <string name="debugShareLogsSummary">Sdílet protokoly aplikace pro ladění záznamníku cvičení. Protokoly obvykle neobsahují data o poloze.</string>
     <string name="show_sum">Zobrazit součet</string>
     <plurals name="satelliteCount">
         <item quantity="one">Jeden satelit</item>
@@ -465,7 +465,7 @@
     <string name="pref_map_directory">Adresář offline map</string>
     <string name="auto">Automatické</string>
     <string name="exportTargetHttpPost">Požadavek HTTP POST</string>
-    <string name="workoutGPXExportTitle">Export GPX cvičení</string>
+    <string name="workoutGPXExportTitle">Exportovat cvičení jako GPX</string>
     <string name="exportTargetDirectory">Adresář</string>
     <string name="autoBackupTitle">Automatické zálohování</string>
     <string name="autoExportWorkoutsSummary">Export nově zaznamenaných cvičení</string>
@@ -477,12 +477,12 @@
     <string name="unitHeartRateSensorBattery">%</string>
     <string name="unitHertzLong">Hertz</string>
     <string name="moveStartOfWorkout">Uříznutí startu</string>
-    <string name="editStartEndHelp">Vyberte polohu na mapě nebo na diagramu. Poté klepnutím na jednu ze šipek vyberte nový počáteční nebo koncový bod. Až budete hotovi, klepnutím na ikonu uložení změny použijte.</string>
+    <string name="editStartEndHelp">Vyberte polohu na mapě nebo na diagramu a poté klepnutím na jednu ze šipek vyberte nový počáteční nebo koncový bod. Až budete hotovi, klepnutím na ikonu uložení změny použijete.</string>
     <string name="purple_rain">Purpurový déšť</string>
     <string name="pink_mist">Růžová mlha</string>
     <string name="thursday">Čtvrtek</string>
     <string name="takeBackups7">Každý týden</string>
-    <string name="hintConfigureExportTargets">Přidejte cíle, do kterých by měly být soubory exportovány.</string>
+    <string name="hintConfigureExportTargets">Přidejte cíle, do kterých mají být soubory exportovány</string>
     <string name="takeBackups14">Každý druhý týden</string>
     <string name="unitHeartBeatsPerMinute">tep/min</string>
     <plurals name="importedWorkouts">
@@ -498,7 +498,7 @@
     <string name="trackable_visibility">Sledovatelné</string>
     <string name="imperial_with_meters_unit_system">Imperiální s metry</string>
     <string name="us_customary_unit_system">Americký zvykový</string>
-    <string name="autoExportBackupExplanation">Ve stanoveném intervalu bude záloha exportována zde:</string>
+    <string name="autoExportBackupExplanation">Záloha bude uložena zde v zadaném intervalu:</string>
     <string name="friday">Pátek</string>
     <string name="exportIntervalTitle">Interval zálohování</string>
     <string name="takeBackups1">Každý den</string>
@@ -514,7 +514,7 @@
     <string name="noSensorAvailable">Žádný senzor není k dispozici</string>
     <string name="pref_announcements_pace_control_title">Upozornění na tempo</string>
     <string name="configureHttpPostRequest">Konfigurace požadavku HTTP POST</string>
-    <string name="debugSensorsSummary">Shromažďování dat ze senzorů, která se zapisují do souboru protokolu</string>
+    <string name="debugSensorsSummary">Shromažďovat a ukládat data ze senzorů do protokolů aplikace</string>
     <string name="never_track_style">Nikdy</string>
     <string name="saturday">Sobota</string>
     <string name="workoutAvgPauseDuration">Průměrná doba pauzy</string>
@@ -526,7 +526,7 @@
     <string name="workoutAvgDistance">Průměrná vzdálenost</string>
     <string name="workoutDistanceSum">Celková vzdálenost</string>
     <string name="wednesday">Středa</string>
-    <string name="autoExportWorkoutExplanation">Po nahrání nového cvičení se zde uloží export GPX:</string>
+    <string name="autoExportWorkoutExplanation">Po zaznamenání nového cvičení se zde uloží soubor GPX:</string>
     <plurals name="workoutPullUp">
         <item quantity="one">Přítah</item>
         <item quantity="few">Přítahy</item>
@@ -543,7 +543,7 @@
     <string name="language">Jazyk</string>
     <string name="restorePreparing">Příprava</string>
     <string name="addWorkoutType">Přidat typ cvičení</string>
-    <string name="autoStartDelaySeconds">Zpoždění v sekundách</string>
+    <string name="autoStartDelaySeconds">Sekundy</string>
     <string name="actionBack">Zpět</string>
     <string name="more">Více</string>
     <string name="recording_elapsed">Trvání</string>
@@ -571,4 +571,11 @@
     <string name="localNetworkPermissionDeniedMessage">Přístup k místní síti byl trvale zamítnut. Pro jeho udělení otevřete nastavení aplikace.</string>
     <string name="openSettings">Otevřít nastavení</string>
     <string name="pref_use_system_colors">Dynamické barvy (Material You)</string>
+    <plurals name="workoutRepetition">
+        <item quantity="one">Opakování</item>
+        <item quantity="few">Opakování</item>
+        <item quantity="many">Opakování</item>
+        <item quantity="other">Opakování</item>
+    </plurals>
+    <string name="autoStartDelayMinutes">Minuty</string>
 </resources>
