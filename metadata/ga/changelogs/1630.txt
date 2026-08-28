@@ -1,0 +1,7 @@
+- Úsáid athdhathú léarscáile sa téama dorcha
+- Léaráid luais curtha leis an scáileán tosaithe/deiridh eagarthóireachta
+- Moill tosaithe uathoibríoch a fhógairt ag eatraimh laghdaitheacha in ionad gach soicind
+- Roghnóir roth a úsáid chun an mhoill tosaithe uathoibríoch a roghnú
+- 17 socrú fabhtanna aonair
+
+féach ar stór an tionscadail ar Codeberg le haghaidh liosta iomlán na n-athruithe
