@@ -28,7 +28,7 @@
     <string name="timeMinuteShort">mnt</string>
     <string name="timeMinutePlural">Menit</string>
     <string name="timeMinuteSingular">Menit</string>
-    <string name="setPreferencesMessage">Anda dapat mengatur sistem satuan Anda dan berat Anda di pengaturan.</string>
+    <string name="setPreferencesMessage">Anda dapat mengatur sistem satuan dan berat badan pilihan di pengaturan.</string>
     <string name="setPreferencesTitle">Atur Preferensi</string>
     <string name="loadingFile">Memuat berkas</string>
     <string name="finished">Selesai</string>
@@ -165,7 +165,7 @@
     <string name="workoutTypePushUps">Push up</string>
     <string name="importWorkout">Impor Latihan</string>
     <string name="setDuration">Atur Durasi</string>
-    <string name="noGpsMessage">Harap aktifkan GPS untuk melacak latihan Anda.</string>
+    <string name="noGpsMessage">Aktifkan GPS untuk melacak latihan Anda.</string>
     <string name="deleteWorkout">Hapus Latihan</string>
     <string name="deleteWorkoutMessage">Apakah Anda benar-benar ingin menghapus latihan\?</string>
     <string name="trackerRunning">Pelacak sedang berjalan</string>
@@ -207,9 +207,9 @@
     </plurals>
     <string name="trackingInfoDescription">Info tentang pelacak lari</string>
     <string name="cancel">Batal</string>
-    <string name="exportAsGpxFile">Ekspor sebagai file GPX</string>
+    <string name="exportAsGpxFile">Ekspor sebagai File GPX</string>
     <string name="pref_step_length">Panjang langkah</string>
-    <string name="exportDataSummary">Ini akan mencadangan semua latihan</string>
+    <string name="exportDataSummary">Buat cadangan semua latihan</string>
     <string name="trackStyle">Gaya Track</string>
     <string name="prefTrackStyleUsageTitle">Gunakan pewarnaan trek secara otomatis</string>
     <string name="trackVisibilityPref">Visibilitas Trek</string>
@@ -218,21 +218,21 @@
     <string name="add_interval">Tambahkan Interval</string>
     <string name="edit_interval">Ubah Interval</string>
     <string name="manageIntervalSets">Atur Set Interval</string>
-    <string name="manageIntervalsSummary">Edit set interval yang dapat Anda gunakan selama latihan menggunakan umpan balik suara.</string>
+    <string name="manageIntervalsSummary">Edit set interval yang dapat digunakan selama latihan menggunakan umpan balik suara</string>
     <string name="createIntervalSet">Buat Set Interval Baru</string>
     <string name="create">Buat</string>
-    <string name="hintManageIntervalSets">Tambahkan set interval untuk menggunakannya dalam latihan Anda.</string>
+    <string name="hintManageIntervalSets">Tambahkan set interval untuk digunakan dalam latihan Anda</string>
     <string name="selectIntervalSet">Pilih Set Interval</string>
     <string name="importBackup">Impor Cadangan Data</string>
-    <string name="importBackupSummary">Pulihkan cadangan sebelumnya</string>
+    <string name="importBackupSummary">Pulihkan cadangan</string>
     <string name="deleteIntervalSet">Hapus Set Interval</string>
     <string name="heartRateSensorBattery">Sensor Baterai</string>
     <string name="cut">Potong 300 m pertama/terakhir</string>
-    <string name="hintEditIntervalSet">Tambahkan interval yang akan diucapkan.</string>
+    <string name="hintEditIntervalSet">Tambahkan interval yang akan diucapkan</string>
     <string name="deleteIntervalSetMessage">Apakah Anda ingin menghapus set interval\?</string>
     <string name="intervalSetSelected">Set Interval dipilih</string>
     <string name="workoutTypeSwimming">Berenang</string>
-    <string name="intervalsIncludePauseTitle">Sertakan Waktu Jeda dalam Latihan Interval</string>
+    <string name="intervalsIncludePauseTitle">Sertakan waktu jeda dalam latihan interval</string>
     <string name="intervalTraining">Pelatihan Interval</string>
     <string name="currentSpeed">Kecepatan saat ini</string>
     <string name="intervalSet">Set Interval</string>
@@ -246,7 +246,7 @@
     <plurals name="workoutPullUp">
         <item quantity="other">Pull up</item>
     </plurals>
-    <string name="intervalsIncludePauseSummary">Jika diaktifkan, interval akan terus berlanjut meskipun Anda melakukan jeda dalam latihan.</string>
+    <string name="intervalsIncludePauseSummary">Lanjutkan interval saat latihan dijeda</string>
     <string name="noColoring">Tidak berwarna</string>
     <string name="ttsAboveTargetSpeed">Terlalu cepat</string>
     <string name="pref_auto_start_mode_wait_for_gps">Menunggu untuk posisi akurat</string>
@@ -261,7 +261,7 @@
     <string name="pref_auto_start_mode_on_move">Menunggu Anda mulai bergerak…</string>
     <string name="preferencesUserInterfaceSummary">Personalisasi aplikasi</string>
     <string name="ttsMinuteSecondCountdownAnnouncement"> <xliff:g example="1 minute" id="mins">%1$s</xliff:g> dan <xliff:g example="7 seconds" id="secs">%2$s</xliff:g> hingga memulai </string>
-    <string name="preferencesBackupSummary">Cadangkan/Pulihkan data latihan Anda</string>
+    <string name="preferencesBackupSummary">Cadangkan dan pulihkan data latihan</string>
     <string name="pref_auto_start_mode_instant">Mulai seketika</string>
     <string name="selectColoring">Pilih pewarnaan</string>
     <plurals name="satelliteCount">
@@ -278,7 +278,7 @@
     <string name="manageAutoStartModeSummary">Ubah mode latihan otomatis dimulai</string>
     <string name="intervalAutoStartModeTraining">Mode Latihan Otomatis</string>
     <string name="workoutDurationPrecisionToSeconds">Presisi durasi hingga detik</string>
-    <string name="hintAddWorkout">Klik ikon plus untuk merekam atau memasukkan workout.</string>
+    <string name="hintAddWorkout">Ketuk ikon plus untuk merekam atau memasukkan latihan</string>
     <string name="preferenceCurrentSpeedTime">Rentang waktu kecepatan rata-rata</string>
     <string name="preferenceCurrentSpeedAverageTimeSummary">Ganti kecepatan saat ini dengan rata-rata</string>
     <string name="preferenceCurrentSpeedAverageTimeTitle">Kecepatan rata-rata</string>
@@ -292,7 +292,7 @@
     <string name="pref_energy_unit">Satuan energi</string>
     <string name="manageAutoTimeoutSummary">Ubah interval untuk penghentian workout otomatis</string>
     <string name="intervalAutoTimeoutTraining">Batas waktu workout otomatis</string>
-    <string name="pref_auto_timeout_title">Rentang waktu untuk Auto-Stop</string>
+    <string name="pref_auto_timeout_title">Rentang waktu henti otomatis</string>
     <string name="currentTime">Waktu saat ini</string>
     <string name="currentTimeStructure">%s %s</string>
     <string name="unlockPhoneStopWorkout">Harap buka kunci ponsel Anda untuk menghentikan perekaman</string>
@@ -306,7 +306,7 @@
     <string name="calendarWeekYear">Minggu Kalender / Tahun</string>
     <string name="dayInMonth">Hari dalam bulan</string>
     <string name="singleWorkout">Workout tunggal</string>
-    <string name="workoutStatsHelpText">Layar ini menampilkan statistik historis dari workout. Untuk menggunakannya, Anda harus terlebih dahulu menentukan jenis workout dengan mengekliknya. Lalu atur informasi yang ingin Anda ketahui beserta rentang waktunya.\n\nContohnya, jika Anda memilih \"Minggu\" sebagai rentang waktu, semua workout pada tiap minggu akan digabung menjadi satu titik data dengan menghitung rata-rata atau jumlah setiap minggu.</string>
+    <string name="workoutStatsHelpText">Layar ini menampilkan statistik latihan historis. Untuk menggunakannya, pilih jenis latihan dan atur informasi yang ingin Anda ketahui tentang rentang waktu. \n\nMisalnya, jika Anda memilih “Minggu” sebagai rentang waktu, semua latihan untuk setiap minggu akan digabungkan menjadi satu titik data yang menghitung rata-rata atau jumlah untuk setiap minggu.</string>
     <string name="replaceOrMergeMessage">Ganti atau gabungkan database dengan file cadangan?</string>
     <string name="replace">Ganti</string>
     <string name="merge">Gabungkan</string>
@@ -324,7 +324,7 @@
     <string name="aboutLinks">Tautan</string>
     <string name="aboutUnlistedContributors">Terima kasih kepada semua kontributor yang tidak tercantum yang telah membantu menerjemahkan dan mengembangkan FitoTrack!</string>
     <string name="editDisplayedInformation">Ubah informasi yang ditampilkan</string>
-    <string name="editDisplayedInformationHint">Selama workout belum dimulai, Anda dapat mengubah nilai yang ditampilkan dengan mengeklik salah satu dari empat bidang.</string>
+    <string name="editDisplayedInformationHint">Sebelum latihan dimulai, Anda dapat mengedit nilai yang ditampilkan dengan mengetuk salah satu dari empat bidang</string>
     <string name="noWorkoutStarted">Belum Ada Workout Dimulai</string>
     <string name="recordingPermissionNotGrantedMessage">FitoTrack memerlukan izin lokasi untuk melacak pergerakan Anda selama workout. FitoTrack juga mengumpulkan data lokasi saat aplikasi berjalan di latar belakang atau layar dimatikan untuk merekam workout Anda. Data lokasi selalu tetap berada di ponsel Anda tanpa persetujuan tegas dari Anda untuk membagikannya.</string>
     <string name="recordingActivityPermissionMessage">FitoTrack memerlukan izin untuk melacak aktivitas fisik Anda guna merekam workout dalam ruangan.</string>
@@ -335,8 +335,8 @@
     <string name="recordingStatePaused">Dijeda</string>
     <string name="recordingStateStopped">Dihentikan</string>
     <string name="importMultipleGpxFiles">Impor beberapa file GPX</string>
-    <string name="importMultipleMessageSelectFolder">Silakan pilih folder yang berisi semua file GPX yang ingin Anda impor.</string>
-    <string name="importWorkoutMultipleQuestion">Apakah Anda ingin mengimpor satu file GPX atau beberapa file?</string>
+    <string name="importMultipleMessageSelectFolder">Pilih folder yang berisi file GPX yang ingin Anda impor.</string>
+    <string name="importWorkoutMultipleQuestion">Apakah Anda ingin mengimpor satu atau beberapa file GPX?</string>
     <string name="actionImport">Impor</string>
     <string name="actionImportMultiple">Impor beberapa</string>
     <string name="importingFiles">Mengimpor file</string>
@@ -359,10 +359,10 @@
     <string name="workoutStopped">Workout dihentikan</string>
     <string name="workoutStarted">Workout dimulai</string>
     <string name="notimeout">Tanpa batas waktu</string>
-    <string name="prefShowOnLockScreenTitle">Terlihat di layar kunci</string>
-    <string name="prefShowOnLockScreenSummary">Tampilkan info workout meskipun perangkat terkunci.</string>
-    <string name="resumeWorkoutConfirmation">Lanjutkan workout ini? Jeda sejak waktu workout dihentikan akan ditambahkan.</string>
-    <string name="hintManageWorkoutTypes">Klik ikon plus untuk menambahkan jenis workout kustom.</string>
+    <string name="prefShowOnLockScreenTitle">Tampilkan di layar kunci</string>
+    <string name="prefShowOnLockScreenSummary">Tampilkan layar perekaman saat perangkat terkunci</string>
+    <string name="resumeWorkoutConfirmation">Lanjutkan latihan ini? Jeda dari saat latihan ini dihentikan akan ditambahkan.</string>
+    <string name="hintManageWorkoutTypes">Ketuk ikon plus untuk menambahkan jenis latihan kustom</string>
     <string name="workoutTypeEditId">ID</string>
     <string name="workoutTypeEditIdErrorCharacters">Karakter yang diizinkan: a–z, A–Z, 0–9, _, -</string>
     <string name="workoutTypeEditIdErrorEmpty">Harap masukkan ID</string>
@@ -407,7 +407,7 @@
     <string name="autoStartCountdownMsgMove">Memulai workout setelah Anda mulai bergerak</string>
     <string name="workoutAutoStarted">Workout dimulai secara otomatis</string>
     <string name="popup_auto_start_delay">Dengan penundaan kustom</string>
-    <string name="autoStartDelaySeconds">Penundaan dalam detik</string>
+    <string name="autoStartDelaySeconds">Detik</string>
     <string name="popup_auto_start">Dengan penundaan bawaan</string>
     <string name="popup_auto_start_immediately">Mulai segera</string>
     <string name="popup_auto_start_on_move">Saat saya mulai bergerak</string>
@@ -426,7 +426,7 @@
     <string name="moveEndOfWorkout">Potong akhir</string>
     <string name="actionApply">Terapkan</string>
     <string name="launchError">Tidak dapat meluncurkan aplikasi</string>
-    <string name="editStartEndHelp">Pilih posisi pada peta atau diagram. Lalu klik salah satu panah untuk memilih titik awal atau akhir yang baru. Setelah selesai, klik ikon simpan untuk menerapkan perubahan.</string>
+    <string name="editStartEndHelp">Pilih posisi pada peta atau diagram, lalu ketuk salah satu panah untuk memilih titik awal atau akhir baru. Setelah selesai, ketuk ikon simpan untuk menerapkan perubahan.</string>
     <string name="statistics">Statistik</string>
     <plurals name="seconds">
         <item quantity="other"><xliff:g example="12" id="secs">%1$d</xliff:g> detik</item>
@@ -447,7 +447,7 @@
     <string name="monthYear">Bulan / Tahun</string>
     <string name="workoutAvgDistance">Jarak Rata-rata</string>
     <string name="workoutDistanceSum">Jumlah jarak</string>
-    <string name="zoomWithVolumeButtonsSummary">Tombol volume atas dan bawah digunakan untuk zoom in dan zoom out</string>
+    <string name="zoomWithVolumeButtonsSummary">Gunakan tombol volume naik dan turun untuk memperbesar dan memperkecil</string>
     <string name="zoomWithVolumeButtonsTitle">Zoom dengan tombol volume</string>
     <string name="zoom_in">Perbesar</string>
     <string name="zoom_out">Perkecil</string>
@@ -491,14 +491,14 @@
     <string name="exportTargetDirectory">Direktori</string>
     <string name="exportTargetHttpPost">Permintaan HTTP POST</string>
     <string name="autoBackupTitle">Cadangan otomatis</string>
-    <string name="workoutGPXExportTitle">Ekspor GPX workout</string>
-    <string name="hintConfigureExportTargets">Tambahkan target tempat file akan diekspor.</string>
+    <string name="workoutGPXExportTitle">Ekspor latihan sebagai GPX</string>
+    <string name="hintConfigureExportTargets">Tambahkan tujuan untuk mengekspor file ke</string>
     <string name="deleteExportTargetConfirmation">Hapus target ekspor ini?</string>
     <string name="autoExportWorkoutsSummary">Ekspor workout yang baru direkam</string>
     <string name="autoExportBackupTitle">Cadangan aplikasi otomatis</string>
     <string name="autoExportBackupSummary">Ekspor cadangan secara otomatis</string>
-    <string name="autoExportBackupExplanation">Pada interval yang ditentukan, cadangan akan diekspor ke sini:</string>
-    <string name="autoExportWorkoutExplanation">Setelah workout baru direkam, ekspor GPX akan disimpan di sini:</string>
+    <string name="autoExportBackupExplanation">Cadangan akan disimpan di sini pada interval yang ditentukan:</string>
+    <string name="autoExportWorkoutExplanation">File GPX akan disimpan di sini setelah latihan baru direkam:</string>
     <string name="exportIntervalTitle">Interval cadangan</string>
     <string name="takeBackups1">Setiap hari</string>
     <string name="takeBackups2">Setiap dua hari</string>
@@ -510,11 +510,11 @@
     <string name="httpUrl">URL</string>
     <string name="enterValidUrl">Masukkan URL HTTP yang valid</string>
     <string name="massExportGpxTitle">Ekspor semua workout sebagai GPX</string>
-    <string name="massExportGpxSummary">Membuat file ZIP yang berisi semua workout sebagai dokumen GPX</string>
+    <string name="massExportGpxSummary">Buat file ZIP dari semua latihan sebagai file GPX</string>
     <string name="debugShareLogsTitle">Bagikan log</string>
-    <string name="debugShareLogsSummary">Bagikan log yang berisi data berguna untuk menemukan bug pada perekam workout. Biasanya data tersebut tidak berisi data lokasi.</string>
+    <string name="debugShareLogsSummary">Bagikan log aplikasi untuk men-debug perekam latihan. Log biasanya tidak berisi data lokasi.</string>
     <string name="debugSensorsTitle">Debug sensor</string>
-    <string name="debugSensorsSummary">Kumpulkan data sensor yang akan ditulis ke file log</string>
+    <string name="debugSensorsSummary">Kumpulkan dan simpan data sensor ke log aplikasi</string>
     <string name="debugPressureSensor">Debug sensor tekanan</string>
     <string name="removeOAuthToken">Hapus Token OAuth</string>
     <string name="removedOAuthToken">Token OAuth dihapus</string>
@@ -522,7 +522,7 @@
     <string name="noSensorAvailable">Tidak ada sensor yang tersedia</string>
     <string name="show_sum">Tampilkan jumlah</string>
     <string name="askForComment">Minta komentar</string>
-    <string name="askForCommentSummary">Minta untuk memasukkan komentar saat menghentikan rekaman</string>
+    <string name="askForCommentSummary">Minta untuk memasukkan komentar setelah menghentikan perekaman</string>
     <string name="language">Bahasa</string>
     <string name="saveChangesQuestion">Simpan perubahan?</string>
     <string name="saveChangesQuestionMessage">Apakah Anda yakin ingin menyimpan perubahan?</string>
@@ -551,4 +551,9 @@
     <string name="recording_gps_accurate">GPS · akurat</string>
     <string name="recording_gps_weak">%d sat · lemah</string>
     <string name="recording_gps_searching">%d sat · mencari</string>
+    <plurals name="workoutRepetition">
+        <item quantity="other">Repetisi</item>
+    </plurals>
+    <string name="autoStartDelayMinutes">Menit</string>
+    <string name="pref_use_system_colors">Warna dinamis (Material You)</string>
 </resources>
