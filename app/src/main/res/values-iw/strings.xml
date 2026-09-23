@@ -86,7 +86,7 @@
     <string name="workoutPauseDuration">משך זמן בהשהיה</string>
     <string name="workoutDuration">משך זמן</string>
     <string name="workoutDate">תאריך</string>
-    <string name="workoutTime">זמן</string>
+    <string name="workoutTime">שעה</string>
     <string name="errorEnterValidDuration">יש להזין משך זמן תקין</string>
     <string name="errorEnterValidNumber">יש להזין מספר תקין</string>
     <string name="and">וגם</string>
@@ -214,7 +214,7 @@
     <string name="speechConfigNoSpeech">ללא הודעות</string>
     <string name="announcementSuppressDuringCall">עצירה במהלך שיחות</string>
     <string name="pref_announcement_mode">מצב הודעה</string>
-    <string name="pref_announcements_content">תוכן ההודעות</string>
+    <string name="pref_announcements_content">תוכן הכרזה</string>
     <string name="pref_announcements_config_summary">בחירת הזמן והמרחק בין כל הודעה קולית</string>
     <string name="pref_voice_announcements_summary">הגדרת ההנחיות הקוליות שינחו אותך במהלך האימון</string>
     <string name="hintManageWorkoutTypes">יש ללחוץ על פלוס כדי להוסיף סוגי אימון מותאמים.</string>
@@ -347,4 +347,17 @@
     <string name="autoStartCountdownMsg">האימון מתחיל בעוד</string>
     <string name="popup_auto_start_immediately">התחלה מיידית</string>
     <string name="workoutAvgDurationLong">משך זמן ממוצע</string>
+    <string name="pref_announcements_pace_control_title">אזהרות קצב</string>
+    <string name="invalidNumberFormat">תבנית מספר שגויה.</string>
+    <string name="fileNotFound">קובץ לא נמצא</string>
+    <string name="stats_explore_title">סיור</string>
+    <string name="stats_history_title">היסטוריה</string>
+    <string name="stats_overview_title">סקירה</string>
+    <string name="histogram">היסטוגרמה</string>
+    <string name="details">פרטים</string>
+    <string name="monthYear">חודש / שנה</string>
+    <string name="workoutAvgDistance">מרחק ממוצע</string>
+    <string name="workoutDistanceSum">מרחק כולל</string>
+    <string name="workoutDurationPrecisionToSeconds">דיוק משך לפי שניות</string>
+    <string name="workoutDurationSum">משך כולל</string>
 </resources>
