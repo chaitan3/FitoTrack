@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright (c) 2026 Jannis Scheibe <jannis@tadris.de>
   ~
@@ -17,9 +16,7 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">FitoTrack</string>
     <string name="stop">Stop</string>
     <string name="delete">Delete</string>
@@ -58,7 +55,7 @@
     <string name="pref_voice_announcements_summary">Configure voice prompts that inform you during the workout</string>
     <string name="pref_announcements_config_title">Announcement Trigger</string>
     <string name="pref_announcements_config_summary">Choose the time and distance between voice announcements</string>
-    <string name="pref_announcements_content">Content of the announcements</string>
+    <string name="pref_announcements_content">Announcement content</string>
     <string name="workoutRecordingTypeGps">GPS Workouts</string>
     <string name="workoutRecordingTypeIndoor">Indoor Workouts</string>
     <string name="gpsLost">GPS signal lost</string>
@@ -313,7 +310,7 @@
     <string name="aboutSourceCode">View source code</string>
     <string name="aboutUnlistedContributors">Thanks to all the unlisted contributors that helped to translate and extend FitoTrack!</string>
     <string name="aboutHelpTranslating">Help translating</string>
-    <string name="aboutPrivacyPolicy">Privacy Policy</string>
+    <string name="aboutPrivacyPolicy">Privacy policy</string>
     <string name="editDisplayedInformation">Edit displayed information</string>
     <string name="editDisplayedInformationHint">Before the workout starts, you can edit the displayed values by clicking on one of the four fields</string>
     <string name="noWorkoutStarted">No Workout Started</string>
@@ -466,7 +463,7 @@
     <string name="auto">Auto</string>
     <string name="noColoring">No coloring</string>
     <string name="pref_announcements_pace_control_summary">Warn when below or above a specified speed</string>
-    <string name="pref_announcements_pace_control_title">Pace-warnings</string>
+    <string name="pref_announcements_pace_control_title">Pace warnings</string>
     <string name="invalidNumberFormat">Invalid number format.</string>
     <string name="fileNotFound">File not found</string>
     <string name="stats_explore_title">Explore</string>
@@ -477,7 +474,7 @@
     <string name="monthYear">Month / Year</string>
     <string name="workoutAvgDistance">Average Distance</string>
     <string name="workoutDistanceSum">Distance sum</string>
-<string name="zoomWithVolumeButtonsSummary">Use volume up and down buttons to zoom in and out</string>
+    <string name="zoomWithVolumeButtonsSummary">Use volume up and down buttons to zoom in and out</string>
     <string name="zoomWithVolumeButtonsTitle">Zoom with volume buttons</string>
     <string name="zoom_in">Zoom in</string>
     <string name="zoom_out">Zoom out</string>
@@ -569,7 +566,6 @@
     <string name="restorePreparing">Preparing</string>
     <string name="actionBack">Back</string>
     <string name="more">More</string>
-
     <string name="recording_elapsed">Duration</string>
     <string name="recording_pause">Pause</string>
     <string name="recording_resume">Resume</string>
