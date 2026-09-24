@@ -225,7 +225,7 @@
     <string name="workoutTime">Hora</string>
     <string name="gpsFound">Sinal GPS atopado</string>
     <string name="gpsLost">Sinal de GPS perdido</string>
-    <string name="pref_announcements_content">Contido dos anuncios</string>
+    <string name="pref_announcements_content">Contido do anuncio</string>
     <string name="pref_announcements_config_summary">Elixe o tempo e a distancia entre os anuncios de voz</string>
     <string name="pref_voice_announcements_summary">Configura as indicacións de voz que te informarán durante a actividade</string>
     <string name="voiceAnnouncementsTitle">Anuncios por voz</string>
@@ -254,7 +254,7 @@
     <string name="recordingStateIdle">Inactivo</string>
     <string name="speechConfigNoSpeech">Sen anuncio</string>
     <string name="actionGrant">Conceder</string>
-    <string name="aboutPrivacyPolicy">Directiva de Privacidade</string>
+    <string name="aboutPrivacyPolicy">Directiva de privacidade</string>
     <string name="aboutHelpTranslating">Axuda a traducir</string>
     <string name="aboutUnlistedContributors">Grazas a todas as colaboradoras non mencionadas que axudaron a traducir e mellorar FitoTrack!</string>
     <string name="inclination">Inclinación</string>
