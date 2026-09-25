@@ -53,7 +53,7 @@
     <string name="noWorkoutStarted">Nebylo zahájeno žádné cvičení</string>
     <string name="editDisplayedInformationHint">Před zahájením cvičení můžete upravit zobrazené hodnoty klepnutím na jedno ze čtyř polí</string>
     <string name="editDisplayedInformation">Upravit zobrazené informace</string>
-    <string name="aboutPrivacyPolicy">Zásady soukromí</string>
+    <string name="aboutPrivacyPolicy">Ochrana soukromí</string>
     <string name="aboutHelpTranslating">Pomozte s překladem</string>
     <string name="aboutUnlistedContributors">Děkujeme všem přispěvatelům, kteří pomohli s překladem a rozšířením FitoTracku!</string>
     <string name="aboutSourceCode">Zobrazit zdrojový kód</string>
