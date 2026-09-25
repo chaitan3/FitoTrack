@@ -30,7 +30,7 @@
     <string name="voiceAnnouncementsTitle">Fógraí Gutha</string>
     <string name="pref_voice_announcements_summary">Cumraigh leideanna gutha a chuireann in iúl duit le linn na hoibre</string>
     <string name="pref_announcements_config_title">Truicear Fógraíochta</string>
-    <string name="pref_announcements_content">Ábhar na bhfógraí</string>
+    <string name="pref_announcements_content">Ábhar na fógraíochta</string>
     <string name="noGpsMessage">Cumasaigh GPS le do thoil chun do chleachtadh a rianú.</string>
     <string name="stopRecordingQuestionMessage">An bhfuil tú cinnte gur mian leat an taifeadadh a stopadh\?</string>
     <string name="deleteWorkoutMessage">An bhfuil tú cinnte gur mian leat an workout a scriosadh\?</string>
@@ -410,7 +410,7 @@
     <string name="aboutContributors">Rannpháirtithe</string>
     <string name="aboutSendFeedback">Seol aiseolas chuig an bhforbróir</string>
     <string name="aboutHelpTranslating">Cabhair le haistriú</string>
-    <string name="aboutPrivacyPolicy">Polasaí Príobháideachais</string>
+    <string name="aboutPrivacyPolicy">Polasaí príobháideachais</string>
     <string name="editDisplayedInformation">Cuir faisnéis ar taispeáint in eagar</string>
     <string name="noWorkoutStarted">Níor thosaigh aon obair</string>
     <string name="unitFootSingular">Crúibe</string>
@@ -464,7 +464,7 @@
     <string name="auto">Carr</string>
     <string name="noColoring">Gan dathú</string>
     <string name="pref_announcements_pace_control_summary">Tabhair rabhadh nuair atá tú thíos nó os cionn luas sonraithe</string>
-    <string name="pref_announcements_pace_control_title">Rabhaidh luais</string>
+    <string name="pref_announcements_pace_control_title">Rabhaidh luasghluaiseachta</string>
     <string name="invalidNumberFormat">Formáid neamhbhailí uimhreacha.</string>
     <string name="stats_explore_title">Déan iniúchadh</string>
     <string name="stats_history_title">Stair</string>
