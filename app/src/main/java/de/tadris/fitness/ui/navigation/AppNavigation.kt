@@ -51,6 +51,7 @@ import de.tadris.fitness.ui.settings.interval.ManageIntervalSetsScreen
 import de.tadris.fitness.ui.settings.workout_type.EditWorkoutTypeScreen
 import de.tadris.fitness.ui.settings.workout_type.ManageWorkoutTypesScreen
 import de.tadris.fitness.ui.statistics.StatisticsActivity
+import de.tadris.fitness.ui.wear.WearSyncActivity
 import de.tadris.fitness.ui.workout.ShareWorkoutScreen
 import de.tadris.fitness.ui.workout.enter.EnterWorkoutScreen
 import de.tadris.fitness.ui.workout.show.DiagramType
@@ -222,6 +223,9 @@ fun AppNavigation(
                 },
                 onNavigateToWorkoutTypes = {
                     navController.navigate(Route.ManageWorkoutTypes)
+                },
+                onNavigateToWearSync = {
+                    context.startActivity(Intent(context, WearSyncActivity::class.java))
                 },
                 onNavigateToDebugSettings = {
                     navController.navigate(Route.DebugSettings)

@@ -24,11 +24,11 @@ plugins {
 
 android {
     namespace = "de.tadris.fitness"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "de.tadris.fitness"
         minSdk = 30
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1544
         versionName = "16.1"
     }
@@ -42,6 +42,10 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
         }
+    }
+    buildFeatures {
+        compose = true
+        resValues = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21

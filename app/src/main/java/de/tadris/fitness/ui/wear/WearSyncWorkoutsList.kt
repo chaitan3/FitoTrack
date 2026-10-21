@@ -35,11 +35,11 @@ import androidx.lifecycle.lifecycleScope
 import de.tadris.fitness.Instance
 import de.tadris.fitness.R
 import de.tadris.fitness.data.AppDatabase
-import de.tadris.fitness.data.GpsSample
-import de.tadris.fitness.data.GpsWorkout
-import de.tadris.fitness.data.IndoorSample
-import de.tadris.fitness.data.IndoorWorkout
-import de.tadris.fitness.data.RecordingType
+import de.tadris.fitness.data.HeartRateSample
+import de.tadris.fitness.data.RouteSample
+import de.tadris.fitness.data.Workout
+import de.tadris.fitness.data.WorkoutData
+import de.tadris.fitness.data.WorkoutPause
 import de.tadris.fitness.data.WorkoutType
 import de.tadris.fitness.data.WorkoutTypeManager
 import de.tadris.fitness.ui.wear.WearSyncActivity.Companion.LOG_TAG
@@ -52,6 +52,7 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
+import java.util.UUID
 import java.util.zip.GZIPInputStream
 
 class WearSyncWorkoutsList : Fragment() {
@@ -68,8 +69,6 @@ class WearSyncWorkoutsList : Fragment() {
 			return db
 		}
 
-	var minHeight = 0.0
-	var maxHeight = 0.0
 	val wearSyncWorkouts = mutableListOf<WearSyncWorkout>()
 	var wearSyncWorkoutInProgress: WearSyncWorkout? = null
 	override fun onAttach(context: Context) {
@@ -153,8 +152,7 @@ class WearSyncWorkoutsList : Fragment() {
 		val name = watchWorkout.getString("name") + " " + watchWorkout.getString("workoutType")
 		val workoutId = watchWorkout.getLong("id")
 		val duration = watchWorkout.getLong("durationTotal")
-		val done = dB.gpsWorkoutDao().getWorkoutById(workoutId)?.duration == duration
-				|| dB.indoorWorkoutDao().getWorkoutById(workoutId)?.duration == duration
+		val done = dB.workoutDao().getWorkoutById(workoutId)?.activeDuration == duration
 		val wearSyncWorkout = WearSyncWorkout(activity, name, workoutId, done)
 		wearSyncWorkouts.add(wearSyncWorkout)
 		list.addView(wearSyncWorkout)
@@ -187,37 +185,19 @@ class WearSyncWorkoutsList : Fragment() {
 			CoroutineScope(Dispatchers.Main).launch { wearSyncWorkoutInProgress?.setProcessing() }
 			val watchWorkout = response.getJSONObject("workout")
 			workoutId = watchWorkout.getLong("id")
-			val type = watchWorkout.getString("workoutType")
-			if(getWorkoutType(type).getRecordingType() == RecordingType.GPS) {
-				val samples = getGpsSamples(watchWorkout, workoutId).toTypedArray<GpsSample?>()
-				val workout = toGpsWorkout(watchWorkout, workoutId)
-				if(dB.gpsWorkoutDao().getWorkoutById(workoutId) == null){
-					dB.gpsWorkoutDao().insertWorkoutAndSamples(workout, samples)
-				}else {
-					dB.gpsWorkoutDao().updateWorkout(workout)
-					samples.forEach { sample ->
-						if(sample == null) return@forEach
-						if(dB.gpsWorkoutDao().findSampleById(sample.id) == null){
-							dB.gpsWorkoutDao().insertSample(sample)
-						}
-					}
-				}
-			} else {
-				val samples = getIndoorSamples(watchWorkout, workoutId).toTypedArray<IndoorSample?>()
-				val workout = toIndoorWorkout(watchWorkout, workoutId)
-				if(dB.indoorWorkoutDao().getWorkoutById(workoutId) == null){
-					dB.indoorWorkoutDao().insertWorkoutAndSamples(workout, samples)
-				}else {
-					dB.indoorWorkoutDao().updateWorkout(workout)
-					samples.forEach { sample ->
-						if(sample == null) return@forEach
-						if(dB.indoorWorkoutDao().findSampleById(sample.id) == null){
-							dB.indoorWorkoutDao().insertSample(sample)
-						}
-					}
-				}
-
+			val watchType = watchWorkout.getString("workoutType")
+			val workoutType = getWorkoutType(watchType)
+			val existing = dB.workoutDao().getWorkoutById(workoutId)
+			val data = toWorkoutData(watchWorkout, workoutId, workoutType, isGpsWorkout(watchType), existing)
+			if(existing != null) {
+				// Replace the previous import, including all child samples. Deleting the workout
+				// cascades to route, heart rate, repetition and pause samples.
+				dB.workoutDao().deleteWorkoutAndSamples(
+					existing,
+					dB.workoutDao().getAllSamplesOfWorkout(workoutId)
+				)
 			}
+			dB.workoutDao().insertWorkoutData(data)
 			doneNext()
 		} catch(e: Exception) {
 			Log.e(LOG_TAG, "getWorkoutResponse exception: $e")
@@ -246,201 +226,177 @@ class WearSyncWorkoutsList : Fragment() {
 		}
 	}
 
-	@Throws(JSONException::class)
-	fun toIndoorWorkout(watchWorkout: JSONObject, workoutId: Long): IndoorWorkout {
-		val indoorWorkout = IndoorWorkout()
-		indoorWorkout.edited = false
-		indoorWorkout.setWorkoutType(getWorkoutType(watchWorkout.getString("workoutType")))
-		indoorWorkout.id = workoutId
-		indoorWorkout.start = workoutId
-		indoorWorkout.duration = watchWorkout.getLong("durationTotal")
-		indoorWorkout.repetitions = (watchWorkout.getJSONArray("checkpoints").length() + 1) / 2
-		if(watchWorkout.has("pauseTotal")) indoorWorkout.pauseDuration =
-			watchWorkout.getLong("pauseTotal")
-		indoorWorkout.end =
-			indoorWorkout.start + indoorWorkout.duration + indoorWorkout.pauseDuration
-		if(watchWorkout.has("heartRateAvg")) indoorWorkout.avgHeartRate =
-			watchWorkout.getDouble("heartRateAvg").toInt()
-		if(watchWorkout.has("heartRateMax")) indoorWorkout.maxHeartRate =
-			watchWorkout.getInt("heartRateMax")
-		if(watchWorkout.has("caloriesTotal")) indoorWorkout.calorie =
-			watchWorkout.getDouble("caloriesTotal").toInt()
-		return indoorWorkout
-	}
-	@Throws(Exception::class)
-	fun getIndoorSamples(watchWorkout: JSONObject, workoutId: Long): MutableList<IndoorSample> {
-		val samples = mutableListOf<IndoorSample>()
-		//get checkpoints
-		val checkpoints = watchWorkout.getJSONArray("checkpoints")
-		var icp = 0
-		var checkpoint = checkpoints.getJSONObject(icp)
-		var icpTime = checkpoint.getLong("time")
-		var icpDuration = checkpoint.getInt("duration")
-		var ncpTime =
-			if(checkpoints.length() <= 1) 0
-			else checkpoints.getJSONObject(1).getLong("time")
-		//get heart rates
-		val heartRates = gzipToJSONArray(watchWorkout.getString("heartRates"))
-		for(ihr in 0..<heartRates.length()) {
-			val heartRate = heartRates.getJSONObject(ihr)
-			val ihrTime = heartRate.getLong("time")
-			val ihrHeartRate = heartRate.getInt("heartRate")
+	private data class Checkpoint(val time: Long, val duration: Long)
 
-			while(ncpTime > 0 && ncpTime < ihrTime) {
-				icp++
-				checkpoint = checkpoints.getJSONObject(icp)
-				icpTime = checkpoint.getLong("time")
-				icpDuration = checkpoint.getInt("duration")
-				ncpTime = if(checkpoints.length() > icp + 1) checkpoints.getJSONObject(icp + 1)
-					.getLong("time") else 0
+	private fun isGpsWorkout(workoutType: String): Boolean =
+		workoutType != "Climbing" && workoutType != "Other (indoor)"
+
+	private fun toWorkoutData(
+		watchWorkout: JSONObject,
+		workoutId: Long,
+		workoutType: WorkoutType,
+		isGps: Boolean,
+		existing: Workout?
+	): WorkoutData {
+		val start = workoutId
+		val durationTotal = watchWorkout.optLong("durationTotal", 0L)
+		val pauseTotal = watchWorkout.optLong("pauseTotal", 0L)
+		val endTime = watchWorkout.optLong("endTime", 0L)
+		val end = if(endTime > 0L) endTime else start + durationTotal + pauseTotal
+		val checkpoints = readCheckpoints(watchWorkout)
+
+		val workout = Workout(
+			id = workoutId,
+			uuid = existing?.uuid ?: UUID.randomUUID().toString(),
+			start = start,
+			end = end,
+			activeDuration = durationTotal,
+			comment = watchWorkout.optString("desc").takeIf { it.isNotBlank() },
+			distance = watchWorkout.optDouble("distanceTotal", 0.0),
+			repetitions = if(isGps) 0 else (checkpoints.size + 1) / 2,
+			energy = watchWorkout.optDouble("caloriesTotal", 0.0) * 4186.8,
+			workoutTypeId = workoutType.id,
+			intervalSetUsedId = existing?.intervalSetUsedId ?: -1L,
+		)
+
+		return WorkoutData(
+			workout = workout,
+			samples = if(isGps) readRouteSamples(watchWorkout, workoutId, start, checkpoints) else emptyList(),
+			pauses = readPauses(workoutId, checkpoints),
+			events = emptyList(),
+			repetitionSamples = emptyList(),
+			heartRateSamples = readHeartRateSamples(watchWorkout, workoutId, start, checkpoints),
+		)
+	}
+
+	private fun readCheckpoints(watchWorkout: JSONObject): List<Checkpoint> {
+		val checkpoints = watchWorkout.optJSONArray("checkpoints") ?: return emptyList()
+		return (0..<checkpoints.length()).mapNotNull { i ->
+			checkpoints.optJSONObject(i)?.let { Checkpoint(it.optLong("time"), it.optLong("duration")) }
+		}
+	}
+
+	private fun relativeTime(time: Long, start: Long, checkpoints: List<Checkpoint>): Long {
+		if(checkpoints.isEmpty()) return time - start
+		var checkpoint = checkpoints.first()
+		for(i in 1..<checkpoints.size) {
+			if(checkpoints[i].time > time) break
+			checkpoint = checkpoints[i]
+		}
+		return time - checkpoint.time + checkpoint.duration
+	}
+
+	private fun readRouteSamples(
+		watchWorkout: JSONObject,
+		workoutId: Long,
+		start: Long,
+		checkpoints: List<Checkpoint>
+	): List<RouteSample> {
+		val locations = gzipToJSONArray(watchWorkout.optString("locations"))
+		if(locations.length() == 0) return emptyList()
+
+		val startElevation = (0..<locations.length())
+			.mapNotNull { locations.optJSONObject(it) }
+			.firstOrNull { it.optDouble("ele", 0.0) != 0.0 }
+			?.optDouble("ele", 0.0) ?: 0.0
+
+		val samples = mutableListOf<RouteSample>()
+		for(i in 0..<locations.length()) {
+			val location = locations.optJSONObject(i) ?: continue
+			val time = location.optLong("time")
+			val elevation = location.optDouble("ele", 0.0).let {
+				if(it == 0.0) startElevation else it
 			}
-			val sample = IndoorSample()
-			sample.absoluteTime = ihrTime
-			sample.relativeTime = ihrTime - icpTime + icpDuration
-			sample.heartRate = ihrHeartRate
-			//sample.repetitions
-			//sample.intensity
-			//sample.frequency
-			sample.id = workoutId + ihr + 1
-			sample.workoutId = workoutId
-			samples.add(sample)
+			samples.add(
+				RouteSample(
+					workoutId = workoutId,
+					timestamp = time,
+					relativeTime = relativeTime(time, start, checkpoints),
+					latitude = location.optDouble("lat", 0.0),
+					longitude = location.optDouble("lon", 0.0),
+					elevation = elevation,
+					elevationMSL = elevation,
+					speed = location.optDouble("speed", 0.0),
+					pressure = 0f,
+				)
+			)
 		}
 		return samples
 	}
-	@Throws(JSONException::class)
-	fun toGpsWorkout(watchWorkout: JSONObject, workoutId: Long): GpsWorkout {
-		val gpsWorkout = GpsWorkout()
-		gpsWorkout.edited = false
-		gpsWorkout.setWorkoutType(getWorkoutType(watchWorkout.getString("workoutType")))
-		gpsWorkout.id = workoutId
-		gpsWorkout.start = workoutId
-		gpsWorkout.duration = watchWorkout.getLong("durationTotal")
-		if(watchWorkout.has("pauseTotal")) gpsWorkout.pauseDuration =
-			watchWorkout.getLong("pauseTotal")
-		gpsWorkout.end = gpsWorkout.start + gpsWorkout.duration + gpsWorkout.pauseDuration
-		if(watchWorkout.has("heartRateAvg")) gpsWorkout.avgHeartRate =
-			watchWorkout.getDouble("heartRateAvg").toInt()
-		if(watchWorkout.has("heartRateMax")) gpsWorkout.maxHeartRate =
-			watchWorkout.getInt("heartRateMax")
-		if(watchWorkout.has("caloriesTotal")) gpsWorkout.calorie =
-			watchWorkout.getDouble("caloriesTotal").toInt()
-		if(watchWorkout.has("distanceTotal")) gpsWorkout.length =
-			watchWorkout.getDouble("distanceTotal").toInt()
-		if(watchWorkout.has("elevationGainTotal")) gpsWorkout.ascent =
-			watchWorkout.getInt("elevationGainTotal").toFloat()
-		if(watchWorkout.has("elevationLossTotal")) gpsWorkout.descent =
-			watchWorkout.getInt("elevationLossTotal").toFloat()
-		if(watchWorkout.has("speedAvg")) {
-			gpsWorkout.avgSpeed = watchWorkout.getDouble("speedAvg")
-			gpsWorkout.avgPace = 1 / (gpsWorkout.avgSpeed / 1000 * 60)
+
+	private fun readHeartRateSamples(
+		watchWorkout: JSONObject,
+		workoutId: Long,
+		start: Long,
+		checkpoints: List<Checkpoint>
+	): List<HeartRateSample> {
+		val heartRates = gzipToJSONArray(watchWorkout.optString("heartRates"))
+		if(heartRates.length() == 0) return emptyList()
+
+		val samples = mutableListOf<HeartRateSample>()
+		for(i in 0..<heartRates.length()) {
+			val heartRate = heartRates.optJSONObject(i) ?: continue
+			val value = heartRate.optDouble("heartRate", 0.0).toInt()
+			if(value <= 0) continue
+			val time = heartRate.optLong("time")
+			samples.add(
+				HeartRateSample(
+					workoutId = workoutId,
+					timestamp = time,
+					relativeTime = relativeTime(time, start, checkpoints),
+					heartRate = value,
+				)
+			)
 		}
-		if(watchWorkout.has("speedMax")) gpsWorkout.topSpeed = watchWorkout.getDouble("speedMax")
-		gpsWorkout.minElevationMSL = minHeight.toFloat()
-		gpsWorkout.maxElevationMSL = maxHeight.toFloat()
-		return gpsWorkout
+		return samples
 	}
-	@Throws(Exception::class)
-	fun getGpsSamples(watchWorkout: JSONObject, workoutId: Long): MutableList<GpsSample> {
-		val samples = mutableListOf<GpsSample>()
-		//get checkpoints
-		val checkpoints = watchWorkout.getJSONArray("checkpoints")
-		var icp = 0
-		var checkpoint = checkpoints.getJSONObject(icp)
-		var icpTime = checkpoint.getLong("time")
-		var icpDuration = checkpoint.getInt("duration")
-		var ncpTime =
-			if(checkpoints.length() > 1) checkpoints.getJSONObject(1).getLong("time") else 0
-		//get heart rates
-		val heartRates = gzipToJSONArray(watchWorkout.getString("heartRates"))
-		var ihr = 0
-		var ihrHeartRate = 0
-		if(heartRates.length() > 0) {
-			val heartRate = heartRates.getJSONObject(ihr)
-			ihrHeartRate = heartRate.getInt("heartRate")
-		}
-		var nhrTime = if(heartRates.length() > 1) heartRates.getJSONObject(1).getLong("time") else 0
-		//get locations
-		val locations = gzipToJSONArray(watchWorkout.getString("locations"))
-		minHeight = 100000.0
-		maxHeight = 0.0
-		var startElevation = 0.0
-		for(il in 0..<locations.length()) {
-			val location = locations.getJSONObject(il)
-			if(location.getDouble("ele") != 0.0) {
-				startElevation = location.getDouble("ele")
-				break
-			}
-		}
-		for(il in 0..<locations.length()) {
-			val location = locations.getJSONObject(il)
-			val ilTime = location.getLong("time")
-			while(ncpTime > 0 && ncpTime < ilTime) {
-				icp++
-				checkpoint = checkpoints.getJSONObject(icp)
-				icpTime = checkpoint.getLong("time")
-				icpDuration = checkpoint.getInt("duration")
-				ncpTime = if(checkpoints.length() > icp + 1) checkpoints.getJSONObject(icp + 1)
-					.getLong("time") else 0
-			}
-			while(nhrTime > 0 && nhrTime < ilTime) {
-				ihr++
-				val heartRate = heartRates.getJSONObject(ihr)
-				ihrHeartRate = heartRate.getInt("heartRate")
-				nhrTime = if(heartRates.length() > ihr + 1) heartRates.getJSONObject(ihr + 1)
-					.getLong("time") else 0
-			}
-			val sample = GpsSample()
-			sample.lat = location.getDouble("lat")
-			sample.lon = location.getDouble("lon")
-			sample.elevation = location.getDouble("ele")
-			if(sample.elevation == 0.0) {
-				sample.elevation = startElevation
+
+	private fun readPauses(workoutId: Long, checkpoints: List<Checkpoint>): List<WorkoutPause> {
+		val pauses = mutableListOf<WorkoutPause>()
+		var i = 0
+		while(i + 1 < checkpoints.size) {
+			val start = checkpoints[i]
+			val end = checkpoints[i + 1]
+			if(start.duration == end.duration) {
+				pauses.add(
+					WorkoutPause(
+						workoutId = workoutId,
+						startDate = start.time,
+						endDate = end.time,
+						userInitiated = false,
+					)
+				)
+				i += 2
 			} else {
-				if(sample.elevation < minHeight) minHeight = sample.elevation
-				if(sample.elevation > maxHeight) maxHeight = sample.elevation
+				i += 1
 			}
-			sample.elevationMSL = sample.elevation
-			sample.speed = location.getDouble("speed")
-			sample.absoluteTime = ilTime
-			sample.relativeTime = ilTime - icpTime + icpDuration
-			//sample.pressure
-			sample.heartRate = ihrHeartRate
-			//sample.intervalTriggered
-			sample.id = workoutId + il + 1
-			sample.workoutId = workoutId
-			samples.add(sample)
 		}
-		if(minHeight == 100000.0) minHeight = maxHeight
-		return samples
+		return pauses
 	}
 
 	fun getWorkoutType(input: String): WorkoutType {
-		var workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
-		when(input) {
-			"Climbing" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_CLIMBING
-			"Cycling" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_CYCLING
-			"Hiking" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_HIKING
-			"Running" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING
-			"Skiing" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SKIING
-			"Snowboarding" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SNOWBOARDING
-			"Snowshoeing" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SNOWSHOEING
-			"Swim (outdoor)" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_SWIMMING
-			"Walking" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_WALKING
-			"Windsurfing" -> workoutTypeId = WorkoutTypeManager.WORKOUT_TYPE_ID_WINDSURFING
-			//TODO Multisport
+		val workoutTypeId = when(input) {
+			"Climbing" -> WorkoutTypeManager.WORKOUT_TYPE_ID_CLIMBING
+			"Cycling" -> WorkoutTypeManager.WORKOUT_TYPE_ID_CYCLING
+			"Hiking" -> WorkoutTypeManager.WORKOUT_TYPE_ID_HIKING
+			"Running" -> WorkoutTypeManager.WORKOUT_TYPE_ID_RUNNING
+			"Skiing" -> WorkoutTypeManager.WORKOUT_TYPE_ID_SKIING
+			"Snowboarding" -> WorkoutTypeManager.WORKOUT_TYPE_ID_SNOWBOARDING
+			"Snowshoeing" -> WorkoutTypeManager.WORKOUT_TYPE_ID_SNOWSHOEING
+			"Swim (outdoor)" -> WorkoutTypeManager.WORKOUT_TYPE_ID_SWIMMING
+			"Walking" -> WorkoutTypeManager.WORKOUT_TYPE_ID_WALKING
+			"Windsurfing" -> WorkoutTypeManager.WORKOUT_TYPE_ID_WINDSURFING
+			// TODO Multisport
+			else -> WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER
 		}
-		val workoutType =
-			WorkoutTypeManager.getInstance().getWorkoutTypeById(activity, workoutTypeId)
-		if(workoutTypeId == WorkoutTypeManager.WORKOUT_TYPE_ID_OTHER) {
-			workoutType.title = input
-			workoutType.recordingType = RecordingType.GPS.id
-		}
-		return workoutType
+		return WorkoutTypeManager.getInstance().getWorkoutTypeById(activity, workoutTypeId)
 	}
-	@Throws(Exception::class)
-	fun gzipToJSONArray(str: String): JSONArray {
+
+	private fun gzipToJSONArray(str: String?): JSONArray {
+		if(str.isNullOrBlank()) return JSONArray()
 		val bin = ByteArrayInputStream(Base64.decode(str, Base64.DEFAULT))
 		val br = BufferedReader(InputStreamReader(GZIPInputStream(bin)))
-		return JSONArray(br.readLine())
+		val line = br.readLine() ?: return JSONArray()
+		return JSONArray(line)
 	}
 }

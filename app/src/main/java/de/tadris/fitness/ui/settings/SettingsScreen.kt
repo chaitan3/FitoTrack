@@ -40,6 +40,7 @@ fun SettingsScreen(
     onNavigateToRecordingSettings: () -> Unit = {},
     onNavigateToBackupSettings: () -> Unit = {},
     onNavigateToWorkoutTypes: () -> Unit = {},
+    onNavigateToWearSync: () -> Unit = {},
     onNavigateToDebugSettings: () -> Unit = {},
     onNavigateToAbout: () -> Unit = {},
 ) {
@@ -84,6 +85,12 @@ fun SettingsScreen(
                     title = stringResource(R.string.preferencesBackupTitle),
                     supporting = stringResource(R.string.preferencesBackupSummary),
                     onClick = onNavigateToBackupSettings,
+                )
+            }
+            item {
+                ClickableSettingsItem(
+                    title = stringResource(R.string.wear_sync),
+                    onClick = onNavigateToWearSync,
                 )
             }
             item {
