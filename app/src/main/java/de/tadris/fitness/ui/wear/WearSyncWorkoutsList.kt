@@ -90,6 +90,7 @@ class WearSyncWorkoutsList : Fragment() {
 		title = rootView.findViewById(R.id.wearSyncTitle)
 		list = rootView.findViewById(R.id.wearSyncList)
 		list.visibility = View.VISIBLE
+		rootView.findViewById<View>(R.id.wearSyncNew).visibility = View.GONE
 		rootView.findViewById<View>(R.id.wearSyncIcon).visibility = View.GONE
 		lifecycleScope.launch { CommsBT.status.collect { status ->
 			when(CommsBT.status.value) {

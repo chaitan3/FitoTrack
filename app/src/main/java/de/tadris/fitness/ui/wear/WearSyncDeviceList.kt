@@ -43,6 +43,7 @@ class WearSyncDeviceList : Fragment() {
 	lateinit var title: TextView
 	lateinit var known: LinearLayout
 	lateinit var list: LinearLayout
+	lateinit var newWatch: TextView
 	lateinit var icon: ImageView
 	lateinit var iconDrawable: AnimatedVectorDrawable
 
@@ -55,15 +56,15 @@ class WearSyncDeviceList : Fragment() {
 		title = rootView.findViewById(R.id.wearSyncTitle)
 		known = rootView.findViewById(R.id.wearSyncKnown)
 		list = rootView.findViewById(R.id.wearSyncList)
+		newWatch = rootView.findViewById(R.id.wearSyncNew)
 		icon = rootView.findViewById(R.id.wearSyncIcon)
 		iconDrawable = icon.background as AnimatedVectorDrawable
-		rootView.findViewById<View>(R.id.wearSyncNew)
-			.setOnClickListener {
-				showIcon()
-				CoroutineScope(Dispatchers.Default).launch {
-					this@WearSyncDeviceList.loadBTDevices()
-				}
+		newWatch.setOnClickListener {
+			showIcon()
+			CoroutineScope(Dispatchers.Default).launch {
+				this@WearSyncDeviceList.loadBTDevices()
 			}
+		}
 		lifecycleScope.launch {
 			CommsBT.status.collect { status ->
 				Log.d(LOG_TAG, "WearSyncActivity: CommsBT status change: $status")
@@ -82,20 +83,29 @@ class WearSyncDeviceList : Fragment() {
 						CoroutineScope(Dispatchers.Main).launch {
 							title.setText(R.string.wear_device_select_title)
 							list.removeAllViews()
+							// removeAllViews() also removes the "New watch" row from the XML.
+							// Put it back, otherwise the screen is empty after any disconnect.
+							list.addView(newWatch)
 							knownDevices.forEach{ deviceFound(known, it) }
 							showList()
 						}
 					}
 					CommsBT.Status.ERROR -> {
 						CoroutineScope(Dispatchers.Main).launch {
-							title.text = getString(R.string.wear_error_connect)
+							val error = CommsBT.error
+							title.setText(if(error != -1) error else R.string.wear_error_connect)
 							showList()
 						}
 					}
-					else -> {}
+					CommsBT.Status.STARTING -> {
+						CoroutineScope(Dispatchers.Main).launch { showList() }
+					}
+					else -> showList()
 				}
 			}
 		}
+		// Never leave the screen empty while waiting for the Bluetooth status.
+		showList()
 		return rootView
 	}
 
@@ -147,6 +157,7 @@ class WearSyncDeviceList : Fragment() {
 		CoroutineScope(Dispatchers.Main).launch {
 			Log.d(LOG_TAG, "onBTError: " + getString(message))
 			title.setText(message)
+			if(newWatch.parent == null) list.addView(newWatch)
 			showList()
 		}
 	}
