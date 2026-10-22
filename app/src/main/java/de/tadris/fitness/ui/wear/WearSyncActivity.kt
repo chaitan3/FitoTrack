@@ -28,6 +28,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.appbar.MaterialToolbar
 import de.tadris.fitness.R
 import de.tadris.fitness.ui.FitoTrackActivity
 import kotlinx.coroutines.CoroutineScope
@@ -36,11 +37,14 @@ import kotlinx.coroutines.launch
 
 class WearSyncActivity : FitoTrackActivity() {
 	companion object { const val LOG_TAG: String = "FitoTrack.WearSync" }
+	override val useEdgeToEdge: Boolean = false
+	override val useAppTheme: Boolean = false
 	private var fragmentManager: FragmentManager? = null
 	private var hasBTPermission = false
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_wear_sync)
+		setSupportActionBar(findViewById<MaterialToolbar>(R.id.wearSyncToolbar))
 		setupActionBar()
 		setTitle(R.string.wear_sync)
 		fragmentManager = supportFragmentManager

@@ -145,7 +145,8 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.wear.WearSyncActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppThemeNoActionbar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -32,10 +32,21 @@ import de.tadris.fitness.util.ThemeUtils
 
 abstract class FitoTrackActivity : AppCompatActivity() {
 
+    /**
+     * Legacy AppCompat screens can opt out of edge-to-edge so their content is laid out
+     * below the action bar and system bars.
+     */
+    protected open val useEdgeToEdge: Boolean = true
+
+    /**
+     * Screens that provide their own Toolbar should keep the theme from the manifest.
+     */
+    protected open val useAppTheme: Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(Instance.getInstance(this).themes.defaultTheme)
-        enableEdgeToEdge()
+        if (useAppTheme) setTheme(Instance.getInstance(this).themes.defaultTheme)
+        if (useEdgeToEdge) enableEdgeToEdge()
     }
 
     fun getThemePrimaryColor(): Int = getThemeColor(android.R.attr.colorPrimary)
